@@ -8,6 +8,11 @@
     # Block direct access to critical app directories
     RewriteRule ^(app|config|database|routes|storage|vendor)($|/) - [F,L]
 
+    # Rewrite assets and public files transparently if requesting from root but they are in public/
+    RewriteCond %{DOCUMENT_ROOT}/public/$1 -f [OR]
+    RewriteCond %{DOCUMENT_ROOT}/public/$1 -d
+    RewriteRule ^(.*)$ public/$1 [L]
+
     # Redirect trailing slashes
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^(.*)/$ /$1 [L,R=301]
