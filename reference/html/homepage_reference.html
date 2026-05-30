@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Référence Statique - Digitalium Group</title>
+    <!-- Link to the main development stylesheet -->
+    <link rel="stylesheet" href="../../public/assets/css/index.css">
+    <!-- Lucide Icons Script -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* Extra styling for reference bar */
+        .reference-bar {
+            background: linear-gradient(90deg, #4f46e5, #7c3aed);
+            color: white;
+            text-align: center;
+            padding: 8px 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            position: sticky;
+            top: 0;
+            z-index: 9999;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="reference-bar">
+        Maquette de Référence Statique (digitaliumgroup.com)
+    </div>
+
+    <!-- Background atmosphere gradients -->
+    <div class="bg-ambient ambient-1"></div>
+    <div class="bg-ambient ambient-2"></div>
+    <div class="bg-ambient ambient-3"></div>
+
+    <!-- Header Navigation -->
+    <header class="site-header" id="siteHeader" style="top: 36px;">
+        <div class="container nav-container">
+            <a href="#" class="logo-text">DIGITALIUM</a>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="#hero" class="nav-link active">Accueil</a></li>
+                <li><a href="#services" class="nav-link">Expertises</a></li>
+                <li><a href="#portfolio" class="nav-link">Portfolio</a></li>
+                <li><a href="#team" class="nav-link">Équipe</a></li>
+                <li><a href="#testimonials" class="nav-link">Avis</a></li>
+                <li><a href="#faq" class="nav-link">FAQ</a></li>
+                <li><a href="#blog" class="nav-link">Blog</a></li>
+                <li><a href="#contact" class="btn-cta-nav">Démarrer un projet</a></li>
+            </ul>
+            <button class="menu-toggle" id="menuToggle" aria-label="Toggle Menu">
+                <i data-lucide="menu" style="width: 24px; height: 24px;"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <main style="padding-top: 36px;">
+
+        <!-- 1. Hero Section -->
+        <section class="hero-section" id="hero">
+            <div class="container hero-layout">
+                <div class="hero-title">
+                    <div>
+                        <h1>Concevons ensemble<br><span style="color: #6366f1;">l'architecture</span> de votre futur</h1>
+                    </div>
+                    <p class="hero-description">
+                        Nous sommes un groupe technologique d'élite. Nous façonnons des logiciels sur mesure stables, performants et hautement sécurisés.
+                    </p>
+                    <div class="hero-actions">
+                        <a href="#contact" class="btn-hero-primary">
+                            <span>Démarrer mon projet</span>
+                            <i data-lucide="arrow-up-right" style="width: 18px; height: 18px;"></i>
+                        </a>
+                        <a href="#services" class="btn-hero-secondary">
+                            <span>En savoir plus</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="hero-image-wrapper">
+                    <div class="hero-image-container">
+                        <div style="width:100%; height:100%; background: linear-gradient(135deg, #1e1b4b 0%, #311042 100%); display:flex; align-items:center; justify-content:center; position:relative;">
+                            <div style="position:absolute; width: 140px; height: 140px; background: radial-gradient(circle, #22d3ee 0%, rgba(99,102,241,0) 70%); border-radius:50%; filter:blur(10px);"></div>
+                            <div style="border: 2px dashed rgba(255,255,255,0.06); width:260px; height:260px; border-radius:50%; position:absolute; display:flex; align-items:center; justify-content:center;">
+                                <div style="border: 1px solid rgba(255,255,255,0.1); width:180px; height:180px; border-radius:50%;"></div>
+                            </div>
+                            <i data-lucide="cpu" style="width:64px; height:64px; color: #6366f1; position:relative; z-index:2; filter: drop-shadow(0 0 15px #6366f1);"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Services Section -->
+        <section class="section-padding" id="services">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-badge">Expertises</span>
+                    <h2 class="section-title">Nos Services Technologiques</h2>
+                    <p class="section-subtitle">Des ingénieurs chevronnés pour concevoir, optimiser et propulser vos projets à grande échelle.</p>
+                </div>
+                <div class="services-grid">
+                    <div class="service-card">
+                        <div class="service-icon-box">
+                            <i data-lucide="cpu" style="width: 28px; height: 28px;"></i>
+                        </div>
+                        <h3 class="service-title">Ingénierie Logicielle</h3>
+                        <p class="service-description">Développement de systèmes d'information robustes en PHP, architectures micro-services et API performantes.</p>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon-box">
+                            <i data-lucide="cloud" style="width: 28px; height: 28px;"></i>
+                        </div>
+                        <h3 class="service-title">Applications Cloud & Mobiles</h3>
+                        <p class="service-description">Conception d'architectures Serverless scalables sur AWS, Azure et plateformes hybrides sécurisées.</p>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon-box">
+                            <i data-lucide="shield-check" style="width: 28px; height: 28px;"></i>
+                        </div>
+                        <h3 class="service-title">Audit & Conseil DevOps</h3>
+                        <p class="service-description">Optimisation de vos bases de données MySQL, pipelines CI/CD sécurisés et audits de vulnérabilités applicatives.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Portfolio Section -->
+        <section class="section-padding" id="portfolio">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-badge">Portfolio</span>
+                    <h2 class="section-title">Études de Cas & Projets</h2>
+                    <p class="section-subtitle">Découvrez les plateformes logicielles complexes que nous avons déployées en production.</p>
+                </div>
+                <div class="portfolio-tabs">
+                    <button class="portfolio-tab-btn active">Tous</button>
+                    <button class="portfolio-tab-btn">Ingénierie</button>
+                    <button class="portfolio-tab-btn">Mobile</button>
+                </div>
+                <div class="portfolio-grid">
+                    <div class="portfolio-item">
+                        <div class="portfolio-img-box">
+                            <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #111827 0%, #1f2937 100%); display:flex; align-items:center; justify-content:center;">
+                                <i data-lucide="layout-template" style="width: 48px; height: 48px; color: var(--border);"></i>
+                            </div>
+                        </div>
+                        <div class="portfolio-content">
+                            <span class="portfolio-category">Ingénierie</span>
+                            <h3 class="portfolio-item-title" style="margin-top: 4px;">
+                                <a href="#" style="display: flex; align-items: center; gap: 8px; justify-content: space-between;">
+                                    <span>Plateforme Logistique</span>
+                                    <i data-lucide="arrow-up-right" style="width: 16px; height: 16px; color: var(--primary);"></i>
+                                </a>
+                            </h3>
+                        </div>
+                    </div>
+                    <div class="portfolio-item">
+                        <div class="portfolio-img-box">
+                            <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #111827 0%, #1f2937 100%); display:flex; align-items:center; justify-content:center;">
+                                <i data-lucide="layout-template" style="width: 48px; height: 48px; color: var(--border);"></i>
+                            </div>
+                        </div>
+                        <div class="portfolio-content">
+                            <span class="portfolio-category">Mobile</span>
+                            <h3 class="portfolio-item-title" style="margin-top: 4px;">
+                                <a href="#" style="display: flex; align-items: center; gap: 8px; justify-content: space-between;">
+                                    <span>Application Fintech</span>
+                                    <i data-lucide="arrow-up-right" style="width: 16px; height: 16px; color: var(--primary);"></i>
+                                </a>
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Team Section -->
+        <section class="section-padding" id="team">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-badge">Équipe</span>
+                    <h2 class="section-title">Nos Experts</h2>
+                    <p class="section-subtitle">Une équipe d'ingénieurs d'élite et de concepteurs chevronnés.</p>
+                </div>
+                <div class="team-grid">
+                    <div class="team-card">
+                        <div class="team-avatar-box">
+                            <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #1e1b4b 0%, #311042 100%); display:flex; align-items:center; justify-content:center;">
+                                <i data-lucide="shield-check" style="width: 64px; height: 64px; color: var(--primary);"></i>
+                            </div>
+                        </div>
+                        <div class="team-info">
+                            <h3 class="team-name">Alexandre Dumas</h3>
+                            <p class="team-role">Lead Architect & Fondateur</p>
+                            <div class="team-socials">
+                                <a href="#" class="team-social-link"><i data-lucide="linkedin" style="width: 18px; height: 18px;"></i></a>
+                                <a href="#" class="team-social-link"><i data-lucide="github" style="width: 18px; height: 18px;"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="team-card">
+                        <div class="team-avatar-box">
+                            <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #1e1b4b 0%, #311042 100%); display:flex; align-items:center; justify-content:center;">
+                                <i data-lucide="terminal" style="width: 64px; height: 64px; color: var(--primary);"></i>
+                            </div>
+                        </div>
+                        <div class="team-info">
+                            <h3 class="team-name">Thomas Morel</h3>
+                            <p class="team-role">Expert Core PHP & SecOps</p>
+                            <div class="team-socials">
+                                <a href="#" class="team-social-link"><i data-lucide="linkedin" style="width: 18px; height: 18px;"></i></a>
+                                <a href="#" class="team-social-link"><i data-lucide="github" style="width: 18px; height: 18px;"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. Testimonials Section -->
+        <section class="section-padding" id="testimonials">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-badge">Témoignages</span>
+                    <h2 class="section-title">Avis de Nos Partenaires</h2>
+                    <p class="section-subtitle">Découvrez les retours d'expérience des directeurs techniques qui nous font confiance.</p>
+                </div>
+                <div class="testimonials-grid">
+                    <div class="testimonial-card">
+                        <div>
+                            <div class="rating-stars">
+                                <i data-lucide="star" style="width: 16px; height: 16px; fill: #fbbf24; color: #fbbf24;"></i>
+                                <i data-lucide="star" style="width: 16px; height: 16px; fill: #fbbf24; color: #fbbf24;"></i>
+                                <i data-lucide="star" style="width: 16px; height: 16px; fill: #fbbf24; color: #fbbf24;"></i>
+                                <i data-lucide="star" style="width: 16px; height: 16px; fill: #fbbf24; color: #fbbf24;"></i>
+                                <i data-lucide="star" style="width: 16px; height: 16px; fill: #fbbf24; color: #fbbf24;"></i>
+                            </div>
+                            <p class="testimonial-text">
+                                "Le professionnalisme de Digitalium a dépassé nos espérances. Une architecture PHP impeccable et un code extrêmement propre."
+                            </p>
+                        </div>
+                        <div class="testimonial-client">
+                            <div class="client-avatar">
+                                <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #1e1b4b 0%, #311042 100%); display:flex; align-items:center; justify-content:center;">
+                                    <i data-lucide="user" style="width: 20px; height: 20px; color: var(--primary);"></i>
+                                </div>
+                            </div>
+                            <div class="client-info">
+                                <span class="client-name">Marc Lemaire</span>
+                                <span class="client-company">CTO - HexaSolutions</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. FAQ Section -->
+        <section class="section-padding" id="faq">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-badge">FAQ</span>
+                    <h2 class="section-title">Questions Fréquentes</h2>
+                    <p class="section-subtitle">Des réponses claires et précises à vos interrogations techniques.</p>
+                </div>
+                <div class="faq-deck">
+                    <div class="faq-item">
+                        <button class="faq-question-btn" onclick="toggleFaqRef(this)">
+                            <span>Comment est structuré le suivi de projet ?</span>
+                            <i data-lucide="chevron-down" style="width: 20px; height: 20px; transition: transform 0.3s;"></i>
+                        </button>
+                        <div class="faq-answer" style="max-height: 0px; overflow: hidden; transition: max-height 0.3s ease-out;">
+                            <div class="faq-answer-inner">
+                                Nous fonctionnons selon les méthodologies agiles (Scrum) avec des livraisons de versions fonctionnelles toutes les deux semaines (sprints) et un canal Slack dédié.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. Blog Section -->
+        <section class="section-padding" id="blog">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-badge">Blog</span>
+                    <h2 class="section-title">Actualités & Insights</h2>
+                    <p class="section-subtitle">Nos analyses techniques sur les architectures logicielles et les tendances cloud.</p>
+                </div>
+                <div class="blog-grid">
+                    <div class="blog-card">
+                        <div class="blog-img-box">
+                            <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #1e1b4b 0%, #111827 100%); display:flex; align-items:center; justify-content:center;">
+                                <i data-lucide="terminal" style="width: 48px; height: 48px; color: var(--primary);"></i>
+                            </div>
+                        </div>
+                        <div class="blog-content">
+                            <div>
+                                <div class="blog-meta">
+                                    <span>PHP 8.1+</span>
+                                    <span>28 Mai 2026</span>
+                                </div>
+                                <h3 class="blog-title">Pourquoi migrer vers une architecture PHP 8.1+ typée ?</h3>
+                                <p class="blog-summary">Découvrez comment les types d'intersection, les propriétés en lecture seule et les enums changent l'ingénierie PHP.</p>
+                            </div>
+                            <a href="#" class="blog-readmore">
+                                <span>Lire la suite</span>
+                                <i data-lucide="arrow-right" style="width: 14px; height: 14px;"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 8. Contact Section -->
+        <section class="section-padding" id="contact">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-badge">Contact</span>
+                    <h2 class="section-title">Parlez-nous de Votre Projet</h2>
+                    <p class="section-subtitle">Prêt à concevoir un système performant ? Remplissez ce formulaire et notre architecte principal vous contactera.</p>
+                </div>
+                <div class="contact-layout">
+                    <div class="contact-details">
+                        <div class="contact-item">
+                            <div class="contact-icon-box">
+                                <i data-lucide="mail" style="width: 22px; height: 22px;"></i>
+                            </div>
+                            <div>
+                                <h3 class="contact-item-title">E-mail</h3>
+                                <p class="contact-item-value">contact@digitaliumgroup.com</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon-box">
+                                <i data-lucide="phone" style="width: 22px; height: 22px;"></i>
+                            </div>
+                            <div>
+                                <h3 class="contact-item-title">Téléphone</h3>
+                                <p class="contact-item-value">+33 1 76 54 32 10</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon-box">
+                                <i data-lucide="map-pin" style="width: 22px; height: 22px;"></i>
+                            </div>
+                            <div>
+                                <h3 class="contact-item-title">Adresse</h3>
+                                <p class="contact-item-value">128 Rue de la Boétie<br>75008 Paris, France</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="contact-form-card">
+                        <form onsubmit="event.preventDefault(); alert('Maquette de référence : la soumission nécessite le serveur dynamique actif.');">
+                            <div class="contact-form-row">
+                                <div class="contact-form-group">
+                                    <label>Nom complet *</label>
+                                    <input type="text" class="contact-input" placeholder="Alexandre Dumas" required>
+                                </div>
+                                <div class="contact-form-group">
+                                    <label>Adresse e-mail *</label>
+                                    <input type="email" class="contact-input" placeholder="alex@digitaliumgroup.com" required>
+                                </div>
+                            </div>
+                            <div class="contact-form-group">
+                                <label>Sujet</label>
+                                <input type="text" class="contact-input" placeholder="Conception d'une application sur mesure">
+                            </div>
+                            <div class="contact-form-group">
+                                <label>Message *</label>
+                                    <textarea rows="5" class="contact-textarea" placeholder="Décrivez brièvement les objectifs de votre projet..." required></textarea>
+                            </div>
+                            <button type="submit" class="btn-contact-submit">
+                                <span>Planifier un entretien technique</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer-layout">
+            <div class="footer-brand">
+                <a href="#" class="logo-text">DIGITALIUM</a>
+                <p class="footer-description">Nous concevons des produits technologiques haut de gamme et des solutions digitales pour accélérer la croissance de nos partenaires.</p>
+                <div class="footer-socials">
+                    <a href="#" class="footer-social-link"><i data-lucide="linkedin" style="width: 18px; height: 18px;"></i></a>
+                    <a href="#" class="footer-social-link"><i data-lucide="twitter" style="width: 18px; height: 18px;"></i></a>
+                    <a href="#" class="footer-social-link"><i data-lucide="github" style="width: 18px; height: 18px;"></i></a>
+                </div>
+            </div>
+            <div>
+                <h4 class="footer-col-title">Services</h4>
+                <ul class="footer-links">
+                    <li><a href="#" class="footer-link">Ingénierie Logicielle</a></li>
+                    <li><a href="#" class="footer-link">Applications Cloud</a></li>
+                    <li><a href="#" class="footer-link">Audit & Conseil</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="footer-col-title">Navigation</h4>
+                <ul class="footer-links">
+                    <li><a href="#" class="footer-link">Accueil</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="footer-col-title">Coordonnées</h4>
+                <ul class="footer-links" style="color: var(--text-muted); font-size: 0.95rem; display: flex; flex-direction: column; gap: 10px;">
+                    <li style="display: flex; gap: 8px; align-items: flex-start;">
+                        <i data-lucide="map-pin" style="width: 16px; height: 16px; color: #6366f1; flex-shrink: 0; margin-top: 3px;"></i>
+                        <span>128 Rue de la Boétie<br>75008 Paris, France</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="container footer-bottom">
+            <span>&copy; 2026 DIGITALIUM. Tous droits réservés.</span>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+
+        function toggleFaqRef(btn) {
+            const item = btn.closest('.faq-item');
+            const answer = item.querySelector('.faq-answer');
+            const icon = btn.querySelector('[data-lucide="chevron-down"]');
+            
+            if (answer.style.maxHeight === '0px' || answer.style.maxHeight === '') {
+                answer.style.maxHeight = answer.scrollHeight + 'px';
+                if (icon) icon.style.transform = 'rotate(180deg)';
+            } else {
+                answer.style.maxHeight = '0px';
+                if (icon) icon.style.transform = 'rotate(0deg)';
+            }
+        }
+    </script>
+</body>
+</html>

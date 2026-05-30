@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --navy:#0d2247;--navy-mid:#1a3a6b;--blue:#1a6fba;--blue-light:#2d8fe0;
+  --red:#e03a3a;--green:#2eaa5c;--yellow:#f5b800;--orange:#f07820;
+  --bg:#f0f4f9;--bg2:#e4ecf5;--white:#ffffff;
+  --text:#1a2a45;--text2:#4a6080;--text3:#8aa0be;
+  --border:rgba(26,111,186,0.15);--border2:rgba(26,111,186,0.28);
+}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;}
+
+/* NAV */
+nav{
+  position:sticky;top:0;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:1rem 5%;
+  background:rgba(255,255,255,0.92);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border);
+  z-index:100;
+  box-shadow:0 1px 20px rgba(26,111,186,0.07);
+}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.logo-d{width:26px;height:34px;background:var(--navy-mid);border-radius:0 5px 5px 0;border-left:4px solid var(--blue);}
+.logo-ring{width:34px;height:34px;border-radius:50%;border:3px solid transparent;border-top-color:var(--red);border-right-color:var(--green);border-bottom-color:var(--yellow);border-left-color:var(--orange);margin-left:-6px;}
+.logo-text{display:flex;flex-direction:column;margin-left:8px;line-height:1;}
+.logo-text strong{font-size:1.1rem;font-weight:700;color:var(--blue);letter-spacing:0.05em;}
+.logo-text span{font-size:0.6rem;letter-spacing:0.3em;color:var(--text3);text-transform:uppercase;}
+.nav-links{display:flex;gap:2rem;list-style:none;}
+.nav-links a{color:var(--text2);text-decoration:none;font-size:0.78rem;letter-spacing:0.1em;text-transform:uppercase;transition:color 0.3s;}
+.nav-links a:hover{color:var(--blue);}
+.nav-links a.active{color:var(--blue);font-weight:600;}
+.nav-cta{background:var(--blue);color:var(--white)!important;padding:0.42rem 1.2rem;border-radius:5px;font-weight:600!important;}
+.nav-cta:hover{background:var(--navy-mid)!important;}
+
+/* HERO */
+.hero{
+  padding:5rem 5% 4rem;
+  text-align:center;
+  background:linear-gradient(180deg,var(--white) 0%,var(--bg) 100%);
+  border-bottom:1px solid var(--border);
+  position:relative;overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;top:-60px;left:50%;transform:translateX(-50%);
+  width:600px;height:600px;border-radius:50%;
+  background:radial-gradient(circle,rgba(26,111,186,0.07) 0%,transparent 70%);
+  pointer-events:none;
+}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(26,111,186,0.08);border:1px solid rgba(26,111,186,0.2);
+  padding:0.38rem 1.1rem;border-radius:50px;
+  font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--blue);margin-bottom:1.5rem;
+  opacity:0;animation:fadeUp 0.8s ease 0.2s forwards;
+}
+.bdot{width:6px;height:6px;border-radius:50%;background:var(--blue);animation:pulse 2s ease-in-out infinite;}
+.hero h1{
+  font-size:clamp(2rem,5vw,3.5rem);font-weight:700;
+  color:var(--navy);line-height:1.15;margin-bottom:1rem;
+  opacity:0;animation:fadeUp 0.8s ease 0.35s forwards;
+}
+.hero h1 em{color:var(--blue);font-style:italic;font-weight:400;}
+.accent-bar{display:flex;gap:4px;justify-content:center;margin:1.4rem auto;opacity:0;animation:fadeUp 0.8s ease 0.5s forwards;}
+.accent-bar span{height:3px;border-radius:2px;}
+.hero-sub{
+  font-size:0.97rem;line-height:1.85;color:var(--text2);
+  max-width:580px;margin:0 auto;
+  opacity:0;animation:fadeUp 0.8s ease 0.65s forwards;
+}
+
+/* QUICK CONTACT STRIP */
+.quick-strip{
+  display:flex;justify-content:center;gap:1.5rem;flex-wrap:wrap;
+  padding:2rem 5%;
+  background:var(--white);
+  border-bottom:1px solid var(--border);
+}
+.qitem{
+  display:flex;align-items:center;gap:0.75rem;
+  padding:0.8rem 1.4rem;
+  border:1px solid var(--border2);border-radius:50px;
+  background:var(--white);
+  transition:border-color 0.3s,box-shadow 0.3s;
+  text-decoration:none;
+}
+.qitem:hover{border-color:var(--blue);box-shadow:0 2px 12px rgba(26,111,186,0.1);}
+.qitem-icon{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.qitem-label{font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);margin-bottom:1px;}
+.qitem-value{font-size:0.85rem;font-weight:600;color:var(--navy);}
+
+/* MAIN CONTENT */
+.main-grid{
+  display:grid;grid-template-columns:1.05fr 0.95fr;gap:2rem;
+  max-width:1100px;margin:4rem auto;padding:0 5%;
+}
+
+/* FORM CARD */
+.form-card{
+  background:var(--white);
+  border:1px solid var(--border);border-radius:14px;
+  padding:2.5rem;
+  box-shadow:0 4px 30px rgba(26,111,186,0.07);
+}
+.card-title{font-size:1.15rem;font-weight:700;color:var(--navy);margin-bottom:0.3rem;}
+.card-sub{font-size:0.82rem;color:var(--text2);margin-bottom:2rem;line-height:1.6;}
+
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;}
+.form-group{display:flex;flex-direction:column;gap:0.4rem;margin-bottom:1rem;}
+.form-group label{font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);font-weight:600;}
+.form-group input,
+.form-group select,
+.form-group textarea{
+  width:100%;padding:0.75rem 1rem;
+  background:var(--bg);
+  border:1px solid var(--border2);border-radius:7px;
+  font-size:0.88rem;color:var(--text);
+  outline:none;transition:border-color 0.3s,box-shadow 0.3s;
+  font-family:'Segoe UI',Arial,sans-serif;
+}
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus{
+  border-color:var(--blue);
+  box-shadow:0 0 0 3px rgba(26,111,186,0.1);
+  background:var(--white);
+}
+.form-group input::placeholder,
+.form-group textarea::placeholder{color:var(--text3);}
+.form-group textarea{resize:vertical;min-height:110px;}
+.form-group select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%234a6080' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 1rem center;padding-right:2.5rem;}
+
+.services-check{display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-top:0.5rem;}
+.check-item{display:flex;align-items:center;gap:0.5rem;cursor:pointer;}
+.check-item input[type=checkbox]{width:14px;height:14px;accent-color:var(--blue);cursor:pointer;}
+.check-item span{font-size:0.8rem;color:var(--text2);}
+
+.form-legal{font-size:0.72rem;color:var(--text3);line-height:1.6;margin:1rem 0;}
+.form-legal a{color:var(--blue);text-decoration:none;}
+
+.btn-submit{
+  width:100%;padding:1rem;
+  background:var(--blue);color:var(--white);
+  font-size:0.85rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;
+  border:none;border-radius:7px;cursor:pointer;
+  transition:background 0.3s,transform 0.15s;
+  display:flex;align-items:center;justify-content:center;gap:0.6rem;
+}
+.btn-submit:hover{background:var(--navy-mid);}
+.btn-submit:active{transform:scale(0.99);}
+
+.whatsapp-btn{
+  width:100%;padding:0.85rem;margin-top:0.8rem;
+  background:transparent;color:#25d366;
+  font-size:0.82rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;
+  border:1.5px solid #25d366;border-radius:7px;cursor:pointer;
+  transition:background 0.3s,color 0.3s;
+  display:flex;align-items:center;justify-content:center;gap:0.6rem;
+  text-decoration:none;
+}
+.whatsapp-btn:hover{background:#25d366;color:var(--white);}
+
+/* INFO CARD */
+.info-col{display:flex;flex-direction:column;gap:1.5rem;}
+
+.info-card{
+  background:var(--white);border:1px solid var(--border);border-radius:14px;
+  padding:2rem;box-shadow:0 4px 30px rgba(26,111,186,0.07);
+}
+
+.info-items{display:flex;flex-direction:column;gap:1.2rem;margin-top:1.5rem;}
+.info-item{display:flex;align-items:flex-start;gap:1rem;}
+.info-item-icon{
+  width:40px;height:40px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.info-item-label{font-size:0.7rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--text3);margin-bottom:2px;}
+.info-item-value{font-size:0.88rem;font-weight:600;color:var(--navy);}
+.info-item-sub{font-size:0.78rem;color:var(--text2);margin-top:1px;}
+
+/* HOURS CARD */
+.hours-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;margin-top:1rem;}
+.hour-item{padding:0.7rem 0.9rem;background:var(--bg);border-radius:7px;border:1px solid var(--border);}
+.hour-day{font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);margin-bottom:2px;}
+.hour-time{font-size:0.82rem;font-weight:600;color:var(--navy);}
+.hour-open{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--green);margin-right:5px;vertical-align:middle;}
+
+/* SOCIAL CARD */
+.social-row{display:flex;gap:0.7rem;margin-top:1.2rem;flex-wrap:wrap;}
+.social-btn{
+  flex:1;min-width:100px;
+  padding:0.65rem 0.5rem;
+  border:1px solid var(--border2);border-radius:8px;
+  display:flex;align-items:center;justify-content:center;gap:0.5rem;
+  font-size:0.75rem;font-weight:600;color:var(--text2);
+  text-decoration:none;transition:all 0.25s;
+}
+.social-btn:hover{border-color:var(--blue);color:var(--blue);background:rgba(26,111,186,0.05);}
+
+/* MAP PLACEHOLDER */
+.map-card{
+  background:var(--white);border:1px solid var(--border);border-radius:14px;
+  overflow:hidden;box-shadow:0 4px 30px rgba(26,111,186,0.07);
+}
+.map-placeholder{
+  height:180px;
+  background:linear-gradient(135deg,var(--bg2),var(--bg));
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.7rem;
+  border-bottom:1px solid var(--border);
+}
+.map-pin{
+  width:36px;height:36px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);
+  background:var(--blue);display:flex;align-items:center;justify-content:center;
+}
+.map-pin svg{transform:rotate(45deg);}
+.map-label{font-size:0.82rem;color:var(--text2);}
+.map-addr{padding:1rem 1.5rem;font-size:0.85rem;color:var(--navy);font-weight:600;display:flex;align-items:center;gap:0.5rem;}
+
+/* SERVICES STRIP */
+.services-strip{
+  background:var(--white);border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  padding:4rem 5%;
+}
+.strip-inner{max-width:1100px;margin:0 auto;}
+.strip-title{text-align:center;margin-bottom:2.5rem;}
+.strip-title h2{font-size:1.6rem;font-weight:700;color:var(--navy);margin-bottom:0.5rem;}
+.strip-title p{font-size:0.88rem;color:var(--text2);}
+.strip-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1rem;}
+.strip-card{
+  text-align:center;padding:1.6rem 1rem;
+  border:1px solid var(--border);border-radius:10px;
+  transition:border-color 0.3s,transform 0.3s;background:var(--bg);
+}
+.strip-card:hover{border-color:rgba(26,111,186,0.4);transform:translateY(-3px);background:var(--white);}
+.strip-icon{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;}
+.strip-label{font-size:0.82rem;font-weight:600;color:var(--navy);margin-bottom:0.3rem;}
+.strip-sub{font-size:0.72rem;color:var(--text2);}
+
+/* CTA */
+.cta-band{
+  padding:6rem 5%;text-align:center;
+  background:linear-gradient(135deg,var(--navy) 0%,var(--navy-mid) 100%);
+}
+.cta-band h2{font-size:clamp(1.8rem,3.5vw,2.6rem);font-weight:700;color:var(--white);margin-bottom:1rem;}
+.cta-band p{font-size:0.92rem;color:rgba(180,200,220,0.85);margin-bottom:2.5rem;line-height:1.8;}
+.cta-actions{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;}
+.btn-primary{display:inline-block;padding:0.9rem 2.2rem;background:var(--blue);color:var(--white);font-size:0.8rem;letter-spacing:0.12em;text-transform:uppercase;text-decoration:none;border-radius:6px;transition:background 0.3s;border:none;cursor:pointer;font-weight:600;}
+.btn-primary:hover{background:var(--blue-light);}
+.btn-white{display:inline-block;padding:0.9rem 2.2rem;border:1.5px solid rgba(255,255,255,0.3);color:var(--white);font-size:0.8rem;letter-spacing:0.12em;text-transform:uppercase;text-decoration:none;border-radius:6px;transition:all 0.3s;background:transparent;cursor:pointer;}
+.btn-white:hover{background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.6);}
+
+footer{
+  border-top:1px solid var(--border);padding:1.5rem 5%;
+  background:var(--white);
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;
+}
+footer p{font-size:0.72rem;color:var(--text3);letter-spacing:0.08em;}
+.footer-socials{display:flex;gap:0.6rem;}
+.footer-socials a{width:30px;height:30px;border-radius:50%;border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;color:var(--text2);text-decoration:none;transition:all 0.3s;}
+.footer-socials a:hover{border-color:var(--blue);color:var(--blue);}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.35;transform:scale(0.6);}}
+
+.reveal{opacity:0;transform:translateY(20px);transition:opacity 0.7s ease,transform 0.7s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+</style>
+
+<div class="wrap">
+
+<nav>
+  <a href="#" class="nav-logo">
+    <div class="logo-d"></div><div class="logo-ring"></div>
+    <div class="logo-text"><strong>Digitalium</strong><span>Group</span></div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#">Accueil</a></li>
+    <li><a href="#">À Propos</a></li>
+    <li><a href="#">Services</a></li>
+    <li><a href="#">Blog</a></li>
+    <li><a href="#" class="active nav-cta">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge"><div class="bdot"></div>Parlons de votre projet digital</div>
+  <h1>Transformons vos idées en<br><em>solutions performantes</em></h1>
+  <div class="accent-bar">
+    <span style="width:32px;background:#e03a3a;"></span>
+    <span style="width:32px;background:#2eaa5c;"></span>
+    <span style="width:32px;background:#f5b800;"></span>
+    <span style="width:32px;background:#f07820;"></span>
+    <span style="width:32px;background:#1a6fba;"></span>
+  </div>
+  <p class="hero-sub">Une question, un projet, un partenariat ? Notre équipe d'experts vous répond sous 24h et vous propose une stratégie sur mesure.</p>
+</section>
+
+<!-- QUICK CONTACT STRIP -->
+<div class="quick-strip">
+  <a href="tel:+2250707820211" class="qitem">
+    <div class="qitem-icon" style="background:rgba(26,111,186,0.1);">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1a6fba" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8a2 2 0 012-2.18h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 7.91a16 16 0 006 6z"/></svg>
+    </div>
+    <div><div class="qitem-label">Téléphone</div><div class="qitem-value">+225 07 07 82 02 11</div></div>
+  </a>
+  <a href="mailto:contact@digitaliumgroup.com" class="qitem">
+    <div class="qitem-icon" style="background:rgba(46,170,92,0.1);">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2eaa5c" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+    </div>
+    <div><div class="qitem-label">Email</div><div class="qitem-value">contact@digitaliumgroup.com</div></div>
+  </a>
+  <a href="https://wa.me/2250707820211" class="qitem">
+    <div class="qitem-icon" style="background:rgba(37,211,102,0.1);">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#25d366" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+    </div>
+    <div><div class="qitem-label">WhatsApp Direct</div><div class="qitem-value">+225 07 07 82 02 11</div></div>
+  </a>
+  <a href="#" class="qitem">
+    <div class="qitem-icon" style="background:rgba(224,58,58,0.1);">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#e03a3a" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+    </div>
+    <div><div class="qitem-label">Adresse</div><div class="qitem-value">Abidjan, Côte d'Ivoire</div></div>
+  </a>
+</div>
+
+<!-- MAIN GRID -->
+<div class="main-grid">
+
+  <!-- FORM -->
+  <div class="form-card reveal">
+    <div class="card-title">Envoyez-nous votre demande</div>
+    <p class="card-sub">Remplissez le formulaire ci-dessous — notre équipe vous répond dans les 24h avec une proposition personnalisée.</p>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Prénom *</label>
+        <input type="text" placeholder="Jean">
+      </div>
+      <div class="form-group">
+        <label>Nom *</label>
+        <input type="text" placeholder="Kouassi">
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Email *</label>
+        <input type="email" placeholder="jean@entreprise.com">
+      </div>
+      <div class="form-group">
+        <label>Téléphone / WhatsApp</label>
+        <input type="tel" placeholder="+225 07 00 00 00">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Société / Organisation</label>
+      <input type="text" placeholder="Nom de votre entreprise">
+    </div>
+
+    <div class="form-group">
+      <label>Service souhaité *</label>
+      <select>
+        <option value="" disabled selected>Sélectionnez un service</option>
+        <option>Web Design & Développement</option>
+        <option>Maintenance Informatique</option>
+        <option>Câblage Réseaux</option>
+        <option>Montage Vidéo TikTok / YouTube</option>
+        <option>Création de Contenu Digital</option>
+        <option>Intelligence Artificielle & Stratégie</option>
+        <option>Autre / Plusieurs services</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Services qui m'intéressent</label>
+      <div class="services-check">
+        <label class="check-item"><input type="checkbox"><span>Web Design</span></label>
+        <label class="check-item"><input type="checkbox"><span>Maintenance TI</span></label>
+        <label class="check-item"><input type="checkbox"><span>Câblage Réseau</span></label>
+        <label class="check-item"><input type="checkbox"><span>Vidéo TikTok/YT</span></label>
+        <label class="check-item"><input type="checkbox"><span>Contenu Digital</span></label>
+        <label class="check-item"><input type="checkbox"><span>IA & Stratégie</span></label>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Message *</label>
+      <textarea placeholder="Décrivez votre projet, vos objectifs ou vos questions..."></textarea>
+    </div>
+
+    <p class="form-legal">En soumettant ce formulaire, vous acceptez que vos données soient traitées par Digitalium Group pour répondre à votre demande. Consulter notre <a href="#">politique de confidentialité</a>.</p>
+
+    <button class="btn-submit">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      Envoyer la demande
+    </button>
+
+    <a href="https://wa.me/2250707820211" class="whatsapp-btn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+      Contacter via WhatsApp
+    </a>
+  </div>
+
+  <!-- INFO COLUMN -->
+  <div class="info-col">
+
+    <div class="info-card reveal">
+      <div class="card-title">Nos coordonnées</div>
+      <div class="info-items">
+        <div class="info-item">
+          <div class="info-item-icon" style="background:rgba(26,111,186,0.1);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1a6fba" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <div>
+            <div class="info-item-label">Adresse</div>
+            <div class="info-item-value">Abidjan, Côte d'Ivoire</div>
+            <div class="info-item-sub">Présence régionale & internationale</div>
+          </div>
+        </div>
+        <div class="info-item">
+          <div class="info-item-icon" style="background:rgba(46,170,92,0.1);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2eaa5c" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8a2 2 0 012-2.18h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 7.91a16 16 0 006 6z"/></svg>
+          </div>
+          <div>
+            <div class="info-item-label">Téléphone / WhatsApp</div>
+            <div class="info-item-value">+225 07 07 82 02 11</div>
+            <div class="info-item-sub">Disponible Lun–Sam · 8h–18h</div>
+          </div>
+        </div>
+        <div class="info-item">
+          <div class="info-item-icon" style="background:rgba(240,120,32,0.1);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f07820" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </div>
+          <div>
+            <div class="info-item-label">Email</div>
+            <div class="info-item-value">contact@digitaliumgroup.com</div>
+            <div class="info-item-sub">Réponse sous 24–48h</div>
+          </div>
+        </div>
+        <div class="info-item">
+          <div class="info-item-icon" style="background:rgba(245,184,0,0.1);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f5b800" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+          </div>
+          <div>
+            <div class="info-item-label">Site web</div>
+            <div class="info-item-value">digitaliumgroup.com</div>
+            <div class="info-item-sub">Découvrez toutes nos réalisations</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-card reveal">
+      <div class="card-title">Horaires d'ouverture</div>
+      <div class="hours-grid">
+        <div class="hour-item"><div class="hour-day">Lundi – Vendredi</div><div class="hour-time"><span class="hour-open"></span>08h00 – 18h00</div></div>
+        <div class="hour-item"><div class="hour-day">Samedi</div><div class="hour-time"><span class="hour-open"></span>09h00 – 14h00</div></div>
+        <div class="hour-item" style="grid-column:1/-1;"><div class="hour-day">Dimanche</div><div class="hour-time" style="color:#e03a3a;">Fermé</div></div>
+      </div>
+      <p style="font-size:0.75rem;color:var(--text3);margin-top:1rem;line-height:1.6;">Pour les urgences, contactez-nous via WhatsApp en dehors des horaires — nous faisons de notre mieux pour répondre rapidement.</p>
+    </div>
+
+    <div class="info-card reveal">
+      <div class="card-title">Nous suivre</div>
+      <p style="font-size:0.82rem;color:var(--text2);margin-top:0.3rem;">Restez informé de nos derniers projets, conseils digitaux et offres exclusives.</p>
+      <div class="social-row">
+        <a href="#" class="social-btn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+          Facebook
+        </a>
+        <a href="#" class="social-btn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          Instagram
+        </a>
+        <a href="#" class="social-btn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+          LinkedIn
+        </a>
+      </div>
+    </div>
+
+    <div class="map-card reveal">
+      <div class="map-placeholder">
+        <div class="map-pin">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="white" stroke="white" stroke-width="0"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+        </div>
+        <span class="map-label" style="font-size:0.78rem;color:var(--text2);">Abidjan, Côte d'Ivoire</span>
+      </div>
+      <div class="map-addr">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1a6fba" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        Digitalium Group — Abidjan, Côte d'Ivoire
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- SERVICES STRIP -->
+<div class="services-strip">
+  <div class="strip-inner">
+    <div class="strip-title">
+      <h2>Des services rapides et efficaces</h2>
+      <p>Digitalium Group est spécialisé dans la création de sites web, le branding et les solutions digitales innovantes.</p>
+    </div>
+    <div class="strip-grid">
+      <div class="strip-card">
+        <div class="strip-icon" style="background:rgba(26,111,186,0.1);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1a6fba" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+        </div>
+        <div class="strip-label">Création de site web</div>
+        <div class="strip-sub">Développement sur mesure et performant</div>
+      </div>
+      <div class="strip-card">
+        <div class="strip-icon" style="background:rgba(240,120,32,0.1);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f07820" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/></svg>
+        </div>
+        <div class="strip-label">Branding & Design</div>
+        <div class="strip-sub">Identité visuelle et design créatif</div>
+      </div>
+      <div class="strip-card">
+        <div class="strip-icon" style="background:rgba(46,170,92,0.1);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2eaa5c" stroke-width="1.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        </div>
+        <div class="strip-label">Marketing Digital</div>
+        <div class="strip-sub">Campagnes et gestion des réseaux</div>
+      </div>
+      <div class="strip-card">
+        <div class="strip-icon" style="background:rgba(224,58,58,0.1);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#e03a3a" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+        </div>
+        <div class="strip-label">Maintenance & Support</div>
+        <div class="strip-sub">Suivi, mises à jour et assistance</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA BAND -->
+<div class="cta-band">
+  <div style="font-size:0.68rem;letter-spacing:0.3em;text-transform:uppercase;color:rgba(180,200,220,0.7);margin-bottom:1rem;display:flex;align-items:center;justify-content:center;gap:8px;">
+    <span style="display:inline-block;width:22px;height:1px;background:rgba(180,200,220,0.5);"></span>
+    Prêt à booster votre présence en ligne ?
+    <span style="display:inline-block;width:22px;height:1px;background:rgba(180,200,220,0.5);"></span>
+  </div>
+  <h2>Rejoignez 100+ clients satisfaits.<br>Contactez-nous dès maintenant.</h2>
+  <p>Votre transformation digitale commence par une simple conversation.<br>Notre équipe est prête à vous accompagner.</p>
+  <div class="cta-actions">
+    <button class="btn-primary">Demander un devis gratuit</button>
+    <a href="https://wa.me/2250707820211" class="btn-white">
+      WhatsApp Direct
+    </a>
+  </div>
+</div>
+
+<footer>
+  <p>© 2025 Digitalium Group — Abidjan, Côte d'Ivoire · contact@digitaliumgroup.com · +225 07 07 82 02 11</p>
+  <div class="footer-socials">
+    <a href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg></a>
+    <a href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+    <a href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
+  </div>
+</footer>
+
+</div>
+
+<script>
+const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:0.08});
+document.querySelectorAll('.reveal').forEach(c=>obs.observe(c));
+</script>

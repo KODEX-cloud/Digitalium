@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?= htmlspecialchars($page['meta_title'] ?? $page['title']) ?> | <?= htmlspecialchars($settings['site_name'] ?? 'Digitalium Group') ?></title>
+    <meta name="description" content="<?= htmlspecialchars($page['meta_description'] ?? 'Solutions logicielles de pointe et transformation digitale sur-mesure pour votre entreprise.') ?>">
+    <link rel="canonical" href="https://digitaliumgroup.com<?= $currentSlug === 'home' ? '' : '/' . htmlspecialchars($currentSlug) ?>">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://digitaliumgroup.com<?= $currentSlug === 'home' ? '' : '/' . htmlspecialchars($currentSlug) ?>">
+    <meta property="og:title" content="<?= htmlspecialchars($page['meta_title'] ?? $page['title']) ?> | <?= htmlspecialchars($settings['site_name'] ?? 'Digitalium Group') ?>">
+    <meta property="og:description" content="<?= htmlspecialchars($page['meta_description'] ?? 'Solutions logicielles de pointe et transformation digitale sur-mesure pour votre entreprise.') ?>">
+    <meta property="og:image" content="https://digitaliumgroup.com/assets/images/og-image.jpg">
+
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:title" content="<?= htmlspecialchars($page['meta_title'] ?? $page['title']) ?> | <?= htmlspecialchars($settings['site_name'] ?? 'Digitalium Group') ?>">
+    <meta property="twitter:description" content="<?= htmlspecialchars($page['meta_description'] ?? 'Solutions logicielles de pointe et transformation digitale sur-mesure pour votre entreprise.') ?>">
+
+    <link rel="stylesheet" href="/assets/css/index.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <?php if (!empty($settings['site_favicon'])): ?>
+        <link rel="icon" href="<?= htmlspecialchars($settings['site_favicon']) ?>" type="image/x-icon">
+    <?php else: ?>
+        <link rel="icon" href="/assets/images/favicon.png" type="image/x-icon">
+    <?php endif; ?>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <?php
+    // Prepare visual style settings from current page configuration
+    $headerBgMode = $page['header_bg_mode'] ?? 'glass';
+    $headerOpacity = isset($page['header_opacity']) ? (float)$page['header_opacity'] : 0.65;
+    $headerBlur = isset($page['header_blur']) ? (int)$page['header_blur'] : 20;
+    $headerShadow = $page['header_shadow'] ?? 'moyen';
+    $headerContrastMode = $page['header_contrast_mode'] ?? 'default';
+    $logoLight = !empty($page['logo_light']) ? $page['logo_light'] : ($settings['site_logo_light'] ?? '');
+    $logoDark = !empty($page['logo_dark']) ? $page['logo_dark'] : ($settings['site_logo_dark'] ?? '');
+    $logoSize = isset($page['logo_size']) ? (int)$page['logo_size'] : 38;
+
+    // Decode responsive settings JSON
+    $respSettings = [];
+    if (!empty($page['responsive_settings'])) {
+        $respSettings = json_decode($page['responsive_settings'], true) ?: [];
+    }
+    $mobileHeaderVisible = $respSettings['mobile']['header_visible'] ?? true;
+    $mobileLogoSize = $respSettings['mobile']['logo_size'] ?? '';
+    $tabletLogoSize = $respSettings['tablet']['logo_size'] ?? '';
+
+    // Map header background modes
+    $headerBgColorNormal = 'rgba(255, 255, 255, 0.45)';
+    $headerBgColorScrolled = 'rgba(255, 255, 255, 0.68)';
+    $headerBackdropFilter = 'blur(20px)';
+    $headerBorder = '1px solid rgba(255, 255, 255, 0.6)';
+
+    if ($headerBgMode === 'clair') {
+        $headerBgColorNormal = "rgba(255, 255, 255, $headerOpacity)";
+        $headerBgColorScrolled = "rgba(255, 255, 255, " . min(1.0, $headerOpacity + 0.15) . ")";
+        $headerBorder = '1px solid rgba(255, 255, 255, 0.8)';
+    } elseif ($headerBgMode === 'sombre') {
+        $headerBgColorNormal = "rgba(15, 23, 42, $headerOpacity)";
+        $headerBgColorScrolled = "rgba(15, 23, 42, " . min(1.0, $headerOpacity + 0.15) . ")";
+        $headerBorder = '1px solid rgba(255, 255, 255, 0.1)';
+    } elseif ($headerBgMode === 'semi-transparent') {
+        $headerBgColorNormal = "rgba(255, 255, 255, $headerOpacity)";
+        $headerBgColorScrolled = "rgba(255, 255, 255, " . min(0.85, $headerOpacity + 0.15) . ")";
+    } elseif ($headerBgMode === 'blur') {
+        $headerBgColorNormal = "rgba(255, 255, 255, " . ($headerOpacity * 0.3) . ")";
+        $headerBgColorScrolled = "rgba(255, 255, 255, " . ($headerOpacity * 0.5) . ")";
+        $headerBackdropFilter = "blur({$headerBlur}px)";
+    } elseif ($headerBgMode === 'plein') {
+        if ($headerContrastMode === 'light_on_dark' || $headerContrastMode === 'light on dark') {
+            $headerBgColorNormal = "#0f172a";
+            $headerBgColorScrolled = "#0f172a";
+            $headerBorder = '1px solid rgba(255, 255, 255, 0.15)';
+        } else {
+            $headerBgColorNormal = "#ffffff";
+            $headerBgColorScrolled = "#ffffff";
+            $headerBorder = '1px solid rgba(0, 0, 0, 0.1)';
+        }
+        $headerBackdropFilter = 'none';
+    } elseif ($headerBgMode === 'glass') {
+        $headerBgColorNormal = "rgba(255, 255, 255, $headerOpacity)";
+        $headerBgColorScrolled = "rgba(255, 255, 255, " . min(0.95, $headerOpacity + 0.15) . ")";
+        $headerBackdropFilter = "blur({$headerBlur}px)";
+    }
+
+    // Map shadow strength
+    $headerShadowCss = 'none';
+    if ($headerShadow === 'leger') {
+        $headerShadowCss = '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)';
+    } elseif ($headerShadow === 'moyen') {
+        $headerShadowCss = '0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04)';
+    } elseif ($headerShadow === 'fort') {
+        $headerShadowCss = '0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 10px 10px -5px rgba(0, 0, 0, 0.04)';
+    }
+
+    // Dynamic Logo Selection
+    $selectedLogo = $settings['site_logo'] ?? '';
+    if ($headerContrastMode === 'light_on_dark' || $headerContrastMode === 'light on dark') {
+        $selectedLogo = !empty($logoLight) ? $logoLight : ($settings['site_logo_light'] ?? ($settings['site_logo'] ?? ''));
+    } elseif ($headerContrastMode === 'dark_on_light' || $headerContrastMode === 'dark on light') {
+        $selectedLogo = !empty($logoDark) ? $logoDark : ($settings['site_logo_dark'] ?? ($settings['site_logo'] ?? ''));
+    } else {
+        if ($headerBgMode === 'sombre') {
+            $selectedLogo = !empty($logoLight) ? $logoLight : ($settings['site_logo_light'] ?? ($settings['site_logo'] ?? ''));
+        } else {
+            $selectedLogo = !empty($logoDark) ? $logoDark : ($settings['site_logo_dark'] ?? ($settings['site_logo'] ?? ''));
+        }
+    }
+    if (empty($selectedLogo)) {
+        $selectedLogo = $settings['site_logo'] ?? '';
+    }
+    ?>
+    <style>
+        .logo-wrap {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+        .logo-d-mark {
+            width: 20px;
+            height: 28px;
+            background: #1a3a6b;
+            border-radius: 0 4px 4px 0;
+            border-left: 3px solid #1a6fba;
+        }
+        .logo-ring-mark {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            border-top-color: #e03a3a;
+            border-right-color: #2eaa5c;
+            border-bottom-color: #f5b800;
+            border-left-color: #f07820;
+            margin-left: -5px;
+        }
+        .logo-text-col {
+            display: flex;
+            flex-direction: column;
+            margin-left: 6px;
+            line-height: 1;
+        }
+        .logo-text-col strong {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #2d8fe0;
+            letter-spacing: .05em;
+            font-family: var(--font-heading);
+            transition: var(--transition);
+        }
+        .logo-text-col span {
+            font-size: .55rem;
+            letter-spacing: .25em;
+            color: #8aa0be;
+            text-transform: uppercase;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        /* Dynamic Header Styling injection */
+        #siteHeader {
+            background-color: <?= $headerBgColorNormal ?> !important;
+            backdrop-filter: <?= $headerBackdropFilter ?> !important;
+            -webkit-backdrop-filter: <?= $headerBackdropFilter ?> !important;
+            border: <?= $headerBorder ?> !important;
+            box-shadow: <?= $headerShadowCss ?> !important;
+        }
+        #siteHeader.scrolled {
+            background-color: <?= $headerBgColorScrolled ?> !important;
+        }
+        
+        #siteHeader img {
+            height: <?= $logoSize ?>px !important;
+            width: auto;
+            object-fit: contain;
+            transition: var(--transition);
+        }
+
+        /* Navigation text contrast modes */
+        <?php if ($headerContrastMode === 'light_on_dark' || $headerContrastMode === 'light on dark' || $headerBgMode === 'sombre'): ?>
+        #siteHeader .nav-link {
+            color: rgba(255, 255, 255, 0.85) !important;
+        }
+        #siteHeader .nav-link:hover, #siteHeader .nav-link.active {
+            color: #ffffff !important;
+        }
+        #siteHeader .nav-link::after {
+            background: #ffffff !important;
+        }
+        #siteHeader .menu-toggle {
+            color: #ffffff !important;
+        }
+        .logo-text-col strong {
+            color: #ffffff !important;
+        }
+        .logo-text-col span {
+            color: rgba(255, 255, 255, 0.6) !important;
+        }
+        <?php elseif ($headerContrastMode === 'dark_on_light' || $headerContrastMode === 'dark on light' || $headerContrastMode === 'solid' || $headerBgMode === 'clair'): ?>
+        #siteHeader .nav-link {
+            color: #0f172a !important;
+        }
+        #siteHeader .nav-link:hover, #siteHeader .nav-link.active {
+            color: var(--primary) !important;
+        }
+        #siteHeader .nav-link::after {
+            background: var(--primary) !important;
+        }
+        #siteHeader .menu-toggle {
+            color: #0f172a !important;
+        }
+        .logo-text-col strong {
+            color: var(--primary) !important;
+        }
+        .logo-text-col span {
+            color: #475569 !important;
+        }
+        <?php endif; ?>
+
+        /* Responsive Breakpoint styling overrides */
+        @media (max-width: 768px) {
+            <?php if (!$mobileHeaderVisible): ?>
+            #siteHeader {
+                display: none !important;
+            }
+            <?php endif; ?>
+            <?php if (!empty($mobileLogoSize)): ?>
+            #siteHeader img {
+                height: <?= $mobileLogoSize ?>px !important;
+            }
+            <?php endif; ?>
+        }
+        @media (min-width: 769px) and (max-width: 1024px) {
+            <?php if (!empty($tabletLogoSize)): ?>
+            #siteHeader img {
+                height: <?= $tabletLogoSize ?>px !important;
+            }
+            <?php endif; ?>
+        }
+    </style>
+</head>
+<body>
+    <canvas id="particles-canvas" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;"></canvas>
+    
+    <div class="bg-ambient ambient-1" style="z-index:0;"></div>
+    <div class="bg-ambient ambient-2" style="z-index:0;"></div>
+    <div class="bg-ambient ambient-3" style="z-index:0;"></div>
+
+    <header class="site-header" id="siteHeader">
+        <div class="container nav-container">
+            <a href="/" class="logo-wrap">
+                <picture style="display: flex; align-items: center;">
+                    <?php if (!empty($settings['site_logo_mobile'])): ?>
+                        <source srcset="<?= htmlspecialchars($settings['site_logo_mobile']) ?>" media="(max-width: 768px)">
+                    <?php endif; ?>
+                    <?php if (!empty($selectedLogo)): ?>
+                        <img src="<?= htmlspecialchars($selectedLogo) ?>" alt="<?= htmlspecialchars($settings['site_name'] ?? 'Digitalium Group') ?>" style="height: 38px; width: auto; object-fit: contain;">
+                    <?php endif; ?>
+                </picture>
+
+                <?php if (!empty($settings['site_logo_text'])): ?>
+                    <div class="logo-text-col" style="margin-left: 6px;">
+                        <strong style="color: var(--primary); font-size: 1.05rem; font-weight: 700; font-family: var(--font-heading);"><?= htmlspecialchars($settings['site_logo_text']) ?></strong>
+                        <span style="font-size: .55rem; color: #8aa0be; text-transform: uppercase; letter-spacing: .25em; font-weight: 500;"><?= htmlspecialchars($settings['site_logo_subtext'] ?? 'Group') ?></span>
+                    </div>
+                <?php elseif (empty($settings['site_logo'])): ?>
+                    <div class="logo-d-mark"></div>
+                    <div class="logo-ring-mark"></div>
+                    <div class="logo-text-col">
+                        <strong>Digitalium</strong>
+                        <span>Group</span>
+                    </div>
+                <?php endif; ?>
+            </a>
+
+            <nav>
+                <ul class="nav-menu" id="navMenu">
+                    <?php 
+                    $navPages = array_filter($menuPages, function($p) {
+                        return (int)($p['in_navigation'] ?? 1) === 1;
+                    });
+                    foreach ($navPages as $menuPage): 
+                        $menuSlug = $menuPage['slug'];
+                        $menuUrl = $menuSlug === 'home' ? '/' : '/' . htmlspecialchars($menuSlug);
+                        $isActive = ($currentSlug === $menuSlug) ? 'active' : '';
+                    ?>
+                        <li>
+                            <a href="<?= $menuUrl ?>" class="nav-link <?= $isActive ?>">
+                                <?= htmlspecialchars($menuPage['title']) ?>
+                            </a>
+                        </li>
+                    <?php endforeach; ?>
+                    <li>
+                        <a href="<?= htmlspecialchars($settings['header_cta_link'] ?? '/contact') ?>" class="btn-cta-nav">
+                            <?= htmlspecialchars($settings['header_cta_text'] ?? 'Discuter de mon projet') ?>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <button class="menu-toggle" id="menuToggle" aria-label="Toggle Menu">
+                <i data-lucide="menu" style="width: 28px; height: 28px;"></i>
+            </button>
+        </div>
+    </header>
+
+    <main style="min-height: 80vh;">
+        <?= $content ?>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer-layout">
+            
+            <div class="footer-brand">
+                <a href="/" class="logo-wrap" style="margin-bottom:10px;">
+                    <?php if (!empty($settings['site_logo'])): ?>
+                        <img src="<?= htmlspecialchars($settings['site_logo']) ?>" alt="<?= htmlspecialchars($settings['site_name'] ?? 'Digitalium Group') ?>" style="height: 38px; width: auto; object-fit: contain;">
+                    <?php endif; ?>
+                    <?php if (!empty($settings['site_logo_text'])): ?>
+                        <div class="logo-text-col" style="margin-left: 6px;">
+                            <strong style="font-size:1.15rem; color: var(--primary); font-family: var(--font-heading);"><?= htmlspecialchars($settings['site_logo_text']) ?></strong>
+                            <span style="font-size:0.6rem; color: #8aa0be; text-transform: uppercase; letter-spacing: .2em; font-weight: 500;"><?= htmlspecialchars($settings['site_logo_subtext'] ?? 'Group') ?></span>
+                        </div>
+                    <?php elseif (empty($settings['site_logo'])): ?>
+                        <div class="logo-d-mark"></div>
+                        <div class="logo-ring-mark"></div>
+                        <div class="logo-text-col">
+                            <strong style="font-size:1.15rem;">Digitalium</strong>
+                            <span style="font-size:0.6rem;">Group</span>
+                        </div>
+                    <?php endif; ?>
+                </a>
+                <p class="footer-description">
+                    <?= htmlspecialchars($settings['footer_pitch'] ?? 'Nous concevons des produits technologiques haut de gamme et des solutions digitales.') ?>
+                </p>
+                <div class="footer-socials">
+                    <a href="<?= htmlspecialchars($settings['social_linkedin'] ?? 'https://linkedin.com') ?>" target="_blank" class="footer-social-link" title="LinkedIn">
+                        <i data-lucide="linkedin" style="width: 18px; height: 18px;"></i>
+                    </a>
+                    <a href="<?= htmlspecialchars($settings['social_twitter'] ?? 'https://twitter.com') ?>" target="_blank" class="footer-social-link" title="Twitter">
+                        <i data-lucide="twitter" style="width: 18px; height: 18px;"></i>
+                    </a>
+                    <a href="<?= htmlspecialchars($settings['social_github'] ?? 'https://github.com') ?>" target="_blank" class="footer-social-link" title="Github">
+                        <i data-lucide="github" style="width: 18px; height: 18px;"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div>
+                <h4 class="footer-col-title">Services</h4>
+                <ul class="footer-links">
+                    <li><a href="/service" class="footer-link">Ingénierie Logicielle</a></li>
+                    <li><a href="/service" class="footer-link">Applications Cloud</a></li>
+                    <li><a href="/service" class="footer-link">Audit & Conseil</a></li>
+                    <li><a href="/service" class="footer-link">SEO & Stratégie</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="footer-col-title">Navigation</h4>
+                <ul class="footer-links">
+                    <?php 
+                    $footPages = array_filter($menuPages, function($p) {
+                        return (int)($p['in_navigation'] ?? 1) === 1;
+                    });
+                    foreach ($footPages as $menuPage): 
+                        $menuSlug = $menuPage['slug'];
+                        $menuUrl = $menuSlug === 'home' ? '/' : '/' . htmlspecialchars($menuSlug);
+                    ?>
+                        <li>
+                            <a href="<?= $menuUrl ?>" class="footer-link">
+                                <?= htmlspecialchars($menuPage['title']) ?>
+                            </a>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="footer-col-title">Coordonnées</h4>
+                <ul class="footer-links" style="color: var(--text-muted); font-size: 0.95rem; display: flex; flex-direction: column; gap: 10px;">
+                    <li style="display: flex; gap: 8px; align-items: flex-start;">
+                        <i data-lucide="map-pin" style="width: 16px; height: 16px; color: var(--primary); flex-shrink: 0; margin-top: 3px;"></i>
+                        <span><?= htmlspecialchars($settings['contact_address'] ?? 'Paris, France') ?></span>
+                    </li>
+                    <li style="display: flex; gap: 8px; align-items: center;">
+                        <i data-lucide="phone" style="width: 16px; height: 16px; color: var(--primary); flex-shrink: 0;"></i>
+                        <span style="font-family: monospace;">
+                            <a href="tel:<?= htmlspecialchars($settings['contact_phone'] ?? '0101782919') ?>">
+                                <?= htmlspecialchars($settings['contact_phone'] ?? '0101782919') ?>
+                            </a>
+                        </span>
+                    </li>
+                    <li style="display: flex; gap: 8px; align-items: center;">
+                        <i data-lucide="mail" style="width: 16px; height: 16px; color: var(--primary); flex-shrink: 0;"></i>
+                        <span>
+                            <a href="mailto:<?= htmlspecialchars($settings['contact_email'] ?? 'contact@digitaliumgroup.com') ?>">
+                                <?= htmlspecialchars($settings['contact_email'] ?? 'contact@digitaliumgroup.com') ?>
+                            </a>
+                        </span>
+                    </li>
+                    <?php if (!empty($settings['site_whatsapp'])): ?>
+                        <li style="display: flex; gap: 8px; align-items: center;">
+                            <i data-lucide="message-square" style="width: 16px; height: 16px; color: var(--success); flex-shrink: 0;"></i>
+                            <span style="font-family: monospace; font-weight: 700;">
+                                <a href="https://wa.me/<?= preg_replace('/[^0-9]/', '', $settings['site_whatsapp']) ?>" target="_blank" style="color: #16a34a;">
+                                    WhatsApp : <?= htmlspecialchars($settings['site_whatsapp']) ?>
+                                </a>
+                            </span>
+                        </li>
+                    <?php endif; ?>
+                </ul>
+            </div>
+        </div>
+
+        <div class="container footer-bottom">
+            <span><?= htmlspecialchars($settings['footer_copyright'] ?? '© ' . date('Y') . ' Digitalium Group. Tous droits réservés.') ?></span>
+            <div style="display: flex; gap: 20px; align-items: center;">
+                <?php if (!empty($settings['footer_legal_text'])): ?>
+                    <a href="<?= htmlspecialchars($settings['footer_legal_url'] ?? '/mentions-legales') ?>" style="color: var(--text-muted); font-size: 0.88rem; font-weight: 500;">
+                        <?= htmlspecialchars($settings['footer_legal_text']) ?>
+                    </a>
+                <?php endif; ?>
+                <a href="#siteHeader" style="display: flex; align-items: center; gap: 6px; color: var(--text-muted); font-weight: 500;" title="Remonter">
+                    <span>Remonter</span>
+                    <i data-lucide="arrow-up-circle" style="width: 18px; height: 18px; color: var(--primary);"></i>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+
+        // Particle Background Network Animation
+        const canvas = document.getElementById('particles-canvas');
+        if (canvas) {
+            const ctx = canvas.getContext('2d');
+            let W, H, pts = [];
+            
+            function resize() {
+                W = canvas.width = window.innerWidth;
+                H = canvas.height = window.innerHeight;
+            }
+            resize();
+            window.addEventListener('resize', resize);
+            
+            const cols = ['rgba(79,70,229,', 'rgba(124,58,237,', 'rgba(6,182,212,', 'rgba(244,63,94,', 'rgba(255,255,255,'];
+            
+            class P {
+                constructor() { this.reset(); }
+                reset() {
+                    this.x = Math.random() * W;
+                    this.y = Math.random() * H;
+                    this.r = Math.random() * 1.3 + 0.3;
+                    this.vx = (Math.random() - .5) * 0.18;
+                    this.vy = (Math.random() - .5) * 0.18;
+                    this.a = Math.random() * 0.4 + 0.08;
+                    this.c = cols[Math.floor(Math.random() * cols.length)];
+                }
+                update() {
+                    this.x += this.vx;
+                    this.y += this.vy;
+                    if (this.x < 0 || this.x > W || this.y < 0 || this.y > H) this.reset();
+                }
+                draw() {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+                    ctx.fillStyle = this.c + this.a + ')';
+                    ctx.fill();
+                }
+            }
+            
+            for (let i = 0; i < 120; i++) pts.push(new P());
+            
+            function anim() {
+                ctx.clearRect(0, 0, W, H);
+                pts.forEach(p => { p.update(); p.draw(); });
+                for (let i = 0; i < pts.length; i++) {
+                    for (let j = i + 1; j < pts.length; j++) {
+                        const dx = pts[i].x - pts[j].x;
+                        const dy = pts[i].y - pts[j].y;
+                        const d = Math.sqrt(dx * dx + dy * dy);
+                        if (d < 80) {
+                            ctx.beginPath();
+                            ctx.moveTo(pts[i].x, pts[i].y);
+                            ctx.lineTo(pts[j].x, pts[j].y);
+                            ctx.strokeStyle = 'rgba(79,70,229,' + (0.07 * (1 - d / 80)) + ')';
+                            ctx.lineWidth = 0.4;
+                            ctx.stroke();
+                        }
+                    }
+                }
+                requestAnimationFrame(anim);
+            }
+            anim();
+        }
+
+        // Scroll Reveal Animation (Intersection Observer)
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    e.target.classList.add('visible');
+                    e.target.classList.add('vis');
+                }
+            });
+        }, { threshold: 0.08 });
+        
+        document.querySelectorAll('.reveal, .rev, .svc-card, .sc, .pc, .feat-item').forEach(el => observer.observe(el));
+
+        const menuToggle = document.getElementById('menuToggle');
+        const navMenu = document.getElementById('navMenu');
+        
+        if (menuToggle && navMenu) {
+            menuToggle.addEventListener('click', () => {
+                navMenu.classList.toggle('open');
+                
+                const icon = menuToggle.querySelector('i');
+                if (navMenu.classList.contains('open')) {
+                    icon.setAttribute('data-lucide', 'x');
+                } else {
+                    icon.setAttribute('data-lucide', 'menu');
+                }
+                lucide.createIcons();
+            });
+        }
+
+        window.addEventListener('scroll', () => {
+            const header = document.getElementById('siteHeader');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+    </script>
+</body>
+</html>

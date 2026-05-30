@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --navy:#0d2247;--navy-mid:#1a3a6b;--blue:#1a6fba;--blue-light:#2d8fe0;
+  --red:#e03a3a;--green:#2eaa5c;--yellow:#f5b800;--orange:#f07820;
+  --white:#ffffff;--muted:#7a92b8;--light:#b8cce0;--border:rgba(26,111,186,0.18);
+}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--navy);color:var(--white);overflow-x:hidden;}
+#pcv{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;}
+.wrap{position:relative;z-index:1;}
+
+/* NAV */
+nav{position:sticky;top:0;display:flex;justify-content:space-between;align-items:center;padding:1rem 5%;background:rgba(13,34,71,0.93);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);z-index:100;}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.logo-d{width:26px;height:34px;background:var(--navy-mid);border-radius:0 5px 5px 0;border-left:4px solid var(--blue);}
+.logo-ring{width:34px;height:34px;border-radius:50%;border:3px solid transparent;border-top-color:var(--red);border-right-color:var(--green);border-bottom-color:var(--yellow);border-left-color:var(--orange);margin-left:-6px;}
+.logo-text{display:flex;flex-direction:column;margin-left:8px;line-height:1;}
+.logo-text strong{font-size:1.1rem;font-weight:700;color:var(--blue);letter-spacing:0.05em;}
+.logo-text span{font-size:0.6rem;letter-spacing:0.3em;color:var(--muted);text-transform:uppercase;}
+.nav-links{display:flex;gap:2rem;list-style:none;}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:0.78rem;letter-spacing:0.1em;text-transform:uppercase;transition:color 0.3s;}
+.nav-links a:hover,.nav-links a.active{color:var(--blue-light);}
+.nav-cta{background:var(--blue);color:var(--white)!important;padding:0.42rem 1.1rem;border-radius:4px;}
+.nav-cta:hover{background:var(--blue-light)!important;}
+
+/* HERO */
+.hero{
+  display:grid;grid-template-columns:1fr 1fr;
+  align-items:center;gap:4rem;
+  padding:6rem 5% 5rem;
+  position:relative;
+}
+.hero-left{opacity:0;animation:fadeUp 0.9s ease 0.2s forwards;}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(26,111,186,0.4);padding:0.38rem 1.1rem;border-radius:50px;font-size:0.7rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--blue-light);margin-bottom:1.5rem;}
+.bdot{width:6px;height:6px;border-radius:50%;background:var(--blue-light);animation:pulse 2s ease-in-out infinite;}
+.hero-left h1{font-size:clamp(2rem,4.5vw,3.5rem);font-weight:700;line-height:1.15;color:var(--white);margin-bottom:1rem;}
+.hero-left h1 em{color:var(--blue-light);font-style:italic;font-weight:400;}
+.accent-bar{display:flex;gap:4px;margin:1.5rem 0;}
+.accent-bar span{height:3px;border-radius:2px;}
+.hero-left p{font-size:0.95rem;line-height:1.85;color:var(--muted);margin-bottom:2rem;}
+.hero-actions{display:flex;gap:1rem;flex-wrap:wrap;}
+.btn-primary{display:inline-block;padding:0.82rem 2.2rem;background:var(--blue);color:var(--white);font-size:0.8rem;letter-spacing:0.12em;text-transform:uppercase;text-decoration:none;border-radius:5px;transition:background 0.3s;border:none;cursor:pointer;}
+.btn-primary:hover{background:var(--blue-light);}
+.btn-outline{display:inline-block;padding:0.82rem 2.2rem;border:1px solid rgba(26,111,186,0.5);color:var(--blue-light);font-size:0.8rem;letter-spacing:0.12em;text-transform:uppercase;text-decoration:none;border-radius:5px;transition:all 0.3s;background:transparent;cursor:pointer;}
+.btn-outline:hover{background:rgba(26,111,186,0.12);border-color:var(--blue-light);}
+
+/* HERO RIGHT — stats panel */
+.hero-right{opacity:0;animation:fadeUp 0.9s ease 0.5s forwards;}
+.hero-panel{
+  background:rgba(26,58,107,0.35);
+  border:1px solid var(--border);border-radius:14px;
+  padding:2rem;
+}
+.panel-title{font-size:0.72rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--muted);margin-bottom:1.5rem;}
+.panel-services{display:flex;flex-direction:column;gap:0.9rem;}
+.ps-item{
+  display:flex;align-items:center;gap:0.9rem;
+  padding:0.8rem 1rem;
+  background:rgba(13,34,71,0.5);
+  border:1px solid var(--border);border-radius:8px;
+  transition:border-color 0.3s;
+}
+.ps-item:hover{border-color:rgba(26,111,186,0.45);}
+.ps-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.ps-label{font-size:0.85rem;color:var(--white);font-weight:500;}
+.ps-arrow{margin-left:auto;color:var(--muted);}
+.panel-bottom{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1.5rem;}
+.pstat{text-align:center;padding:1rem;background:rgba(13,34,71,0.5);border:1px solid var(--border);border-radius:8px;}
+.pstat-num{font-size:1.8rem;font-weight:700;color:var(--white);}
+.pstat-num .u{color:var(--blue-light);}
+.pstat-label{font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-top:0.3rem;}
+
+/* SECTION TITLES */
+.sec-wrap{max-width:1100px;margin:0 auto;padding:0 5%;}
+.section-tag{display:inline-flex;align-items:center;gap:8px;font-size:0.68rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--blue-light);margin-bottom:1rem;}
+.section-tag::before{content:'';width:22px;height:1px;background:var(--blue-light);}
+.section-title{font-size:clamp(1.7rem,3vw,2.5rem);font-weight:700;color:var(--white);margin-bottom:0.7rem;}
+.section-sub{font-size:0.92rem;color:var(--muted);line-height:1.8;margin-bottom:3.5rem;}
+
+/* SERVICE CARDS — portfolio style */
+.services-section{padding:6rem 0;}
+.svc-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.5rem;}
+
+.svc-card{
+  background:rgba(26,58,107,0.28);
+  border:1px solid var(--border);
+  border-radius:12px;overflow:hidden;
+  transition:border-color 0.3s,transform 0.3s;
+  opacity:0;transform:translateY(22px);
+}
+.svc-card.visible{opacity:1;transform:translateY(0);transition:opacity 0.65s ease,transform 0.65s ease,border-color 0.3s;}
+.svc-card:hover{border-color:rgba(26,111,186,0.5);transform:translateY(-5px);}
+
+.svc-card-header{
+  height:150px;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;
+}
+
+.svc-tag{
+  position:absolute;top:14px;left:14px;
+  padding:0.25rem 0.85rem;border-radius:50px;
+  font-size:0.68rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;
+}
+
+.svc-icon-wrap{
+  width:72px;height:72px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  border:2px solid rgba(255,255,255,0.12);
+  position:relative;
+}
+.svc-icon-wrap::before{
+  content:'';position:absolute;inset:-10px;border-radius:50%;
+  border:1px dashed rgba(255,255,255,0.1);
+  animation:spin 10s linear infinite;
+}
+
+.svc-body{padding:1.4rem 1.5rem 1.6rem;}
+
+.svc-title{font-size:1.05rem;font-weight:700;color:var(--white);margin-bottom:0.9rem;line-height:1.3;}
+
+.svc-tabs{display:flex;gap:0.5rem;margin-bottom:1rem;}
+.svc-tab{
+  padding:0.22rem 0.75rem;border-radius:50px;
+  font-size:0.68rem;letter-spacing:0.08em;
+  border:1px solid;cursor:pointer;
+  transition:all 0.25s;font-weight:600;
+}
+
+.svc-points{display:flex;flex-direction:column;gap:0.55rem;margin-bottom:1.2rem;}
+.svc-point{
+  display:flex;align-items:flex-start;gap:0.6rem;
+  font-size:0.8rem;line-height:1.55;color:var(--muted);
+}
+.svc-point-dot{
+  width:5px;height:5px;border-radius:50%;
+  flex-shrink:0;margin-top:6px;
+}
+
+.svc-footer{
+  display:flex;justify-content:space-between;align-items:center;
+  border-top:1px solid var(--border);padding-top:1rem;
+}
+.svc-cta{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:0.78rem;letter-spacing:0.1em;text-transform:uppercase;
+  text-decoration:none;transition:gap 0.3s;
+}
+.svc-cta:hover{gap:10px;}
+.svc-badge{
+  font-size:0.65rem;letter-spacing:0.08em;text-transform:uppercase;
+  padding:0.2rem 0.6rem;border-radius:4px;font-weight:600;
+}
+
+/* PROCESS STRIP */
+.process-strip{
+  background:rgba(26,58,107,0.2);
+  border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  padding:4.5rem 5%;
+}
+.process-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1rem;max-width:1100px;margin:3rem auto 0;}
+.proc-card{text-align:center;padding:1.8rem 1rem;}
+.proc-num{font-size:0.65rem;letter-spacing:0.3em;color:rgba(26,111,186,0.4);margin-bottom:0.8rem;font-weight:700;}
+.proc-icon{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;border:1px solid var(--border);}
+.proc-title{font-size:0.88rem;font-weight:600;color:var(--white);margin-bottom:0.4rem;}
+.proc-desc{font-size:0.75rem;line-height:1.6;color:var(--muted);}
+
+/* TESTIMONIAL */
+.testimonial-section{padding:6rem 5%;}
+.testi-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.5rem;max-width:1100px;margin:3rem auto 0;}
+.tcard{
+  padding:1.8rem;background:rgba(26,58,107,0.28);
+  border:1px solid var(--border);border-radius:10px;
+  transition:border-color 0.3s;
+}
+.tcard:hover{border-color:rgba(26,111,186,0.4);}
+.tcard-stars{display:flex;gap:3px;margin-bottom:1rem;}
+.star{width:12px;height:12px;background:var(--yellow);clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);}
+.tcard-text{font-size:0.83rem;line-height:1.75;color:var(--muted);margin-bottom:1.2rem;font-style:italic;}
+.tcard-author{display:flex;align-items:center;gap:0.7rem;}
+.tcard-av{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:700;color:var(--white);}
+.tcard-name{font-size:0.82rem;font-weight:600;color:var(--white);}
+.tcard-role{font-size:0.7rem;color:var(--muted);}
+
+/* CTA */
+.cta-band{background:var(--navy-mid);border-top:1px solid var(--border);padding:6rem 5%;text-align:center;}
+.cta-band h2{font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:700;color:var(--white);margin-bottom:1rem;}
+.cta-band p{font-size:0.92rem;color:var(--muted);margin-bottom:2.5rem;line-height:1.8;}
+.cta-actions{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;}
+
+footer{border-top:1px solid var(--border);padding:1.5rem 5%;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;}
+footer p{font-size:0.72rem;color:#3a5a80;letter-spacing:0.08em;}
+.footer-socials{display:flex;gap:0.7rem;}
+.footer-socials a{width:30px;height:30px;border-radius:50%;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--muted);text-decoration:none;transition:all 0.3s;}
+.footer-socials a:hover{border-color:var(--blue-light);color:var(--blue-light);}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.4;transform:scale(0.65);}}
+@keyframes spin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+</style>
+
+<canvas id="pcv"></canvas>
+<div class="wrap">
+
+<nav>
+  <a href="#" class="nav-logo">
+    <div class="logo-d"></div><div class="logo-ring"></div>
+    <div class="logo-text"><strong>Digitalium</strong><span>Group</span></div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#">Accueil</a></li>
+    <li><a href="#">À Propos</a></li>
+    <li><a href="#" class="active">Services</a></li>
+    <li><a href="#">Blog</a></li>
+    <li><a href="#" class="nav-cta">Nous Contacter</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-eyebrow"><div class="bdot"></div>Nos Prestations Digitales</div>
+    <h1>Des solutions digitales<br><em>sur mesure</em> pour<br>propulser votre business</h1>
+    <div class="accent-bar">
+      <span style="width:36px;background:#e03a3a;"></span>
+      <span style="width:36px;background:#2eaa5c;"></span>
+      <span style="width:36px;background:#f5b800;"></span>
+      <span style="width:36px;background:#f07820;"></span>
+      <span style="width:36px;background:#1a6fba;"></span>
+    </div>
+    <p>De la conception web à l'intelligence artificielle, en passant par le câblage réseau et la création de contenu — une approche globale de la transformation digitale.</p>
+    <div class="hero-actions">
+      <button class="btn-primary">Demander un devis</button>
+      <button class="btn-outline">Voir nos réalisations</button>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-panel">
+      <div class="panel-title">Nos 5 domaines d'expertise</div>
+      <div class="panel-services">
+        <div class="ps-item">
+          <div class="ps-dot" style="background:#1a6fba;"></div>
+          <span class="ps-label">Web Design & Développement</span>
+          <svg class="ps-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+        <div class="ps-item">
+          <div class="ps-dot" style="background:#2eaa5c;"></div>
+          <span class="ps-label">Maintenance Informatique</span>
+          <svg class="ps-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+        <div class="ps-item">
+          <div class="ps-dot" style="background:#f07820;"></div>
+          <span class="ps-label">Câblage Réseaux</span>
+          <svg class="ps-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+        <div class="ps-item">
+          <div class="ps-dot" style="background:#e03a3a;"></div>
+          <span class="ps-label">Montage Vidéo TikTok & YouTube</span>
+          <svg class="ps-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+        <div class="ps-item">
+          <div class="ps-dot" style="background:#f5b800;"></div>
+          <span class="ps-label">Créateur de Contenu Digital</span>
+          <svg class="ps-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </div>
+      <div class="panel-bottom">
+        <div class="pstat"><div class="pstat-num">100<span class="u">+</span></div><div class="pstat-label">Clients satisfaits</div></div>
+        <div class="pstat"><div class="pstat-num">7<span class="u">+</span></div><div class="pstat-label">Années d'expérience</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES GRID -->
+<section class="services-section">
+  <div class="sec-wrap">
+    <div class="section-tag">Nos Services</div>
+    <h2 class="section-title">Nos Réalisations & Expertises</h2>
+    <p class="section-sub">Découvrez nos prestations de transformation digitale — chaque service conçu pour booster votre présence en ligne et votre performance.</p>
+
+    <div class="svc-grid">
+
+      <!-- SERVICE 1 — Web Design -->
+      <div class="svc-card">
+        <div class="svc-card-header" style="background:linear-gradient(135deg,rgba(26,111,186,0.3),rgba(13,34,71,0.7));">
+          <span class="svc-tag" style="background:rgba(26,111,186,0.25);color:#2d8fe0;border:1px solid rgba(26,111,186,0.3);">Web Design</span>
+          <div class="svc-icon-wrap" style="background:rgba(26,111,186,0.15);">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1a6fba" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+          </div>
+        </div>
+        <div class="svc-body">
+          <div class="svc-title">Web Designer &amp; Développement</div>
+          <div class="svc-tabs">
+            <div class="svc-tab" style="color:#2d8fe0;border-color:rgba(26,111,186,0.4);background:rgba(26,111,186,0.1);">UX/UI</div>
+            <div class="svc-tab" style="color:#2d8fe0;border-color:rgba(26,111,186,0.3);background:transparent;">E-commerce</div>
+          </div>
+          <div class="svc-points">
+            <div class="svc-point"><div class="svc-point-dot" style="background:#1a6fba;"></div>Sites professionnels et intuitifs adaptés à tous les publics</div>
+            <div class="svc-point"><div class="svc-point-dot" style="background:#1a6fba;"></div>Interfaces UX exceptionnelles pour renforcer votre marque en ligne</div>
+            <div class="svc-point"><div class="svc-point-dot" style="background:#1a6fba;"></div>Sites vitrines, e-commerce et plateformes sur mesure</div>
+          </div>
+          <div class="svc-footer">
+            <a href="#" class="svc-cta" style="color:#2d8fe0;">
+              Découvrir
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+            <span class="svc-badge" style="background:rgba(26,111,186,0.15);color:#2d8fe0;">Populaire</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SERVICE 2 — Maintenance -->
+      <div class="svc-card">
+        <div class="svc-card-header" style="background:linear-gradient(135deg,rgba(46,170,92,0.25),rgba(13,34,71,0.7));">
+          <span class="svc-tag" style="background:rgba(46,170,92,0.2);color:#2eaa5c;border:1px solid rgba(46,170,92,0.3);">Informatique</span>
+          <div class="svc-icon-wrap" style="background:rgba(46,170,92,0.15);">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2eaa5c" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M6 8h.01M10 8h4"/></svg>
+          </div>
+        </div>
+        <div class="svc-body">
+          <div class="svc-title">Maintenance Informatique</div>
+          <div class="svc-tabs">
+            <div class="svc-tab" style="color:#2eaa5c;border-color:rgba(46,170,92,0.4);background:rgba(46,170,92,0.1);">Réseau</div>
+            <div class="svc-tab" style="color:#2eaa5c;border-color:rgba(46,170,92,0.3);background:transparent;">Support</div>
+          </div>
+          <div class="svc-points">
+            <div class="svc-point"><div class="svc-point-dot" style="background:#2eaa5c;"></div>Gestion complète des parcs informatiques et surveillance réseau</div>
+            <div class="svc-point"><div class="svc-point-dot" style="background:#2eaa5c;"></div>Mises à jour, dépannages par experts certifiés</div>
+            <div class="svc-point"><div class="svc-point-dot" style="background:#2eaa5c;"></div>Régie informatique pour fiabilité et efficacité quotidienne</div>
+          </div>
+          <div class="svc-footer">
+            <a href="#" class="svc-cta" style="color:#2eaa5c;">
+              Découvrir
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+            <span class="svc-badge" style="background:rgba(46,170,92,0.15);color:#2eaa5c;">B2B</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SERVICE 3 — Câblage -->
+      <div class="svc-card">
+        <div class="svc-card-header" style="background:linear-gradient(135deg,rgba(240,120,32,0.25),rgba(13,34,71,0.7));">
+          <span class="svc-tag" style="background:rgba(240,120,32,0.2);color:#f07820;border:1px solid rgba(240,120,32,0.3);">Infrastructure</span>
+          <div class="svc-icon-wrap" style="background:rgba(240,120,32,0.15);">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#f07820" stroke-width="1.5"><path d="M4 6h16M4 12h16M4 18h7"/><circle cx="17" cy="18" r="3"/><path d="M17 15v-3"/></svg>
+          </div>
+        </div>
+        <div class="svc-body">
+          <div class="svc-title">Câblage Réseaux</div>
+          <div class="svc-tabs">
+            <div class="svc-tab" style="color:#f07820;border-color:rgba(240,120,32,0.4);background:rgba(240,120,32,0.1);">Sécurité</div>
+            <div class="svc-tab" style="color:#f07820;border-color:rgba(240,120,32,0.3);background:transparent;">B2B/B2C</div>
+          </div>
+          <div class="svc-points">
+            <div class="svc-point"><div class="svc-point-dot" style="background:#f07820;"></div>Installation et configuration de réseaux sécurisés pour entreprises</div>
+            <div class="svc-point"><div class="svc-point-dot" style="background:#f07820;"></div>Maintenance et extension de structures réseau adaptées</div>
+            <div class="svc-point"><div class="svc-point-dot" style="background:#f07820;"></div>Renforcement de la connectivité et sécurité des infrastructures</div>
+          </div>
+          <div class="svc-footer">
+            <a href="#" class="svc-cta" style="color:#f07820;">
+              Découvrir
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+            <span class="svc-badge" style="background:rgba(240,120,32,0.15);color:#f07820;">Physique</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SERVICE 4 — Vidéo -->
+      <div class="svc-card">
+        <div class="svc-card-header" style="background:linear-gradient(135deg,rgba(224,58,58,0.25),rgba(13,34,71,0.7));">
+          <span class="svc-tag" style="background:rgba(224,58,58,0.2);color:#e03a3a;border:1px solid rgba(224,58,58,0.3);">Vidéo</span>
+          <div class="svc-icon-wrap" style="background:rgba(224,58,58,0.15);">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#e03a3a" stroke-width="1.5"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+          </div>
+        </div>
+        <div class="svc-body">
+          <div class="svc-title">Montage Vidéo TikTok &amp; YouTube</div>
+          <div class="svc-tabs">
+            <div class="svc-tab" style="color:#e03a3a;border-color:rgba(224,58,58,0.4);background:rgba(224,58,58,0.1);">TikTok</div>
+            <div class="svc-tab" style="color:#e03a3a;border-color:rgba(224,58,58,0.3);background:transparent;">YouTube</div>
+          </div>
+          <div class="svc-points">
+            <div class="svc-point"><div class="svc-point-dot" style="background:#e03a3a;"></div>Production et montage professionnel de vidéos courtes</div>
+            <div class="svc-point"><div class="svc-point-dot" style="background:#e03a3a;"></div>Contenus engageants pour booster votre visibilité sociale</div>
+            <div class="svc-point"><div class="svc-point-dot" style="background:#e03a3a;"></div>Stratégies vidéo pour monétisation et croissance d'audience</div>
+          </div>
+          <div class="svc-footer">
+            <a href="#" class="svc-cta" style="color:#e03a3a;">
+              Découvrir
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+            <span class="svc-badge" style="background:rgba(224,58,58,0.15);color:#e03a3a;">Viral</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SERVICE 5 — Contenu Digital -->
+      <div class="svc-card">
+        <div class="svc-card-header" style="background:linear-gradient(135deg,rgba(245,184,0,0.2),rgba(13,34,71,0.7));">
+          <span class="svc-tag" style="background:rgba(245,184,0,0.15);color:#f5b800;border:1px solid rgba(245,184,0,0.3);">Contenu</span>
+          <div class="svc-icon-wrap" style="background:rgba(245,184,0,0.12);">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#f5b800" stroke-width="1.5"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          </div>
+        </div>
+        <div class="svc-body">
+          <div class="svc-title">Créateur de Contenu Digital</div>
+          <div class="svc-tabs">
+            <div class="svc-tab" style="color:#f5b800;border-color:rgba(245,184,0,0.4);background:rgba(245,184,0,0.1);">SEO</div>
+            <div class="svc-tab" style="color:#f5b800;border-color:rgba(245,184,0,0.3);background:transparent;">IA-assisté</div>
+          </div>
+          <div class="svc-points">
+            <div class="svc-point"><div class="svc-point-dot" style="background:#f5b800;"></div>Stratégies de contenu (articles, posts, visuels) pour SEO</div>
+            <div class="svc-point"><div class="svc-point-dot" style="background:#f5b800;"></div>Campagnes multicanales : réseaux sociaux, e-mailing, pub</div>
+            <div class="svc-point"><div class="svc-point-dot" style="background:#f5b800;"></div>Contenus IA-assistés : chatbots et analyses prédictives</div>
+          </div>
+          <div class="svc-footer">
+            <a href="#" class="svc-cta" style="color:#f5b800;">
+              Découvrir
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+            <span class="svc-badge" style="background:rgba(245,184,0,0.12);color:#f5b800;">IA</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SERVICE 6 — IA / Stratégie -->
+      <div class="svc-card">
+        <div class="svc-card-header" style="background:linear-gradient(135deg,rgba(45,143,224,0.25),rgba(26,58,107,0.5));">
+          <span class="svc-tag" style="background:rgba(45,143,224,0.2);color:#2d8fe0;border:1px solid rgba(45,143,224,0.3);">Stratégie IA</span>
+          <div class="svc-icon-wrap" style="background:rgba(45,143,224,0.15);">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2d8fe0" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+          </div>
+        </div>
+        <div class="svc-body">
+          <div class="svc-title">Intelligence Artificielle &amp; Stratégie Digitale</div>
+          <div class="svc-tabs">
+            <div class="svc-tab" style="color:#2d8fe0;border-color:rgba(45,143,224,0.4);background:rgba(45,143,224,0.1);">Automatisation</div>
+            <div class="svc-tab" style="color:#2d8fe0;border-color:rgba(45,143,224,0.3);background:transparent;">ML</div>
+          </div>
+          <div class="svc-points">
+            <div class="svc-point"><div class="svc-point-dot" style="background:#2d8fe0;"></div>Chatbots, assistants virtuels et analyses prédictives</div>
+            <div class="svc-point"><div class="svc-point-dot" style="background:#2d8fe0;"></div>Automatisation des processus métier via machine learning</div>
+            <div class="svc-point"><div class="svc-point-dot" style="background:#2d8fe0;"></div>Plan stratégique digital complet pour rester compétitif</div>
+          </div>
+          <div class="svc-footer">
+            <a href="#" class="svc-cta" style="color:#2d8fe0;">
+              Découvrir
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+            <span class="svc-badge" style="background:rgba(45,143,224,0.15);color:#2d8fe0;">Premium</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<div class="process-strip">
+  <div style="text-align:center;max-width:600px;margin:0 auto;">
+    <div class="section-tag" style="justify-content:center;">Comment ça marche</div>
+    <h2 class="section-title">Notre processus en 4 étapes</h2>
+  </div>
+  <div class="process-grid">
+    <div class="proc-card">
+      <div class="proc-num">01</div>
+      <div class="proc-icon" style="background:rgba(224,58,58,0.12);border-color:rgba(224,58,58,0.2);">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#e03a3a" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      </div>
+      <div class="proc-title">Analyse & Audit</div>
+      <p class="proc-desc">Évaluation de vos besoins, objectifs et situation digitale actuelle.</p>
+    </div>
+    <div class="proc-card">
+      <div class="proc-num">02</div>
+      <div class="proc-icon" style="background:rgba(26,111,186,0.12);border-color:rgba(26,111,186,0.2);">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1a6fba" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      </div>
+      <div class="proc-title">Proposition sur mesure</div>
+      <p class="proc-desc">Plan d'action personnalisé avec budget, délais et livrables clairs.</p>
+    </div>
+    <div class="proc-card">
+      <div class="proc-num">03</div>
+      <div class="proc-icon" style="background:rgba(46,170,92,0.12);border-color:rgba(46,170,92,0.2);">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2eaa5c" stroke-width="1.5"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+      </div>
+      <div class="proc-title">Développement & Exécution</div>
+      <p class="proc-desc">Mise en œuvre par nos experts avec suivi régulier et validation client.</p>
+    </div>
+    <div class="proc-card">
+      <div class="proc-num">04</div>
+      <div class="proc-icon" style="background:rgba(245,184,0,0.12);border-color:rgba(245,184,0,0.2);">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f5b800" stroke-width="1.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      </div>
+      <div class="proc-title">Livraison & Support</div>
+      <p class="proc-desc">Déploiement, formation et support continu pour des résultats durables.</p>
+    </div>
+  </div>
+</div>
+
+<!-- TESTIMONIALS -->
+<section class="testimonial-section">
+  <div style="text-align:center;max-width:600px;margin:0 auto;">
+    <div class="section-tag" style="justify-content:center;">Témoignages</div>
+    <h2 class="section-title">Ce que disent nos clients</h2>
+  </div>
+  <div class="testi-grid">
+    <div class="tcard">
+      <div class="tcard-stars"><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div></div>
+      <p class="tcard-text">"Digitalium Group a transformé notre présence en ligne. Notre site e-commerce génère maintenant 3x plus de leads qu'avant."</p>
+      <div class="tcard-author">
+        <div class="tcard-av" style="background:rgba(26,111,186,0.4);">MK</div>
+        <div><div class="tcard-name">Mamadou Koné</div><div class="tcard-role">Directeur Commercial, PME Abidjan</div></div>
+      </div>
+    </div>
+    <div class="tcard">
+      <div class="tcard-stars"><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div></div>
+      <p class="tcard-text">"L'équipe a géré notre câblage réseau et notre parc informatique avec un professionnalisme remarquable. Zéro panne depuis 6 mois."</p>
+      <div class="tcard-author">
+        <div class="tcard-av" style="background:rgba(46,170,92,0.4);">AB</div>
+        <div><div class="tcard-name">Adjoua Bamba</div><div class="tcard-role">DSI, Entreprise Industrielle</div></div>
+      </div>
+    </div>
+    <div class="tcard">
+      <div class="tcard-stars"><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div></div>
+      <p class="tcard-text">"Nos vidéos TikTok créées par Digitalium ont atteint 500K vues en 2 semaines. Un résultat au-delà de nos attentes !"</p>
+      <div class="tcard-author">
+        <div class="tcard-av" style="background:rgba(224,58,58,0.4);">YD</div>
+        <div><div class="tcard-name">Yao Diabaté</div><div class="tcard-role">Fondateur, Startup Tech</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-band">
+  <div class="section-tag" style="justify-content:center;">Prêt à démarrer ?</div>
+  <h2>Boostez votre présence digitale<br>dès aujourd'hui</h2>
+  <p>Rejoignez 100+ clients satisfaits à Abidjan et à l'international.<br>Contactez-nous pour un devis gratuit et sans engagement.</p>
+  <div class="cta-actions">
+    <a href="#" class="btn-primary">Demander un devis gratuit</a>
+    <a href="https://wa.me/2250707820211" class="btn-outline">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:6px;"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8 19.79 19.79 0 012 2.22 2 2 0 014 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/></svg>
+      WhatsApp direct
+    </a>
+  </div>
+</div>
+
+<footer>
+  <p>© 2025 Digitalium Group — Abidjan, Côte d'Ivoire · contact@digitaliumgroup.com · +225 07 07 82 02 11</p>
+  <div class="footer-socials">
+    <a href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg></a>
+    <a href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37zM17.5 6.5h.01"/></svg></a>
+    <a href="#"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg></a>
+  </div>
+</footer>
+
+</div>
+
+<script>
+const cv=document.getElementById('pcv'),ctx=cv.getContext('2d');
+let W,H,pts=[];
+function resize(){W=cv.width=window.innerWidth;H=cv.height=window.innerHeight;}
+resize();window.addEventListener('resize',resize);
+const cols=['rgba(26,111,186,','rgba(224,58,58,','rgba(46,170,92,','rgba(245,184,0,','rgba(240,120,32,'];
+class P{
+  constructor(){this.reset();}
+  reset(){this.x=Math.random()*W;this.y=Math.random()*H;this.r=Math.random()*1.2+0.3;this.vx=(Math.random()-.5)*.18;this.vy=(Math.random()-.5)*.18;this.a=Math.random()*.4+0.08;this.c=cols[Math.floor(Math.random()*cols.length)];}
+  update(){this.x+=this.vx;this.y+=this.vy;if(this.x<0||this.x>W||this.y<0||this.y>H)this.reset();}
+  draw(){ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);ctx.fillStyle=this.c+this.a+')';ctx.fill();}
+}
+for(let i=0;i<130;i++)pts.push(new P());
+function anim(){
+  ctx.clearRect(0,0,W,H);
+  pts.forEach(p=>{p.update();p.draw();});
+  for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){
+    const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);
+    if(d<80){ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.strokeStyle='rgba(26,111,186,'+(0.06*(1-d/80))+')';ctx.lineWidth=0.4;ctx.stroke();}
+  }
+  requestAnimationFrame(anim);
+}
+anim();
+const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:0.08});
+document.querySelectorAll('.svc-card').forEach(c=>obs.observe(c));
+</script>
