@@ -1,0 +1,19 @@
+# Environment files
+.env
+.env.production
+.env.local
+.env.development
+
+# Logs & Cache
+storage/logs/*.log
+storage/cache/*
+public/assets/uploads/*
+!public/assets/uploads/.gitkeep
+
+# Temporary files
+conversations_archive.zip
+conversations_archive.md
+conversations_viewer.html
+*.tmp
+.DS_Store
+Thumbs.db
