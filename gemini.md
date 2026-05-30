@@ -144,3 +144,12 @@ Lorsque vous modifiez ou étendez cette application, veillez à respecter rigour
 - Toutes les pages administratives doivent valider le jeton CSRF (`$this->validateCsrf()`).
 - Après toute modification de fichiers PHP de rendu ou de gabarit, exécutez toujours le script CLI de purge du cache : `php bin/clear-cache.php`.
 - N'utilisez jamais la commande `cd` dans vos exécutions shell.
+
+---
+
+## 7. Journal de Validation de Déploiement
+
+- **Validation des Pages Principales** : Effectuée avec succès par requêtes HTTP locales.
+  - Page d'accueil : `http://127.0.0.1:8000/` ➔ Statut `200 OK`. Rendu des variables de configuration valide et actif.
+  - Page Admin : `http://127.0.0.1:8000/admin/login` ➔ Statut `200 OK`. Accès au routeur et aux sessions valide.
+- **Sauvegarde et Versionnage** : Tag de restauration `v1.0-pre-deploy` appliqué de manière stable. Dépôt GitHub synchronisé sur `main`.
