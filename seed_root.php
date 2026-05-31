@@ -39,13 +39,9 @@ header('Content-Type: text/plain; charset=utf-8');
 echo "=== INITIALISATION ET SEEDING COMPLET DE LA BASE DE DONNÉES DIGITALIUM ===\n\n";
 
 try {
-    // Connect to MySQL server and ensure DB exists
-    $dsnTemp = sprintf("mysql:host=%s;port=%s;charset=%s", DB_HOST, DB_PORT, DB_CHARSET);
-    $pdoTemp = new \PDO($dsnTemp, DB_USER, DB_PASS, [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
-    $pdoTemp->exec("CREATE DATABASE IF NOT EXISTS `" . DB_NAME . "` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
-    echo "Base de données '" . DB_NAME . "' créée ou existante.\n";
-
+    // Connect directly to the existing database created via hPanel
     $pdo = Database::getConnection();
+    echo "Connexion établie avec succès à la base de données '" . DB_NAME . "'.\n";
 
     // 1. Import schema from database/database.sql (which drops tables first)
     echo "Réinitialisation des tables et importation du schéma SQL...\n";
