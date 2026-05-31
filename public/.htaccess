@@ -2,8 +2,8 @@
     RewriteEngine On
     RewriteBase /
 
-    # Prevent directory browsing
-    Options -Indexes
+    # Prevent directory browsing and MultiViews conflicts
+    Options -Indexes -MultiViews
 
     # Redirect trailing slashes
     RewriteRule ^(.*)/$ /$1 [L,R=301]
