@@ -29,6 +29,65 @@ CREATE TABLE IF NOT EXISTS `pages` (
   `meta_title` VARCHAR(255) NULL,
   `meta_description` TEXT NULL,
   `status` ENUM('draft', 'published') DEFAULT 'draft',
+  `sort_order` INT DEFAULT 0,
+  `in_navigation` TINYINT DEFAULT 1,
+  
+  -- Advanced Hero settings
+  `hero_title` VARCHAR(255) NULL,
+  `hero_subtitle` TEXT NULL,
+  `hero_image` VARCHAR(255) NULL,
+  `hero_cta1_text` VARCHAR(100) NULL,
+  `hero_cta1_url` VARCHAR(255) NULL,
+  `hero_cta2_text` VARCHAR(100) NULL,
+  `hero_cta2_url` VARCHAR(255) NULL,
+  `hero_bg_color` VARCHAR(100) NULL,
+  `hero_effect` VARCHAR(50) DEFAULT 'particles',
+  `hero_variant` VARCHAR(50) DEFAULT 'hero_split_large_image',
+  `hero_image_layout` VARCHAR(50) DEFAULT 'right',
+  `hero_image_size` VARCHAR(50) DEFAULT 'large',
+  `hero_badge` VARCHAR(255) NULL,
+  `hero_status` TINYINT DEFAULT 1,
+  
+  -- Advanced Header settings
+  `header_bg_mode` VARCHAR(50) DEFAULT 'glass',
+  `header_opacity` FLOAT DEFAULT 0.65,
+  `header_blur` INT DEFAULT 20,
+  `header_shadow` VARCHAR(50) DEFAULT 'moyen',
+  `header_contrast_mode` VARCHAR(50) DEFAULT 'default',
+  
+  -- Brand settings
+  `logo_light` VARCHAR(255) NULL,
+  `logo_dark` VARCHAR(255) NULL,
+  `logo_size` INT DEFAULT 38,
+  
+  -- Advanced Hero positions & mobile layout
+  `hero_layout_mode` VARCHAR(50) DEFAULT 'moyen',
+  `hero_text_position` VARCHAR(50) DEFAULT 'centre',
+  `hero_text_alignment` VARCHAR(50) DEFAULT 'center',
+  `hero_text_width` VARCHAR(50) DEFAULT '100%',
+  `hero_overlay_opacity` FLOAT DEFAULT 0.45,
+  `hero_shadow_strength` VARCHAR(50) DEFAULT 'moyen',
+  `hero_image_mobile` VARCHAR(255) NULL,
+  `responsive_settings` TEXT NULL,
+  
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 2.1 Projects Table
+CREATE TABLE IF NOT EXISTS `projects` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `title` VARCHAR(255) NOT NULL,
+  `category` VARCHAR(100) NOT NULL,
+  `logo` VARCHAR(255) NULL,
+  `main_image` VARCHAR(255) NOT NULL,
+  `gallery` TEXT NULL,
+  `context` TEXT NULL,
+  `impact` TEXT NULL,
+  `technologies` VARCHAR(255) NULL,
+  `external_link` VARCHAR(255) NULL,
+  `sort_order` INT DEFAULT 0,
+  `is_featured` TINYINT DEFAULT 0,
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

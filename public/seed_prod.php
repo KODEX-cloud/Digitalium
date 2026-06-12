@@ -514,13 +514,530 @@ try {
     Block::setVal($secCtCtaId, 'cta_text', 'text', 'Demander un devis gratuit');
     Block::setVal($secCtCtaId, 'cta_url', 'link', '#contact');
 
+    // ----------------------------------------------------
+    // MISE A JOUR DES PARAMETRES D'AFFICHAGE HERO & HEADER DES PAGES EXISTANTES
+    // ----------------------------------------------------
+    echo "Configuration des paramètres d'affichage des pages...\n";
+
+    $pageUpdates = [
+        'home' => [
+            'sort_order' => 1,
+            'hero_title' => 'Des solutions<br>technologiques<br><span class="hi">innovantes</span>',
+            'hero_subtitle' => 'Plongez dans un monde où la convergence du digital et de la technologie redéfinit les normes et réinvente l\'avenir de votre entreprise.',
+            'hero_image' => '/assets/images/hero_3d.png',
+            'hero_cta1_text' => 'Découvrez nos services',
+            'hero_cta1_url' => '#services',
+            'hero_bg_color' => 'linear-gradient(135deg, #0b0f19 0%, #111827 100%)',
+            'hero_effect' => 'particles',
+            'hero_variant' => 'hero_split_large_image',
+            'hero_image_layout' => 'right',
+            'hero_image_size' => 'large',
+            'hero_badge' => 'AAIA — Agence d\'Automatisation en IA',
+            'hero_status' => 1,
+            'header_bg_mode' => 'glass',
+            'header_opacity' => 0.65,
+            'header_blur' => 20,
+            'header_shadow' => 'moyen',
+            'header_contrast_mode' => 'default'
+        ],
+        'about' => [
+            'sort_order' => 2,
+            'hero_title' => 'L\'excellence digitale,<br><span class="highlight">au service de votre croissance</span>',
+            'hero_subtitle' => 'Une équipe passionnée d\'experts en marketing, développement web, intelligence artificielle et technologies — unis pour transformer votre entreprise à l\'échelle mondiale.',
+            'hero_image' => '/assets/images/about_3d.png',
+            'hero_cta1_text' => 'Nous Contacter',
+            'hero_cta1_url' => '/contact',
+            'hero_bg_color' => 'linear-gradient(135deg, #0b0f19 0%, #111827 100%)',
+            'hero_effect' => 'particles',
+            'hero_variant' => 'hero_split_large_image',
+            'hero_image_layout' => 'right',
+            'hero_image_size' => 'large',
+            'hero_badge' => 'Leader en stratégie digitale & IA',
+            'hero_status' => 1,
+            'header_bg_mode' => 'glass',
+            'header_opacity' => 0.65,
+            'header_blur' => 20,
+            'header_shadow' => 'moyen',
+            'header_contrast_mode' => 'default'
+        ],
+        'service' => [
+            'sort_order' => 3,
+            'hero_title' => 'Des solutions digitales<br><em>sur mesure</em> pour<br>propulser votre business',
+            'hero_subtitle' => 'De la conception web à l\'intelligence artificielle, en passant par le câblage réseau et la création de contenu — une approche globale de la transformation digitale.',
+            'hero_image' => '/assets/images/services_3d.png',
+            'hero_cta1_text' => 'Demander un devis gratuit',
+            'hero_cta1_url' => '/contact',
+            'hero_bg_color' => 'linear-gradient(135deg, #0b0f19 0%, #111827 100%)',
+            'hero_effect' => 'particles',
+            'hero_variant' => 'hero_split_large_image',
+            'hero_image_layout' => 'right',
+            'hero_image_size' => 'large',
+            'hero_badge' => 'Nos Prestations Digitales',
+            'hero_status' => 1,
+            'header_bg_mode' => 'glass',
+            'header_opacity' => 0.65,
+            'header_blur' => 20,
+            'header_shadow' => 'moyen',
+            'header_contrast_mode' => 'default'
+        ],
+        'blog' => [
+            'sort_order' => 7,
+            'hero_title' => 'Explorez l\'avenir du <em>digital</em><br>et de l\'<em>intelligence artificielle</em>',
+            'hero_subtitle' => 'Stratégies, tendances et solutions concrètes pour transformer votre entreprise grâce au numérique et à l\'IA — par les experts Digitalium Group.',
+            'hero_cta1_text' => 'Explorer les articles',
+            'hero_cta1_url' => '#blog-grid',
+            'hero_bg_color' => 'linear-gradient(135deg, #0b0f19 0%, #111827 100%)',
+            'hero_effect' => 'particles',
+            'hero_variant' => 'hero_text_only',
+            'hero_badge' => 'Insights Digitaux & Intelligence Artificielle',
+            'hero_status' => 1,
+            'header_bg_mode' => 'glass',
+            'header_opacity' => 0.65,
+            'header_blur' => 20,
+            'header_shadow' => 'moyen',
+            'header_contrast_mode' => 'default'
+        ],
+        'contact' => [
+            'sort_order' => 8,
+            'hero_title' => 'Transformons vos idées en<br><em>solutions performantes</em>',
+            'hero_subtitle' => 'Une question, un projet, un partenariat ? Notre équipe d\'experts vous répond sous 24h et vous propose une stratégie sur mesure.',
+            'hero_bg_color' => 'linear-gradient(135deg, #0b0f19 0%, #111827 100%)',
+            'hero_effect' => 'particles',
+            'hero_variant' => 'hero_text_only',
+            'hero_badge' => 'Parlons de votre projet digital',
+            'hero_status' => 1,
+            'header_bg_mode' => 'glass',
+            'header_opacity' => 0.65,
+            'header_blur' => 20,
+            'header_shadow' => 'moyen',
+            'header_contrast_mode' => 'default'
+        ]
+    ];
+
+    foreach ($pageUpdates as $slug => $data) {
+        $updateSql = "UPDATE pages SET 
+            sort_order = :sort_order,
+            in_navigation = 1,
+            hero_title = :hero_title,
+            hero_subtitle = :hero_subtitle,
+            hero_image = :hero_image,
+            hero_cta1_text = :hero_cta1_text,
+            hero_cta1_url = :hero_cta1_url,
+            hero_bg_color = :hero_bg_color,
+            hero_effect = :hero_effect,
+            hero_variant = :hero_variant,
+            hero_image_layout = :hero_image_layout,
+            hero_image_size = :hero_image_size,
+            hero_badge = :hero_badge,
+            hero_status = :hero_status,
+            header_bg_mode = :header_bg_mode,
+            header_opacity = :header_opacity,
+            header_blur = :header_blur,
+            header_shadow = :header_shadow,
+            header_contrast_mode = :header_contrast_mode
+            WHERE slug = :slug";
+            
+        $stmt = $pdo->prepare($updateSql);
+        $stmt->execute(array_merge($data, ['slug' => $slug]));
+        echo "Paramètres de la page '$slug' mis à jour.\n";
+    }
+
+    // Set bg_image for sections hero
+    $heroSec = Database::fetch("SELECT id FROM sections WHERE type = 'hero' LIMIT 1");
+    if ($heroSec) {
+        $secId = (int)$heroSec['id'];
+        Block::setVal($secId, 'bg_image', 'image', '/assets/images/hero_3d.png');
+    }
+
+    // ----------------------------------------------------
+    // CREATION DES AUTRES PAGES DU CMS
+    // ----------------------------------------------------
+    echo "Génération des autres pages complexes...\n";
+
+    // 1. Réalisations
+    $pageRealId = (int)Page::createPage(
+        'Réalisations',
+        'realisations',
+        'Réalisations | Nos projets de transformation digitale',
+        'Découvrez nos projets de transformation digitale et solutions de pointe pour nos clients.',
+        'published'
+    );
+    $pdo->prepare("UPDATE pages SET 
+        sort_order = 4,
+        in_navigation = 1,
+        hero_title = 'Nos Réalisations <span class=\"hi\">Digitales</span>',
+        hero_subtitle = 'Découvrez mes projets de transformation digitale pour des clients variés.',
+        hero_image = '/assets/images/services_3d.png',
+        hero_cta1_text = 'Parler à un expert',
+        hero_cta1_url = '/contact',
+        hero_bg_color = 'linear-gradient(135deg, #0b0f19 0%, #111827 100%)',
+        hero_effect = 'particles',
+        hero_variant = 'hero_split_large_image',
+        hero_image_layout = 'right',
+        hero_image_size = 'large',
+        hero_badge = 'Portfolio de Réalisations',
+        hero_status = 1,
+        header_bg_mode = 'glass',
+        header_opacity = 0.65,
+        header_blur = 20,
+        header_shadow = 'moyen',
+        header_contrast_mode = 'default'
+        WHERE id = :id")->execute(['id' => $pageRealId]);
+    Section::addSection($pageRealId, 'Portfolio de Réalisations', 'portfolio', 0);
+    echo "Page Réalisations créée.\n";
+
+    // 2. Portfolio
+    $pagePortId = (int)Page::createPage(
+        'Portfolio',
+        'portfolio',
+        'Portfolio | Notre savoir-faire technologique',
+        'Un aperçu complet de notre savoir-faire technologique, ingénierie logicielle et impact digital.',
+        'published'
+    );
+    $pdo->prepare("UPDATE pages SET 
+        sort_order = 5,
+        in_navigation = 1,
+        hero_title = 'Notre Portfolio <span class=\"hi\">Premium</span>',
+        hero_subtitle = 'Un aperçu complet de notre savoir-faire technologique, d\'ingénierie logicielle et d\'impact digital.',
+        hero_image = '/assets/images/hero_3d.png',
+        hero_cta1_text = 'Lancer un projet',
+        hero_cta1_url = '/contact',
+        hero_bg_color = 'linear-gradient(135deg, #0b0f19 0%, #111827 100%)',
+        hero_effect = 'particles',
+        hero_variant = 'hero_split_large_image',
+        hero_image_layout = 'right',
+        hero_image_size = 'large',
+        hero_badge = 'Notre Savoir-Faire',
+        hero_status = 1,
+        header_bg_mode = 'glass',
+        header_opacity = 0.65,
+        header_blur = 20,
+        header_shadow = 'moyen',
+        header_contrast_mode = 'default'
+        WHERE id = :id")->execute(['id' => $pagePortId]);
+    Section::addSection($pagePortId, 'Grille Portfolio', 'portfolio', 0);
+    echo "Page Portfolio créée.\n";
+
+    // 3. Études de Cas
+    $pageCaseId = (int)Page::createPage(
+        'Études de Cas',
+        'etudes-de-cas',
+        'Études de Cas | Analyses & Impacts Rituels',
+        'Découvrez nos études de cas détaillées montrant le contexte, les technologies et l\'impact de nos solutions.',
+        'published'
+    );
+    $pdo->prepare("UPDATE pages SET 
+        sort_order = 6,
+        in_navigation = 1,
+        hero_title = 'Études de <span class=\"hi\">Cas</span>',
+        hero_subtitle = 'Analyses d\'impacts de nos intégrations logicielles et automatisations IA.',
+        hero_image = '/assets/images/about_3d.png',
+        hero_cta1_text = 'Lancer un projet',
+        hero_cta1_url = '/contact',
+        hero_bg_color = 'linear-gradient(135deg, #0b0f19 0%, #111827 100%)',
+        hero_effect = 'particles',
+        hero_variant = 'hero_split_large_image',
+        hero_image_layout = 'right',
+        hero_image_size = 'large',
+        hero_badge = 'Analyses & Impacts',
+        hero_status = 1,
+        header_bg_mode = 'glass',
+        header_opacity = 0.65,
+        header_blur = 20,
+        header_shadow = 'moyen',
+        header_contrast_mode = 'default'
+        WHERE id = :id")->execute(['id' => $pageCaseId]);
+    Section::addSection($pageCaseId, 'Grille des Études de Cas', 'portfolio', 0);
+    echo "Page Études de Cas créée.\n";
+
+    // 4. IA & Automatisation
+    $pageIaId = (int)Page::createPage(
+        'IA & Automatisation', 
+        'ia-automatisation', 
+        'Automatisation IA | Propulsez votre entreprise avec l\'Intelligence Artificielle', 
+        'Découvrez nos solutions d\'automatisation par intelligence artificielle : intégration de modèles LLM, chatbots intelligents et workflows autonomes.',
+        'published'
+    );
+    $pdo->prepare("UPDATE pages SET 
+        sort_order = 9,
+        in_navigation = 1,
+        hero_title = 'Automatisez vos<br>processus par<br><span class=\"hi\">l\'IA</span>',
+        hero_subtitle = 'Nous concevons des agents autonomes et des intégrations de grands modèles de langage (LLM) pour multiplier par 10 la productivité de vos équipes.',
+        hero_image = '/assets/images/services_3d.png',
+        hero_cta1_text = 'Commencer l\'automatisation',
+        hero_cta1_url = '/contact',
+        hero_bg_color = 'linear-gradient(135deg, #0b0f19 0%, #111827 100%)',
+        hero_effect = 'particles',
+        hero_variant = 'hero_split_large_image',
+        hero_image_layout = 'right',
+        hero_image_size = 'large',
+        hero_badge = 'Solutions Intelligentes',
+        hero_status = 1,
+        header_bg_mode = 'glass',
+        header_opacity = 0.65,
+        header_blur = 20,
+        header_shadow = 'moyen',
+        header_contrast_mode = 'default'
+        WHERE id = :id")->execute(['id' => $pageIaId]);
+
+    $secIaHeroId = (int)Section::addSection($pageIaId, 'Bannière IA & Automatisation', 'hero', 0);
+    Block::setVal($secIaHeroId, 'badge', 'text', 'Solutions Intelligentes');
+    Block::setVal($secIaHeroId, 'title', 'wysiwyg', 'Automatisez vos<br>processus par<br><span class="hi">l\'IA</span>');
+    Block::setVal($secIaHeroId, 'subtitle', 'textarea', 'Nous concevons des agents autonomes et des intégrations de grands modèles de langage (LLM) pour multiplier par 10 la productivité de vos équipes.');
+    Block::setVal($secIaHeroId, 'cta_text', 'text', 'Commencer l\'automatisation');
+    Block::setVal($secIaHeroId, 'cta_url', 'link', '/contact');
+    Block::setVal($secIaHeroId, 'bg_image', 'image', '/assets/images/services_3d.png');
+    Block::setVal($secIaHeroId, 'stats_years', 'text', '10x');
+    Block::setVal($secIaHeroId, 'stats_clients', 'text', '50+');
+    Block::setVal($secIaHeroId, 'stats_satisfaction', 'text', '99%');
+    
+    $secIaGridId = (int)Section::addSection($pageIaId, 'Nos Solutions IA', 'services_grid', 1);
+    Block::setVal($secIaGridId, 'tag', 'text', 'Nos Solutions');
+    Block::setVal($secIaGridId, 'title', 'text', 'Des outils d\'automatisation de pointe');
+    Block::setVal($secIaGridId, 'subtitle', 'textarea', 'Des agents intelligents et intégrations robustes pour une efficacité opérationnelle maximale.');
+    Block::setVal($secIaGridId, 'card_title', 'text', 'Agents de Support Autonomes', 1, 0);
+    Block::setVal($secIaGridId, 'card_icon', 'text', 'message-square', 1, 1);
+    Block::setVal($secIaGridId, 'card_description', 'textarea', 'Intégration de chatbots intelligents capables de résoudre 80% des demandes de support client de manière autonome en temps réel.', 1, 2);
+    Block::setVal($secIaGridId, 'card_title', 'text', 'Automatisation de Workflows (RPA)', 2, 0);
+    Block::setVal($secIaGridId, 'card_icon', 'text', 'git-branch', 2, 1);
+    Block::setVal($secIaGridId, 'card_description', 'textarea', 'Connexion de vos outils métiers (CRM, ERP, Slack) pour automatiser le transfert et le traitement des données sans erreur.', 2, 2);
+    Block::setVal($secIaGridId, 'card_title', 'text', 'Analyse Prédictive & Dashboard', 3, 0);
+    Block::setVal($secIaGridId, 'card_icon', 'text', 'pie-chart', 3, 1);
+    Block::setVal($secIaGridId, 'card_description', 'textarea', 'Modélisation de vos données historiques pour prévoir les tendances de ventes et optimiser vos stocks automatiquement.', 3, 2);
+
+    $secIaProcessId = (int)Section::addSection($pageIaId, 'Méthodologie IA', 'process_strip', 2);
+    Block::setVal($secIaProcessId, 'tag', 'text', 'Notre Méthode');
+    Block::setVal($secIaProcessId, 'title', 'text', 'Déploiement en 3 étapes');
+    Block::setVal($secIaProcessId, 'card_title', 'text', '1. Audit Technique', 1, 0);
+    Block::setVal($secIaProcessId, 'card_icon', 'text', 'eye', 1, 1);
+    Block::setVal($secIaProcessId, 'card_description', 'textarea', 'Analyse de vos processus manuels répétitifs et identification des opportunités d\'automatisation.', 1, 2);
+    Block::setVal($secIaProcessId, 'card_title', 'text', '2. Développement & Fine-tuning', 2, 0);
+    Block::setVal($secIaProcessId, 'card_icon', 'text', 'code', 2, 1);
+    Block::setVal($secIaProcessId, 'card_description', 'textarea', 'Création et entraînement de modèles d\'IA spécialisés sur vos propres bases de connaissances.', 2, 2);
+    Block::setVal($secIaProcessId, 'card_title', 'text', '3. Intégration & Suivi', 3, 0);
+    Block::setVal($secIaProcessId, 'card_icon', 'text', 'rocket', 3, 1);
+    Block::setVal($secIaProcessId, 'card_description', 'textarea', 'Mise en production, branchement des APIs, et surveillance continue des gains de productivité.', 3, 2);
+
+    $secIaCtaId = (int)Section::addSection($pageIaId, 'CTA Final IA', 'cta', 3);
+    Block::setVal($secIaCtaId, 'eyebrow', 'text', 'Prêt pour le futur de la productivité ?');
+    Block::setVal($secIaCtaId, 'title', 'text', 'Propulsez votre entreprise dans l\'ère de l\'automatisation par l\'IA');
+    Block::setVal($secIaCtaId, 'subtitle', 'textarea', 'Prenez rendez-vous avec l\'un de nos architectes IA pour obtenir une démonstration personnalisée et gratuite sur vos workflows.');
+    Block::setVal($secIaCtaId, 'cta_text', 'text', 'Planifier ma démo');
+    Block::setVal($secIaCtaId, 'cta_url', 'link', '/contact');
+    echo "Page IA & Automatisation créée.\n";
+
+
+    // ----------------------------------------------------
+    // INJECTION DES REGLAGES GENERAUX SUPPLEMENTAIRES
+    // ----------------------------------------------------
+    echo "Génération des réglages généraux supplémentaires...\n";
+    $extraSettings = [
+        'site_favicon' => '/assets/images/hero_3d.png',
+        'site_logo_mobile' => '',
+        'site_logo_text' => 'Digitalium',
+        'site_logo_subtext' => 'Group',
+        'site_whatsapp' => '0101782919',
+        'footer_copyright' => '© ' . date('Y') . ' Digitalium Group. Tous droits réservés.',
+        'footer_legal_text' => 'Mentions Légales',
+        'footer_legal_url' => '/mentions-legales',
+        'header_cta_text' => 'Discuter de mon projet',
+        'header_cta_link' => '/contact',
+        'contact_phone' => '0101782919' // Overwrite with official contact phone
+    ];
+
+    foreach ($extraSettings as $k => $v) {
+        Setting::setVal($k, $v);
+        echo "Réglage '$k' défini.\n";
+    }
+
+
+    // ----------------------------------------------------
+    // POPULATION DE LA TABLE DES PROJETS (projects)
+    // ----------------------------------------------------
+    echo "Peuplement de la table des projets (projects)...\n";
+    $projects = [
+        [
+            'title' => 'Assalé Président',
+            'category' => 'Politique',
+            'logo' => '/assets/images/hero_3d.png',
+            'main_image' => '/assets/images/hero_3d.png',
+            'context' => 'Plateforme de communication politique pour renforcer la visibilité et l\'engagement des électeurs.',
+            'impact' => 'Canal direct de communication fluide avec les citoyens.',
+            'technologies' => 'HTML, CSS, JavaScript, PHP',
+            'external_link' => 'https://assale.digitaliumgroup.com',
+            'sort_order' => 1,
+            'is_featured' => 1
+        ],
+        [
+            'title' => 'Mairie de Tiassalé',
+            'category' => 'Institutionnel',
+            'logo' => '/assets/images/about_3d.png',
+            'main_image' => '/assets/images/about_3d.png',
+            'context' => 'Site institutionnel pour améliorer la communication municipale et l\'accès rapide aux services administratifs.',
+            'impact' => 'Accès grandement facilité aux services municipaux et démarches en ligne.',
+            'technologies' => 'HTML, CSS, WordPress, MySQL',
+            'external_link' => 'https://tiassale.digitaliumgroup.com',
+            'sort_order' => 2,
+            'is_featured' => 1
+        ],
+        [
+            'title' => 'Cabinet Dentaire Blessing',
+            'category' => 'Médical',
+            'logo' => '/assets/images/services_3d.png',
+            'main_image' => '/assets/images/services_3d.png',
+            'context' => 'Site web professionnel haut de gamme pour promouvoir un cabinet dentaire moderne et attirer de nouveaux patients.',
+            'impact' => 'Augmentation notable de la visibilité locale et des prises de rendez-vous en ligne.',
+            'technologies' => 'HTML, CSS, PHP, Native JS',
+            'external_link' => 'https://blessing.digitaliumgroup.com',
+            'sort_order' => 3,
+            'is_featured' => 1
+        ],
+        [
+            'title' => 'ONG 2SC',
+            'category' => 'Humanitaire',
+            'logo' => '/assets/images/hero_3d.png',
+            'main_image' => '/assets/images/hero_3d.png',
+            'context' => 'Plateforme internationale de visibilité et de collecte de dons sécurisés pour une ONG panafricaine.',
+            'impact' => 'Visibilité internationale accrue pour l\'organisation et transparence des dons.',
+            'technologies' => 'HTML, CSS, Bootstrap, PHP',
+            'external_link' => 'https://ong2sc.digitaliumgroup.com',
+            'sort_order' => 4,
+            'is_featured' => 1
+        ],
+        [
+            'title' => 'Elephant Déchaîné',
+            'category' => 'Média Digital',
+            'logo' => '/assets/images/about_3d.png',
+            'main_image' => '/assets/images/about_3d.png',
+            'context' => 'Portail d\'actualités et de presse satirique digitale avec passerelle d\'abonnements payants sécurisés.',
+            'impact' => 'Monétisation des articles en ligne et fidélisation des abonnés.',
+            'technologies' => 'HTML, CSS, TailWind, Laravel, MySQL',
+            'external_link' => 'https://elephant.digitaliumgroup.com',
+            'sort_order' => 5,
+            'is_featured' => 1
+        ],
+        [
+            'title' => 'Ivoire Kita & KenCity Shop',
+            'category' => 'E-Commerce',
+            'logo' => '/assets/images/services_3d.png',
+            'main_image' => '/assets/images/services_3d.png',
+            'context' => 'Boutiques de commerce électronique performantes conçues pour promouvoir le textile Kita traditionnel.',
+            'impact' => 'Expansion importante des ventes nationales et internationales.',
+            'technologies' => 'HTML, CSS, WooCommerce, Stripe',
+            'external_link' => 'https://kita.digitaliumgroup.com',
+            'sort_order' => 6,
+            'is_featured' => 1
+        ]
+    ];
+
+    $insertQuery = "INSERT INTO projects (title, category, logo, main_image, context, impact, technologies, external_link, sort_order, is_featured)
+                    VALUES (:title, :cat, :logo, :img, :context, :impact, :tech, :link, :ord, :feat)";
+    
+    foreach ($projects as $proj) {
+        $pdo->prepare($insertQuery)->execute([
+            'title' => $proj['title'],
+            'cat' => $proj['category'],
+            'logo' => $proj['logo'],
+            'img' => $proj['main_image'],
+            'context' => $proj['context'],
+            'impact' => $proj['impact'],
+            'tech' => $proj['technologies'],
+            'link' => $proj['external_link'],
+            'ord' => $proj['sort_order'],
+            'feat' => $proj['is_featured']
+        ]);
+        echo "Projet '{$proj['title']}' inséré.\n";
+    }
+
+
+    // ----------------------------------------------------
+    // ENREGISTREMENT DES IMAGES 3D DANS LA BIBLIOTHEQUE MEDIA
+    // ----------------------------------------------------
+    echo "Enregistrement des images 3D dans la bibliothèque média...\n";
+    $imagesToRegister = [
+        'hero_3d.png' => '/assets/images/hero_3d.png',
+        'services_3d.png' => '/assets/images/services_3d.png',
+        'about_3d.png' => '/assets/images/about_3d.png'
+    ];
+
+    foreach ($imagesToRegister as $name => $path) {
+        $fullPath = PUBLIC_PATH . $path;
+        if (file_exists($fullPath)) {
+            Database::insert(
+                "INSERT INTO media (filename, filepath, original_name, file_size, mime_type) 
+                 VALUES (:filename, :filepath, :original_name, :file_size, :mime_type)",
+                [
+                    'filename' => $name,
+                    'filepath' => $path,
+                    'original_name' => $name,
+                    'file_size' => filesize($fullPath),
+                    'mime_type' => 'image/png'
+                ]
+            );
+            echo "Média '{$name}' enregistré.\n";
+        }
+    }
+
+
+    // ----------------------------------------------------
+    // INJECTION DES BLOCK FIELDS DANS LES GROUPES REPETABLES
+    // ----------------------------------------------------
+    echo "Injection des block fields dans les groupes répétables...\n";
+    $sections = Database::fetchAll("SELECT id, type FROM sections");
+    foreach ($sections as $sec) {
+        $secId = (int)$sec['id'];
+        $type = $sec['type'];
+        
+        $groups = Database::fetchAll("SELECT DISTINCT group_id FROM blocks WHERE section_id = :sid AND group_id IS NOT NULL", ['sid' => $secId]);
+        if (empty($groups)) continue;
+
+        foreach ($groups as $g) {
+            $groupId = (int)$g['group_id'];
+
+            switch ($type) {
+                case 'services_grid':
+                    Block::setVal($secId, 'svc_image', 'image', '', $groupId, 4);
+                    Block::setVal($secId, 'svc_link', 'link', '/contact', $groupId, 5);
+                    break;
+                case 'blog_grid':
+                    Block::setVal($secId, 'post_image', 'image', '', $groupId, 5);
+                    Block::setVal($secId, 'post_link', 'link', '/blog', $groupId, 6);
+                    break;
+                case 'team_roles':
+                case 'team':
+                    Block::setVal($secId, 'role_image', 'image', '', $groupId, 3);
+                    Block::setVal($secId, 'role_link', 'link', '#', $groupId, 4);
+                    break;
+                case 'process':
+                case 'process_strip':
+                    Block::setVal($secId, 'proc_image', 'image', '', $groupId, 4);
+                    Block::setVal($secId, 'proc_link', 'link', '#', $groupId, 5);
+                    break;
+                case 'features':
+                    Block::setVal($secId, 'card_image', 'image', '', $groupId, 3);
+                    Block::setVal($secId, 'card_link', 'link', '#', $groupId, 4);
+                    break;
+            }
+        }
+    }
+
+    // ----------------------------------------------------
+    // NETTOYAGE DU CACHE CMS
+    // ----------------------------------------------------
+    \App\Services\Cache::clear();
+    echo "Cache CMS vidé avec succès.\n";
+
     echo "=== MULTI-PAGES CONFIGURÉES ET SEEDÉES AVEC SUCCÈS ! ===\n\n";
     echo "Pages disponibles :\n";
     echo "  - /           (home)\n";
     echo "  - /about      (À Propos)\n";
     echo "  - /service    (Services)\n";
     echo "  - /blog       (Blog)\n";
-    echo "  - /contact    (Contact)\n\n";
+    echo "  - /contact    (Contact)\n";
+    echo "  - /realisations (Réalisations)\n";
+    echo "  - /portfolio  (Portfolio)\n";
+    echo "  - /etudes-de-cas (Études de Cas)\n";
+    echo "  - /ia-automatisation (IA & Automatisation)\n\n";
     echo "Accès admin: /admin/login  (admin / password123)\n";
 
 } catch (Exception $e) {
