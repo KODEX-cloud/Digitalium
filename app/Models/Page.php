@@ -73,6 +73,9 @@ class Page extends Model {
                 responsive_settings = :responsive_settings
                 WHERE id = :id";
         
+        ini_set('error_log', ROOT_PATH . '/storage/logs/app.log');
+        error_log($sql);
+        
         $stmt = Database::query($sql, [
             'title' => $data['title'],
             'slug' => self::slugify($data['slug']),

@@ -119,6 +119,9 @@ class PageController extends Controller {
      * Handle page metadata update.
      */
     public function editSubmit(array $params): void {
+        ini_set('error_log', ROOT_PATH . '/storage/logs/app.log');
+        error_log(print_r($_POST,true));
+
         $this->middlewareAuth();
         $this->validateCsrf();
 
