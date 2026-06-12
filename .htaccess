@@ -2,8 +2,8 @@
     RewriteEngine On
     RewriteBase /
 
-    # Prevent directory browsing and MultiViews conflicts
-    Options -Indexes -MultiViews
+    # Prevent directory browsing and MultiViews conflicts (commented out for host compatibility)
+    # Options -Indexes -MultiViews
 
     # Block direct access to critical app directories
     RewriteRule ^(app|config|database|routes|storage|vendor)($|/) - [F,L]
