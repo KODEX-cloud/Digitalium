@@ -4,6 +4,31 @@
  * Bootstraps config, session, autoloader, and routes.
  */
 
+// Custom Error & Exception Handler to bypass server blockages and show detailed logs
+register_shutdown_function(function() {
+    $error = error_get_last();
+    if ($error !== null && in_array($error['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR])) {
+        if (!headers_sent()) {
+            header('HTTP/1.1 500 Internal Server Error');
+        }
+        echo "<div style='background:#fee2e2;color:#991b1b;padding:20px;border:1px solid #f87171;border-radius:6px;font-family:monospace;margin:20px;'>";
+        echo "<b>Fatal Error:</b> " . htmlspecialchars($error['message']) . "<br>";
+        echo "in <b>" . htmlspecialchars($error['file']) . "</b> on line <b>" . $error['line'] . "</b><br>";
+        echo "</div>";
+    }
+});
+
+set_exception_handler(function($e) {
+    if (!headers_sent()) {
+        header('HTTP/1.1 500 Internal Server Error');
+    }
+    echo "<div style='background:#fee2e2;color:#991b1b;padding:20px;border:1px solid #f87171;border-radius:6px;font-family:monospace;margin:20px;'>";
+    echo "<b>Exception:</b> " . htmlspecialchars($e->getMessage()) . "<br>";
+    echo "in <b>" . htmlspecialchars($e->getFile()) . "</b> on line <b>" . $e->getLine() . "</b><br><br>";
+    echo "<b>Stack trace:</b><pre>" . htmlspecialchars($e->getTraceAsString()) . "</pre>";
+    echo "</div>";
+});
+
 // 0. PHP Built-in Server static files fallback
 if (php_sapi_name() === 'cli-server') {
     $filePath = __DIR__ . '/public' . parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
