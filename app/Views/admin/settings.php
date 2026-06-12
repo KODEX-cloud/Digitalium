@@ -107,7 +107,7 @@
     }
 </style>
 
-<form action="/admin/settings" method="POST">
+<form action="<?= url('/admin/settings') ?>" method="POST">
     <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
 
     <div class="settings-grid-layout">

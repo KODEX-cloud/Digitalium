@@ -25,12 +25,12 @@ class MediaHelper {
                 ' . $previewHtml . '
             </div>
             <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 6px;">
-                <input type="hidden" name="' . htmlspecialchars($inputName) . '" id="input-' . htmlspecialchars($fieldId) . '" value="' . htmlspecialchars($currentValue ?? '') . '" class="media-input-value">
+                <input type="hidden" name="' . htmlspecialchars($inputName) . '" id="' . htmlspecialchars($fieldId) . '" value="' . htmlspecialchars($currentValue ?? '') . '" class="media-input-value">
                 <div style="display: flex; gap: 8px;">
-                    <button type="button" class="btn-primary select-media-btn" data-target="input-' . htmlspecialchars($fieldId) . '" data-preview="preview-' . htmlspecialchars($fieldId) . '" data-label="label-' . htmlspecialchars($fieldId) . '" style="padding: 8px 14px; font-size: 0.8rem; height: 36px; display: inline-flex; align-items: center; justify-content: center; gap: 6px;">
+                    <button type="button" class="btn-primary select-media-btn" data-target="' . htmlspecialchars($fieldId) . '" data-preview="preview-' . htmlspecialchars($fieldId) . '" data-label="label-' . htmlspecialchars($fieldId) . '" style="padding: 8px 14px; font-size: 0.8rem; height: 36px; display: inline-flex; align-items: center; justify-content: center; gap: 6px;">
                         <i data-lucide="image" style="width: 14px; height: 14px;"></i> Choisir...
                     </button>
-                    <button type="button" class="btn-danger remove-media-btn" data-target="input-' . htmlspecialchars($fieldId) . '" data-preview="preview-' . htmlspecialchars($fieldId) . '" data-label="label-' . htmlspecialchars($fieldId) . '" style="padding: 8px 14px; font-size: 0.8rem; height: 36px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; ' . $removeBtnStyle . '">
+                    <button type="button" class="btn-danger remove-media-btn" data-target="' . htmlspecialchars($fieldId) . '" data-preview="preview-' . htmlspecialchars($fieldId) . '" data-label="label-' . htmlspecialchars($fieldId) . '" style="padding: 8px 14px; font-size: 0.8rem; height: 36px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; ' . $removeBtnStyle . '">
                         <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i> Supprimer
                     </button>
                 </div>

@@ -167,7 +167,7 @@
                 <i data-lucide="clock"></i>
                 <span>Pages modifiées récemment</span>
             </h2>
-            <a href="/admin/pages" class="btn-secondary" style="padding: 6px 12px; font-size: 0.8rem;">Tout voir</a>
+            <a href="<?= url('/admin/pages') ?>" class="btn-secondary" style="padding: 6px 12px; font-size: 0.8rem;">Tout voir</a>
         </div>
         <?php if (empty($recentPages)): ?>
             <p style="color: var(--text-muted); text-align: center; padding: 20px;">Aucune page créée pour le moment.</p>
@@ -192,7 +192,7 @@
                                 </span>
                             </td>
                             <td style="text-align: right;">
-                                <a href="/admin/pages/edit/<?= $page['id'] ?>" class="btn-primary" style="padding: 6px 12px; font-size: 0.8rem;">
+                                <a href="<?= url('/admin/pages/edit/' . $page['id']) ?>" class="btn-primary" style="padding: 6px 12px; font-size: 0.8rem;">
                                     <i data-lucide="edit-3" style="width: 14px; height: 14px;"></i>
                                     <span>Gérer</span>
                                 </a>
@@ -210,11 +210,11 @@
                 <h3 class="card-title" style="font-size: 1rem;">Actions Rapides</h3>
             </div>
             <div style="display: flex; flex-direction: column; gap: 10px;">
-                <a href="/admin/pages/create" class="btn-primary" style="justify-content: center; width: 100%;">
+                <a href="<?= url('/admin/pages/create') ?>" class="btn-primary" style="justify-content: center; width: 100%;">
                     <i data-lucide="plus-circle"></i>
                     <span>Ajouter une page</span>
                 </a>
-                <a href="/admin/media" class="btn-secondary" style="justify-content: center; width: 100%;">
+                <a href="<?= url('/admin/media') ?>" class="btn-secondary" style="justify-content: center; width: 100%;">
                     <i data-lucide="image"></i>
                     <span>Importer un média</span>
                 </a>
@@ -231,8 +231,8 @@
                 <div class="media-thumb-grid">
                     <?php foreach ($recentMedia as $media): ?>
                         <div class="media-thumb-item" title="<?= htmlspecialchars($media['original_name']) ?>">
-                            <a href="/admin/media">
-                                <img src="<?= htmlspecialchars($media['filepath']) ?>" alt="<?= htmlspecialchars($media['original_name']) ?>">
+                            <a href="<?= url('/admin/media') ?>">
+                                <img src="<?= htmlspecialchars(url($media['filepath'])) ?>" alt="<?= htmlspecialchars($media['original_name']) ?>">
                             </a>
                         </div>
                     <?php endforeach; ?>

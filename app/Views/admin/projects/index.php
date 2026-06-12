@@ -4,7 +4,7 @@
             <i data-lucide="folder-git-2"></i>
             <span>Vos Réalisations Digitales</span>
         </h2>
-        <a href="/admin/projects/create" class="btn-primary">
+        <a href="<?= url('/admin/projects/create') ?>" class="btn-primary">
             <i data-lucide="plus-circle"></i>
             <span>Ajouter une réalisation</span>
         </a>
@@ -33,7 +33,7 @@
                     <tr>
                         <td>
                             <div style="width: 50px; height: 35px; border-radius: 6px; overflow: hidden; border: 1px solid var(--border); background-color: var(--bg-base);">
-                                <img src="<?= htmlspecialchars($proj['main_image'] ?? '/assets/images/hero_3d.png') ?>" alt="Project Thumbnail" style="width:100%; height:100%; object-fit:cover;">
+                                <img src="<?= htmlspecialchars(url($proj['main_image'] ?? '/assets/images/hero_3d.png')) ?>" alt="Project Thumbnail" style="width:100%; height:100%; object-fit:cover;">
                             </div>
                         </td>
                         <td style="font-weight: 700; color: var(--text-main);"><?= htmlspecialchars($proj['title']) ?></td>
@@ -56,11 +56,11 @@
                         </td>
                         <td style="text-align: right; white-space: nowrap;">
                             <div style="display: inline-flex; gap: 8px;">
-                                <a href="/admin/projects/edit/<?= $proj['id'] ?>" class="btn-secondary" style="padding: 6px 12px; font-size: 0.8rem;" title="Modifier">
+                                <a href="<?= url('/admin/projects/edit/' . $proj['id']) ?>" class="btn-secondary" style="padding: 6px 12px; font-size: 0.8rem;" title="Modifier">
                                     <i data-lucide="edit-3" style="width: 14px; height: 14px;"></i>
                                     <span>Modifier</span>
                                 </a>
-                                <form action="/admin/projects/delete/<?= $proj['id'] ?>" method="POST" onsubmit="return confirm('Supprimer définitivement cette réalisation ?');" style="display:inline;">
+                                <form action="<?= url('/admin/projects/delete/' . $proj['id']) ?>" method="POST" onsubmit="return confirm('Supprimer définitivement cette réalisation ?');" style="display:inline;">
                                     <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
                                     <button type="submit" class="btn-danger" style="padding: 6px 12px; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 4px;">
                                         <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i>

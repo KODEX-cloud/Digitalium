@@ -47,12 +47,28 @@
 </section>
 
 <style>
+.search-box {
+    transition: var(--transition);
+    border-radius: 12px !important;
+}
+.search-box:focus-within {
+    border-color: var(--secondary) !important;
+    box-shadow: 0 12px 30px -10px rgba(124, 58, 237, 0.25) !important;
+}
+.search-box button {
+    border-radius: 0 12px 12px 0 !important;
+    transition: var(--transition);
+}
+.search-box button:hover {
+    background: var(--secondary) !important;
+}
 .blog-tag-btn {
-    background: transparent;
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(8px);
     border: 1px solid var(--border);
     color: var(--text-muted);
-    padding: 6px 18px;
-    border-radius: 50px;
+    padding: 8px 20px;
+    border-radius: 12px;
     cursor: pointer;
     font-size: 0.75rem;
     font-weight: 600;
@@ -61,9 +77,11 @@
     transition: var(--transition);
 }
 .blog-tag-btn.active, .blog-tag-btn:hover {
-    background: var(--primary);
-    border-color: var(--primary);
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    border-color: transparent;
     color: white;
+    box-shadow: 0 10px 20px -8px rgba(79, 70, 229, 0.3);
+    transform: translateY(-1px);
 }
 </style>
 

@@ -4,7 +4,7 @@
             <i data-lucide="file-text"></i>
             <span>Toutes les pages du site</span>
         </h2>
-        <a href="/admin/pages/create" class="btn-primary">
+        <a href="<?= url('/admin/pages/create') ?>" class="btn-primary">
             <i data-lucide="plus-circle"></i>
             <span>Créer une page</span>
         </a>
@@ -15,7 +15,7 @@
             <i data-lucide="file" style="width: 48px; height: 48px; color: var(--text-muted); margin-bottom: 16px;"></i>
             <h3 style="margin-bottom: 8px;">Aucune page trouvée</h3>
             <p style="color: var(--text-muted); margin-bottom: 20px; font-size: 0.9rem;">Commencez à créer des pages.</p>
-            <a href="/admin/pages/create" class="btn-primary">Ajouter la première page</a>
+            <a href="<?= url('/admin/pages/create') ?>" class="btn-primary">Ajouter la première page</a>
         </div>
     <?php else: ?>
         <style>
@@ -78,7 +78,7 @@
                     <tr>
                         <td style="font-weight: 600; font-size: 0.95rem;"><?= htmlspecialchars($page['title']) ?></td>
                         <td>
-                            <a href="<?= $page['slug'] === 'home' ? '/' : '/' . htmlspecialchars($page['slug']) ?>" target="_blank" style="color: var(--primary); text-decoration: none; font-family: monospace; font-size: 0.9rem;">
+                            <a href="<?= url($page['slug'] === 'home' ? '/' : '/' . htmlspecialchars($page['slug'])) ?>" target="_blank" style="color: var(--primary); text-decoration: none; font-family: monospace; font-size: 0.9rem;">
                                 <?= $page['slug'] === 'home' ? '/' : '/' . htmlspecialchars($page['slug']) ?>
                             </a>
                         </td>
@@ -89,13 +89,13 @@
                         </td>
                         <td>
                             <div class="actions-cell">
-                                <a href="/admin/pages/edit/<?= $page['id'] ?>" class="btn-secondary" style="padding: 6px 12px; font-size: 0.8rem;">
+                                <a href="<?= url('/admin/pages/edit/' . $page['id']) ?>" class="btn-secondary" style="padding: 6px 12px; font-size: 0.8rem;">
                                     <i data-lucide="edit-3" style="width: 14px; height: 14px;"></i>
                                     <span>Éditeur Visuel</span>
                                 </a>
 
                                 <?php if ($page['slug'] !== 'home'): ?>
-                                    <form action="/admin/pages/delete/<?= $page['id'] ?>" method="POST" onsubmit="return confirm('Êtes-vous sûr ?');" style="display: inline;">
+                                    <form action="<?= url('/admin/pages/delete/' . $page['id']) ?>" method="POST" onsubmit="return confirm('Êtes-vous sûr ?');" style="display: inline;">
                                         <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
                                         <button type="submit" class="btn-danger" style="padding: 6px 12px; font-size: 0.8rem;">
                                             <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i>

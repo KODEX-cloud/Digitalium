@@ -185,7 +185,7 @@
             </div>
         <?php endif; ?>
 
-        <form action="/admin/login" method="POST">
+        <form action="<?= url('/admin/login') ?>" method="POST">
             <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
 
             <div class="form-group">

@@ -105,7 +105,7 @@
     }
 </style>
 
-<form action="/admin/projects/edit/<?= $project['id'] ?>" method="POST">
+<form action="<?= url('/admin/projects/edit/' . $project['id']) ?>" method="POST">
     <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
 
     <div class="projects-grid-form">
@@ -193,7 +193,7 @@
                     <i data-lucide="save"></i>
                     <span>Mettre à jour</span>
                 </button>
-                <a href="/admin/projects" class="btn-secondary" style="justify-content: center; width: 100%; padding: 12px;">Annuler</a>
+                <a href="<?= url('/admin/projects') ?>" class="btn-secondary" style="justify-content: center; width: 100%; padding: 12px;">Annuler</a>
             </div>
         </div>
     </div>

@@ -109,6 +109,27 @@ if (!empty($page['hero_title'])):
         text-shadow: <?= $shadowStrengthCss ?>;
     }
 
+    /* Keyframes and custom styles for new premium Hero variants */
+    @keyframes pulseGlow {
+        0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+        50% { transform: translate(-50%, -50%) scale(1.08); opacity: 1; }
+    }
+    @keyframes floatGlow {
+        0%, 100% { transform: translateY(0) scale(1); }
+        50% { transform: translateY(-15px) scale(1.05); }
+    }
+    .glass-stack-card:hover {
+        transform: scale(1.05) translateY(-2px) !important;
+        border-color: rgba(99, 102, 241, 0.45) !important;
+        box-shadow: 0 20px 40px rgba(99, 102, 241, 0.1) !important;
+    }
+    .glass-feature-card:hover {
+        transform: translateY(-5px) !important;
+        border-color: rgba(99, 102, 241, 0.4) !important;
+        box-shadow: 0 20px 40px rgba(99, 102, 241, 0.08) !important;
+        background: rgba(255, 255, 255, 0.8) !important;
+    }
+
     /* Embedded Breakpoint styling overrides */
     <?php
     $mobileHeroTextPos = $respSettings['mobile']['hero_text_position'] ?? '';
@@ -277,10 +298,260 @@ if (!empty($page['hero_title'])):
         </div>
     </section>
 
+<?php elseif ($variant === 'hero_ambient_glow'): ?>
+    <!-- Variant 6: Ambient Glow Hero -->
+    <section class="premium-hero hero-ambient-glow-layout" id="hero-section-<?= $page['id'] ?>" style="<?= $bgStyle ?> position: relative; padding: <?= $heroPadding ?>; overflow: hidden; display: flex; <?= $verticalAlignCss ?> min-height: <?= $heroMinHeight ?>;">
+        
+        <!-- Large neon glowing circles behind content -->
+        <div class="ambient-glow-core" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 600px; height: 600px; border-radius: 50%; background: radial-gradient(circle, rgba(124, 58, 237, 0.18) 0%, rgba(30, 58, 138, 0.08) 40%, rgba(0,0,0,0) 70%); filter: blur(40px); z-index: 1; pointer-events: none; animation: pulseGlow 10s ease-in-out infinite;"></div>
+        <div class="ambient-glow-secondary" style="position: absolute; top: 40%; left: 30%; width: 400px; height: 400px; border-radius: 50%; background: radial-gradient(circle, rgba(226, 109, 54, 0.12) 0%, rgba(226, 109, 54, 0) 70%); filter: blur(30px); z-index: 1; pointer-events: none; animation: floatGlow 12s ease-in-out infinite;"></div>
+
+        <div class="container" style="position: relative; z-index: 5; width: 100%;">
+            <div class="hero-text-block" style="max-width: <?= $heroTextWidth ?>; <?= $textMarginCss ?> <?= $textAlignmentCss ?> display: flex; flex-direction: column; <?= ($heroTextAlignment === 'center' || $heroTextAlignment === 'centre') ? 'align-items: center;' : (($heroTextAlignment === 'right' || $heroTextAlignment === 'droite') ? 'align-items: flex-end;' : 'align-items: flex-start;') ?> opacity: 0; transform: translateY(20px); animation: heroFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;">
+                
+                <!-- Badge -->
+                <?php if (!empty($badge)): ?>
+                    <div class="hero-brand-badge" style="display: inline-flex; align-items: center; gap: 8px; background: rgba(124, 58, 237, 0.12); border: 1px solid rgba(124, 58, 237, 0.3); padding: 6px 18px; border-radius: 50px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; color: #a5b4fc; margin-bottom: 28px; font-family: var(--font-heading); box-shadow: 0 0 20px rgba(124, 58, 237, 0.15);">
+                        <div style="width: 6px; height: 6px; border-radius: 50%; background: #818cf8; box-shadow: 0 0 8px #818cf8;"></div>
+                        <span><?= htmlspecialchars($badge) ?></span>
+                    </div>
+                <?php endif; ?>
+
+                <!-- Heading -->
+                <h1 style="font-size: clamp(2.6rem, 6.5vw, 4.5rem); line-height: 1.1; font-weight: 900; letter-spacing: -0.03em; color: var(--text-main); margin-bottom: 24px; font-family: var(--font-heading);">
+                    <?= $page['hero_title'] ?>
+                </h1>
+
+                <!-- Accent Stripes -->
+                <div style="display: flex; gap: 8px; margin: 10px 0 28px 0;">
+                    <span style="width: 36px; height: 5px; border-radius: 2.5px; background: var(--primary); box-shadow: 0 0 10px rgba(99, 102, 241, 0.5);"></span>
+                    <span style="width: 24px; height: 5px; border-radius: 2.5px; background: var(--secondary); box-shadow: 0 0 10px rgba(124, 58, 237, 0.5);"></span>
+                </div>
+
+                <!-- Subtitle -->
+                <?php if (!empty($page['hero_subtitle'])): ?>
+                    <p style="font-size: 1.2rem; line-height: 1.75; color: var(--text-muted); margin-bottom: 40px; max-width: 750px; font-weight: 500;">
+                        <?= htmlspecialchars($page['hero_subtitle']) ?>
+                    </p>
+                <?php endif; ?>
+
+                <!-- Actions -->
+                <div style="display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; align-items: center;">
+                    <?php if (!empty($page['hero_cta1_text'])): ?>
+                        <a href="<?= htmlspecialchars(url($page['hero_cta1_url'] ?? '#contact')) ?>" class="btn-cta-primary" style="display: inline-flex; align-items: center; gap: 10px; padding: 14px 34px; border-radius: 12px; font-weight: 700; color: white; background: linear-gradient(135deg, #e26d36 0%, #f97316 100%); border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 25px -5px rgba(226, 109, 54, 0.4); text-transform: uppercase; font-size: 0.82rem; letter-spacing: 0.05em; transition: var(--transition);">
+                            <span><?= htmlspecialchars($page['hero_cta1_text']) ?></span>
+                            <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
+                        </a>
+                    <?php endif; ?>
+
+                    <?php if (!empty($page['hero_cta2_text'])): ?>
+                        <a href="<?= htmlspecialchars(url($page['hero_cta2_url'] ?? '#services')) ?>" class="btn-cta-secondary" style="display: inline-flex; align-items: center; gap: 8px; padding: 14px 30px; border-radius: 12px; font-weight: 600; color: var(--text-main); background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid var(--border); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02); transition: var(--transition);">
+                            <span><?= htmlspecialchars($page['hero_cta2_text']) ?></span>
+                        </a>
+                    <?php endif; ?>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+<?php elseif ($variant === 'hero_split_asymmetric'): ?>
+    <!-- Variant 7: Asymmetric Stack Hero -->
+    <section class="premium-hero hero-asymmetric-layout" id="hero-section-<?= $page['id'] ?>" style="<?= $bgStyle ?> position: relative; padding: <?= $heroPadding ?>; overflow: hidden; display: flex; <?= $verticalAlignCss ?> min-height: <?= $heroMinHeight ?>;">
+        
+        <div class="hero-glow-1" style="position: absolute; width: 600px; height: 600px; border-radius: 50%; background: radial-gradient(circle, rgba(124, 58, 237, 0.12) 0%, rgba(124, 58, 237, 0) 70%); top: -100px; right: -50px; z-index: 1; pointer-events: none;"></div>
+
+        <div class="container" style="position: relative; z-index: 5; width: 100%;">
+            <div class="hero-grid" style="display: grid; <?= $gridOrder ?> gap: 60px; align-items: center;">
+                
+                <!-- Text block -->
+                <div class="hero-left-content hero-text-block" style="<?= $textOrder ?> max-width: <?= $heroTextWidth ?>; <?= $textMarginCss ?> <?= $textAlignmentCss ?> display: flex; flex-direction: column; <?= ($heroTextAlignment === 'center' || $heroTextAlignment === 'centre') ? 'align-items: center;' : (($heroTextAlignment === 'right' || $heroTextAlignment === 'droite') ? 'align-items: flex-end;' : 'align-items: flex-start;') ?> opacity: 0; transform: translateY(20px); animation: heroFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;">
+                    
+                    <?php if (!empty($badge)): ?>
+                        <div class="hero-brand-badge" style="display: inline-flex; align-items: center; gap: 8px; background: rgba(124, 58, 237, 0.08); border: 1px solid rgba(124, 58, 237, 0.2); padding: 6px 16px; border-radius: 50px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.15em; color: var(--secondary); margin-bottom: 24px; font-family: var(--font-heading);">
+                            <div style="width: 6px; height: 6px; border-radius: 50%; background: var(--secondary); box-shadow: 0 0 8px var(--secondary);"></div>
+                            <span><?= htmlspecialchars($badge) ?></span>
+                        </div>
+                    <?php endif; ?>
+
+                    <h1 style="font-size: clamp(2.4rem, 5vw, 3.8rem); line-height: 1.15; font-weight: 900; letter-spacing: -0.03em; color: var(--text-main); margin-bottom: 20px; font-family: var(--font-heading);">
+                        <?= $page['hero_title'] ?>
+                    </h1>
+
+                    <div style="display: flex; gap: 6px; margin: 20px 0 24px 0;">
+                        <span style="width: 24px; height: 4px; border-radius: 2px; background: var(--primary);"></span>
+                        <span style="width: 16px; height: 4px; border-radius: 2px; background: var(--secondary);"></span>
+                    </div>
+
+                    <?php if (!empty($page['hero_subtitle'])): ?>
+                        <p style="font-size: 1.1rem; line-height: 1.7; color: var(--text-muted); margin-bottom: 36px; max-width: 580px; font-weight: 500;">
+                            <?= htmlspecialchars($page['hero_subtitle']) ?>
+                        </p>
+                    <?php endif; ?>
+
+                    <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center;">
+                        <?php if (!empty($page['hero_cta1_text'])): ?>
+                            <a href="<?= htmlspecialchars(url($page['hero_cta1_url'] ?? '#contact')) ?>" class="btn-cta-primary" style="display: inline-flex; align-items: center; gap: 10px; padding: 14px 32px; border-radius: 12px; font-weight: 700; color: white; background: linear-gradient(135deg, #e26d36 0%, #f97316 100%); border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 25px -5px rgba(226, 109, 54, 0.4); text-transform: uppercase; font-size: 0.82rem; letter-spacing: 0.05em; transition: var(--transition);">
+                                <span><?= htmlspecialchars($page['hero_cta1_text']) ?></span>
+                                <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
+                            </a>
+                        <?php endif; ?>
+                        <?php if (!empty($page['hero_cta2_text'])): ?>
+                            <a href="<?= htmlspecialchars(url($page['hero_cta2_url'] ?? '#services')) ?>" class="btn-cta-secondary" style="display: inline-flex; align-items: center; gap: 8px; padding: 14px 28px; border-radius: 12px; font-weight: 600; color: var(--text-main); background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid var(--border); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02); transition: var(--transition);">
+                                <span><?= htmlspecialchars($page['hero_cta2_text']) ?></span>
+                            </a>
+                        <?php endif; ?>
+                    </div>
+                </div>
+
+                <!-- Visual Stack column -->
+                <div class="hero-right-visual" style="<?= $visualOrder ?> position: relative; opacity: 0; transform: scale(0.95) translateY(10px); animation: heroFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards; display: flex; justify-content: center; align-items: center;">
+                    <div class="asymmetric-card-stack" style="display: flex; flex-direction: column; gap: 20px; width: 100%; max-width: 440px;">
+                        <!-- Card 1 -->
+                        <div class="glass-stack-card" style="background: rgba(255, 255, 255, 0.65); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.7); border-radius: 16px; padding: 18px 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); display: flex; align-items: center; gap: 16px; transform: translateX(-15px); transition: all 0.4s ease-in-out;">
+                            <div style="width: 42px; height: 42px; border-radius: 12px; background: rgba(79, 70, 229, 0.1); display: flex; align-items: center; justify-content: center; color: var(--primary);">
+                                <i data-lucide="zap" style="width: 22px; height: 22px;"></i>
+                            </div>
+                            <div>
+                                <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--text-main); margin-bottom: 2px;">Haute Performance</h4>
+                                <p style="font-size: 0.75rem; color: var(--text-muted);">Architectures web rapides et optimisées.</p>
+                            </div>
+                        </div>
+                        <!-- Card 2 -->
+                        <div class="glass-stack-card" style="background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.8); border-radius: 16px; padding: 18px 24px; box-shadow: 0 20px 40px rgba(79,70,229,0.06); display: flex; align-items: center; gap: 16px; transform: scale(1.03); transition: all 0.4s ease-in-out; border-left: 4px solid var(--secondary);">
+                            <div style="width: 42px; height: 42px; border-radius: 12px; background: rgba(124, 58, 237, 0.1); display: flex; align-items: center; justify-content: center; color: var(--secondary);">
+                                <i data-lucide="shield-check" style="width: 22px; height: 22px;"></i>
+                            </div>
+                            <div>
+                                <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--text-main); margin-bottom: 2px;">Sécurité Maximale</h4>
+                                <p style="font-size: 0.75rem; color: var(--text-muted);">Protection de vos données et transactions.</p>
+                            </div>
+                        </div>
+                        <!-- Card 3 -->
+                        <div class="glass-stack-card" style="background: rgba(255, 255, 255, 0.65); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.7); border-radius: 16px; padding: 18px 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); display: flex; align-items: center; gap: 16px; transform: translateX(15px); transition: all 0.4s ease-in-out;">
+                            <div style="width: 42px; height: 42px; border-radius: 12px; background: rgba(226, 109, 54, 0.1); display: flex; align-items: center; justify-content: center; color: #e26d36;">
+                                <i data-lucide="layout-grid" style="width: 22px; height: 22px;"></i>
+                            </div>
+                            <div>
+                                <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--text-main); margin-bottom: 2px;">CMS Ultra-Modulaire</h4>
+                                <p style="font-size: 0.75rem; color: var(--text-muted);">Administration dynamique en temps réel.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+<?php elseif ($variant === 'hero_grid_features'): ?>
+    <!-- Variant 8: Grid Features Hero -->
+    <section class="premium-hero hero-grid-features-layout" id="hero-section-<?= $page['id'] ?>" style="<?= $bgStyle ?> position: relative; padding: <?= $heroPadding ?>; overflow: hidden; display: flex; <?= $verticalAlignCss ?> min-height: <?= $heroMinHeight ?>;">
+        
+        <div class="hero-glow-1" style="position: absolute; width: 600px; height: 600px; border-radius: 50%; background: radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%, rgba(99, 102, 241, 0) 70%); top: -100px; right: -50px; z-index: 1; pointer-events: none;"></div>
+
+        <div class="container" style="position: relative; z-index: 5; width: 100%;">
+            <div class="hero-grid" style="display: grid; <?= $gridOrder ?> gap: 60px; align-items: center;">
+                
+                <!-- Text block -->
+                <div class="hero-left-content hero-text-block" style="<?= $textOrder ?> max-width: <?= $heroTextWidth ?>; <?= $textMarginCss ?> <?= $textAlignmentCss ?> display: flex; flex-direction: column; <?= ($heroTextAlignment === 'center' || $heroTextAlignment === 'centre') ? 'align-items: center;' : (($heroTextAlignment === 'right' || $heroTextAlignment === 'droite') ? 'align-items: flex-end;' : 'align-items: flex-start;') ?> opacity: 0; transform: translateY(20px); animation: heroFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;">
+                    
+                    <?php if (!empty($badge)): ?>
+                        <div class="hero-brand-badge" style="display: inline-flex; align-items: center; gap: 8px; background: rgba(99, 102, 241, 0.08); border: 1px solid rgba(99, 102, 241, 0.2); padding: 6px 16px; border-radius: 50px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.15em; color: var(--primary); margin-bottom: 24px; font-family: var(--font-heading);">
+                            <div style="width: 6px; height: 6px; border-radius: 50%; background: var(--primary); box-shadow: 0 0 8px var(--primary);"></div>
+                            <span><?= htmlspecialchars($badge) ?></span>
+                        </div>
+                    <?php endif; ?>
+
+                    <h1 style="font-size: clamp(2.4rem, 5vw, 3.8rem); line-height: 1.15; font-weight: 900; letter-spacing: -0.03em; color: var(--text-main); margin-bottom: 20px; font-family: var(--font-heading);">
+                        <?= $page['hero_title'] ?>
+                    </h1>
+
+                    <div style="display: flex; gap: 6px; margin: 20px 0 24px 0;">
+                        <span style="width: 24px; height: 4px; border-radius: 2px; background: var(--primary);"></span>
+                        <span style="width: 16px; height: 4px; border-radius: 2px; background: var(--secondary);"></span>
+                    </div>
+
+                    <?php if (!empty($page['hero_subtitle'])): ?>
+                        <p style="font-size: 1.1rem; line-height: 1.7; color: var(--text-muted); margin-bottom: 36px; max-width: 580px; font-weight: 500;">
+                            <?= htmlspecialchars($page['hero_subtitle']) ?>
+                        </p>
+                    <?php endif; ?>
+
+                    <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center;">
+                        <?php if (!empty($page['hero_cta1_text'])): ?>
+                            <a href="<?= htmlspecialchars(url($page['hero_cta1_url'] ?? '#contact')) ?>" class="btn-cta-primary" style="display: inline-flex; align-items: center; gap: 10px; padding: 14px 32px; border-radius: 12px; font-weight: 700; color: white; background: linear-gradient(135deg, #e26d36 0%, #f97316 100%); border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 25px -5px rgba(226, 109, 54, 0.4); text-transform: uppercase; font-size: 0.82rem; letter-spacing: 0.05em; transition: var(--transition);">
+                                <span><?= htmlspecialchars($page['hero_cta1_text']) ?></span>
+                                <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
+                            </a>
+                        <?php endif; ?>
+                        <?php if (!empty($page['hero_cta2_text'])): ?>
+                            <a href="<?= htmlspecialchars(url($page['hero_cta2_url'] ?? '#services')) ?>" class="btn-cta-secondary" style="display: inline-flex; align-items: center; gap: 8px; padding: 14px 28px; border-radius: 12px; font-weight: 600; color: var(--text-main); background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid var(--border); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02); transition: var(--transition);">
+                                <span><?= htmlspecialchars($page['hero_cta2_text']) ?></span>
+                            </a>
+                        <?php endif; ?>
+                    </div>
+                </div>
+
+                <!-- Visual Grid column -->
+                <div class="hero-right-visual" style="<?= $visualOrder ?> position: relative; opacity: 0; transform: scale(0.95) translateY(10px); animation: heroFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards; display: flex; justify-content: center; align-items: center;">
+                    <div class="grid-features-wrap" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; width: 100%; max-width: 440px;">
+                        
+                        <!-- Feature 1 -->
+                        <div class="glass-feature-card" style="background: rgba(255, 255, 255, 0.65); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.7); border-radius: 20px; padding: 24px 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.03); display: flex; flex-direction: column; gap: 14px; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);">
+                            <div style="width: 38px; height: 38px; border-radius: 10px; background: rgba(79, 70, 229, 0.1); display: flex; align-items: center; justify-content: center; color: var(--primary);">
+                                <i data-lucide="cpu" style="width: 20px; height: 20px;"></i>
+                            </div>
+                            <div>
+                                <h4 style="font-size: 0.9rem; font-weight: 700; color: var(--text-main); margin-bottom: 4px;">IA & Automation</h4>
+                                <p style="font-size: 0.72rem; color: var(--text-muted); line-height: 1.4;">Optimisez vos process métiers.</p>
+                            </div>
+                        </div>
+
+                        <!-- Feature 2 -->
+                        <div class="glass-feature-card" style="background: rgba(255, 255, 255, 0.65); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.7); border-radius: 20px; padding: 24px 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.03); display: flex; flex-direction: column; gap: 14px; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);">
+                            <div style="width: 38px; height: 38px; border-radius: 10px; background: rgba(124, 58, 237, 0.1); display: flex; align-items: center; justify-content: center; color: var(--secondary);">
+                                <i data-lucide="cloud" style="width: 20px; height: 20px;"></i>
+                            </div>
+                            <div>
+                                <h4 style="font-size: 0.9rem; font-weight: 700; color: var(--text-main); margin-bottom: 4px;">Infrastructure Cloud</h4>
+                                <p style="font-size: 0.72rem; color: var(--text-muted); line-height: 1.4;">Hébergement sécurisé scalable.</p>
+                            </div>
+                        </div>
+
+                        <!-- Feature 3 -->
+                        <div class="glass-feature-card" style="background: rgba(255, 255, 255, 0.65); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.7); border-radius: 20px; padding: 24px 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.03); display: flex; flex-direction: column; gap: 14px; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);">
+                            <div style="width: 38px; height: 38px; border-radius: 10px; background: rgba(6, 182, 212, 0.1); display: flex; align-items: center; justify-content: center; color: #0891b2;">
+                                <i data-lucide="globe" style="width: 20px; height: 20px;"></i>
+                            </div>
+                            <div>
+                                <h4 style="font-size: 0.9rem; font-weight: 700; color: var(--text-main); margin-bottom: 4px;">Applications Web</h4>
+                                <p style="font-size: 0.72rem; color: var(--text-muted); line-height: 1.4;">Solutions sur-mesure modernes.</p>
+                            </div>
+                        </div>
+
+                        <!-- Feature 4 -->
+                        <div class="glass-feature-card" style="background: rgba(255, 255, 255, 0.65); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.7); border-radius: 20px; padding: 24px 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.03); display: flex; flex-direction: column; gap: 14px; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);">
+                            <div style="width: 38px; height: 38px; border-radius: 10px; background: rgba(226, 109, 54, 0.1); display: flex; align-items: center; justify-content: center; color: #e26d36;">
+                                <i data-lucide="phone-call" style="width: 20px; height: 20px;"></i>
+                            </div>
+                            <div>
+                                <h4 style="font-size: 0.9rem; font-weight: 700; color: var(--text-main); margin-bottom: 4px;">Support 24/7</h4>
+                                <p style="font-size: 0.72rem; color: var(--text-muted); line-height: 1.4;">Une équipe d'experts à l'écoute.</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
 <?php else: 
-    // Split layout (hero_split_large_image and hero_split_small_image)
+    // Split layout (hero_split_large_image, hero_split_small_image, hero_floating_card)
     $visualMaxWidth = ($variant === 'hero_split_small_image') ? '380px' : '480px';
-    $isFloating = ($imageLayout === 'floating');
+    $isFloating = ($variant === 'hero_floating_card' || $imageLayout === 'floating');
 ?>
     <!-- Variant 3 & 4: Split Layout Hero (Premium Overlap Mockup / Floating Card) -->
     <section class="premium-hero hero-split-layout" id="hero-section-<?= $page['id'] ?>" style="<?= $bgStyle ?> position: relative; padding: <?= $heroPadding ?>; overflow: hidden; display: flex; <?= $verticalAlignCss ?> min-height: <?= $heroMinHeight ?>;">

@@ -26,7 +26,7 @@
         </p>
 
         <div class="hero-actions" style="display: flex; gap: 16px; flex-wrap: wrap;">
-            <a href="/contact" class="btn-hero-primary" style="padding: 14px 30px; font-weight: 600; border-radius: 8px;">
+            <a href="<?= url('/contact') ?>" class="btn-hero-primary" style="padding: 14px 30px; font-weight: 600; border-radius: 8px;">
                 <span>Demander un devis</span>
                 <i data-lucide="arrow-up-right" style="width: 16px; height: 16px;"></i>
             </a>

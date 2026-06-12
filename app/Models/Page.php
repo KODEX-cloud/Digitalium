@@ -33,6 +33,10 @@ class Page extends Model {
      * Update page metadata.
      */
     public static function updatePage(int $id, array $data): bool {
+        $logPath = ROOT_PATH . '/storage/logs/app.log';
+        $timestamp = date('Y-m-d H:i:s');
+        error_log("[{$timestamp}] [Page::updatePage START] ID: {$id}\n", 3, $logPath);
+
         $sql = "UPDATE " . static::$table . " SET 
                 title = :title, 
                 slug = :slug, 
@@ -73,51 +77,53 @@ class Page extends Model {
                 responsive_settings = :responsive_settings
                 WHERE id = :id";
         
-        ini_set('error_log', ROOT_PATH . '/storage/logs/app.log');
-        error_log($sql);
-        
-        $stmt = Database::query($sql, [
-            'title' => $data['title'],
-            'slug' => self::slugify($data['slug']),
-            'meta_title' => $data['meta_title'] ?? $data['title'],
-            'meta_description' => $data['meta_description'] ?? null,
-            'status' => $data['status'] ?? 'draft',
-            'sort_order' => $data['sort_order'] ?? 0,
-            'in_navigation' => $data['in_navigation'] ?? 1,
-            'hero_title' => $data['hero_title'] ?? null,
-            'hero_subtitle' => $data['hero_subtitle'] ?? null,
-            'hero_image' => $data['hero_image'] ?? null,
-            'hero_cta1_text' => $data['hero_cta1_text'] ?? null,
-            'hero_cta1_url' => $data['hero_cta1_url'] ?? null,
-            'hero_cta2_text' => $data['hero_cta2_text'] ?? null,
-            'hero_cta2_url' => $data['hero_cta2_url'] ?? null,
-            'hero_bg_color' => $data['hero_bg_color'] ?? null,
-            'hero_effect' => $data['hero_effect'] ?? 'particles',
-            'hero_variant' => $data['hero_variant'] ?? 'hero_split_large_image',
-            'hero_image_layout' => $data['hero_image_layout'] ?? 'right',
-            'hero_image_size' => $data['hero_image_size'] ?? 'large',
-            'hero_badge' => $data['hero_badge'] ?? null,
-            'hero_status' => $data['hero_status'] ?? 1,
-            'header_bg_mode' => $data['header_bg_mode'] ?? 'glass',
-            'header_opacity' => $data['header_opacity'] ?? 0.65,
-            'header_blur' => $data['header_blur'] ?? 20,
-            'header_shadow' => $data['header_shadow'] ?? 'moyen',
-            'header_contrast_mode' => $data['header_contrast_mode'] ?? 'default',
-            'logo_light' => $data['logo_light'] ?? null,
-            'logo_dark' => $data['logo_dark'] ?? null,
-            'logo_size' => $data['logo_size'] ?? 38,
-            'hero_layout_mode' => $data['hero_layout_mode'] ?? 'moyen',
-            'hero_text_position' => $data['hero_text_position'] ?? 'centre',
-            'hero_text_alignment' => $data['hero_text_alignment'] ?? 'center',
-            'hero_text_width' => $data['hero_text_width'] ?? '100%',
-            'hero_overlay_opacity' => $data['hero_overlay_opacity'] ?? 0.45,
-            'hero_shadow_strength' => $data['hero_shadow_strength'] ?? 'moyen',
-            'hero_image_mobile' => $data['hero_image_mobile'] ?? null,
-            'responsive_settings' => $data['responsive_settings'] ?? null,
-            'id' => $id
-        ]);
-
-        return $stmt->rowCount() > 0;
+        try {
+            $stmt = Database::query($sql, [
+                'title' => $data['title'],
+                'slug' => self::slugify($data['slug']),
+                'meta_title' => $data['meta_title'] ?? $data['title'],
+                'meta_description' => $data['meta_description'] ?? null,
+                'status' => $data['status'] ?? 'draft',
+                'sort_order' => $data['sort_order'] ?? 0,
+                'in_navigation' => $data['in_navigation'] ?? 1,
+                'hero_title' => $data['hero_title'] ?? null,
+                'hero_subtitle' => $data['hero_subtitle'] ?? null,
+                'hero_image' => $data['hero_image'] ?? null,
+                'hero_cta1_text' => $data['hero_cta1_text'] ?? null,
+                'hero_cta1_url' => $data['hero_cta1_url'] ?? null,
+                'hero_cta2_text' => $data['hero_cta2_text'] ?? null,
+                'hero_cta2_url' => $data['hero_cta2_url'] ?? null,
+                'hero_bg_color' => $data['hero_bg_color'] ?? null,
+                'hero_effect' => $data['hero_effect'] ?? 'particles',
+                'hero_variant' => $data['hero_variant'] ?? 'hero_split_large_image',
+                'hero_image_layout' => $data['hero_image_layout'] ?? 'right',
+                'hero_image_size' => $data['hero_image_size'] ?? 'large',
+                'hero_badge' => $data['hero_badge'] ?? null,
+                'hero_status' => $data['hero_status'] ?? 1,
+                'header_bg_mode' => $data['header_bg_mode'] ?? 'glass',
+                'header_opacity' => $data['header_opacity'] ?? 0.65,
+                'header_blur' => $data['header_blur'] ?? 20,
+                'header_shadow' => $data['header_shadow'] ?? 'moyen',
+                'header_contrast_mode' => $data['header_contrast_mode'] ?? 'default',
+                'logo_light' => $data['logo_light'] ?? null,
+                'logo_dark' => $data['logo_dark'] ?? null,
+                'logo_size' => $data['logo_size'] ?? 38,
+                'hero_layout_mode' => $data['hero_layout_mode'] ?? 'moyen',
+                'hero_text_position' => $data['hero_text_position'] ?? 'centre',
+                'hero_text_alignment' => $data['hero_text_alignment'] ?? 'center',
+                'hero_text_width' => $data['hero_text_width'] ?? '100%',
+                'hero_overlay_opacity' => $data['hero_overlay_opacity'] ?? 0.45,
+                'hero_shadow_strength' => $data['hero_shadow_strength'] ?? 'moyen',
+                'hero_image_mobile' => $data['hero_image_mobile'] ?? null,
+                'responsive_settings' => $data['responsive_settings'] ?? null,
+                'id' => $id
+            ]);
+            error_log("[{$timestamp}] [Page::updatePage SUCCESS] Affected rows: " . $stmt->rowCount() . "\n", 3, $logPath);
+            return true;
+        } catch (\Throwable $e) {
+            error_log("[{$timestamp}] [Page::updatePage ERROR] " . $e->getMessage() . "\n", 3, $logPath);
+            throw $e;
+        }
     }
 
     /**

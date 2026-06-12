@@ -161,13 +161,13 @@
                     <i data-lucide="image"></i>
                     <span>Vos Fichiers Média</span>
                 </h2>
-                <form action="/admin/media" method="GET" class="search-box" style="margin-bottom: 0;">
+                <form action="<?= url('/admin/media') ?>" method="GET" class="search-box" style="margin-bottom: 0;">
                     <input type="text" name="search" class="admin-input" style="width: 220px;" placeholder="Rechercher un média..." value="<?= htmlspecialchars($search) ?>">
                     <button type="submit" class="btn-secondary" style="padding: 10px 14px;">
                         <i data-lucide="search" style="width: 16px; height: 16px;"></i>
                     </button>
                     <?php if (!empty($search)): ?>
-                        <a href="/admin/media" class="btn-secondary" style="padding: 10px 14px;">
+                        <a href="<?= url('/admin/media') ?>" class="btn-secondary" style="padding: 10px 14px;">
                             <i data-lucide="x" style="width: 16px; height: 16px;"></i>
                         </a>
                     <?php endif; ?>
@@ -188,7 +188,7 @@
                                 $isImg = str_starts_with($media['mime_type'], 'image/');
                                 if ($isImg): 
                                 ?>
-                                    <img src="<?= htmlspecialchars($media['filepath']) ?>" alt="<?= htmlspecialchars($media['original_name']) ?>" loading="lazy">
+                                    <img src="<?= htmlspecialchars(url($media['filepath'])) ?>" alt="<?= htmlspecialchars($media['original_name']) ?>" loading="lazy">
                                 <?php else: ?>
                                     <i data-lucide="file" style="width: 32px; height: 32px;"></i>
                                 <?php endif; ?>
@@ -202,10 +202,10 @@
                                     </div>
                                 </div>
                                 <div class="media-actions">
-                                    <button class="media-btn" onclick="copyToClipboard('<?= htmlspecialchars($media['filepath']) ?>')" title="Copier le lien direct">
+                                    <button class="media-btn" onclick="copyToClipboard('<?= htmlspecialchars(url($media['filepath'])) ?>')" title="Copier le lien direct">
                                         <i data-lucide="copy" style="width: 16px; height: 16px;"></i>
                                     </button>
-                                    <button class="media-btn" onclick="window.open('<?= htmlspecialchars($media['filepath']) ?>', '_blank')" title="Ouvrir dans un nouvel onglet">
+                                    <button class="media-btn" onclick="window.open('<?= htmlspecialchars(url($media['filepath'])) ?>', '_blank')" title="Ouvrir dans un nouvel onglet">
                                         <i data-lucide="external-link" style="width: 16px; height: 16px;"></i>
                                     </button>
                                     <button class="media-btn btn-delete-media" onclick="deleteMedia(<?= $media['id'] ?>)" title="Supprimer définitivement">
@@ -287,7 +287,7 @@
 
         showNotification('Téléversement de ' + file.name + '...', 'info');
 
-        fetch('/admin/media/upload?ajax=1', {
+        fetch(BASE_URL + '/admin/media/upload?ajax=1', {
             method: 'POST',
             body: formData
         })
@@ -315,7 +315,7 @@
         formData.append('id', id);
         formData.append('csrf_token', '<?= htmlspecialchars($csrf_token) ?>');
 
-        fetch('/admin/media/delete', {
+        fetch(BASE_URL + '/admin/media/delete', {
             method: 'POST',
             body: formData
         })

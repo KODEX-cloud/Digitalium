@@ -17,12 +17,12 @@
     <meta property="twitter:title" content="<?= htmlspecialchars($page['meta_title'] ?? $page['title']) ?> | <?= htmlspecialchars($settings['site_name'] ?? 'Digitalium Group') ?>">
     <meta property="twitter:description" content="<?= htmlspecialchars($page['meta_description'] ?? 'Solutions logicielles de pointe et transformation digitale sur-mesure pour votre entreprise.') ?>">
 
-    <link rel="stylesheet" href="/assets/css/index.css">
+    <link rel="stylesheet" href="<?= url('/assets/css/index.css') ?>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <?php if (!empty($settings['site_favicon'])): ?>
-        <link rel="icon" href="<?= htmlspecialchars($settings['site_favicon']) ?>" type="image/x-icon">
+        <link rel="icon" href="<?= htmlspecialchars(url($settings['site_favicon'])) ?>" type="image/x-icon">
     <?php else: ?>
-        <link rel="icon" href="/assets/images/favicon.png" type="image/x-icon">
+        <link rel="icon" href="<?= url('/assets/images/favicon.png') ?>" type="image/x-icon">
     <?php endif; ?>
     <script src="https://unpkg.com/lucide@latest"></script>
     <?php
@@ -168,6 +168,12 @@
         }
         #siteHeader.scrolled {
             background-color: <?= $headerBgColorScrolled ?> !important;
+            height: 64px !important;
+            top: 12px !important;
+            box-shadow: 0 20px 40px -15px rgba(30, 58, 138, 0.08) !important;
+        }
+        #siteHeader.scrolled img {
+            height: <?= max(26, $logoSize - 6) ?>px !important;
         }
         
         #siteHeader img {
@@ -249,13 +255,13 @@
 
     <header class="site-header" id="siteHeader">
         <div class="container nav-container">
-            <a href="/" class="logo-wrap">
+            <a href="<?= url('/') ?>" class="logo-wrap">
                 <picture style="display: flex; align-items: center;">
                     <?php if (!empty($settings['site_logo_mobile'])): ?>
-                        <source srcset="<?= htmlspecialchars($settings['site_logo_mobile']) ?>" media="(max-width: 768px)">
+                        <source srcset="<?= htmlspecialchars(url($settings['site_logo_mobile'])) ?>" media="(max-width: 768px)">
                     <?php endif; ?>
                     <?php if (!empty($selectedLogo)): ?>
-                        <img src="<?= htmlspecialchars($selectedLogo) ?>" alt="<?= htmlspecialchars($settings['site_name'] ?? 'Digitalium Group') ?>" style="height: 38px; width: auto; object-fit: contain;">
+                        <img src="<?= htmlspecialchars(url($selectedLogo)) ?>" alt="<?= htmlspecialchars($settings['site_name'] ?? 'Digitalium Group') ?>" style="height: 38px; width: auto; object-fit: contain;">
                     <?php endif; ?>
                 </picture>
 
@@ -282,7 +288,7 @@
                     });
                     foreach ($navPages as $menuPage): 
                         $menuSlug = $menuPage['slug'];
-                        $menuUrl = $menuSlug === 'home' ? '/' : '/' . htmlspecialchars($menuSlug);
+                        $menuUrl = url($menuSlug === 'home' ? '/' : '/' . htmlspecialchars($menuSlug));
                         $isActive = ($currentSlug === $menuSlug) ? 'active' : '';
                     ?>
                         <li>
@@ -292,7 +298,7 @@
                         </li>
                     <?php endforeach; ?>
                     <li>
-                        <a href="<?= htmlspecialchars($settings['header_cta_link'] ?? '/contact') ?>" class="btn-cta-nav">
+                        <a href="<?= htmlspecialchars(url($settings['header_cta_link'] ?? '/contact')) ?>" class="btn-cta-nav">
                             <?= htmlspecialchars($settings['header_cta_text'] ?? 'Discuter de mon projet') ?>
                         </a>
                     </li>
@@ -313,9 +319,9 @@
         <div class="container footer-layout">
             
             <div class="footer-brand">
-                <a href="/" class="logo-wrap" style="margin-bottom:10px;">
+                <a href="<?= url('/') ?>" class="logo-wrap" style="margin-bottom:10px;">
                     <?php if (!empty($settings['site_logo'])): ?>
-                        <img src="<?= htmlspecialchars($settings['site_logo']) ?>" alt="<?= htmlspecialchars($settings['site_name'] ?? 'Digitalium Group') ?>" style="height: 38px; width: auto; object-fit: contain;">
+                        <img src="<?= htmlspecialchars(url($settings['site_logo'])) ?>" alt="<?= htmlspecialchars($settings['site_name'] ?? 'Digitalium Group') ?>" style="height: 38px; width: auto; object-fit: contain;">
                     <?php endif; ?>
                     <?php if (!empty($settings['site_logo_text'])): ?>
                         <div class="logo-text-col" style="margin-left: 6px;">
@@ -350,10 +356,10 @@
             <div>
                 <h4 class="footer-col-title">Services</h4>
                 <ul class="footer-links">
-                    <li><a href="/service" class="footer-link">Ingénierie Logicielle</a></li>
-                    <li><a href="/service" class="footer-link">Applications Cloud</a></li>
-                    <li><a href="/service" class="footer-link">Audit & Conseil</a></li>
-                    <li><a href="/service" class="footer-link">SEO & Stratégie</a></li>
+                    <li><a href="<?= url('/service') ?>" class="footer-link">Ingénierie Logicielle</a></li>
+                    <li><a href="<?= url('/service') ?>" class="footer-link">Applications Cloud</a></li>
+                    <li><a href="<?= url('/service') ?>" class="footer-link">Audit & Conseil</a></li>
+                    <li><a href="<?= url('/service') ?>" class="footer-link">SEO & Stratégie</a></li>
                 </ul>
             </div>
 
@@ -366,7 +372,7 @@
                     });
                     foreach ($footPages as $menuPage): 
                         $menuSlug = $menuPage['slug'];
-                        $menuUrl = $menuSlug === 'home' ? '/' : '/' . htmlspecialchars($menuSlug);
+                        $menuUrl = url($menuSlug === 'home' ? '/' : '/' . htmlspecialchars($menuSlug));
                     ?>
                         <li>
                             <a href="<?= $menuUrl ?>" class="footer-link">
@@ -418,7 +424,7 @@
             <span><?= htmlspecialchars($settings['footer_copyright'] ?? '© ' . date('Y') . ' Digitalium Group. Tous droits réservés.') ?></span>
             <div style="display: flex; gap: 20px; align-items: center;">
                 <?php if (!empty($settings['footer_legal_text'])): ?>
-                    <a href="<?= htmlspecialchars($settings['footer_legal_url'] ?? '/mentions-legales') ?>" style="color: var(--text-muted); font-size: 0.88rem; font-weight: 500;">
+                    <a href="<?= htmlspecialchars(url($settings['footer_legal_url'] ?? '/mentions-legales')) ?>" style="color: var(--text-muted); font-size: 0.88rem; font-weight: 500;">
                         <?= htmlspecialchars($settings['footer_legal_text']) ?>
                     </a>
                 <?php endif; ?>

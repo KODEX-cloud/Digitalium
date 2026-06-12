@@ -4,10 +4,10 @@
             <i data-lucide="plus-circle"></i>
             <span>Créer une nouvelle page</span>
         </h2>
-        <a href="/admin/pages" class="btn-secondary" style="padding: 6px 12px; font-size: 0.8rem;">Retour</a>
+        <a href="<?= url('/admin/pages') ?>" class="btn-secondary" style="padding: 6px 12px; font-size: 0.8rem;">Retour</a>
     </div>
 
-    <form action="/admin/pages/create" method="POST">
+    <form action="<?= url('/admin/pages/create') ?>" method="POST">
         <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
 
         <div class="admin-form-group">
@@ -47,7 +47,7 @@
         </div>
 
         <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 24px;">
-            <a href="/admin/pages" class="btn-secondary">Annuler</a>
+            <a href="<?= url('/admin/pages') ?>" class="btn-secondary">Annuler</a>
             <button type="submit" class="btn-primary">
                 <i data-lucide="save"></i>
                 <span>Créer la page</span>

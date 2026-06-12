@@ -414,36 +414,40 @@
         <ul class="sidebar-menu">
             <?php 
             $currentUri = $_SERVER['REQUEST_URI'];
+            $scriptName = dirname($_SERVER['SCRIPT_NAME']);
+            if ($scriptName !== '/' && $scriptName !== '\\') {
+                $currentUri = str_replace($scriptName, '', $currentUri);
+            }
             $isActive = function($pattern) use ($currentUri) {
                 return preg_match($pattern, $currentUri) ? 'active' : '';
             };
             ?>
             <li class="menu-item <?= $isActive('#^/admin(/dashboard)?$#') ?>">
-                <a href="/admin/dashboard">
+                <a href="<?= url('/admin/dashboard') ?>">
                     <i data-lucide="layout-dashboard"></i>
                     <span>Tableau de bord</span>
                 </a>
             </li>
             <li class="menu-item <?= $isActive('#^/admin/pages#') ?>">
-                <a href="/admin/pages">
+                <a href="<?= url('/admin/pages') ?>">
                     <i data-lucide="file-text"></i>
                     <span>Pages CMS</span>
                 </a>
             </li>
             <li class="menu-item <?= $isActive('#^/admin/projects#') ?>">
-                <a href="/admin/projects">
+                <a href="<?= url('/admin/projects') ?>">
                     <i data-lucide="briefcase"></i>
                     <span>Réalisations</span>
                 </a>
             </li>
             <li class="menu-item <?= $isActive('#^/admin/media#') ?>">
-                <a href="/admin/media">
+                <a href="<?= url('/admin/media') ?>">
                     <i data-lucide="image"></i>
                     <span>Bibliothèque Média</span>
                 </a>
             </li>
             <li class="menu-item <?= $isActive('#^/admin/settings#') ?>">
-                <a href="/admin/settings">
+                <a href="<?= url('/admin/settings') ?>">
                     <i data-lucide="settings"></i>
                     <span>Configuration</span>
                 </a>
@@ -455,7 +459,7 @@
                 <span class="user-name"><?= htmlspecialchars($currentUser['username'] ?? 'Admin') ?></span>
                 <span class="user-role">Super Administrateur</span>
             </div>
-            <a href="/admin/logout" class="btn-logout" title="Se déconnecter">
+            <a href="<?= url('/admin/logout') ?>" class="btn-logout" title="Se déconnecter">
                 <i data-lucide="log-out"></i>
             </a>
         </div>
@@ -465,7 +469,7 @@
         <header class="navbar">
             <h1 class="page-title-header"><?= htmlspecialchars($title ?? 'Administration') ?></h1>
             <div class="nav-actions">
-                <a href="/" target="_blank" class="btn-visit">
+                <a href="<?= url('/') ?>" target="_blank" class="btn-visit">
                     <i data-lucide="external-link"></i>
                     <span>Voir le site</span>
                 </a>
@@ -547,6 +551,7 @@
 
     <!-- Centralized JavaScript for Notifications, Toasts and Dynamic Media Selection -->
     <script>
+        const BASE_URL = '<?= rtrim(url('/'), '/') ?>';
         // Centralized Toast Notifications
         function showNotification(message, type) {
             const container = document.querySelector('.toast-container') || document.body;

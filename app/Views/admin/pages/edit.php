@@ -316,7 +316,7 @@ if (empty($selectedLogo)) {
     
     <!-- Config Form Column -->
     <div class="card" style="padding: 24px; margin-bottom: 0;">
-        <form action="/admin/pages/edit/<?= $page['id'] ?>" method="POST" style="display: flex; flex-direction: column; gap: 24px;">
+        <form action="<?= url('/admin/pages/edit/' . $page['id']) ?>" method="POST" style="display: flex; flex-direction: column; gap: 24px;">
             <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
             <input type="hidden" name="responsive_settings" id="responsive_settings_input" value="<?= htmlspecialchars($page['responsive_settings'] ?? '') ?>">
 
@@ -531,7 +531,7 @@ if (empty($selectedLogo)) {
 
                             <div class="admin-form-group" style="margin-bottom: 0;">
                                 <label style="font-size: 0.75rem;">Image Mobile Spécifique (Responsive)</label>
-                                <?= \App\Helpers\MediaHelper::renderField('hero_image_mobile', $page['hero_image_mobile'] ?? '', 'hero_mobile') ?>
+                                <?= \App\Helpers\MediaHelper::renderField('hero_image_mobile', $page['hero_image_mobile'] ?? '', 'hero_image_mobile') ?>
                             </div>
                         </fieldset>
 
@@ -579,8 +579,12 @@ if (empty($selectedLogo)) {
                             <select id="hero_variant" name="hero_variant" class="admin-select visual-simulator-trigger">
                                 <option value="hero_split_large_image" <?= ($page['hero_variant'] ?? 'hero_split_large_image') === 'hero_split_large_image' ? 'selected' : '' ?>>Séparé - Grand Visuel (Mockup)</option>
                                 <option value="hero_split_small_image" <?= ($page['hero_variant'] ?? 'hero_split_large_image') === 'hero_split_small_image' ? 'selected' : '' ?>>Séparé - Petit Visuel (Compact)</option>
+                                <option value="hero_floating_card" <?= ($page['hero_variant'] ?? 'hero_split_large_image') === 'hero_floating_card' ? 'selected' : '' ?>>Flottant - Carte Verre Premium</option>
                                 <option value="hero_full_image" <?= ($page['hero_variant'] ?? 'hero_split_large_image') === 'hero_full_image' ? 'selected' : '' ?>>Pleine Page - Fond & Texte</option>
                                 <option value="hero_text_only" <?= ($page['hero_variant'] ?? 'hero_split_large_image') === 'hero_text_only' ? 'selected' : '' ?>>Texte Uniquement (Minimaliste)</option>
+                                <option value="hero_ambient_glow" <?= ($page['hero_variant'] ?? 'hero_split_large_image') === 'hero_ambient_glow' ? 'selected' : '' ?>>Halo Lumineux - IA Centré</option>
+                                <option value="hero_split_asymmetric" <?= ($page['hero_variant'] ?? 'hero_split_large_image') === 'hero_split_asymmetric' ? 'selected' : '' ?>>Asymétrique - Pile de Cartes (3)</option>
+                                <option value="hero_grid_features" <?= ($page['hero_variant'] ?? 'hero_split_large_image') === 'hero_grid_features' ? 'selected' : '' ?>>Grille - Cartes de Services (2x2)</option>
                             </select>
                         </div>
 
@@ -609,7 +613,7 @@ if (empty($selectedLogo)) {
 
                         <div class="admin-form-group">
                             <label>Illustration principale</label>
-                            <?= \App\Helpers\MediaHelper::renderField('hero_image', $page['hero_image'] ?? '', 'hero') ?>
+                            <?= \App\Helpers\MediaHelper::renderField('hero_image', $page['hero_image'] ?? '', 'hero_image') ?>
                         </div>
 
                         <div class="admin-form-group">
@@ -767,7 +771,7 @@ if (empty($selectedLogo)) {
                             <h2 id="sim_hero_title" style="font-size: 0.85rem; line-height: 1.1; font-weight: 800; font-family: var(--font-heading); margin: 0; color: var(--text-main);">Titre principal</h2>
                             <p id="sim_hero_subtitle" style="font-size: 0.5rem; color: var(--text-muted); margin: 0;">Description de la Hero section.</p>
                             <div id="sim_hero_ctas" style="display:flex; gap: 4px; margin-top: 3px;">
-                                <span style="padding: 2px 6px; border-radius: 4px; background: #e26d36; color: white; font-size: 0.42rem; font-weight:700;">CTA 1</span>
+                                <span id="sim_hero_cta1_btn" style="padding: 2px 6px; border-radius: 4px; background: #e26d36; color: white; font-size: 0.42rem; font-weight:700;">CTA 1</span>
                                 <span id="sim_hero_cta2_btn" style="padding: 2px 6px; border-radius: 4px; background: rgba(255,255,255,0.7); color: #000; font-size: 0.42rem; font-weight:700; border: 1px solid var(--border);">CTA 2</span>
                             </div>
                         </div>
@@ -1074,7 +1078,7 @@ if (empty($selectedLogo)) {
         formData.append('type', type);
         formData.append('csrf_token', '<?= htmlspecialchars($csrf_token) ?>');
 
-        fetch('/admin/pages/sections/add', {
+        fetch(BASE_URL + '/admin/pages/sections/add', {
             method: 'POST',
             body: formData
         })
@@ -1115,7 +1119,7 @@ if (empty($selectedLogo)) {
         formData.append('section_id', sectionId);
         formData.append('csrf_token', '<?= htmlspecialchars($csrf_token) ?>');
 
-        fetch('/admin/pages/sections/delete', {
+        fetch(BASE_URL + '/admin/pages/sections/delete', {
             method: 'POST',
             body: formData
         })
@@ -1140,7 +1144,7 @@ if (empty($selectedLogo)) {
 
         showNotification('Enregistrement...', 'info');
 
-        fetch('/admin/pages/blocks/update', {
+        fetch(BASE_URL + '/admin/pages/blocks/update', {
             method: 'POST',
             body: formData
         })
@@ -1160,7 +1164,7 @@ if (empty($selectedLogo)) {
         formData.append('type', type);
         formData.append('csrf_token', '<?= htmlspecialchars($csrf_token) ?>');
 
-        fetch('/admin/pages/blocks/group-add', {
+        fetch(BASE_URL + '/admin/pages/blocks/group-add', {
             method: 'POST',
             body: formData
         })
@@ -1185,7 +1189,7 @@ if (empty($selectedLogo)) {
         formData.append('group_id', groupId);
         formData.append('csrf_token', '<?= htmlspecialchars($csrf_token) ?>');
 
-        fetch('/admin/pages/blocks/group-delete', {
+        fetch(BASE_URL + '/admin/pages/blocks/group-delete', {
             method: 'POST',
             body: formData
         })
@@ -1232,7 +1236,7 @@ if (empty($selectedLogo)) {
         ids.forEach(id => formData.append('ids[]', id));
         formData.append('csrf_token', '<?= htmlspecialchars($csrf_token) ?>');
 
-        fetch('/admin/pages/sections/sort', {
+        fetch(BASE_URL + '/admin/pages/sections/sort', {
             method: 'POST',
             body: formData
         })
@@ -1391,14 +1395,148 @@ if (empty($selectedLogo)) {
             simHeroSubtitle.style.color = '#e2e8f0';
             simHeroVisual.style.display = 'none';
             simHeroGrid.style.gridTemplateColumns = '1fr';
-        } else {
+        } else if (heroVariant === 'hero_text_only') {
             simHeroBg.style.backgroundImage = 'none';
             simHeroBg.style.background = bgInput;
             simHeroOverlay.style.opacity = '0';
             simHeroTitle.style.color = 'var(--text-main)';
             simHeroSubtitle.style.color = 'var(--text-muted)';
-            simHeroGrid.style.gridTemplateColumns = '1.1fr 0.9fr';
+            simHeroVisual.style.display = 'none';
+            simHeroGrid.style.gridTemplateColumns = '1fr';
+        } else if (heroVariant === 'hero_ambient_glow') {
+            simHeroBg.style.backgroundImage = 'none';
+            // Custom glowing gradient in WAMP simulator
+            simHeroBg.style.background = `radial-gradient(circle, rgba(124, 58, 237, 0.22) 0%, rgba(30, 58, 138, 0.08) 50%, rgba(0,0,0,0) 80%), ${bgInput}`;
+            simHeroOverlay.style.opacity = '0';
+            simHeroTitle.style.color = 'var(--text-main)';
+            simHeroSubtitle.style.color = 'var(--text-muted)';
+            simHeroVisual.style.display = 'none';
+            simHeroGrid.style.gridTemplateColumns = '1fr';
+        } else if (heroVariant === 'hero_split_asymmetric') {
+            simHeroBg.style.backgroundImage = 'none';
+            simHeroBg.style.background = bgInput;
+            simHeroOverlay.style.opacity = '0';
+            simHeroTitle.style.color = 'var(--text-main)';
+            simHeroSubtitle.style.color = 'var(--text-muted)';
             simHeroVisual.style.display = 'flex';
+            simHeroGrid.style.gridTemplateColumns = '1.1fr 0.9fr';
+            simHeroVisual.innerHTML = `
+              <div style="display: flex; flex-direction: column; gap: 8px; width: 100%; max-width: 220px; font-size: 0.35rem;">
+                <div style="background: rgba(255,255,255,0.7); border: 1px solid rgba(255,255,255,0.8); border-radius: 8px; padding: 6px 10px; display: flex; align-items: center; gap: 8px; transform: translateX(-10px);">
+                  <div style="width: 14px; height: 14px; border-radius: 4px; background: rgba(79, 70, 229, 0.1); display: flex; align-items: center; justify-content: center; color: var(--primary);"><i data-lucide="zap" style="width: 8px; height: 8px;"></i></div>
+                  <div><strong>Haute Performance</strong><div style="font-size:0.28rem;color:var(--text-muted);">Web rapide.</div></div>
+                </div>
+                <div style="background: rgba(255,255,255,0.85); border: 1px solid rgba(255,255,255,0.9); border-radius: 8px; padding: 6px 10px; display: flex; align-items: center; gap: 8px; border-left: 2px solid var(--secondary);">
+                  <div style="width: 14px; height: 14px; border-radius: 4px; background: rgba(124, 58, 237, 0.1); display: flex; align-items: center; justify-content: center; color: var(--secondary);"><i data-lucide="shield-check" style="width: 8px; height: 8px;"></i></div>
+                  <div><strong>Sécurité</strong><div style="font-size:0.28rem;color:var(--text-muted);">Données protégées.</div></div>
+                </div>
+                <div style="background: rgba(255,255,255,0.7); border: 1px solid rgba(255,255,255,0.8); border-radius: 8px; padding: 6px 10px; display: flex; align-items: center; gap: 8px; transform: translateX(10px);">
+                  <div style="width: 14px; height: 14px; border-radius: 4px; background: rgba(226, 109, 54, 0.1); display: flex; align-items: center; justify-content: center; color: #e26d36;"><i data-lucide="layout-grid" style="width: 8px; height: 8px;"></i></div>
+                  <div><strong>CMS Modulaire</strong><div style="font-size:0.28rem;color:var(--text-muted);">Modifications live.</div></div>
+                </div>
+              </div>
+            `;
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        } else if (heroVariant === 'hero_grid_features') {
+            simHeroBg.style.backgroundImage = 'none';
+            simHeroBg.style.background = bgInput;
+            simHeroOverlay.style.opacity = '0';
+            simHeroTitle.style.color = 'var(--text-main)';
+            simHeroSubtitle.style.color = 'var(--text-muted)';
+            simHeroVisual.style.display = 'flex';
+            simHeroGrid.style.gridTemplateColumns = '1.1fr 0.9fr';
+            simHeroVisual.innerHTML = `
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; width: 100%; max-width: 220px; font-size: 0.35rem;">
+                <div style="background: rgba(255,255,255,0.7); border: 1px solid rgba(255,255,255,0.8); border-radius: 8px; padding: 8px 6px; display: flex; flex-direction: column; gap: 4px;">
+                  <div style="width: 14px; height: 14px; border-radius: 4px; background: rgba(79, 70, 229, 0.1); display: flex; align-items: center; justify-content: center; color: var(--primary);"><i data-lucide="cpu" style="width: 8px; height: 8px;"></i></div>
+                  <div><strong>IA & Automation</strong></div>
+                </div>
+                <div style="background: rgba(255,255,255,0.7); border: 1px solid rgba(255,255,255,0.8); border-radius: 8px; padding: 8px 6px; display: flex; flex-direction: column; gap: 4px;">
+                  <div style="width: 14px; height: 14px; border-radius: 4px; background: rgba(124, 58, 237, 0.1); display: flex; align-items: center; justify-content: center; color: var(--secondary);"><i data-lucide="cloud" style="width: 8px; height: 8px;"></i></div>
+                  <div><strong>Infrastructure</strong></div>
+                </div>
+                <div style="background: rgba(255,255,255,0.7); border: 1px solid rgba(255,255,255,0.8); border-radius: 8px; padding: 8px 6px; display: flex; flex-direction: column; gap: 4px;">
+                  <div style="width: 14px; height: 14px; border-radius: 4px; background: rgba(6, 182, 212, 0.1); display: flex; align-items: center; justify-content: center; color: #0891b2;"><i data-lucide="globe" style="width: 8px; height: 8px;"></i></div>
+                  <div><strong>Applications</strong></div>
+                </div>
+                <div style="background: rgba(255,255,255,0.7); border: 1px solid rgba(255,255,255,0.8); border-radius: 8px; padding: 8px 6px; display: flex; flex-direction: column; gap: 4px;">
+                  <div style="width: 14px; height: 14px; border-radius: 4px; background: rgba(226, 109, 54, 0.1); display: flex; align-items: center; justify-content: center; color: #e26d36;"><i data-lucide="phone-call" style="width: 8px; height: 8px;"></i></div>
+                  <div><strong>Support 24/7</strong></div>
+                </div>
+              </div>
+            `;
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        } else {
+            // Split layout variants (hero_split_large_image, hero_split_small_image, hero_floating_card)
+            simHeroBg.style.backgroundImage = 'none';
+            simHeroBg.style.background = bgInput;
+            simHeroOverlay.style.opacity = '0';
+            simHeroTitle.style.color = 'var(--text-main)';
+            simHeroSubtitle.style.color = 'var(--text-muted)';
+            simHeroVisual.style.display = 'flex';
+            simHeroGrid.style.gridTemplateColumns = '1.1fr 0.9fr';
+            // Reset mockup container structure if it got overwritten by stack/grid
+            if (!document.getElementById('sim_hero_mockup')) {
+                simHeroVisual.innerHTML = `
+                  <div id="sim_hero_mockup" style="width: 80%; aspect-ratio: 1.4; border-radius: 6px; background: #0f172a; padding: 3px; border: 1px solid #334155; box-shadow: 0 4px 8px rgba(0,0,0,0.15); transition: all 0.3s;">
+                      <div id="sim_hero_mockup_screen" style="width:100%; height:100%; background: #1e293b; border-radius: 4px; background-size: cover; background-position: center; transition: all 0.3s;"></div>
+                  </div>
+                `;
+            }
+        }
+
+        // Adjust mockup visual sizes and style frames based on settings
+        const mockupFrame = document.getElementById('sim_hero_mockup');
+        if (mockupFrame) {
+            let visualWidth = '90%';
+            if (heroImageSize === 'medium') visualWidth = '75%';
+            else if (heroImageSize === 'small') visualWidth = '55%';
+            mockupFrame.style.width = visualWidth;
+
+            if (heroImageLayout === 'floating') {
+                mockupFrame.style.background = 'rgba(30, 41, 59, 0.45)';
+                mockupFrame.style.borderRadius = '12px';
+                mockupFrame.style.border = '1px solid rgba(255, 255, 255, 0.15)';
+                mockupFrame.style.padding = '8px';
+            } else {
+                mockupFrame.style.background = '#0f172a';
+                mockupFrame.style.borderRadius = '6px';
+                mockupFrame.style.border = '1px solid #334155';
+                mockupFrame.style.padding = '3px';
+            }
+        }
+
+        // Update CTA Button Texts and Visibility
+        const heroCta1Text = document.getElementById('hero_cta1_text').value || '';
+        const heroCta2Text = document.getElementById('hero_cta2_text').value || '';
+        const simCta1Btn = document.getElementById('sim_hero_cta1_btn');
+        const simCta2Btn = document.getElementById('sim_hero_cta2_btn');
+        const simHeroCtas = document.getElementById('sim_hero_ctas');
+
+        if (simCta1Btn) {
+            if (heroCta1Text) {
+                simCta1Btn.innerText = heroCta1Text;
+                simCta1Btn.style.display = 'inline-flex';
+            } else {
+                simCta1Btn.style.display = 'none';
+            }
+        }
+
+        if (simCta2Btn) {
+            if (heroCta2Text) {
+                simCta2Btn.innerText = heroCta2Text;
+                simCta2Btn.style.display = 'inline-flex';
+            } else {
+                simCta2Btn.style.display = 'none';
+            }
+        }
+
+        if (simHeroCtas) {
+            if (!heroCta1Text && !heroCta2Text) {
+                simHeroCtas.style.display = 'none';
+            } else {
+                simHeroCtas.style.display = 'flex';
+            }
         }
 
         // Set filters on background element
@@ -1564,13 +1702,20 @@ if (empty($selectedLogo)) {
         // Initialize simulator
         updateSimulator();
 
-        // Attach listeners
+        // Listen to changes on any form input/select/textarea dynamically to update preview
+        const mainForm = document.querySelector('form');
+        if (mainForm) {
+            mainForm.addEventListener('input', updateSimulator);
+            mainForm.addEventListener('change', updateSimulator);
+        }
+
+        // Attach listeners specifically to standard inputs/visual triggers
         document.querySelectorAll('.visual-simulator-trigger').forEach(input => {
             input.addEventListener('input', updateSimulator);
             input.addEventListener('change', updateSimulator);
         });
         
-        const standardInputs = ['hero_title', 'hero_subtitle', 'hero_badge', 'hero_bg_color', 'hero_cta1_text', 'hero_cta2_text'];
+        const standardInputs = ['hero_title', 'hero_subtitle', 'hero_badge', 'hero_bg_color', 'hero_cta1_text', 'hero_cta2_text', 'hero_cta1_url', 'hero_cta2_url'];
         standardInputs.forEach(id => {
             const el = document.getElementById(id);
             if (el) {
@@ -1593,6 +1738,7 @@ if (empty($selectedLogo)) {
             const el = document.getElementById(id);
             if (el) {
                 observer.observe(el, { attributes: true });
+                el.addEventListener('change', updateSimulator);
             }
         });
     });

@@ -18,22 +18,22 @@
                 <?php foreach ($groups as $post): 
                     $category = $post['post_category'] ?? 'Intelligence Artificielle';
                 ?>
-                    <div class="bcard reveal" data-tag="<?= htmlspecialchars($category) ?>" style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; transition: var(--transition);">
+                    <div class="bcard reveal" data-tag="<?= htmlspecialchars($category) ?>" style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; transition: var(--transition); display: flex; flex-direction: column; height: 100%;">
                         
                         <!-- Header / Image Box with dynamic cover image support -->
-                        <div class="bcard-img" style="height: 140px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; background: <?= !empty($post['post_image']) ? "url('" . htmlspecialchars($post['post_image']) . "') center center / cover" : "linear-gradient(135deg, var(--primary-glow), rgba(13,34,71,0.5))" ?>;">
+                        <div class="bcard-img" style="height: 180px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; background: <?= !empty($post['post_image']) ? "url('" . htmlspecialchars($post['post_image']) . "') center center / cover" : "linear-gradient(135deg, var(--primary-glow), rgba(13,34,71,0.5))" ?>;">
                             <?php if (!empty($post['post_image'])): ?>
-                                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.45); z-index: 1;"></div>
+                                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.25); z-index: 1;"></div>
                             <?php endif; ?>
-                            <div class="bcard-icon" style="width: 56px; height: 56px; border-radius: 12px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.06); background: var(--bg-surface-alt); color: var(--primary); z-index: 2; overflow: hidden; padding: 12px;">
-                                <?= \App\Helpers\IconHelper::render($post['post_icon'] ?? 'book-open', ['size' => '24px']) ?>
+                            <div class="bcard-icon" style="width: 48px; height: 48px; border-radius: 10px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.15); background: rgba(255, 255, 255, 0.9); color: var(--primary); z-index: 2; overflow: hidden; padding: 10px;">
+                                <?= \App\Helpers\IconHelper::render($post['post_icon'] ?? 'book-open', ['size' => '20px']) ?>
                             </div>
                         </div>
 
                         <!-- Card Content Body -->
-                        <div class="bcard-body" style="padding: 1.5rem;">
-                            <div class="bcard-meta" style="display: flex; gap: 8px; align-items: center; margin-bottom: 0.8rem; flex-wrap: wrap;">
-                                <span class="pill" style="padding: 0.22rem 0.75rem; border-radius: 50px; font-size: 0.65rem; letter-spacing: 0.05em; text-transform: uppercase; font-weight: 700; background: var(--primary-glow); color: var(--accent);">
+                        <div class="bcard-body" style="padding: 1.8rem; display: flex; flex-direction: column; flex-grow: 1;">
+                            <div class="bcard-meta" style="display: flex; gap: 10px; align-items: center; margin-bottom: 1rem; flex-wrap: wrap;">
+                                <span class="pill" style="padding: 4px 12px; border-radius: 8px; font-size: 0.65rem; letter-spacing: 0.05em; text-transform: uppercase; font-weight: 700; background: rgba(124, 58, 237, 0.08); color: var(--secondary); border: 1px solid rgba(124, 58, 237, 0.15);">
                                     <?= htmlspecialchars($category) ?>
                                 </span>
                                 <span class="bcard-date" style="font-size: 0.72rem; color: var(--text-muted); font-family: monospace;">
@@ -41,22 +41,22 @@
                                 </span>
                             </div>
 
-                            <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--text-main); line-height: 1.4; margin-bottom: 0.8rem; font-family: var(--font-heading);">
-                                <a href="<?= htmlspecialchars($post['post_link'] ?? '/blog') ?>" style="transition: var(--transition); hover: color: var(--primary);">
+                            <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text-main); line-height: 1.4; margin-bottom: 0.8rem; font-family: var(--font-heading);">
+                                <a href="<?= htmlspecialchars($post['post_link'] ?? '/blog') ?>" class="bcard-title-link">
                                     <?= htmlspecialchars($post['post_title'] ?? 'Article sans titre') ?>
                                 </a>
                             </h3>
                             
-                            <p style="font-size: 0.82rem; line-height: 1.6; color: var(--text-muted); margin-bottom: 1.5rem;">
+                            <p style="font-size: 0.88rem; line-height: 1.6; color: var(--text-muted); margin-bottom: 1.8rem; flex-grow: 1;">
                                 <?= htmlspecialchars($post['post_summary'] ?? '') ?>
                             </p>
 
-                            <div class="bcard-footer" style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); padding-top: 1rem;">
+                            <div class="bcard-footer" style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); padding-top: 1.2rem; margin-top: auto;">
                                 <div class="bcard-author" style="display: flex; align-items: center; gap: 8px;">
-                                    <div class="author-av" style="width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 700; background: var(--primary-glow); color: var(--accent); border: 1px solid var(--border);">
+                                    <div class="author-av" style="width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.68rem; font-weight: 700; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); color: white;">
                                         DG
                                     </div>
-                                    <span class="author-name" style="font-size: 0.72rem; color: var(--text-muted);">Équipe DG</span>
+                                    <span class="author-name" style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">Équipe DG</span>
                                 </div>
                                 <span class="bcard-read" style="font-size: 0.72rem; color: var(--text-muted); font-family: monospace;">5 min de lecture</span>
                             </div>
@@ -67,16 +67,26 @@
             <?php endif; ?>
         </div>
 
-        <div style="text-align: center; margin-top: 3.5rem;" class="reveal">
-            <button class="btn-hero-secondary" style="padding: 12px 28px; font-weight: 600; border-radius: 8px; cursor: pointer;">Charger plus d'articles</button>
+        <div style="text-align: center; margin-top: 4rem;" class="reveal">
+            <button class="btn-hero-secondary" style="padding: 14px 32px; font-weight: 600; cursor: pointer;">Charger plus d'articles</button>
         </div>
 
     </div>
 </div>
 
 <style>
+.bcard {
+    box-shadow: 0 12px 30px -10px rgba(30, 58, 138, 0.04), inset 0 1px 1px rgba(255,255,255,0.9) !important;
+}
 .bcard:hover {
-    border-color: rgba(99, 102, 241, 0.45) !important;
-    transform: translateY(-4px);
+    border-color: rgba(124, 58, 237, 0.35) !important;
+    transform: translateY(-5px);
+    box-shadow: 0 24px 48px -12px rgba(124, 58, 237, 0.12), inset 0 1px 2px rgba(255,255,255,1) !important;
+}
+.bcard-title-link {
+    transition: var(--transition);
+}
+.bcard-title-link:hover {
+    color: var(--secondary) !important;
 }
 </style>

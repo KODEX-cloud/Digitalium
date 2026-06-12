@@ -16,11 +16,11 @@
         </p>
 
         <div class="cta-btns" style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
-            <a href="<?= htmlspecialchars($single['cta_url'] ?? '/contact') ?>" class="btn-hero-primary" style="padding: 14px 30px; font-weight: 600; border-radius: 8px;">
+            <a href="<?= htmlspecialchars(url($single['cta_url'] ?? '/contact')) ?>" class="btn-hero-primary" style="padding: 14px 30px; font-weight: 600; border-radius: 8px;">
                 <span><?= htmlspecialchars($single['cta_text'] ?? 'Commencer aujourd\'hui') ?></span>
                 <i data-lucide="arrow-up-right" style="width: 16px; height: 16px;"></i>
             </a>
-            <a href="/service" class="btn-hero-secondary" style="padding: 14px 30px; font-weight: 600; border-radius: 8px;">
+            <a href="<?= url('/service') ?>" class="btn-hero-secondary" style="padding: 14px 30px; font-weight: 600; border-radius: 8px;">
                 <span>Découvrir nos Expertises</span>
             </a>
         </div>

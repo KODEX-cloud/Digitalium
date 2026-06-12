@@ -10,30 +10,30 @@
     /* Color Palette - Poster-based Premium Brand Identity */
     --bg-base: #f8fafc;
     --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 50%, #e2e8f0 100%);
-    --bg-surface: rgba(255, 255, 255, 0.65);
-    --bg-surface-alt: rgba(255, 255, 255, 0.92);
+    --bg-surface: rgba(255, 255, 255, 0.72);
+    --bg-surface-alt: rgba(255, 255, 255, 0.96);
     
     --primary: #1e3a8a;       /* Bleu Digitalium */
     --primary-glow: rgba(30, 58, 138, 0.08);
     --secondary: #7c3aed;     /* Violet Premium */
     --accent: #e26d36;        /* Orange CTA */
     
-    --text-main: #0f172a;     /* Deep Slate */
-    --text-muted: #334155;    /* Optimized Slate for enhanced contrast and legibility */
+    --text-main: #0f172a;     /* Deep Slate (Slate-900) */
+    --text-muted: #1e293b;    /* High Contrast Slate (Slate-800) for strict WCAG compliance */
     
-    --border: rgba(255, 255, 255, 0.75); /* Original clean white glassmorphic borders */
-    --border-hover: rgba(30, 58, 138, 0.25); /* Original hover border */
-    --border-focus: rgba(30, 58, 138, 0.4);
+    --border: rgba(255, 255, 255, 0.88); /* Higher-end glassmorphic borders */
+    --border-hover: rgba(30, 58, 138, 0.3);
+    --border-focus: rgba(30, 58, 138, 0.5);
     
     --font-main: 'Inter', sans-serif;
     --font-heading: 'Outfit', sans-serif;
     
     --max-width: 1200px;
-    --transition: all 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+    --transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
     
     /* Premium smooth shadows for depth and border visibility */
-    --shadow-card: 0 15px 35px -10px rgba(30, 58, 138, 0.06), 0 8px 16px -8px rgba(0, 0, 0, 0.02), inset 0 1px 1px rgba(255, 255, 255, 0.8);
-    --shadow-card-hover: 0 30px 60px -15px rgba(30, 58, 138, 0.12), 0 12px 24px -10px rgba(0, 0, 0, 0.04), inset 0 1px 2px rgba(255, 255, 255, 0.9);
+    --shadow-card: 0 12px 30px -10px rgba(30, 58, 138, 0.04), 0 4px 12px -8px rgba(0, 0, 0, 0.02), inset 0 1px 1px rgba(255, 255, 255, 0.95);
+    --shadow-card-hover: 0 24px 48px -12px rgba(30, 58, 138, 0.1), 0 8px 16px -8px rgba(0, 0, 0, 0.03), inset 0 1px 2px rgba(255, 255, 255, 1);
 }
 
 /* 1. Global Reset & Base */
@@ -77,6 +77,13 @@ h1, h2, h3, h4, h5, h6 {
     color: var(--text-main);
     font-weight: 800;
     line-height: 1.15;
+    letter-spacing: -0.025em;
+}
+
+p {
+    color: var(--text-muted);
+    line-height: 1.75;
+    font-size: 1.05rem;
 }
 
 a {
@@ -208,10 +215,10 @@ a {
     padding: 10px 24px;
     background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
     color: white !important;
-    border-radius: 50px;
+    border-radius: 12px;
     font-weight: 600;
     font-size: 0.88rem;
-    box-shadow: 0 10px 20px -5px rgba(79, 70, 229, 0.3);
+    box-shadow: 0 8px 16px -4px rgba(79, 70, 229, 0.25);
     transition: var(--transition);
 }
 
@@ -306,8 +313,8 @@ a {
     background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
     color: white !important;
     font-weight: 600;
-    border-radius: 50px;
-    box-shadow: 0 10px 25px -5px rgba(79, 70, 229, 0.35);
+    border-radius: 12px;
+    box-shadow: 0 8px 20px -4px rgba(79, 70, 229, 0.3);
 }
 .btn-hero-primary:hover {
     transform: translateY(-2px);
@@ -320,12 +327,12 @@ a {
     align-items: center;
     gap: 8px;
     padding: 16px 36px;
-    background: rgba(255, 255, 255, 0.6);
+    background: rgba(255, 255, 255, 0.75);
     backdrop-filter: blur(10px);
     color: var(--text-main) !important;
     border: 1px solid var(--border);
     font-weight: 600;
-    border-radius: 50px;
+    border-radius: 12px;
 }
 .btn-hero-secondary:hover {
     background: rgba(255, 255, 255, 0.85);
@@ -747,12 +754,12 @@ a {
     background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
     color: white;
     border: none;
-    border-radius: 50px;
+    border-radius: 12px;
     font-family: inherit;
     font-size: 0.98rem;
     font-weight: 700;
     cursor: pointer;
-    box-shadow: 0 10px 25px -5px rgba(79, 70, 229, 0.35);
+    box-shadow: 0 8px 20px -4px rgba(79, 70, 229, 0.3);
     transition: var(--transition);
 }
 
@@ -940,17 +947,20 @@ a {
 /* 8. Premium Micro-interactions & Animations */
 .btn-cta-primary, .btn-hero-primary, .btn-contact-submit, .btn-cta-nav, .btn-hero-secondary, .btn-primary, .btn-secondary {
     transition: var(--transition);
+    border-radius: 12px !important;
 }
 
 .btn-cta-primary:hover, .btn-hero-primary:hover, .btn-contact-submit:hover, .btn-cta-nav:hover, .btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 28px -5px rgba(30, 58, 138, 0.22);
-    filter: brightness(1.05);
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 12px 24px -6px rgba(79, 70, 229, 0.25), 0 4px 12px -4px rgba(79, 70, 229, 0.15);
+    filter: brightness(1.08);
 }
 
 .btn-cta-secondary:hover, .btn-hero-secondary:hover, .btn-secondary:hover {
-    transform: translateY(-2px);
-    background: rgba(255, 255, 255, 0.9);
+    transform: translateY(-2px) scale(1.02);
+    background: rgba(255, 255, 255, 0.98) !important;
+    border-color: rgba(99, 102, 241, 0.35) !important;
+    box-shadow: 0 10px 20px -8px rgba(0, 0, 0, 0.05);
 }
 
 /* Elegant Icon hover movements without color changes */

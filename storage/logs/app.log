@@ -1,45 +1,52 @@
-[2026-05-29 11:30:15] [CACHE-PURGED] Entire system cache has been invalidated.
-[2026-05-29 11:58:23] [CACHE-PURGED] Entire system cache has been invalidated.
-[2026-05-29 12:00:17] [CACHE-PURGED] Entire system cache has been invalidated.
-[2026-05-29 15:22:27] [CACHE-PURGED] Entire system cache has been invalidated.
-[2026-05-29 15:39:18] [CACHE-PURGED] Entire system cache has been invalidated.
-[2026-05-29 15:41:47] [CACHE-PURGED] Entire system cache has been invalidated.
-[2026-05-29 15:42:57] [CACHE-PURGED] Entire system cache has been invalidated.
-[2026-05-29 15:43:04] [CACHE-PURGED] Entire system cache has been invalidated.
-[2026-05-29 15:43:30] [CACHE-PURGED] Entire system cache has been invalidated.
-[2026-05-29 15:50:33] [CACHE-PURGED] Entire system cache has been invalidated.
-[2026-05-29 15:50:49] [CACHE-PURGED] Entire system cache has been invalidated.
-[2026-05-29 15:51:08] [CACHE-PURGED] Entire system cache has been invalidated.
-[2026-05-29 15:53:45] [CACHE-PURGED] Entire system cache has been invalidated.
-[2026-05-29 15:57:58] [CACHE-PURGED] Entire system cache has been invalidated.
-[2026-05-29 15:58:14] [CACHE-PURGED] Entire system cache has been invalidated.
-[2026-05-29 15:58:17] [CACHE-PURGED] Entire system cache has been invalidated.
-[2026-05-29 15:59:29] [CACHE-PURGED] Entire system cache has been invalidated.
-[2026-05-29 16:00:35] [CACHE-PURGED] Entire system cache has been invalidated.
-[2026-05-29 16:02:00] [CACHE-PURGED] Entire system cache has been invalidated.
-[2026-05-29 16:04:30] [CACHE-PURGED] Entire system cache has been invalidated.
-[2026-05-29 16:15:41] [CACHE-PURGED] Entire system cache has been invalidated.
-[2026-05-29 16:16:39] [CACHE-PURGED] Entire system cache has been invalidated.
-[2026-05-29 16:19:57] [CACHE-PURGED] Entire system cache has been invalidated.
-[2026-05-29 16:22:51] [CACHE-PURGED] Entire system cache has been invalidated.
-[2026-05-29 16:22:54] [CACHE-PURGED] Entire system cache has been invalidated.
-[2026-05-29 16:26:50] [CACHE-PURGED] Entire system cache has been invalidated.
-[2026-05-29 17:11:14] [CACHE-PURGED] Entire system cache has been invalidated.
-[2026-05-29 17:14:34] [CACHE-PURGED] Entire system cache has been invalidated.
-[2026-05-29 17:15:08] [CACHE-PURGED] Entire system cache has been invalidated.
-[2026-05-29 17:17:11] [CACHE-PURGED] Entire system cache has been invalidated.
-[2026-05-29 17:41:15] [CACHE-PURGED] Entire system cache has been invalidated.
-[2026-05-29 17:42:07] [CACHE-PURGED] Entire system cache has been invalidated.
-[2026-05-29 18:22:53] [CACHE-PURGED] Entire system cache has been invalidated.
-[2026-05-29 18:34:12] [CACHE-PURGED] Entire system cache has been invalidated.
-[2026-05-29 18:39:02] [CACHE-PURGED] Entire system cache has been invalidated.
-[2026-05-29 18:43:32] [CACHE-PURGED] Entire system cache has been invalidated.
-[2026-05-29 18:58:15] [CACHE-PURGED] Entire system cache has been invalidated.
-[2026-05-29 19:00:03] [CACHE-PURGED] Entire system cache has been invalidated.
-[2026-05-29 19:02:25] [CACHE-PURGED] Entire system cache has been invalidated.
-[2026-05-29 20:15:42] [CACHE-PURGED] Entire system cache has been invalidated.
-[2026-05-29 21:00:11] [CACHE-PURGED] Entire system cache has been invalidated.
-[2026-05-29 21:00:58] [CACHE-PURGED] Entire system cache has been invalidated.
-[2026-05-29 21:05:04] [CACHE-PURGED] Entire system cache has been invalidated.
-[2026-05-29 21:05:47] [CACHE-PURGED] Entire system cache has been invalidated.
-[2026-05-29 21:18:23] [CACHE-PURGED] Entire system cache has been invalidated.
+[2026-06-12 15:50:30] [PageController::editSubmit START] Params: {"id":1}
+[2026-06-12 15:50:30] [PageController::editSubmit] Auth middleware passed.
+[2026-06-12 15:50:30] [PageController::editSubmit] CSRF validation passed.
+[2026-06-12 15:50:30] [DB QUERY START] SQL: SELECT * FROM pages WHERE id = :id LIMIT 1 | Params: {"id":1}
+[2026-06-12 15:50:30] [DB QUERY SUCCESS]
+[2026-06-12 15:50:30] [DB QUERY START] SQL: SELECT * FROM pages WHERE slug = :slug LIMIT 1 | Params: {"slug":"home"}
+[2026-06-12 15:50:30] [DB QUERY SUCCESS]
+[2026-06-12 15:50:30] [PageController::editSubmit] Form data prepared. Calling Page::updatePage()...
+[2026-06-12 15:50:30] [Page::updatePage START] ID: 1
+[2026-06-12 15:50:30] [DB QUERY START] SQL: UPDATE pages SET 
+                title = :title, 
+                slug = :slug, 
+                meta_title = :meta_title, 
+                meta_description = :meta_description, 
+                status = :status,
+                sort_order = :sort_order,
+                in_navigation = :in_navigation,
+                hero_title = :hero_title,
+                hero_subtitle = :hero_subtitle,
+                hero_image = :hero_image,
+                hero_cta1_text = :hero_cta1_text,
+                hero_cta1_url = :hero_cta1_url,
+                hero_cta2_text = :hero_cta2_text,
+                hero_cta2_url = :hero_cta2_url,
+                hero_bg_color = :hero_bg_color,
+                hero_effect = :hero_effect,
+                hero_variant = :hero_variant,
+                hero_image_layout = :hero_image_layout,
+                hero_image_size = :hero_image_size,
+                hero_badge = :hero_badge,
+                hero_status = :hero_status,
+                header_bg_mode = :header_bg_mode,
+                header_opacity = :header_opacity,
+                header_blur = :header_blur,
+                header_shadow = :header_shadow,
+                header_contrast_mode = :header_contrast_mode,
+                logo_light = :logo_light,
+                logo_dark = :logo_dark,
+                logo_size = :logo_size,
+                hero_layout_mode = :hero_layout_mode,
+                hero_text_position = :hero_text_position,
+                hero_text_alignment = :hero_text_alignment,
+                hero_text_width = :hero_text_width,
+                hero_overlay_opacity = :hero_overlay_opacity,
+                hero_shadow_strength = :hero_shadow_strength,
+                hero_image_mobile = :hero_image_mobile,
+                responsive_settings = :responsive_settings
+                WHERE id = :id | Params: {"title":"Accueil","slug":"home","meta_title":"Digitalium Group | Leader de la Transformation Digitale & IA","meta_description":"Strat\u00e9gie digitale, intelligence artificielle avant-gardiste et maintenance de parcs informatiques. D\u00e9couvrez nos services professionnels.","status":"published","sort_order":1,"in_navigation":1,"hero_title":"Des solutions<br>technologiques<br><span class=\"hi\">innovantes<\/span>","hero_subtitle":"Plongez dans un monde o\u00f9 la convergence du digital et de la technologie red\u00e9finit les normes et r\u00e9invente l'avenir de votre entreprise.","hero_image":"\/assets\/uploads\/digitalium-pic-2-1780069687.webp","hero_cta1_text":"D\u00e9couvrez nos services","hero_cta1_url":"#services","hero_cta2_text":"","hero_cta2_url":"","hero_bg_color":"linear-gradient(135deg, #f8fafc 0%, #f1f5f9 50%, #e2e8f0 100%)","hero_effect":"particles","hero_variant":"hero_ambient_glow","hero_image_layout":"right","hero_image_size":"large","hero_badge":"Innovation IA & Performance","hero_status":1,"header_bg_mode":"glass","header_opacity":0.65,"header_blur":21,"header_shadow":"moyen","header_contrast_mode":"default","logo_light":"","logo_dark":"","logo_size":38,"hero_layout_mode":"grand","hero_text_position":"centre","hero_text_alignment":"center","hero_text_width":"100%","hero_overlay_opacity":0,"hero_shadow_strength":"none","hero_image_mobile":"","responsive_settings":"","id":1}
+[2026-06-12 15:50:30] [DB QUERY SUCCESS]
+[2026-06-12 15:50:30] [Page::updatePage SUCCESS] Affected rows: 1
+[2026-06-12 15:50:30] [CACHE-PURGED] Entire system cache has been invalidated.
+[2026-06-12 15:50:30] [PageController::editSubmit SUCCESS] Redirecting to edit page.

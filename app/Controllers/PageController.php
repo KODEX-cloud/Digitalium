@@ -119,16 +119,21 @@ class PageController extends Controller {
      * Handle page metadata update.
      */
     public function editSubmit(array $params): void {
-        ini_set('error_log', ROOT_PATH . '/storage/logs/app.log');
-        error_log(print_r($_POST,true));
+        $logPath = ROOT_PATH . '/storage/logs/app.log';
+        $timestamp = date('Y-m-d H:i:s');
+        error_log("[{$timestamp}] [PageController::editSubmit START] Params: " . json_encode($params) . "\n", 3, $logPath);
 
         $this->middlewareAuth();
+        error_log("[{$timestamp}] [PageController::editSubmit] Auth middleware passed.\n", 3, $logPath);
+        
         $this->validateCsrf();
+        error_log("[{$timestamp}] [PageController::editSubmit] CSRF validation passed.\n", 3, $logPath);
 
         $id = (int)($params['id'] ?? 0);
         $page = Page::find($id);
 
         if (!$page) {
+            error_log("[{$timestamp}] [PageController::editSubmit ERROR] Page ID {$id} not found.\n", 3, $logPath);
             $this->redirect('/admin/pages', 'error', 'Page introuvable.');
         }
 
@@ -139,12 +144,15 @@ class PageController extends Controller {
         ];
 
         if (!$validator->validate($_POST, $rules)) {
-            $this->redirect("/admin/pages/edit/{$id}", 'error', reset($validator->getErrors()));
+            $err = reset($validator->getErrors());
+            error_log("[{$timestamp}] [PageController::editSubmit ERROR] Validation failed: {$err}\n", 3, $logPath);
+            $this->redirect("/admin/pages/edit/{$id}", 'error', $err);
         }
 
         $slug = Page::slugify($_POST['slug']);
         $existing = Page::findBySlug($slug);
         if ($existing && (int)$existing['id'] !== $id) {
+            error_log("[{$timestamp}] [PageController::editSubmit ERROR] Slug {$slug} is already taken by page ID " . $existing['id'] . ".\n", 3, $logPath);
             $this->redirect("/admin/pages/edit/{$id}", 'error', "L'URL slug '{$slug}' est déjà pris.");
         }
 
@@ -188,11 +196,20 @@ class PageController extends Controller {
             'responsive_settings' => trim($_POST['responsive_settings'] ?? '')
         ];
 
-        if (Page::updatePage($id, $data)) {
-            \App\Services\Cache::clear();
-            $this->redirect("/admin/pages/edit/{$id}", 'success', 'Enregistré avec succès.');
-        } else {
-            $this->redirect("/admin/pages/edit/{$id}", 'info', 'Aucune modification apportée.');
+        error_log("[{$timestamp}] [PageController::editSubmit] Form data prepared. Calling Page::updatePage()...\n", 3, $logPath);
+
+        try {
+            if (Page::updatePage($id, $data)) {
+                \App\Services\Cache::clear();
+                error_log("[{$timestamp}] [PageController::editSubmit SUCCESS] Redirecting to edit page.\n", 3, $logPath);
+                $this->redirect("/admin/pages/edit/{$id}", 'success', 'Enregistré avec succès.');
+            } else {
+                error_log("[{$timestamp}] [PageController::editSubmit INFO] No columns updated.\n", 3, $logPath);
+                $this->redirect("/admin/pages/edit/{$id}", 'info', 'Aucune modification apportée.');
+            }
+        } catch (\Throwable $e) {
+            error_log("[{$timestamp}] [PageController::editSubmit EXCEPTION] " . $e->getMessage() . " | file: " . $e->getFile() . " line: " . $e->getLine() . "\n", 3, $logPath);
+            $this->redirect("/admin/pages/edit/{$id}", 'error', "Erreur de sauvegarde : " . $e->getMessage());
         }
     }
 

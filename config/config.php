@@ -62,3 +62,38 @@ define('APP_SECRET', $envData['APP_SECRET'] ?? '4f923b784a92c0199e8293e9da2884a0
 // 5. Site Constants
 define('DEFAULT_PAGE_SLUG', 'home');
 define('ADMIN_PREFIX', '/admin');
+
+/**
+ * Global Helper to generate absolute URLs relative to the application base directory.
+ * Works seamlessly in subdirectories (like /Digitalium) and production root.
+ */
+if (!function_exists('url')) {
+    function url(string $path = ''): string {
+        if (empty($path)) {
+            return '';
+        }
+        // Skip external protocols, phone/mail schemes, or fragments
+        if (preg_match('/^(https?:\/\/|mailto:|tel:|#|javascript:)/i', $path)) {
+            return $path;
+        }
+        static $basePath = null;
+        if ($basePath === null) {
+            $scriptName = $_SERVER['SCRIPT_NAME'] ?? '';
+            $dir = dirname($scriptName);
+            if ($dir === '/' || $dir === '\\') {
+                $basePath = '';
+            } else {
+                $basePath = rtrim(str_replace('\\', '/', $dir), '/');
+            }
+        }
+        
+        $path = '/' . ltrim($path, '/');
+        
+        // If the path already begins with $basePath (and $basePath is not empty), don't prepend it again
+        if ($basePath !== '' && strpos($path, $basePath . '/') === 0) {
+            return $path;
+        }
+        
+        return $basePath . $path;
+    }
+}
