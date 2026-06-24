@@ -196,6 +196,9 @@ class HomeController extends Controller {
      */
     private function render404(): void {
         http_response_code(404);
+        if (!headers_sent()) {
+            header('HTTP/1.1 404 Not Found', true, 404);
+        }
         $settings  = Setting::getAll();
         $menuPages = array_filter(Page::all('sort_order ASC'), fn($p) => $p['status'] === 'published');
         $this->render('frontend/404', [
