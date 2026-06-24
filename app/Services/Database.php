@@ -46,16 +46,16 @@ class Database {
      * Helper to run an SQL query with parameters.
      */
     public static function query(string $sql, array $params = []): \PDOStatement {
-        $logPath = ROOT_PATH . '/storage/logs/app.log';
-        $timestamp = date('Y-m-d H:i:s');
-        error_log("[{$timestamp}] [DB QUERY START] SQL: {$sql} | Params: " . json_encode($params) . "\n", 3, $logPath);
         try {
             $stmt = self::getConnection()->prepare($sql);
             $stmt->execute($params);
-            error_log("[{$timestamp}] [DB QUERY SUCCESS]\n", 3, $logPath);
             return $stmt;
         } catch (PDOException $e) {
-            error_log("[{$timestamp}] [DB QUERY ERROR] " . $e->getMessage() . " | SQL: {$sql} | Params: " . json_encode($params) . "\n", 3, $logPath);
+            if (ENVIRONMENT === 'development') {
+                $logPath = ROOT_PATH . '/storage/logs/app.log';
+                $timestamp = date('Y-m-d H:i:s');
+                error_log("[{$timestamp}] [DB QUERY ERROR] " . $e->getMessage() . " | SQL: {$sql}\n", 3, $logPath);
+            }
             throw new Exception("Query error: " . $e->getMessage() . " in SQL: " . $sql);
         }
     }

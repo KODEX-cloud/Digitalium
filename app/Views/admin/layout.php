@@ -440,6 +440,33 @@
                     <span>Réalisations</span>
                 </a>
             </li>
+            <li class="menu-item <?= $isActive('#^/admin/blog#') ?>">
+                <a href="<?= url('/admin/blog') ?>">
+                    <i data-lucide="newspaper"></i>
+                    <span>Blog</span>
+                </a>
+            </li>
+            <li class="menu-item <?= $isActive('#^/admin/messages#') ?>">
+                <a href="<?= url('/admin/messages') ?>" style="position: relative;">
+                    <i data-lucide="inbox"></i>
+                    <span>Messages</span>
+                    <?php
+                    try {
+                        $unreadCount = \App\Models\Message::countNew();
+                        if ($unreadCount > 0): ?>
+                        <span style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:#6366f1;color:#fff;font-size:0.65rem;font-weight:800;padding:1px 7px;border-radius:50px;min-width:20px;text-align:center;">
+                            <?= $unreadCount ?>
+                        </span>
+                    <?php endif;
+                    } catch (\Throwable $e) {} ?>
+                </a>
+            </li>
+            <li class="menu-item <?= $isActive('#^/admin/menus#') ?>">
+                <a href="<?= url('/admin/menus') ?>">
+                    <i data-lucide="menu"></i>
+                    <span>Navigation</span>
+                </a>
+            </li>
             <li class="menu-item <?= $isActive('#^/admin/media#') ?>">
                 <a href="<?= url('/admin/media') ?>">
                     <i data-lucide="image"></i>

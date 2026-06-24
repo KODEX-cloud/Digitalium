@@ -155,9 +155,26 @@
                     <?= \App\Helpers\MediaHelper::renderField('site_logo_mobile', $settings['site_logo_mobile'] ?? '', 'logo_mobile') ?>
                 </div>
 
+                <!-- Light Logo -->
+                <div class="admin-form-group">
+                    <label>Logo Clair (pour fonds foncés / contrastes sombres)</label>
+                    <?= \App\Helpers\MediaHelper::renderField('site_logo_light', $settings['site_logo_light'] ?? '', 'logo_light') ?>
+                </div>
+
+                <!-- Dark Logo -->
+                <div class="admin-form-group">
+                    <label>Logo Sombre (pour fonds clairs / contrastes clairs)</label>
+                    <?= \App\Helpers\MediaHelper::renderField('site_logo_dark', $settings['site_logo_dark'] ?? '', 'logo_dark') ?>
+                </div>
+
                 <div class="admin-form-group">
                     <label for="footer_pitch">Accroche corporative (Footer Pitch)</label>
                     <textarea id="footer_pitch" name="footer_pitch" class="admin-textarea" rows="3"><?= htmlspecialchars($settings['footer_pitch'] ?? '') ?></textarea>
+                </div>
+
+                <div class="admin-form-group">
+                    <label for="footer_slogan">Slogan de bas de page (Footer Slogan)</label>
+                    <input type="text" id="footer_slogan" name="footer_slogan" class="admin-input" value="<?= htmlspecialchars($settings['footer_slogan'] ?? '') ?>" placeholder="Ex: L'innovation digitale par l'excellence technique.">
                 </div>
             </div>
 
@@ -184,6 +201,17 @@
                 <div class="admin-form-group">
                     <label for="footer_copyright">Texte du Copyright du bas de page</label>
                     <input type="text" id="footer_copyright" name="footer_copyright" class="admin-input" value="<?= htmlspecialchars($settings['footer_copyright'] ?? '') ?>">
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    <div class="admin-form-group">
+                        <label for="footer_cta_text">Texte du Bouton CTA Footer</label>
+                        <input type="text" id="footer_cta_text" name="footer_cta_text" class="admin-input" value="<?= htmlspecialchars($settings['footer_cta_text'] ?? '') ?>" placeholder="Ex: Commencer mon projet">
+                    </div>
+                    <div class="admin-form-group">
+                        <label for="footer_cta_link">Lien du Bouton CTA Footer</label>
+                        <input type="text" id="footer_cta_link" name="footer_cta_link" class="admin-input" value="<?= htmlspecialchars($settings['footer_cta_link'] ?? '') ?>" placeholder="Ex: /contact">
+                    </div>
                 </div>
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
@@ -240,6 +268,11 @@
                 </div>
 
                 <div class="admin-form-group">
+                    <label for="social_facebook">Facebook URL</label>
+                    <input type="url" id="social_facebook" name="social_facebook" class="admin-input" value="<?= htmlspecialchars($settings['social_facebook'] ?? '') ?>" placeholder="https://facebook.com/...">
+                </div>
+
+                <div class="admin-form-group">
                     <label for="social_linkedin">LinkedIn URL</label>
                     <input type="url" id="social_linkedin" name="social_linkedin" class="admin-input" value="<?= htmlspecialchars($settings['social_linkedin'] ?? '') ?>" placeholder="https://linkedin.com/...">
                 </div>
@@ -247,6 +280,16 @@
                 <div class="admin-form-group">
                     <label for="social_twitter">Twitter / X URL</label>
                     <input type="url" id="social_twitter" name="social_twitter" class="admin-input" value="<?= htmlspecialchars($settings['social_twitter'] ?? '') ?>" placeholder="https://twitter.com/...">
+                </div>
+
+                <div class="admin-form-group">
+                    <label for="social_instagram">Instagram URL</label>
+                    <input type="url" id="social_instagram" name="social_instagram" class="admin-input" value="<?= htmlspecialchars($settings['social_instagram'] ?? '') ?>" placeholder="https://instagram.com/...">
+                </div>
+
+                <div class="admin-form-group">
+                    <label for="social_youtube">Youtube URL</label>
+                    <input type="url" id="social_youtube" name="social_youtube" class="admin-input" value="<?= htmlspecialchars($settings['social_youtube'] ?? '') ?>" placeholder="https://youtube.com/...">
                 </div>
 
                 <div class="admin-form-group">

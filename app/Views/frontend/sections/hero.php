@@ -35,9 +35,11 @@
                         <i data-lucide="arrow-up-right" style="width: 18px; height: 18px;"></i>
                     </a>
                 <?php endif; ?>
-                <a href="#about" class="btn-hero-secondary" style="padding: 14px 30px; font-weight: 600; border-radius: 8px;">
-                    <span>En savoir plus</span>
-                </a>
+                <?php if (!empty($single['cta2_text'])): ?>
+                    <a href="<?= htmlspecialchars($single['cta2_url'] ?? '#about') ?>" class="btn-hero-secondary" style="padding: 14px 30px; font-weight: 600; border-radius: 8px;">
+                        <span><?= htmlspecialchars($single['cta2_text']) ?></span>
+                    </a>
+                <?php endif; ?>
             </div>
         </div>
 
@@ -46,14 +48,16 @@
             <div class="ai-frame" style="width: 100%; max-width: 380px;">
                 <div class="hero-image-box">
                     <?php if (!empty($single['bg_image'])): ?>
-                        <img src="<?= htmlspecialchars($single['bg_image']) ?>" alt="Digitalium Hero" loading="lazy">
+                        <img src="<?= htmlspecialchars(url($single['bg_image'])) ?>" alt="Digitalium Hero" loading="lazy">
                     <?php else: ?>
-                        <img src="/assets/images/hero_3d.png" alt="Digitalium Hero" loading="lazy">
+                        <img src="<?= htmlspecialchars(url('/assets/images/hero_3d.png')) ?>" alt="Digitalium Hero" loading="lazy">
                     <?php endif; ?>
                 </div>
                 <div class="ai-label" style="font-size: 0.72rem; letter-spacing: 0.2rem; text-transform: uppercase; color: var(--primary); text-align: center; font-weight: 700; margin-top: 6px;">
-                    Digitalium Group
-                    <strong style="display: block; font-size: 1.15rem; color: var(--text-main); letter-spacing: 0; margin-top: 4px; font-family: var(--font-heading);">Digital Innovation</strong>
+                    <?= htmlspecialchars($settings['site_name'] ?? 'Digitalium Group') ?>
+                    <?php if (!empty($single['visual_label'])): ?>
+                        <strong style="display: block; font-size: 1.15rem; color: var(--text-main); letter-spacing: 0; margin-top: 4px; font-family: var(--font-heading);"><?= htmlspecialchars($single['visual_label']) ?></strong>
+                    <?php endif; ?>
                 </div>
             </div>
 
@@ -61,15 +65,15 @@
             <div class="hero-stats" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; width: 100%; max-width: 380px;">
                 <div class="hstat" style="text-align: center; padding: 1rem 0.5rem; background: var(--bg-surface); border: 1px solid var(--border); border-radius: 10px;">
                     <div class="hstat-n" style="font-size: 1.6rem; font-weight: 800; color: var(--text-main); font-family: var(--font-heading);"><?= htmlspecialchars($single['stats_years'] ?? '10+') ?></div>
-                    <div class="hstat-l" style="font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-top: 4px; font-weight: 600;">Expérience</div>
+                    <div class="hstat-l" style="font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-top: 4px; font-weight: 600;"><?= htmlspecialchars($single['stats_label_years'] ?? 'Expérience') ?></div>
                 </div>
                 <div class="hstat" style="text-align: center; padding: 1rem 0.5rem; background: var(--bg-surface); border: 1px solid var(--border); border-radius: 10px;">
                     <div class="hstat-n" style="font-size: 1.6rem; font-weight: 800; color: var(--text-main); font-family: var(--font-heading);"><?= htmlspecialchars($single['stats_clients'] ?? '100+') ?></div>
-                    <div class="hstat-l" style="font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-top: 4px; font-weight: 600;">Clients</div>
+                    <div class="hstat-l" style="font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-top: 4px; font-weight: 600;"><?= htmlspecialchars($single['stats_label_clients'] ?? 'Clients') ?></div>
                 </div>
                 <div class="hstat" style="text-align: center; padding: 1rem 0.5rem; background: var(--bg-surface); border: 1px solid var(--border); border-radius: 10px;">
                     <div class="hstat-n" style="font-size: 1.6rem; font-weight: 800; color: var(--text-main); font-family: var(--font-heading);"><?= htmlspecialchars($single['stats_satisfaction'] ?? '98%') ?></div>
-                    <div class="hstat-l" style="font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-top: 4px; font-weight: 600;">Satisfaction</div>
+                    <div class="hstat-l" style="font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-top: 4px; font-weight: 600;"><?= htmlspecialchars($single['stats_label_satisfaction'] ?? 'Satisfaction') ?></div>
                 </div>
             </div>
         </div>

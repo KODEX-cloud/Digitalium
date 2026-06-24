@@ -9,6 +9,14 @@ abstract class Controller {
      * Render a view file with an optional layout file.
      */
     protected function render(string $view, array $data = [], string $layout = ''): void {
+        // Automatically inject settings if not already provided to avoid query duplication in views
+        if (!isset($data['siteSettings'])) {
+            $data['siteSettings'] = \App\Models\Setting::getAll();
+        }
+        if (!isset($data['settings'])) {
+            $data['settings'] = $data['siteSettings'];
+        }
+
         extract($data);
 
         ob_start();

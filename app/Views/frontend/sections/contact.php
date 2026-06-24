@@ -81,7 +81,7 @@
                         <div class="error-msg" id="err-message" style="color: #f87171; font-size: 0.8rem; margin-top: 4px; display: none;"></div>
                     </div>
 
-                    <button type="submit" class="btn-contact-submit" id="contactSubmitBtn">
+                    <button type="submit" class="btn-contact-submit" id="contactSubmitBtn" onclick="window.location.href='<?= url('/contact') ?>'">
                         <span><?= htmlspecialchars($single['cta_label'] ?? 'Planifier un entretien technique') ?></span>
                     </button>
                 </form>

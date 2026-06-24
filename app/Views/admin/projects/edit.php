@@ -141,6 +141,27 @@
                     <input type="text" id="technologies" name="technologies" class="admin-input" value="<?= htmlspecialchars($project['technologies'] ?? '') ?>" placeholder="Ex: HTML, CSS, Laravel, MySQL">
                 </div>
 
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    <div class="admin-form-group">
+                        <label for="client">Client</label>
+                        <input type="text" id="client" name="client" class="admin-input" value="<?= htmlspecialchars($project['client'] ?? '') ?>" placeholder="Nom du client">
+                    </div>
+                    <div class="admin-form-group">
+                        <label for="project_date">Date du projet</label>
+                        <input type="date" id="project_date" name="project_date" class="admin-input" value="<?= htmlspecialchars($project['project_date'] ?? '') ?>">
+                    </div>
+                </div>
+
+                <div class="admin-form-group">
+                    <label for="slug">Slug URL <small style="color:var(--text-muted);font-weight:400;">(auto-généré si vide)</small></label>
+                    <input type="text" id="slug" name="slug" class="admin-input" value="<?= htmlspecialchars($project['slug'] ?? '') ?>" placeholder="mon-projet">
+                </div>
+
+                <div class="admin-form-group">
+                    <label for="description">Description courte <small style="color:var(--text-muted);font-weight:400;">(résumé public)</small></label>
+                    <textarea id="description" name="description" class="admin-textarea" rows="3" placeholder="Résumé du projet affiché dans la liste et les meta..."><?= htmlspecialchars($project['description'] ?? '') ?></textarea>
+                </div>
+
                 <div class="admin-form-group">
                     <label for="external_link">Lien externe du projet (URL)</label>
                     <input type="url" id="external_link" name="external_link" class="admin-input" value="<?= htmlspecialchars($project['external_link'] ?? '') ?>" placeholder="https://projet-site.com">

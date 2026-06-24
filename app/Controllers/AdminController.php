@@ -7,6 +7,8 @@ use App\Helpers\Validator;
 use App\Models\Page;
 use App\Models\Section;
 use App\Models\Media;
+use App\Models\Post;
+use App\Models\Project;
 
 class AdminController extends Controller {
     /**
@@ -24,10 +26,17 @@ class AdminController extends Controller {
     public function dashboard(): void {
         $this->middlewareAuth();
 
+        $blogCount = 0;
+        try { $blogCount = Post::count(); } catch (\Throwable $e) { /* table may not exist yet */ }
+        $projectCount = 0;
+        try { $projectCount = Project::count(); } catch (\Throwable $e) {}
+
         $stats = [
-            'pages_count'   => Page::count(),
-            'sections_count'=> Section::count(),
-            'media_count'   => Media::count()
+            'pages_count'    => Page::count(),
+            'sections_count' => Section::count(),
+            'media_count'    => Media::count(),
+            'blog_count'     => $blogCount,
+            'project_count'  => $projectCount,
         ];
 
         $recentPages = Page::all('id DESC LIMIT 5');
@@ -137,12 +146,20 @@ class AdminController extends Controller {
             'social_linkedin',
             'social_twitter',
             'social_github',
+            'social_facebook',
+            'social_instagram',
+            'social_youtube',
             'site_favicon',
             'site_logo_mobile',
+            'site_logo_light',
+            'site_logo_dark',
             'site_logo_text',
             'site_logo_subtext',
             'site_whatsapp',
             'footer_copyright',
+            'footer_slogan',
+            'footer_cta_text',
+            'footer_cta_link',
             'footer_legal_text',
             'footer_legal_url',
             'header_cta_text',

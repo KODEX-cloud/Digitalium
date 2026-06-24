@@ -104,6 +104,7 @@ class PageController extends Controller {
         }
 
         $mediaList = Media::all('id DESC');
+        $slides = \App\Models\HeroSlide::getByPage($id);
 
         $this->render('admin/pages/edit', [
             'title' => "Édition : " . $page['title'],
@@ -111,6 +112,7 @@ class PageController extends Controller {
             'sections' => $sections,
             'sectionBlocks' => $sectionBlocks,
             'mediaList' => $mediaList,
+            'slides' => $slides,
             'csrf_token' => $this->generateCsrf()
         ], 'admin/layout');
     }
@@ -144,7 +146,8 @@ class PageController extends Controller {
         ];
 
         if (!$validator->validate($_POST, $rules)) {
-            $err = reset($validator->getErrors());
+            $errs = $validator->getErrors();
+            $err = reset($errs);
             error_log("[{$timestamp}] [PageController::editSubmit ERROR] Validation failed: {$err}\n", 3, $logPath);
             $this->redirect("/admin/pages/edit/{$id}", 'error', $err);
         }
@@ -193,7 +196,9 @@ class PageController extends Controller {
             'hero_overlay_opacity' => (float)($_POST['hero_overlay_opacity'] ?? 0.45),
             'hero_shadow_strength' => trim($_POST['hero_shadow_strength'] ?? 'moyen'),
             'hero_image_mobile' => trim($_POST['hero_image_mobile'] ?? ''),
-            'responsive_settings' => trim($_POST['responsive_settings'] ?? '')
+            'responsive_settings' => trim($_POST['responsive_settings'] ?? ''),
+            'hero_features' => trim($_POST['hero_features'] ?? ''),
+            'hero_articles' => trim($_POST['hero_articles'] ?? '')
         ];
 
         error_log("[{$timestamp}] [PageController::editSubmit] Form data prepared. Calling Page::updatePage()...\n", 3, $logPath);
@@ -394,11 +399,21 @@ class PageController extends Controller {
     private function seedDefaultSectionBlocks(int $sectionId, string $type): void {
         switch ($type) {
             case 'hero':
+                Block::setVal($sectionId, 'badge', 'text', 'Innovation');
                 Block::setVal($sectionId, 'title', 'wysiwyg', '<h1>Votre transformation digitale commence ici</h1>');
                 Block::setVal($sectionId, 'subtitle', 'textarea', 'Nous concevons des solutions logicielles sur mesure.');
                 Block::setVal($sectionId, 'cta_text', 'text', 'Commencer mon projet');
                 Block::setVal($sectionId, 'cta_url', 'link', '#contact');
+                Block::setVal($sectionId, 'cta2_text', 'text', 'En savoir plus');
+                Block::setVal($sectionId, 'cta2_url', 'link', '#about');
                 Block::setVal($sectionId, 'bg_image', 'image', '');
+                Block::setVal($sectionId, 'visual_label', 'text', 'Digital Innovation');
+                Block::setVal($sectionId, 'stats_years', 'text', '10+');
+                Block::setVal($sectionId, 'stats_clients', 'text', '100+');
+                Block::setVal($sectionId, 'stats_satisfaction', 'text', '98%');
+                Block::setVal($sectionId, 'stats_label_years', 'text', 'Expérience');
+                Block::setVal($sectionId, 'stats_label_clients', 'text', 'Clients');
+                Block::setVal($sectionId, 'stats_label_satisfaction', 'text', 'Satisfaction');
                 break;
 
             case 'services':
@@ -538,6 +553,91 @@ class PageController extends Controller {
                 Block::setVal($sectionId, 'card_image', 'image', '', $groupId, 3);
                 Block::setVal($sectionId, 'card_link', 'link', '#', $groupId, 4);
                 break;
+        }
+    }
+
+    /**
+     * AJAX API: Add a new Hero Slide.
+     */
+    public function addSlide(): void {
+        $this->middlewareAuth();
+        $this->validateCsrf();
+
+        $pageId = (int)($_POST['page_id'] ?? 0);
+        if ($pageId <= 0) {
+            $this->json(['error' => 'ID de page invalide.'], 400);
+        }
+
+        try {
+            $slideId = \App\Models\HeroSlide::add([
+                'page_id' => $pageId,
+                'title' => 'Nouveau Slide',
+                'subtitle' => 'Description du slide.',
+                'badge' => 'Premium',
+                'image' => '',
+                'cta_text' => 'Découvrir',
+                'cta_url' => '#',
+                'sort_order' => 0
+            ]);
+            \App\Services\Cache::clear();
+            $this->json([
+                'success' => true,
+                'message' => 'Slide ajouté !',
+                'slide_id' => $slideId
+            ]);
+        } catch (\Exception $e) {
+            $this->json(['error' => 'Erreur : ' . $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * AJAX API: Update all slides for a page.
+     */
+    public function updateSlides(): void {
+        $this->middlewareAuth();
+        $this->validateCsrf();
+
+        $slidesData = $_POST['slides'] ?? [];
+        try {
+            foreach ($slidesData as $slideId => $slide) {
+                \App\Models\HeroSlide::updateSlide((int)$slideId, [
+                    'title'      => trim($slide['title'] ?? ''),
+                    'subtitle'   => trim($slide['subtitle'] ?? ''),
+                    'badge'      => trim($slide['badge'] ?? ''),
+                    'image'      => trim($slide['image'] ?? ''),
+                    'cta_text'   => trim($slide['cta_text'] ?? ''),
+                    'cta_url'    => trim($slide['cta_url'] ?? ''),
+                    'sort_order' => (int)($slide['sort_order'] ?? 0)
+                ]);
+            }
+            \App\Services\Cache::clear();
+            $this->json(['success' => true, 'message' => 'Slides mis à jour avec succès.']);
+        } catch (\Exception $e) {
+            $this->json(['error' => 'Erreur : ' . $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * AJAX API: Delete a Hero Slide.
+     */
+    public function deleteSlide(): void {
+        $this->middlewareAuth();
+        $this->validateCsrf();
+
+        $slideId = (int)($_POST['slide_id'] ?? 0);
+        if ($slideId <= 0) {
+            $this->json(['error' => 'ID de slide invalide.'], 400);
+        }
+
+        try {
+            if (\App\Models\HeroSlide::delete($slideId)) {
+                \App\Services\Cache::clear();
+                $this->json(['success' => true, 'message' => 'Slide supprimé avec succès.']);
+            } else {
+                $this->json(['error' => 'Aucun slide supprimé.'], 404);
+            }
+        } catch (\Exception $e) {
+            $this->json(['error' => 'Erreur : ' . $e->getMessage()], 500);
         }
     }
 }

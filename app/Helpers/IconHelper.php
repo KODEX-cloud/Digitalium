@@ -26,7 +26,7 @@ class IconHelper {
             $imgStyle = "width: {$size}; height: {$size}; object-fit: contain; {$style}";
             return sprintf(
                 '<img src="%s" class="%s" style="%s" alt="Icon" />',
-                htmlspecialchars($image),
+                htmlspecialchars(url($image)),
                 htmlspecialchars($class),
                 $imgStyle
             );
@@ -38,7 +38,7 @@ class IconHelper {
             $imgStyle = "width: {$size}; height: {$size}; object-fit: contain; {$style}";
             return sprintf(
                 '<img src="%s" class="%s" style="%s" alt="Icon" />',
-                htmlspecialchars($iconValue),
+                htmlspecialchars(url($iconValue)),
                 htmlspecialchars($class),
                 $imgStyle
             );

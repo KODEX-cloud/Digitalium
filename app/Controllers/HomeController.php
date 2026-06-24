@@ -6,6 +6,7 @@ use App\Models\Page;
 use App\Models\Section;
 use App\Models\Block;
 use App\Models\Setting;
+use App\Models\Message;
 use App\Helpers\Validator;
 use App\Helpers\Sanitizer;
 
@@ -103,25 +104,53 @@ class HomeController extends Controller {
             exit;
         }
 
-        // 3. Process the entry (write to log file)
-        $storageDir = ROOT_PATH . '/storage/logs';
-        if (!file_exists($storageDir)) {
-            mkdir($storageDir, 0755, true);
+        // 3. Anti-spam: honeypot field check
+        if (!empty($_POST['website'])) {
+            echo json_encode(['success' => true, 'message' => 'Message transmis.']);
+            exit;
         }
 
-        $logFile = $storageDir . '/contacts.log';
-        $timestamp = date('Y-m-d H:i:s');
-        $logEntry = sprintf(
-            "[%s] Nom: %s | Email: %s | Sujet: %s | Message: %s\n",
-            $timestamp,
-            $data['name'],
-            $data['email'],
-            $data['subject'] ?? 'Sans sujet',
-            str_replace(["\r", "\n"], " ", $data['message'])
-        );
-        file_put_contents($logFile, $logEntry, FILE_APPEND);
+        $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
 
-        // 4. Return success response
+        // 4. Save to database
+        try {
+            Message::create([
+                'nom'       => $data['name'],
+                'email'     => $data['email'],
+                'telephone' => $data['phone'] ?? null,
+                'sujet'     => $data['subject'] ?? null,
+                'message'   => $data['message'],
+                'ip_address' => $ip,
+            ]);
+        } catch (\Throwable $e) {
+            // Fallback: log only if DB write fails
+            $storageDir = ROOT_PATH . '/storage/logs';
+            if (!is_dir($storageDir)) mkdir($storageDir, 0755, true);
+            file_put_contents($storageDir . '/contacts.log',
+                '[' . date('Y-m-d H:i:s') . '] DB ERROR: ' . $e->getMessage() . "\n",
+                FILE_APPEND
+            );
+        }
+
+        // 5. Send notification email (best effort)
+        $settings = Setting::getAll();
+        $toEmail  = $settings['contact_email'] ?? null;
+        if ($toEmail && filter_var($toEmail, FILTER_VALIDATE_EMAIL)) {
+            $subject  = '[Digitalium] Nouveau message de ' . $data['name'];
+            $body  = "Nouveau message reçu depuis le site.\n\n";
+            $body .= "Nom     : " . $data['name'] . "\n";
+            $body .= "Email   : " . $data['email'] . "\n";
+            $body .= "Téléphone : " . ($data['phone'] ?? 'Non renseigné') . "\n";
+            $body .= "Sujet   : " . ($data['subject'] ?? 'Sans sujet') . "\n\n";
+            $body .= "Message :\n" . $data['message'] . "\n\n";
+            $body .= "---\nIP : $ip · Date : " . date('d/m/Y H:i:s');
+            $headers  = "From: no-reply@digitaliumgroup.com\r\n";
+            $headers .= "Reply-To: " . $data['email'] . "\r\n";
+            $headers .= "X-Mailer: PHP/" . PHP_VERSION;
+            @mail($toEmail, $subject, $body, $headers);
+        }
+
+        // 6. Return success response
         echo json_encode([
             'success' => true,
             'message' => 'Votre message a bien été transmis. Un architecte conseil de notre équipe prendra contact avec vous sous 24 heures.'
@@ -167,9 +196,20 @@ class HomeController extends Controller {
      */
     private function render404(): void {
         http_response_code(404);
-        echo "<!DOCTYPE html><html lang='fr'><head><meta charset='UTF-8'><title>Page non trouvée - 404</title>";
-        echo "<style>body{background:#0b0f19;color:#9ca3af;font-family:sans-serif;display:flex;justify-content:center;align-items:center;height:100vh;flex-direction:column;margin:0;} h1{color:#f87171;font-size:4rem;margin:0;font-family:sans-serif;} p{font-size:1.2rem;margin-top:10px;} a{color:#6366f1;text-decoration:none;margin-top:20px;padding:10px 20px;border:1px solid #6366f1;border-radius:6px;transition:background 0.2s;} a:hover{background:#6366f1;color:white;}</style></head>";
-        echo "<body><h1>404</h1><p>Désolé, la page demandée n'existe pas ou est indisponible.</p><a href='/'>Retour à l'accueil</a></body></html>";
+        $settings  = Setting::getAll();
+        $menuPages = array_filter(Page::all('sort_order ASC'), fn($p) => $p['status'] === 'published');
+        $this->render('frontend/404', [
+            'page'        => [
+                'title'            => '404 — Page introuvable',
+                'meta_title'       => 'Page introuvable — Digitalium Group',
+                'meta_description' => '',
+                'slug'             => '',
+                'hero_status'      => 0,
+            ],
+            'settings'    => $settings,
+            'menuPages'   => $menuPages,
+            'currentSlug' => '',
+        ], 'frontend/layout');
         exit;
     }
 }

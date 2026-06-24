@@ -68,7 +68,7 @@
         </div>
 
         <div style="text-align: center; margin-top: 4rem;" class="reveal">
-            <button class="btn-hero-secondary" style="padding: 14px 32px; font-weight: 600; cursor: pointer;">Charger plus d'articles</button>
+            <button class="btn-hero-secondary" style="padding: 14px 32px; font-weight: 600; cursor: pointer;" onclick="window.location.href='<?= url('/contact') ?>'">Charger plus d'articles</button>
         </div>
 
     </div>

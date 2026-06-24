@@ -12,6 +12,11 @@ if (empty($sections)) {
         $type = $sec['type'];
         $name = $sec['name'];
         
+        // Bypass duplicate legacy hero sections as the universal Hero covers them
+        if (in_array($type, ['hero', 'about_hero', 'services_hero', 'blog_hero', 'contact_hero']) || str_contains($type, '_hero')) {
+            continue;
+        }
+        
         $blocks = $sectionBlocks[$sectionId] ?? ['single' => [], 'groups' => []];
         $single = $blocks['single'];
         $groups = $blocks['groups'];

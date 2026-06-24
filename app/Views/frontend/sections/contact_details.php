@@ -72,9 +72,9 @@
                         <div class="error-msg" id="err-main-message" style="color: #f87171; font-size: 0.8rem; margin-top: 4px; display: none;"></div>
                     </div>
 
-                    <p class="form-legal" style="font-size: 0.72rem; color: var(--text-muted); line-height: 1.6; margin: 1rem 0;">En soumettant ce formulaire, vous acceptez que vos données soient traitées par Digitalium Group pour répondre à votre demande. Consulter notre <a href="#" style="color: var(--accent); text-decoration: none;">politique de confidentialité</a>.</p>
+                    <p class="form-legal" style="font-size: 0.72rem; color: var(--text-muted); line-height: 1.6; margin: 1rem 0;">En soumettant ce formulaire, vous acceptez que vos données soient traitées par Digitalium Group pour répondre à votre demande. Consulter notre <a href="<?= htmlspecialchars(url($settings['footer_legal_url'] ?? '/mentions-legales')) ?>" style="color: var(--accent); text-decoration: none;">politique de confidentialité / Mentions Légales</a>.</p>
 
-                    <button type="submit" class="btn-contact-submit" id="mainSubmitBtn" style="padding: 14px; font-weight: 600; font-size: 0.95rem;">
+                    <button type="submit" class="btn-contact-submit" id="mainSubmitBtn" style="padding: 14px; font-weight: 600; font-size: 0.95rem;" onclick="window.location.href='<?= url('/contact') ?>'">
                         <i data-lucide="send" style="width: 16px; height: 16px; display: inline-block; vertical-align: middle; margin-right: 8px;"></i>
                         <span><?= htmlspecialchars($single['cta_label'] ?? 'Planifier un entretien technique') ?></span>
                     </button>
@@ -143,18 +143,36 @@
                     <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text-main); margin-bottom: 0.4rem; font-family: var(--font-heading);">Nous suivre</h3>
                     <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 1.2rem;">Restez informé de nos derniers projets, conseils digitaux et offres exclusives.</p>
                     <div class="social-row" style="display: flex; gap: 10px; flex-wrap: wrap;">
-                        <a href="<?= htmlspecialchars($settings['social_linkedin'] ?? 'https://linkedin.com') ?>" target="_blank" class="social-btn" style="flex: 1; min-width: 90px; padding: 0.6rem 0.5rem; border: 1px solid var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 0.72rem; font-weight: 600; color: var(--text-muted); text-decoration: none; transition: var(--transition);">
-                            <i data-lucide="linkedin" style="width: 14px; height: 14px;"></i>
-                            <span>LinkedIn</span>
-                        </a>
-                        <a href="<?= htmlspecialchars($settings['social_twitter'] ?? 'https://twitter.com') ?>" target="_blank" class="social-btn" style="flex: 1; min-width: 90px; padding: 0.6rem 0.5rem; border: 1px solid var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 0.72rem; font-weight: 600; color: var(--text-muted); text-decoration: none; transition: var(--transition);">
-                            <i data-lucide="twitter" style="width: 14px; height: 14px;"></i>
-                            <span>Twitter</span>
-                        </a>
-                        <a href="<?= htmlspecialchars($settings['social_github'] ?? 'https://github.com') ?>" target="_blank" class="social-btn" style="flex: 1; min-width: 90px; padding: 0.6rem 0.5rem; border: 1px solid var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 0.72rem; font-weight: 600; color: var(--text-muted); text-decoration: none; transition: var(--transition);">
-                            <i data-lucide="github" style="width: 14px; height: 14px;"></i>
-                            <span>GitHub</span>
-                        </a>
+                        <?php if (!empty($settings['social_facebook'])): ?>
+                            <a href="<?= htmlspecialchars($settings['social_facebook']) ?>" target="_blank" class="social-btn" style="flex: 1; min-width: 90px; padding: 0.6rem 0.5rem; border: 1px solid var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 0.72rem; font-weight: 600; color: var(--text-muted); text-decoration: none; transition: var(--transition);">
+                                <i data-lucide="facebook" style="width: 14px; height: 14px;"></i>
+                                <span>Facebook</span>
+                            </a>
+                        <?php endif; ?>
+                        <?php if (!empty($settings['social_linkedin'])): ?>
+                            <a href="<?= htmlspecialchars($settings['social_linkedin']) ?>" target="_blank" class="social-btn" style="flex: 1; min-width: 90px; padding: 0.6rem 0.5rem; border: 1px solid var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 0.72rem; font-weight: 600; color: var(--text-muted); text-decoration: none; transition: var(--transition);">
+                                <i data-lucide="linkedin" style="width: 14px; height: 14px;"></i>
+                                <span>LinkedIn</span>
+                            </a>
+                        <?php endif; ?>
+                        <?php if (!empty($settings['social_twitter'])): ?>
+                            <a href="<?= htmlspecialchars($settings['social_twitter']) ?>" target="_blank" class="social-btn" style="flex: 1; min-width: 90px; padding: 0.6rem 0.5rem; border: 1px solid var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 0.72rem; font-weight: 600; color: var(--text-muted); text-decoration: none; transition: var(--transition);">
+                                <i data-lucide="twitter" style="width: 14px; height: 14px;"></i>
+                                <span>Twitter / X</span>
+                            </a>
+                        <?php endif; ?>
+                        <?php if (!empty($settings['social_instagram'])): ?>
+                            <a href="<?= htmlspecialchars($settings['social_instagram']) ?>" target="_blank" class="social-btn" style="flex: 1; min-width: 90px; padding: 0.6rem 0.5rem; border: 1px solid var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 0.72rem; font-weight: 600; color: var(--text-muted); text-decoration: none; transition: var(--transition);">
+                                <i data-lucide="instagram" style="width: 14px; height: 14px;"></i>
+                                <span>Instagram</span>
+                            </a>
+                        <?php endif; ?>
+                        <?php if (!empty($settings['social_github'])): ?>
+                            <a href="<?= htmlspecialchars($settings['social_github']) ?>" target="_blank" class="social-btn" style="flex: 1; min-width: 90px; padding: 0.6rem 0.5rem; border: 1px solid var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 0.72rem; font-weight: 600; color: var(--text-muted); text-decoration: none; transition: var(--transition);">
+                                <i data-lucide="github" style="width: 14px; height: 14px;"></i>
+                                <span>GitHub</span>
+                            </a>
+                        <?php endif; ?>
                     </div>
                 </div>
 
@@ -164,7 +182,7 @@
                         <div class="map-pin" style="width: 36px; height: 36px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); background: var(--primary); display: flex; align-items: center; justify-content: center;">
                             <i data-lucide="map-pin" style="width: 16px; height: 16px; color: white; transform: rotate(45deg);"></i>
                         </div>
-                        <span class="map-label" style="font-size: 0.78rem; color: var(--text-muted);"><?= htmlspecialchars($single['contact_address'] ?? 'Abidjan, Côte d\'Ivoire') ?></span>
+                        <span class="map-label" style="font-size: 0.78rem; color: var(--text-muted);"><?= htmlspecialchars($single['contact_address'] ?? $settings['contact_address'] ?? 'Abidjan, Côte d\'Ivoire') ?></span>
                     </div>
                     <div class="map-addr" style="padding: 1rem 1.2rem; font-size: 0.85rem; color: var(--text-main); font-weight: 700; display: flex; align-items: center; gap: 8px; font-family: var(--font-heading);">
                         <i data-lucide="building-2" style="width: 16px; height: 16px; color: var(--primary);"></i>

@@ -7,12 +7,12 @@
 if (isset($project)):
     $title = htmlspecialchars($project['title']);
     $category = htmlspecialchars($project['category']);
-    $logo = htmlspecialchars($project['logo'] ?? '/assets/images/hero_3d.png');
-    $mainImage = htmlspecialchars($project['main_image']);
+    $logo = htmlspecialchars(url($project['logo'] ?? '/assets/images/hero_3d.png'));
+    $mainImage = htmlspecialchars(url($project['main_image']));
     $context = htmlspecialchars($project['context'] ?? '');
     $impact = htmlspecialchars($project['impact'] ?? '');
     $techs = htmlspecialchars($project['technologies'] ?? '');
-    $link = htmlspecialchars($project['external_link'] ?? '#');
+    $link = htmlspecialchars(url($project['external_link'] ?? url('/contact')));
     
     // Choose dynamic category styling to match the poster's custom colors
     $catColorClass = '';

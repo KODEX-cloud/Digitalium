@@ -34,12 +34,12 @@
             </div>
             
             <div class="tags" style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
-                <button class="blog-tag-btn active" onclick="filterBlogTag('Tous', this)">Tous</button>
-                <button class="blog-tag-btn" onclick="filterBlogTag('Intelligence Artificielle', this)">IA</button>
-                <button class="blog-tag-btn" onclick="filterBlogTag('Marketing Digital', this)">Marketing</button>
-                <button class="blog-tag-btn" onclick="filterBlogTag('Développement Web', this)">Développement</button>
-                <button class="blog-tag-btn" onclick="filterBlogTag('Stratégie', this)">Stratégie</button>
-                <button class="blog-tag-btn" onclick="filterBlogTag('Transformation', this)">Transformation</button>
+                <button class="blog-tag-btn active" onclick="filterBlogTag('Tous', this)" onclick="window.location.href='<?= url('/contact') ?>'">Tous</button>
+                <button class="blog-tag-btn" onclick="filterBlogTag('Intelligence Artificielle', this)" onclick="window.location.href='<?= url('/contact') ?>'">IA</button>
+                <button class="blog-tag-btn" onclick="filterBlogTag('Marketing Digital', this)" onclick="window.location.href='<?= url('/contact') ?>'">Marketing</button>
+                <button class="blog-tag-btn" onclick="filterBlogTag('Développement Web', this)" onclick="window.location.href='<?= url('/contact') ?>'">Développement</button>
+                <button class="blog-tag-btn" onclick="filterBlogTag('Stratégie', this)" onclick="window.location.href='<?= url('/contact') ?>'">Stratégie</button>
+                <button class="blog-tag-btn" onclick="filterBlogTag('Transformation', this)" onclick="window.location.href='<?= url('/contact') ?>'">Transformation</button>
             </div>
         </div>
 

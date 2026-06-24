@@ -11,7 +11,7 @@
             <?php if (!empty($groups)): ?>
                 <?php foreach ($groups as $index => $item): ?>
                     <div class="faq-item">
-                        <button class="faq-question-btn" onclick="toggleFaq(this)">
+                        <button class="faq-question-btn" onclick="toggleFaq(this)" onclick="window.location.href='<?= url('/contact') ?>'">
                             <span><?= htmlspecialchars($item['faq_question'] ?? 'Question sans titre') ?></span>
                             <i data-lucide="chevron-down" style="width: 20px; height: 20px; transition: transform 0.3s;"></i>
                         </button>

@@ -158,6 +158,26 @@
             <span class="stat-label">Fichiers Média</span>
         </div>
     </div>
+
+    <div class="stat-card">
+        <div class="stat-icon" style="background-color: rgba(16, 185, 129, 0.08); color: #10b981;">
+            <i data-lucide="newspaper" style="width: 28px; height: 28px;"></i>
+        </div>
+        <div class="stat-details">
+            <span class="stat-number"><?= $stats['blog_count'] ?? 0 ?></span>
+            <span class="stat-label">Articles Blog</span>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon" style="background-color: rgba(245, 158, 11, 0.08); color: #d97706;">
+            <i data-lucide="briefcase" style="width: 28px; height: 28px;"></i>
+        </div>
+        <div class="stat-details">
+            <span class="stat-number"><?= $stats['project_count'] ?? 0 ?></span>
+            <span class="stat-label">Réalisations</span>
+        </div>
+    </div>
 </div>
 
 <div class="dashboard-grid">

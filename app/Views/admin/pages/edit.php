@@ -376,7 +376,7 @@ if (empty($selectedLogo)) {
 
             <!-- Part 1.5: Paramètres Visuels (Header & Logo) -->
             <div style="border-top: 1px dashed var(--border); padding-top: 20px; margin-top: 10px;">
-                <h4 style="font-family: var(--font-heading); font-size: 1.05rem; color: var(--primary); display: flex; align-items: center; gap: 8px; margin-bottom: 16px;">
+                <h4 id="header_config_title" style="font-family: var(--font-heading); font-size: 1.05rem; color: var(--primary); display: flex; align-items: center; gap: 8px; margin-bottom: 16px;">
                     <i data-lucide="palette" style="width: 18px; height: 18px; color: var(--secondary);"></i>
                     <span>Paramètres Visuels (Header & Logo)</span>
                 </h4>
@@ -453,7 +453,7 @@ if (empty($selectedLogo)) {
 
             <!-- Part 2: Unified Hero Manager -->
             <div style="border-top: 1px dashed var(--border); padding-top: 20px; margin-top: 10px;">
-                <h4 style="font-family: var(--font-heading); font-size: 1.05rem; color: var(--primary); display: flex; align-items: center; gap: 8px; margin-bottom: 16px;">
+                <h4 id="hero_config_title" style="font-family: var(--font-heading); font-size: 1.05rem; color: var(--primary); display: flex; align-items: center; gap: 8px; margin-bottom: 16px;">
                     <i data-lucide="layout-template" style="width: 18px; height: 18px; color: var(--secondary);"></i>
                     <span>Gestionnaire de Hero Section</span>
                 </h4>
@@ -576,15 +576,18 @@ if (empty($selectedLogo)) {
 
                         <div class="admin-form-group">
                             <label for="hero_variant">Style principal (Hero Variant)</label>
-                            <select id="hero_variant" name="hero_variant" class="admin-select visual-simulator-trigger">
-                                <option value="hero_split_large_image" <?= ($page['hero_variant'] ?? 'hero_split_large_image') === 'hero_split_large_image' ? 'selected' : '' ?>>Séparé - Grand Visuel (Mockup)</option>
-                                <option value="hero_split_small_image" <?= ($page['hero_variant'] ?? 'hero_split_large_image') === 'hero_split_small_image' ? 'selected' : '' ?>>Séparé - Petit Visuel (Compact)</option>
-                                <option value="hero_floating_card" <?= ($page['hero_variant'] ?? 'hero_split_large_image') === 'hero_floating_card' ? 'selected' : '' ?>>Flottant - Carte Verre Premium</option>
-                                <option value="hero_full_image" <?= ($page['hero_variant'] ?? 'hero_split_large_image') === 'hero_full_image' ? 'selected' : '' ?>>Pleine Page - Fond & Texte</option>
-                                <option value="hero_text_only" <?= ($page['hero_variant'] ?? 'hero_split_large_image') === 'hero_text_only' ? 'selected' : '' ?>>Texte Uniquement (Minimaliste)</option>
-                                <option value="hero_ambient_glow" <?= ($page['hero_variant'] ?? 'hero_split_large_image') === 'hero_ambient_glow' ? 'selected' : '' ?>>Halo Lumineux - IA Centré</option>
-                                <option value="hero_split_asymmetric" <?= ($page['hero_variant'] ?? 'hero_split_large_image') === 'hero_split_asymmetric' ? 'selected' : '' ?>>Asymétrique - Pile de Cartes (3)</option>
-                                <option value="hero_grid_features" <?= ($page['hero_variant'] ?? 'hero_split_large_image') === 'hero_grid_features' ? 'selected' : '' ?>>Grille - Cartes de Services (2x2)</option>
+                            <select id="hero_variant" name="hero_variant" class="admin-select visual-simulator-trigger" onchange="toggleSlideshowManager(this.value)">
+                                <option value="hero_slider" <?= ($page['hero_variant'] ?? 'hero_split') === 'hero_slider' ? 'selected' : '' ?>>Slider Dynamique (Diaporama)</option>
+                                <option value="hero_split" <?= ($page['hero_variant'] ?? 'hero_split') === 'hero_split' ? 'selected' : '' ?>>Séparé - Side-by-Side (Splitté)</option>
+                                <option value="hero_full_width" <?= ($page['hero_variant'] ?? 'hero_split') === 'hero_full_width' ? 'selected' : '' ?>>Pleine Page - Cover Immersive</option>
+                                <option value="hero_card" <?= ($page['hero_variant'] ?? 'hero_split') === 'hero_card' ? 'selected' : '' ?>>Flottant - Carte Verre Premium</option>
+                                <option value="hero_video" <?= ($page['hero_variant'] ?? 'hero_split') === 'hero_video' ? 'selected' : '' ?>>Vidéo - Arrière-plan Interactif</option>
+                                <option value="hero_corporate" <?= ($page['hero_variant'] ?? 'hero_split') === 'hero_corporate' ? 'selected' : '' ?>>Corporate - Épuré Professionnel</option>
+                                <option value="hero_magazine" <?= ($page['hero_variant'] ?? 'hero_split') === 'hero_magazine' ? 'selected' : '' ?>>Magazine - Offset & Badge</option>
+                                <option value="hero_split_large_image" <?= ($page['hero_variant'] ?? 'hero_split') === 'hero_split_large_image' ? 'selected' : '' ?>>Legacy: Grand Visuel (Mockup)</option>
+                                <option value="hero_split_small_image" <?= ($page['hero_variant'] ?? 'hero_split') === 'hero_split_small_image' ? 'selected' : '' ?>>Legacy: Petit Visuel (Compact)</option>
+                                <option value="hero_text_only" <?= ($page['hero_variant'] ?? 'hero_split') === 'hero_text_only' ? 'selected' : '' ?>>Legacy: Texte Uniquement</option>
+                                <option value="hero_ambient_glow" <?= ($page['hero_variant'] ?? 'hero_split') === 'hero_ambient_glow' ? 'selected' : '' ?>>Legacy: Halo Lumineux Centré</option>
                             </select>
                         </div>
 
@@ -697,8 +700,107 @@ if (empty($selectedLogo)) {
                             </div>
                         </fieldset>
 
-                    </div>
+            </div>
+
+            <!-- Part 2.5: Slideshow Slides Manager (Dynamic Slider CRUD) -->
+            <div id="slides_manager_container" style="border-top: 1px dashed var(--border); padding-top: 20px; margin-top: 10px; <?= ($page['hero_variant'] ?? '') === 'hero_slider' ? 'display: block;' : 'display: none;' ?>">
+                <h4 style="font-family: var(--font-heading); font-size: 1.05rem; color: var(--primary); display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+                    <span style="display: flex; align-items: center; gap: 8px;">
+                        <i data-lucide="images" style="width: 18px; height: 18px; color: var(--secondary);"></i>
+                        <span>Gestionnaire de Slides (Hero Slider)</span>
+                    </span>
+                    <button type="button" class="btn-secondary" style="padding: 6px 12px; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 4px;" onclick="addHeroSlide(<?= $page['id'] ?>)">
+                        <i data-lucide="plus" style="width: 14px; height: 14px;"></i> Ajouter un Slide
+                    </button>
+                </h4>
+
+                <div id="slides_list" style="display: flex; flex-direction: column; gap: 16px; margin-bottom: 20px;">
+                    <?php if (empty($slides)): ?>
+                        <p style="text-align: center; color: var(--text-muted); font-size: 0.85rem; padding: 20px;" id="no_slides_text">Aucun slide enregistré. Cliquez sur "Ajouter un Slide" pour commencer.</p>
+                    <?php else: ?>
+                        <?php foreach ($slides as $slide): ?>
+                            <div class="item-card slide-card" id="slide-card-<?= $slide['id'] ?>" data-slide-id="<?= $slide['id'] ?>">
+                                <div class="item-card-header">
+                                    <span class="item-card-title">Slide #<?= $slide['id'] ?></span>
+                                    <button type="button" class="action-btn-small delete-sec" onclick="deleteHeroSlide(<?= $slide['id'] ?>)">
+                                        <i data-lucide="trash-2" style="width: 16px; height: 16px;"></i>
+                                    </button>
+                                </div>
+                                <div style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 16px;">
+                                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                                        <div class="admin-form-group" style="margin-bottom: 0;">
+                                            <label style="font-size: 0.75rem; margin-bottom: 4px;">Badge</label>
+                                            <input type="text" name="slides[<?= $slide['id'] ?>][badge]" class="admin-input slide-input-trigger" value="<?= htmlspecialchars($slide['badge'] ?? '') ?>" placeholder="Ex: Nouveau">
+                                        </div>
+                                        <div class="admin-form-group" style="margin-bottom: 0;">
+                                            <label style="font-size: 0.75rem; margin-bottom: 4px;">Titre principal</label>
+                                            <input type="text" name="slides[<?= $slide['id'] ?>][title]" class="admin-input slide-input-trigger" value="<?= htmlspecialchars($slide['title']) ?>" placeholder="Ex: Titre du Slide" required>
+                                        </div>
+                                        <div class="admin-form-group" style="margin-bottom: 0;">
+                                            <label style="font-size: 0.75rem; margin-bottom: 4px;">Description / Texte</label>
+                                            <textarea name="slides[<?= $slide['id'] ?>][subtitle]" class="admin-textarea slide-input-trigger" rows="2" placeholder="Description courte du slide."><?= htmlspecialchars($slide['subtitle'] ?? '') ?></textarea>
+                                        </div>
+                                    </div>
+                                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                                        <div class="admin-form-group" style="margin-bottom: 0;">
+                                            <label style="font-size: 0.75rem; margin-bottom: 4px;">Illustration (Image)</label>
+                                            <?= \App\Helpers\MediaHelper::renderField("slides[{$slide['id']}][image]", $slide['image'] ?? '', "slide_img_{$slide['id']}") ?>
+                                        </div>
+                                        <div style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 8px;">
+                                            <div class="admin-form-group" style="margin-bottom: 0;">
+                                                <label style="font-size: 0.75rem; margin-bottom: 4px;">CTA Texte</label>
+                                                <input type="text" name="slides[<?= $slide['id'] ?>][cta_text]" class="admin-input slide-input-trigger" value="<?= htmlspecialchars($slide['cta_text'] ?? '') ?>" placeholder="CTA Texte">
+                                            </div>
+                                            <div class="admin-form-group" style="margin-bottom: 0;">
+                                                <label style="font-size: 0.75rem; margin-bottom: 4px;">CTA URL</label>
+                                                <input type="text" name="slides[<?= $slide['id'] ?>][cta_url]" class="admin-input slide-input-trigger" value="<?= htmlspecialchars($slide['cta_url'] ?? '') ?>" placeholder="CTA URL">
+                                            </div>
+                                        </div>
+                                        <div class="admin-form-group" style="margin-bottom: 0;">
+                                            <label style="font-size: 0.75rem; margin-bottom: 4px;">Ordre d'affichage</label>
+                                            <input type="number" name="slides[<?= $slide['id'] ?>][sort_order]" class="admin-input slide-input-trigger" value="<?= (int)($slide['sort_order'] ?? 0) ?>">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                 </div>
+
+                <div style="display: flex; justify-content: flex-end; margin-bottom: 20px;">
+                    <button type="button" class="btn-secondary" style="padding: 10px 22px; font-weight: 600; font-size: 0.88rem; display: inline-flex; align-items: center; gap: 8px;" onclick="saveSlidesContent()">
+                        <i data-lucide="save" style="width: 16px; height: 16px;"></i>
+                        <span>Sauvegarder l'ordre et le contenu des slides</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Hero Features (pour variants: asymmetric, grid_features) -->
+            <div style="border-top: 1px dashed var(--border); padding-top: 20px; margin-top: 4px;">
+                <h4 style="font-family: var(--font-heading); font-size: 1rem; color: var(--primary); display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                    <i data-lucide="layout-grid" style="width: 16px; height: 16px;"></i>
+                    Cartes de fonctionnalités <span style="font-size:0.72rem;color:var(--text-muted);font-weight:500;">(hero_split_asymmetric, hero_grid_features)</span>
+                </h4>
+                <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 14px;">Max 4 cartes. Icônes Lucide : zap, shield-check, cpu, cloud, globe, phone-call, etc.</p>
+                <div id="hero-features-list" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px;"></div>
+                <button type="button" onclick="addHeroFeature()" style="padding: 8px 16px; font-size: 0.8rem; border-radius: 8px; border: 1px dashed var(--border); background: transparent; cursor: pointer; color: var(--primary); font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+                    <i data-lucide="plus" style="width: 14px; height: 14px;"></i> Ajouter une carte
+                </button>
+                <input type="hidden" name="hero_features" id="hero_features_input" value="<?= htmlspecialchars($page['hero_features'] ?? '') ?>">
+            </div>
+
+            <!-- Hero Articles (pour variant: magazine) -->
+            <div style="border-top: 1px dashed var(--border); padding-top: 20px; margin-top: 4px;">
+                <h4 style="font-family: var(--font-heading); font-size: 1rem; color: var(--primary); display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                    <i data-lucide="newspaper" style="width: 16px; height: 16px;"></i>
+                    Articles Magazine <span style="font-size:0.72rem;color:var(--text-muted);font-weight:500;">(hero_magazine)</span>
+                </h4>
+                <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 14px;">Max 3 articles visibles dans la sidebar du Hero Magazine.</p>
+                <div id="hero-articles-list" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px;"></div>
+                <button type="button" onclick="addHeroArticle()" style="padding: 8px 16px; font-size: 0.8rem; border-radius: 8px; border: 1px dashed var(--border); background: transparent; cursor: pointer; color: var(--primary); font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+                    <i data-lucide="plus" style="width: 14px; height: 14px;"></i> Ajouter un article
+                </button>
+                <input type="hidden" name="hero_articles" id="hero_articles_input" value="<?= htmlspecialchars($page['hero_articles'] ?? '') ?>">
             </div>
 
             <div style="display: flex; justify-content: flex-end; border-top: 1px solid var(--border); padding-top: 16px;">
@@ -708,6 +810,62 @@ if (empty($selectedLogo)) {
                 </button>
             </div>
         </form>
+
+        <script>
+        // ── Hero Features Builder ──────────────────────────────────────────
+        let heroFeatures = [];
+        try { heroFeatures = JSON.parse(document.getElementById('hero_features_input').value || '[]'); } catch(e) { heroFeatures = []; }
+
+        function renderHeroFeatures() {
+            const container = document.getElementById('hero-features-list');
+            container.innerHTML = '';
+            heroFeatures.forEach((f, i) => {
+                container.innerHTML += `
+                <div style="background:rgba(255,255,255,0.45);border:1px solid var(--border);border-radius:10px;padding:14px 16px;display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:10px;align-items:end;">
+                    <div><label style="font-size:0.72rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">Titre</label><input type="text" value="${escHtml(f.title||'')}" oninput="heroFeatures[${i}].title=this.value;syncHeroFeatures()" class="admin-input" style="height:34px;font-size:0.85rem;"></div>
+                    <div><label style="font-size:0.72rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">Description</label><input type="text" value="${escHtml(f.desc||'')}" oninput="heroFeatures[${i}].desc=this.value;syncHeroFeatures()" class="admin-input" style="height:34px;font-size:0.85rem;"></div>
+                    <div><label style="font-size:0.72rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">Icône Lucide</label><input type="text" value="${escHtml(f.icon||'zap')}" oninput="heroFeatures[${i}].icon=this.value;syncHeroFeatures()" class="admin-input" style="height:34px;font-size:0.85rem;" placeholder="zap, cpu, cloud…"></div>
+                    <button type="button" onclick="removeHeroFeature(${i})" style="padding:6px 10px;background:none;border:1px solid var(--danger);border-radius:8px;cursor:pointer;color:var(--danger);font-size:0.8rem;height:34px;">✕</button>
+                </div>`;
+            });
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        }
+        function addHeroFeature() {
+            if (heroFeatures.length >= 4) { alert('Maximum 4 cartes.'); return; }
+            heroFeatures.push({icon:'zap',title:'Nouveau service',desc:'Description courte.',color:'rgba(79,70,229,0.1)',iconColor:'var(--primary)'});
+            renderHeroFeatures(); syncHeroFeatures();
+        }
+        function removeHeroFeature(i) { heroFeatures.splice(i,1); renderHeroFeatures(); syncHeroFeatures(); }
+        function syncHeroFeatures() { document.getElementById('hero_features_input').value = JSON.stringify(heroFeatures); }
+        function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+        renderHeroFeatures();
+
+        // ── Hero Articles Builder ─────────────────────────────────────────
+        let heroArticles = [];
+        try { heroArticles = JSON.parse(document.getElementById('hero_articles_input').value || '[]'); } catch(e) { heroArticles = []; }
+
+        function renderHeroArticles() {
+            const container = document.getElementById('hero-articles-list');
+            container.innerHTML = '';
+            heroArticles.forEach((a, i) => {
+                container.innerHTML += `
+                <div style="background:rgba(255,255,255,0.45);border:1px solid var(--border);border-radius:10px;padding:14px 16px;display:grid;grid-template-columns:1fr 2fr 1fr auto;gap:10px;align-items:end;">
+                    <div><label style="font-size:0.72rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">Catégorie</label><input type="text" value="${escHtml(a.category||'')}" oninput="heroArticles[${i}].category=this.value;syncHeroArticles()" class="admin-input" style="height:34px;font-size:0.85rem;" placeholder="TECHNOLOGIE"></div>
+                    <div><label style="font-size:0.72rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">Titre de l'article</label><input type="text" value="${escHtml(a.title||'')}" oninput="heroArticles[${i}].title=this.value;syncHeroArticles()" class="admin-input" style="height:34px;font-size:0.85rem;"></div>
+                    <div><label style="font-size:0.72rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">URL</label><input type="text" value="${escHtml(a.url||'/blog')}" oninput="heroArticles[${i}].url=this.value;syncHeroArticles()" class="admin-input" style="height:34px;font-size:0.85rem;"></div>
+                    <button type="button" onclick="removeHeroArticle(${i})" style="padding:6px 10px;background:none;border:1px solid var(--danger);border-radius:8px;cursor:pointer;color:var(--danger);font-size:0.8rem;height:34px;">✕</button>
+                </div>`;
+            });
+        }
+        function addHeroArticle() {
+            if (heroArticles.length >= 3) { alert('Maximum 3 articles.'); return; }
+            heroArticles.push({category:'ACTUALITÉ',title:'Titre de l\'article',url:'/blog'});
+            renderHeroArticles(); syncHeroArticles();
+        }
+        function removeHeroArticle(i) { heroArticles.splice(i,1); renderHeroArticles(); syncHeroArticles(); }
+        function syncHeroArticles() { document.getElementById('hero_articles_input').value = JSON.stringify(heroArticles); }
+        renderHeroArticles();
+        </script>
     </div>
 
     <!-- Interactive Simulator Panel -->
@@ -739,7 +897,7 @@ if (empty($selectedLogo)) {
                 <div style="position: absolute; width: 100px; height: 100px; border-radius: 50%; background: radial-gradient(circle, rgba(236, 72, 153, 0.06) 0%, transparent 70%); bottom: -20px; left: -20px; pointer-events: none;"></div>
 
                 <!-- Simulated Header -->
-                <div id="sim_header" style="position: sticky; top: 6px; margin: 0 8px; height: 32px; border-radius: 6px; display: flex; align-items: center; justify-content: space-between; padding: 0 10px; z-index: 10; transition: all 0.3s; font-size: 0.55rem; border: 1px solid rgba(255,255,255,0.6); background: rgba(255,255,255,0.45); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);">
+                <div id="sim_header" style="position: sticky; top: 6px; margin: 0 8px; height: 32px; border-radius: 6px; display: flex; align-items: center; justify-content: space-between; padding: 0 10px; z-index: 10; transition: all 0.3s; font-size: 0.55rem; border: 1px solid rgba(255,255,255,0.6); background: rgba(255,255,255,0.45); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); cursor: pointer;" onclick="focusPageConfig('header')">
                     <!-- Logo -->
                     <div style="display:flex; align-items:center; gap: 4px;">
                         <img id="sim_header_logo" src="<?= htmlspecialchars($selectedLogo) ?>" style="height: 14px; width: auto; object-fit: contain;">
@@ -756,7 +914,7 @@ if (empty($selectedLogo)) {
                 </div>
 
                 <!-- Simulated Hero Banner -->
-                <div id="sim_hero" style="width: 100%; min-height: 120px; padding: 24px 12px; display: flex; align-items: center; justify-content: center; position: relative;">
+                <div id="sim_hero" style="width: 100%; min-height: 120px; padding: 24px 12px; display: flex; align-items: center; justify-content: center; position: relative; cursor: pointer;" onclick="focusPageConfig('hero')">
                     
                     <!-- Background image or color of Hero -->
                     <div id="sim_hero_bg" style="position: absolute; top:0; left:0; width:100%; height:100%; z-index:1; background-size: cover; background-position: center; transition: all 0.3s;"></div>
@@ -783,8 +941,30 @@ if (empty($selectedLogo)) {
                             </div>
                         </div>
 
-                    </div>
+                </div>
 
+                <!-- Simulated Sections Previews -->
+                <div id="sim_sections_container" style="display: flex; flex-direction: column; gap: 8px; padding: 12px; position: relative; z-index: 5;">
+                    <?php if (!empty($sections)): ?>
+                        <?php foreach ($sections as $sec): 
+                            if ($sec['type'] === 'hero' || $sec['type'] === 'about_hero' || $sec['type'] === 'services_hero' || $sec['type'] === 'blog_hero' || $sec['type'] === 'contact_hero') continue;
+                        ?>
+                            <div class="sim-section-box" data-id="<?= $sec['id'] ?>" style="background: rgba(255, 255, 255, 0.45); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.6); border-radius: 10px; padding: 12px 14px; cursor: pointer; transition: all 0.3s ease-in-out; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02);" onclick="switchSection(<?= $sec['id'] ?>)">
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <div style="width: 26px; height: 26px; border-radius: 6px; background: rgba(79, 70, 229, 0.08); display: flex; align-items: center; justify-content: center; color: var(--primary);">
+                                        <i data-lucide="layout" style="width: 14px; height: 14px;"></i>
+                                    </div>
+                                    <div style="display: flex; flex-direction: column; gap: 2px;">
+                                        <span style="font-size: 0.6rem; font-weight: 700; color: var(--text-main);"><?= htmlspecialchars($sec['name']) ?></span>
+                                        <span style="font-size: 0.45rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600;"><?= $sec['type'] ?></span>
+                                    </div>
+                                </div>
+                                <div style="width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.03); color: var(--text-muted);">
+                                    <i data-lucide="chevron-right" style="width: 8px; height: 8px;"></i>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                 </div>
 
             </div>
@@ -1055,6 +1235,68 @@ if (empty($selectedLogo)) {
         const activePanel = document.getElementById('panel-' + sectionId);
         if (activePanel) {
             activePanel.classList.add('active');
+            activePanel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            // Add a visual flash effect to show it is selected
+            activePanel.style.transition = 'outline 0.3s ease';
+            activePanel.style.outline = '2px solid var(--primary)';
+            activePanel.style.borderRadius = '20px';
+            setTimeout(() => {
+                activePanel.style.outline = 'none';
+            }, 1000);
+
+            // Focus the first form input or textarea inside the card
+            const firstInput = activePanel.querySelector('input:not([type="hidden"]), textarea, select');
+            if (firstInput) {
+                setTimeout(() => firstInput.focus(), 600);
+            }
+        }
+    }
+
+    function focusPageConfig(area) {
+        document.querySelectorAll('.section-nav-item').forEach(item => {
+            item.classList.remove('active');
+        });
+        document.querySelectorAll('.section-form-panel').forEach(panel => {
+            panel.classList.remove('active');
+        });
+        
+        if (area === 'header') {
+            const headerTitleEl = document.getElementById('header_config_title') || document.getElementById('header_bg_mode');
+            if (headerTitleEl) {
+                headerTitleEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                const headerContainer = document.getElementById('header_bg_mode').closest('div').parentElement;
+                if (headerContainer) {
+                    headerContainer.style.transition = 'outline 0.3s ease';
+                    headerContainer.style.outline = '2px solid var(--secondary)';
+                    headerContainer.style.borderRadius = '14px';
+                    setTimeout(() => {
+                        headerContainer.style.outline = 'none';
+                    }, 1000);
+                }
+                const firstInput = document.getElementById('header_bg_mode');
+                if (firstInput) {
+                    setTimeout(() => firstInput.focus(), 600);
+                }
+            }
+        } else if (area === 'hero') {
+            const heroTitleEl = document.getElementById('hero_config_title') || document.getElementById('hero_title');
+            if (heroTitleEl) {
+                heroTitleEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                const heroContainer = document.getElementById('hero_title').closest('div').parentElement;
+                if (heroContainer) {
+                    heroContainer.style.transition = 'outline 0.3s ease';
+                    heroContainer.style.outline = '2px solid var(--secondary)';
+                    heroContainer.style.borderRadius = '14px';
+                    setTimeout(() => {
+                        heroContainer.style.outline = 'none';
+                    }, 1000);
+                }
+                const firstInput = document.getElementById('hero_title');
+                if (firstInput) {
+                    setTimeout(() => firstInput.focus(), 600);
+                }
+            }
         }
     }
 
@@ -1265,7 +1507,152 @@ if (empty($selectedLogo)) {
         });
     }
 
+    function getDragAfterElement(container, y) {
+        const draggableElements = [...container.querySelectorAll('.section-nav-item:not([style*="opacity: 0.4"])')];
+        return draggableElements.reduce((closest, child) => {
+            const box = child.getBoundingClientRect();
+            const offset = y - box.top - box.height / 2;
+            if (offset < 0 && offset > closest.offset) {
+                return { offset: offset, element: child };
+            } else {
+                return closest;
+            }
         }, { offset: Number.NEGATIVE_INFINITY }).element;
+    }
+
+    function toggleSlideshowManager(variant) {
+        const container = document.getElementById('slides_manager_container');
+        if (container) {
+            if (variant === 'hero_slider') {
+                container.style.display = 'block';
+            } else {
+                container.style.display = 'none';
+            }
+        }
+    }
+
+    function addHeroSlide(pageId) {
+        const formData = new FormData();
+        formData.append('page_id', pageId);
+        formData.append('csrf_token', '<?= htmlspecialchars($csrf_token) ?>');
+
+        showNotification('Ajout du slide...', 'info');
+
+        fetch(BASE_URL + '/admin/pages/slides/add', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showNotification(data.message, 'success');
+                setTimeout(() => window.location.reload(), 600);
+            } else {
+                showNotification(data.error || 'Erreur lors de l\'ajout.', 'error');
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            showNotification('Erreur réseau.', 'error');
+        });
+    }
+
+    function deleteHeroSlide(slideId) {
+        if (!confirm('Supprimer définitivement ce slide ?')) {
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('slide_id', slideId);
+        formData.append('csrf_token', '<?= htmlspecialchars($csrf_token) ?>');
+
+        showNotification('Suppression du slide...', 'info');
+
+        fetch(BASE_URL + '/admin/pages/slides/delete', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showNotification(data.message, 'success');
+                const card = document.getElementById('slide-card-' + slideId);
+                if (card) {
+                    card.style.transition = 'opacity 0.2s';
+                    card.style.opacity = '0';
+                    setTimeout(() => {
+                        card.remove();
+                        const slidesList = document.getElementById('slides_list');
+                        if (slidesList && slidesList.querySelectorAll('.slide-card').length === 0) {
+                            slidesList.innerHTML = '<p style="text-align: center; color: var(--text-muted); font-size: 0.85rem; padding: 20px;" id="no_slides_text">Aucun slide enregistré. Cliquez sur "Ajouter un Slide" pour commencer.</p>';
+                        }
+                        updateSimulator();
+                    }, 250);
+                }
+            } else {
+                showNotification(data.error || 'Erreur lors de la suppression.', 'error');
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            showNotification('Erreur réseau.', 'error');
+        });
+    }
+
+    function saveSlidesContent() {
+        const formData = new FormData();
+        formData.append('csrf_token', '<?= htmlspecialchars($csrf_token) ?>');
+
+        const slideCards = document.querySelectorAll('.slide-card');
+        if (slideCards.length === 0) {
+            showNotification('Aucun slide à sauvegarder.', 'info');
+            return;
+        }
+
+        slideCards.forEach(card => {
+            const id = card.getAttribute('data-slide-id');
+            const titleInput = card.querySelector(`input[name="slides[${id}][title]"]`);
+            const subtitleText = card.querySelector(`textarea[name="slides[${id}][subtitle]"]`);
+            const badgeInput = card.querySelector(`input[name="slides[${id}][badge]"]`);
+            const ctaTextInput = card.querySelector(`input[name="slides[${id}][cta_text]"]`);
+            const ctaUrlInput = card.querySelector(`input[name="slides[${id}][cta_url]"]`);
+            const imageInput = card.querySelector(`input[name="slides[${id}][image]"]`);
+            const sortOrderInput = card.querySelector(`input[name="slides[${id}][sort_order]"]`);
+
+            if (titleInput) formData.append(`slides[${id}][title]`, titleInput.value);
+            if (subtitleText) formData.append(`slides[${id}][subtitle]`, subtitleText.value);
+            if (badgeInput) formData.append(`slides[${id}][badge]`, badgeInput.value);
+            if (ctaTextInput) formData.append(`slides[${id}][cta_text]`, ctaTextInput.value);
+            if (ctaUrlInput) formData.append(`slides[${id}][cta_url]`, ctaUrlInput.value);
+            if (imageInput) formData.append(`slides[${id}][image]`, imageInput.value);
+            if (sortOrderInput) formData.append(`slides[${id}][sort_order]`, sortOrderInput.value);
+        });
+
+        showNotification('Sauvegarde des slides...', 'info');
+
+        fetch(BASE_URL + '/admin/pages/slides/update', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showNotification(data.message, 'success');
+                updateSimulator();
+            } else {
+                showNotification(data.error || 'Erreur lors de la sauvegarde.', 'error');
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            showNotification('Erreur réseau.', 'error');
+        });
+    }
+
+    window.simActiveSlideIndex = window.simActiveSlideIndex || 0;
+    function setSimActiveSlide(idx) {
+        window.simActiveSlideIndex = idx;
+        updateSimulator();
     }
 
     // --- VISUAL SIMULATOR REAL-TIME UPDATE SCRIPTS ---
@@ -1386,7 +1773,147 @@ if (empty($selectedLogo)) {
         
         // Set backgrounds
         const bgInput = document.getElementById('hero_bg_color').value;
-        if (heroVariant === 'hero_full_image') {
+        
+        let textShadowCss = 'none';
+        if (heroShadowStrength === 'leger') textShadowCss = '0 1px 2px rgba(0,0,0,0.2)';
+        else if (heroShadowStrength === 'moyen') textShadowCss = '0 2px 4px rgba(0,0,0,0.35)';
+        else if (heroShadowStrength === 'fort') textShadowCss = '0 4px 8px rgba(0,0,0,0.6)';
+
+        if (heroVariant === 'hero_slider') {
+            simHeroBg.style.backgroundImage = 'none';
+            simHeroBg.style.background = 'linear-gradient(135deg, #0b0f19 0%, #1e1b4b 100%)';
+            simHeroOverlay.style.background = 'rgba(0,0,0,0.3)';
+            simHeroOverlay.style.opacity = '1';
+            simHeroTitle.style.color = '#ffffff';
+            simHeroSubtitle.style.color = '#e2e8f0';
+            simHeroVisual.style.display = 'flex';
+            simHeroGrid.style.gridTemplateColumns = '1.1fr 0.9fr';
+            
+            // Extract slide list
+            const slides = [];
+            document.querySelectorAll('.slide-card').forEach((card) => {
+                const id = card.getAttribute('data-slide-id');
+                const titleInput = card.querySelector(`input[name="slides[${id}][title]"]`);
+                const subtitleText = card.querySelector(`textarea[name="slides[${id}][subtitle]"]`);
+                const badgeInput = card.querySelector(`input[name="slides[${id}][badge]"]`);
+                const ctaTextInput = card.querySelector(`input[name="slides[${id}][cta_text]"]`);
+                const hiddenImgInput = card.querySelector('.media-input-value');
+                const img = (hiddenImgInput && hiddenImgInput.value) ? hiddenImgInput.value : '';
+
+                slides.push({
+                    title: titleInput ? titleInput.value : '',
+                    subtitle: subtitleText ? subtitleText.value : '',
+                    badge: badgeInput ? badgeInput.value : '',
+                    cta_text: ctaTextInput ? ctaTextInput.value : '',
+                    img: img
+                });
+            });
+
+            if (slides.length === 0) {
+                slides.push({
+                    title: heroTitle,
+                    subtitle: heroSubtitle,
+                    badge: heroBadge,
+                    cta_text: heroCta1Text || 'Découvrir',
+                    img: heroImgUrl
+                });
+            }
+
+            if (window.simActiveSlideIndex >= slides.length) {
+                window.simActiveSlideIndex = 0;
+            }
+
+            let slidesHtml = '';
+            let dotsHtml = '';
+            slides.forEach((slide, idx) => {
+                const isActive = idx === window.simActiveSlideIndex ? 'opacity: 1; z-index: 4;' : 'opacity: 0; z-index: 3;';
+                slidesHtml += `
+                    <div class="sim-slide-item" data-index="${idx}" style="position: absolute; inset: 0; display: flex; align-items: center; transition: opacity 0.5s ease-in-out; ${isActive}">
+                        <div style="width: 100%; display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 12px; align-items: center; padding: 0 12px;">
+                            <div style="display: flex; flex-direction: column; gap: 4px;">
+                                ${slide.badge ? `<span style="display: inline-flex; align-self: flex-start; padding: 1px 5px; border-radius: 20px; background: rgba(99,102,241,0.25); color: #a5b4fc; font-size: 0.42rem; font-weight: 700; border: 1px solid rgba(99,102,241,0.3); text-transform: uppercase;">${slide.badge}</span>` : ''}
+                                <h2 style="font-size: 0.85rem; line-height: 1.1; font-weight: 800; font-family: var(--font-heading); margin: 0; color: #ffffff; text-shadow: ${textShadowCss};">${slide.title}</h2>
+                                <p style="font-size: 0.5rem; color: #cbd5e1; margin: 0; text-shadow: ${textShadowCss};">${slide.subtitle}</p>
+                                <div style="display: flex; gap: 4px; margin-top: 3px;">
+                                    ${slide.cta_text ? `<span style="padding: 2px 6px; border-radius: 4px; background: #e26d36; color: white; font-size: 0.42rem; font-weight: 700;">${slide.cta_text}</span>` : ''}
+                                </div>
+                            </div>
+                            <div style="display: flex; justify-content: center; align-items: center;">
+                                <div style="width: 80%; aspect-ratio: 1.4; border-radius: 6px; background: #0f172a; padding: 3px; border: 1px solid #334155; box-shadow: 0 4px 8px rgba(0,0,0,0.15); overflow: hidden;">
+                                    <div style="width: 100%; height: 100%; background: #1e293b; border-radius: 4px; background-size: cover; background-position: center; background-image: url('${slide.img}');"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                dotsHtml += `
+                    <span class="sim-slide-dot" data-index="${idx}" style="width: 6px; height: 6px; border-radius: 50%; background: ${idx === window.simActiveSlideIndex ? '#ffffff' : 'rgba(255,255,255,0.4)'}; cursor: pointer; transition: all 0.3s;" onclick="event.stopPropagation(); setSimActiveSlide(${idx})"></span>
+                `;
+            });
+
+            simHero.innerHTML = `
+                <div id="sim_slides_container" style="position: absolute; inset: 0; z-index: 3; overflow: hidden; height: 100%; width: 100%;">
+                    ${slidesHtml}
+                </div>
+                <div id="sim_slides_dots" style="position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); display: flex; gap: 4px; z-index: 10;">
+                    ${dotsHtml}
+                </div>
+            `;
+        } else if (heroVariant === 'hero_video') {
+            simHeroBg.style.backgroundImage = 'none';
+            simHeroBg.style.background = 'linear-gradient(135deg, #090d16 0%, #05050f 100%)';
+            simHeroOverlay.style.background = 'radial-gradient(circle, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.7) 100%)';
+            simHeroOverlay.style.opacity = '1';
+            simHeroTitle.style.color = '#ffffff';
+            simHeroSubtitle.style.color = '#94a3b8';
+            simHeroVisual.style.display = 'flex';
+            simHeroGrid.style.gridTemplateColumns = '1.1fr 0.9fr';
+            simHeroVisual.innerHTML = `
+              <div id="sim_hero_mockup" style="width: 80%; aspect-ratio: 1.4; border-radius: 12px; background: rgba(30, 41, 59, 0.45); padding: 8px; border: 1px solid rgba(255,255,255,0.12); box-shadow: 0 10px 25px rgba(0,0,0,0.2); position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                 <div id="sim_hero_mockup_screen" style="width:100%; height:100%; background: #000; border-radius: 6px; background-size: cover; background-position: center; background-image: url('${heroImgUrl}'); filter: brightness(0.65);"></div>
+                 <div style="position: absolute; width: 24px; height: 24px; border-radius: 50%; background: rgba(255,255,255,0.85); display: flex; align-items: center; justify-content: center; color: #000; z-index: 10; box-shadow: 0 0 10px rgba(0,0,0,0.3);"><i data-lucide="play" style="width: 10px; height: 10px; fill: #000; margin-left: 2px;"></i></div>
+              </div>
+            `;
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        } else if (heroVariant === 'hero_corporate') {
+            simHeroBg.style.backgroundImage = 'none';
+            simHeroBg.style.background = bgInput;
+            simHeroOverlay.style.opacity = '0';
+            simHeroTitle.style.color = 'var(--text-main)';
+            simHeroSubtitle.style.color = 'var(--text-muted)';
+            simHeroVisual.style.display = 'flex';
+            simHeroGrid.style.gridTemplateColumns = '1.1fr 0.9fr';
+            simHeroVisual.innerHTML = `
+              <div id="sim_hero_mockup" style="width: 80%; aspect-ratio: 1.4; border-radius: 6px; background: #ffffff; padding: 4px; border: 1px solid #cbd5e1; box-shadow: 0 8px 16px rgba(0,0,0,0.06);">
+                  <div id="sim_hero_mockup_screen" style="width:100%; height:100%; background: #f8fafc; border-radius: 4px; background-size: cover; background-position: center; background-image: url('${heroImgUrl}');"></div>
+              </div>
+            `;
+        } else if (heroVariant === 'hero_magazine') {
+            simHeroBg.style.backgroundImage = 'none';
+            simHeroBg.style.background = 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)';
+            simHeroOverlay.style.opacity = '0';
+            simHeroTitle.style.color = 'var(--text-main)';
+            simHeroSubtitle.style.color = 'var(--text-muted)';
+            simHeroVisual.style.display = 'flex';
+            simHeroGrid.style.gridTemplateColumns = '1fr 1fr';
+            simHeroVisual.innerHTML = `
+              <div style="display: flex; flex-direction: column; gap: 8px; width: 100%; max-width: 220px; font-size: 0.35rem; color: var(--text-main); border-left: 1px solid var(--border); padding-left: 16px;">
+                <div style="font-weight: 800; font-family: var(--font-heading); color: var(--primary); text-transform: uppercase; font-size: 0.4rem; letter-spacing: 0.05em; margin-bottom: 2px;">Derniers articles</div>
+                <div style="border-bottom: 1px solid var(--border); padding-bottom: 6px;">
+                   <strong>Stratégie IA 2026</strong>
+                   <p style="font-size:0.28rem;color:var(--text-muted);">Comment piloter l'automatisation.</p>
+                </div>
+                <div style="border-bottom: 1px solid var(--border); padding-bottom: 6px;">
+                   <strong>Design Systems</strong>
+                   <p style="font-size:0.28rem;color:var(--text-muted);">Optimiser la vélocité UX.</p>
+                </div>
+                <div>
+                   <strong>Green IT & Performance</strong>
+                   <p style="font-size:0.28rem;color:var(--text-muted);">Développer durablement.</p>
+                </div>
+              </div>
+            `;
+        } else if (heroVariant === 'hero_full_image' || heroVariant === 'hero_full_width') {
             simHeroBg.style.backgroundImage = heroImgUrl ? `url('${heroImgUrl}')` : 'none';
             simHeroBg.style.background = 'transparent';
             simHeroOverlay.style.background = `linear-gradient(rgba(11, 15, 25, ${heroOverlayOpacity}), rgba(11, 15, 25, ${Math.min(1.0, heroOverlayOpacity + 0.15)}))`;
@@ -1405,7 +1932,6 @@ if (empty($selectedLogo)) {
             simHeroGrid.style.gridTemplateColumns = '1fr';
         } else if (heroVariant === 'hero_ambient_glow') {
             simHeroBg.style.backgroundImage = 'none';
-            // Custom glowing gradient in WAMP simulator
             simHeroBg.style.background = `radial-gradient(circle, rgba(124, 58, 237, 0.22) 0%, rgba(30, 58, 138, 0.08) 50%, rgba(0,0,0,0) 80%), ${bgInput}`;
             simHeroOverlay.style.opacity = '0';
             simHeroTitle.style.color = 'var(--text-main)';
@@ -1467,7 +1993,7 @@ if (empty($selectedLogo)) {
             `;
             if (typeof lucide !== 'undefined') lucide.createIcons();
         } else {
-            // Split layout variants (hero_split_large_image, hero_split_small_image, hero_floating_card)
+            // Split layout variants (hero_split, hero_split_large_image, hero_split_small_image, hero_floating_card, hero_card)
             simHeroBg.style.backgroundImage = 'none';
             simHeroBg.style.background = bgInput;
             simHeroOverlay.style.opacity = '0';
@@ -1558,63 +2084,72 @@ if (empty($selectedLogo)) {
         simHero.style.minHeight = minHeight;
         simHero.style.padding = padding;
 
-        // Text content
-        simHeroTitle.innerHTML = heroTitle;
-        simHeroSubtitle.innerHTML = heroSubtitle;
-        if (heroBadge) {
-            simHeroBadge.innerText = heroBadge;
-            simHeroBadge.style.display = 'inline-flex';
-        } else {
-            simHeroBadge.style.display = 'none';
-        }
+        if (heroVariant !== 'hero_slider') {
+            // Text content
+            if (simHeroTitle) simHeroTitle.innerHTML = heroTitle;
+            if (simHeroSubtitle) simHeroSubtitle.innerHTML = heroSubtitle;
+            if (simHeroBadge) {
+                if (heroBadge) {
+                    simHeroBadge.innerText = heroBadge;
+                    simHeroBadge.style.display = 'inline-flex';
+                } else {
+                    simHeroBadge.style.display = 'none';
+                }
+            }
 
-        // Horizontal text alignment
-        simHeroText.style.textAlign = heroTextAlignment;
-        let alignFlex = 'flex-start';
-        let marginCss = '0 auto 0 0';
-        if (heroTextAlignment === 'center') {
-            alignFlex = 'center';
-            marginCss = '0 auto';
-        } else if (heroTextAlignment === 'right') {
-            alignFlex = 'flex-end';
-            marginCss = '0 0 0 auto';
-        }
-        simHeroText.style.alignItems = alignFlex;
-        simHeroText.style.margin = marginCss;
-        simHeroText.style.maxWidth = heroTextWidth;
+            // Horizontal text alignment
+            if (simHeroText) {
+                simHeroText.style.textAlign = heroTextAlignment;
+                let alignFlex = 'flex-start';
+                let marginCss = '0 auto 0 0';
+                if (heroTextAlignment === 'center') {
+                    alignFlex = 'center';
+                    marginCss = '0 auto';
+                } else if (heroTextAlignment === 'right') {
+                    alignFlex = 'flex-end';
+                    marginCss = '0 0 0 auto';
+                }
+                simHeroText.style.alignItems = alignFlex;
+                simHeroText.style.margin = marginCss;
+                simHeroText.style.maxWidth = heroTextWidth;
+            }
 
-        // Vertical positioning
-        let verticalAlign = 'center';
-        if (heroTextPosition === 'haut') {
-            verticalAlign = 'flex-start';
-        } else if (heroTextPosition === 'bas') {
-            verticalAlign = 'flex-end';
-        }
-        simHero.style.alignItems = verticalAlign;
+            // Vertical positioning
+            let verticalAlign = 'center';
+            if (heroTextPosition === 'haut') {
+                verticalAlign = 'flex-start';
+            } else if (heroTextPosition === 'bas') {
+                verticalAlign = 'flex-end';
+            }
+            if (simHero) simHero.style.alignItems = verticalAlign;
 
-        // Grid column sorting
-        if (heroImageLayout === 'left') {
-            simHeroGrid.style.gridTemplateColumns = '0.9fr 1.1fr';
-            document.getElementById('sim_hero_text_block').style.order = '2';
-            document.getElementById('sim_hero_visual').style.order = '1';
-        } else {
-            document.getElementById('sim_hero_text_block').style.order = '1';
-            document.getElementById('sim_hero_visual').style.order = '2';
+            // Grid column sorting
+            if (simHeroGrid) {
+                if (heroImageLayout === 'left') {
+                    simHeroGrid.style.gridTemplateColumns = '0.9fr 1.1fr';
+                    const textBlock = document.getElementById('sim_hero_text_block');
+                    const visualBlock = document.getElementById('sim_hero_visual');
+                    if (textBlock) textBlock.style.order = '2';
+                    if (visualBlock) visualBlock.style.order = '1';
+                } else {
+                    const textBlock = document.getElementById('sim_hero_text_block');
+                    const visualBlock = document.getElementById('sim_hero_visual');
+                    if (textBlock) textBlock.style.order = '1';
+                    if (visualBlock) visualBlock.style.order = '2';
+                }
+            }
         }
 
         // Shadow strength on simulated texts
-        let textShadowCss = 'none';
-        if (heroShadowStrength === 'leger') textShadowCss = '0 1px 2px rgba(0,0,0,0.2)';
-        else if (heroShadowStrength === 'moyen') textShadowCss = '0 2px 4px rgba(0,0,0,0.35)';
-        else if (heroShadowStrength === 'fort') textShadowCss = '0 4px 8px rgba(0,0,0,0.6)';
-        
-        simHeroTitle.style.textShadow = textShadowCss;
-        simHeroSubtitle.style.textShadow = textShadowCss;
+        if (simHeroTitle) simHeroTitle.style.textShadow = textShadowCss;
+        if (simHeroSubtitle) simHeroSubtitle.style.textShadow = textShadowCss;
 
         // Visual image in mockups
         const mockupScreen = document.getElementById('sim_hero_mockup_screen');
-        mockupScreen.style.backgroundImage = heroImgUrl ? `url('${heroImgUrl}')` : 'none';
-        mockupScreen.style.filter = `brightness(${visualBrightness}) saturate(${visualSaturation}) blur(${visualBlur}px)`;
+        if (mockupScreen && heroVariant !== 'hero_slider') {
+            mockupScreen.style.backgroundImage = heroImgUrl ? `url('${heroImgUrl}')` : 'none';
+            mockupScreen.style.filter = `brightness(${visualBrightness}) saturate(${visualSaturation}) blur(${visualBlur}px)`;
+        }
 
         // Mobile layout overrides in simulator view
         if (isMobile) {

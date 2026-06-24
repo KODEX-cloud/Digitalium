@@ -282,19 +282,68 @@
 
             <nav>
                 <ul class="nav-menu" id="navMenu">
-                    <?php 
-                    $navPages = array_filter($menuPages, function($p) {
-                        return (int)($p['in_navigation'] ?? 1) === 1;
-                    });
-                    foreach ($navPages as $menuPage): 
-                        $menuSlug = $menuPage['slug'];
-                        $menuUrl = url($menuSlug === 'home' ? '/' : '/' . htmlspecialchars($menuSlug));
-                        $isActive = ($currentSlug === $menuSlug) ? 'active' : '';
+                    <?php
+                    // Load primary menu from DB; fallback to pages with in_navigation=1
+                    $primaryMenu = \App\Models\Menu::findByLocation('primary');
+                    $navItems = [];
+                    if ($primaryMenu) {
+                        $navItems = \App\Models\MenuItem::getActiveByMenu((int)$primaryMenu['id']);
+                    }
+                    if (empty($navItems) && !empty($menuPages)) {
+                        // Fallback: build nav from published pages
+                        foreach (array_filter($menuPages, fn($p) => (int)($p['in_navigation'] ?? 1) === 1) as $p) {
+                            $navItems[] = [
+                                'label'      => $p['title'],
+                                'url'        => $p['slug'] === 'home' ? '/' : '/' . $p['slug'],
+                                'page_slug'  => $p['slug'],
+                                'target'     => '_self',
+                                'parent_id'  => null,
+                                'icon'       => '',
+                                'is_active'  => 1,
+                            ];
+                        }
+                    }
+                    // Separate root items and children
+                    $rootItems     = array_filter($navItems, fn($i) => empty($i['parent_id']));
+                    $childrenItems = array_filter($navItems, fn($i) => !empty($i['parent_id']));
+                    $childrenByParent = [];
+                    foreach ($childrenItems as $child) {
+                        $childrenByParent[$child['parent_id']][] = $child;
+                    }
+
+                    foreach ($rootItems as $navItem):
+                        $itemUrl   = url(\App\Models\MenuItem::resolveUrl($navItem));
+                        $itemSlug  = ltrim($navItem['page_slug'] ?? parse_url($navItem['url'] ?? '', PHP_URL_PATH) ?? '', '/');
+                        $isActive  = ($currentSlug === $itemSlug || '/'.$currentSlug === ($navItem['url'] ?? '')) ? 'active' : '';
+                        $hasChildren = !empty($childrenByParent[$navItem['id'] ?? '']);
                     ?>
-                        <li>
-                            <a href="<?= $menuUrl ?>" class="nav-link <?= $isActive ?>">
-                                <?= htmlspecialchars($menuPage['title']) ?>
+                        <li class="<?= $hasChildren ? 'has-dropdown' : '' ?>">
+                            <a href="<?= htmlspecialchars($itemUrl) ?>"
+                               class="nav-link <?= $isActive ?>"
+                               <?= ($navItem['target'] ?? '_self') === '_blank' ? 'target="_blank" rel="noopener"' : '' ?>>
+                                <?php if (!empty($navItem['icon'])): ?>
+                                    <i data-lucide="<?= htmlspecialchars($navItem['icon']) ?>" style="width:15px;height:15px;vertical-align:middle;margin-right:4px;"></i>
+                                <?php endif; ?>
+                                <?= htmlspecialchars($navItem['label']) ?>
+                                <?php if ($hasChildren): ?>
+                                    <i data-lucide="chevron-down" style="width:13px;height:13px;vertical-align:middle;margin-left:2px;opacity:.7;"></i>
+                                <?php endif; ?>
                             </a>
+                            <?php if ($hasChildren): ?>
+                            <ul class="nav-dropdown">
+                                <?php foreach ($childrenByParent[$navItem['id']] as $child):
+                                    $childUrl = url(\App\Models\MenuItem::resolveUrl($child));
+                                ?>
+                                <li>
+                                    <a href="<?= htmlspecialchars($childUrl) ?>"
+                                       class="nav-link"
+                                       <?= ($child['target'] ?? '_self') === '_blank' ? 'target="_blank" rel="noopener"' : '' ?>>
+                                        <?= htmlspecialchars($child['label']) ?>
+                                    </a>
+                                </li>
+                                <?php endforeach; ?>
+                            </ul>
+                            <?php endif; ?>
                         </li>
                     <?php endforeach; ?>
                     <li>
@@ -338,28 +387,75 @@
                     <?php endif; ?>
                 </a>
                 <p class="footer-description">
-                    <?= htmlspecialchars($settings['footer_pitch'] ?? 'Nous concevons des produits technologiques haut de gamme et des solutions digitales.') ?>
+                    <?= htmlspecialchars($settings['footer_slogan'] ?? $settings['footer_pitch'] ?? 'Nous concevons des produits technologiques haut de gamme et des solutions digitales.') ?>
                 </p>
+                <?php if (!empty($settings['footer_cta_text'])): ?>
+                    <div style="margin-top: 15px; margin-bottom: 20px;">
+                        <a href="<?= htmlspecialchars(url($settings['footer_cta_link'] ?? '/contact')) ?>" class="btn-primary" style="padding: 8px 18px; font-size: 0.82rem; height: auto; text-decoration: none;">
+                            <span><?= htmlspecialchars($settings['footer_cta_text']) ?></span>
+                            <i data-lucide="arrow-right" style="width: 14px; height: 14px; display: inline-block; vertical-align: middle;"></i>
+                        </a>
+                    </div>
+                <?php endif; ?>
                 <div class="footer-socials">
-                    <a href="<?= htmlspecialchars($settings['social_linkedin'] ?? 'https://linkedin.com') ?>" target="_blank" class="footer-social-link" title="LinkedIn">
-                        <i data-lucide="linkedin" style="width: 18px; height: 18px;"></i>
-                    </a>
-                    <a href="<?= htmlspecialchars($settings['social_twitter'] ?? 'https://twitter.com') ?>" target="_blank" class="footer-social-link" title="Twitter">
-                        <i data-lucide="twitter" style="width: 18px; height: 18px;"></i>
-                    </a>
-                    <a href="<?= htmlspecialchars($settings['social_github'] ?? 'https://github.com') ?>" target="_blank" class="footer-social-link" title="Github">
-                        <i data-lucide="github" style="width: 18px; height: 18px;"></i>
-                    </a>
+                    <?php if (!empty($settings['social_facebook'])): ?>
+                        <a href="<?= htmlspecialchars($settings['social_facebook']) ?>" target="_blank" class="footer-social-link" title="Facebook">
+                            <i data-lucide="facebook" style="width: 18px; height: 18px;"></i>
+                        </a>
+                    <?php endif; ?>
+                    <?php if (!empty($settings['social_linkedin'])): ?>
+                        <a href="<?= htmlspecialchars($settings['social_linkedin']) ?>" target="_blank" class="footer-social-link" title="LinkedIn">
+                            <i data-lucide="linkedin" style="width: 18px; height: 18px;"></i>
+                        </a>
+                    <?php endif; ?>
+                    <?php if (!empty($settings['social_twitter'])): ?>
+                        <a href="<?= htmlspecialchars($settings['social_twitter']) ?>" target="_blank" class="footer-social-link" title="Twitter / X">
+                            <i data-lucide="twitter" style="width: 18px; height: 18px;"></i>
+                        </a>
+                    <?php endif; ?>
+                    <?php if (!empty($settings['social_instagram'])): ?>
+                        <a href="<?= htmlspecialchars($settings['social_instagram']) ?>" target="_blank" class="footer-social-link" title="Instagram">
+                            <i data-lucide="instagram" style="width: 18px; height: 18px;"></i>
+                        </a>
+                    <?php endif; ?>
+                    <?php if (!empty($settings['social_youtube'])): ?>
+                        <a href="<?= htmlspecialchars($settings['social_youtube']) ?>" target="_blank" class="footer-social-link" title="YouTube">
+                            <i data-lucide="youtube" style="width: 18px; height: 18px;"></i>
+                        </a>
+                    <?php endif; ?>
+                    <?php if (!empty($settings['social_github'])): ?>
+                        <a href="<?= htmlspecialchars($settings['social_github']) ?>" target="_blank" class="footer-social-link" title="GitHub">
+                            <i data-lucide="github" style="width: 18px; height: 18px;"></i>
+                        </a>
+                    <?php endif; ?>
                 </div>
             </div>
 
             <div>
                 <h4 class="footer-col-title">Services</h4>
                 <ul class="footer-links">
-                    <li><a href="<?= url('/service') ?>" class="footer-link">Ingénierie Logicielle</a></li>
-                    <li><a href="<?= url('/service') ?>" class="footer-link">Applications Cloud</a></li>
-                    <li><a href="<?= url('/service') ?>" class="footer-link">Audit & Conseil</a></li>
-                    <li><a href="<?= url('/service') ?>" class="footer-link">SEO & Stratégie</a></li>
+                    <?php 
+                    $servicesSec = \App\Services\Database::fetch("SELECT id FROM sections WHERE type = 'services_grid' AND status = 'active' LIMIT 1");
+                    $servicesList = [];
+                    if ($servicesSec) {
+                        $servicesBlocks = \App\Models\Block::getStructuredContent($servicesSec['id']);
+                        $servicesList = $servicesBlocks['groups'] ?? [];
+                    }
+                    if (empty($servicesList)) {
+                        $servicesList = [
+                            ['svc_title' => 'Ingénierie Logicielle', 'svc_link' => '/service'],
+                            ['svc_title' => 'Applications Cloud', 'svc_link' => '/service'],
+                            ['svc_title' => 'Audit & Conseil', 'svc_link' => '/service'],
+                            ['svc_title' => 'SEO & Stratégie', 'svc_link' => '/service']
+                        ];
+                    }
+                    $footerServices = array_slice($servicesList, 0, 4);
+                    foreach ($footerServices as $svc):
+                        $svcTitle = $svc['svc_title'] ?? $svc['title'] ?? '';
+                        $svcLink = $svc['svc_link'] ?? $svc['link'] ?? '/service';
+                    ?>
+                        <li><a href="<?= htmlspecialchars(url($svcLink)) ?>" class="footer-link"><?= htmlspecialchars($svcTitle) ?></a></li>
+                    <?php endforeach; ?>
                 </ul>
             </div>
 

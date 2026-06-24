@@ -74,7 +74,9 @@ class Page extends Model {
                 hero_overlay_opacity = :hero_overlay_opacity,
                 hero_shadow_strength = :hero_shadow_strength,
                 hero_image_mobile = :hero_image_mobile,
-                responsive_settings = :responsive_settings
+                responsive_settings = :responsive_settings,
+                hero_features = :hero_features,
+                hero_articles = :hero_articles
                 WHERE id = :id";
         
         try {
@@ -116,6 +118,8 @@ class Page extends Model {
                 'hero_shadow_strength' => $data['hero_shadow_strength'] ?? 'moyen',
                 'hero_image_mobile' => $data['hero_image_mobile'] ?? null,
                 'responsive_settings' => $data['responsive_settings'] ?? null,
+                'hero_features' => $data['hero_features'] ?? null,
+                'hero_articles' => $data['hero_articles'] ?? null,
                 'id' => $id
             ]);
             error_log("[{$timestamp}] [Page::updatePage SUCCESS] Affected rows: " . $stmt->rowCount() . "\n", 3, $logPath);

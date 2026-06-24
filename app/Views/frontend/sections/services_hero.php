@@ -30,7 +30,7 @@
                 <span>Demander un devis</span>
                 <i data-lucide="arrow-up-right" style="width: 16px; height: 16px;"></i>
             </a>
-            <a href="#services-grid" class="btn-hero-secondary" style="padding: 14px 30px; font-weight: 600; border-radius: 8px;">
+            <a href="<?= url('/services#services-grid') ?>" class="btn-hero-secondary" style="padding: 14px 30px; font-weight: 600; border-radius: 8px;">
                 <span>Voir nos Expertises</span>
             </a>
         </div>

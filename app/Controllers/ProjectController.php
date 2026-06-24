@@ -69,17 +69,21 @@ class ProjectController extends Controller {
         }
 
         $data = [
-            'title'         => trim($_POST['title']),
-            'category'      => trim($_POST['category']),
-            'logo'          => trim($_POST['logo'] ?? ''),
-            'main_image'    => trim($_POST['main_image']),
-            'gallery'       => trim($_POST['gallery'] ?? ''),
-            'context'       => trim($_POST['context'] ?? ''),
-            'impact'        => trim($_POST['impact'] ?? ''),
-            'technologies'  => trim($_POST['technologies'] ?? ''),
-            'external_link' => trim($_POST['external_link'] ?? ''),
-            'sort_order'    => (int)($_POST['sort_order'] ?? 0),
-            'is_featured'   => isset($_POST['is_featured']) ? 1 : 0
+            'title'        => trim($_POST['title']),
+            'slug'         => trim($_POST['slug'] ?? ''),
+            'category'     => trim($_POST['category']),
+            'client'       => trim($_POST['client'] ?? ''),
+            'project_date' => trim($_POST['project_date'] ?? ''),
+            'description'  => trim($_POST['description'] ?? ''),
+            'logo'         => trim($_POST['logo'] ?? ''),
+            'main_image'   => trim($_POST['main_image']),
+            'gallery'      => trim($_POST['gallery'] ?? ''),
+            'context'      => trim($_POST['context'] ?? ''),
+            'impact'       => trim($_POST['impact'] ?? ''),
+            'technologies' => trim($_POST['technologies'] ?? ''),
+            'external_link'=> trim($_POST['external_link'] ?? ''),
+            'sort_order'   => (int)($_POST['sort_order'] ?? 0),
+            'is_featured'  => isset($_POST['is_featured']) ? 1 : 0
         ];
 
         try {
@@ -142,17 +146,21 @@ class ProjectController extends Controller {
         }
 
         $data = [
-            'title'         => trim($_POST['title']),
-            'category'      => trim($_POST['category']),
-            'logo'          => trim($_POST['logo'] ?? ''),
-            'main_image'    => trim($_POST['main_image']),
-            'gallery'       => trim($_POST['gallery'] ?? ''),
-            'context'       => trim($_POST['context'] ?? ''),
-            'impact'        => trim($_POST['impact'] ?? ''),
-            'technologies'  => trim($_POST['technologies'] ?? ''),
-            'external_link' => trim($_POST['external_link'] ?? ''),
-            'sort_order'    => (int)($_POST['sort_order'] ?? 0),
-            'is_featured'   => isset($_POST['is_featured']) ? 1 : 0
+            'title'        => trim($_POST['title']),
+            'slug'         => trim($_POST['slug'] ?? ''),
+            'category'     => trim($_POST['category']),
+            'client'       => trim($_POST['client'] ?? ''),
+            'project_date' => trim($_POST['project_date'] ?? ''),
+            'description'  => trim($_POST['description'] ?? ''),
+            'logo'         => trim($_POST['logo'] ?? ''),
+            'main_image'   => trim($_POST['main_image']),
+            'gallery'      => trim($_POST['gallery'] ?? ''),
+            'context'      => trim($_POST['context'] ?? ''),
+            'impact'       => trim($_POST['impact'] ?? ''),
+            'technologies' => trim($_POST['technologies'] ?? ''),
+            'external_link'=> trim($_POST['external_link'] ?? ''),
+            'sort_order'   => (int)($_POST['sort_order'] ?? 0),
+            'is_featured'  => isset($_POST['is_featured']) ? 1 : 0
         ];
 
         try {
@@ -162,6 +170,73 @@ class ProjectController extends Controller {
         } catch (\Exception $e) {
             $this->redirect("/admin/projects/edit/{$id}", 'error', 'Erreur : ' . $e->getMessage());
         }
+    }
+
+    /**
+     * Frontend: list all projects.
+     */
+    public function publicIndex(): void {
+        $category   = trim($_GET['categorie'] ?? '');
+        $projects   = Project::getPublic($category);
+        $categories = Project::getCategories();
+        $settings   = \App\Models\Setting::getAll();
+        $menuPages  = array_filter(\App\Models\Page::all('sort_order ASC'), fn($p) => $p['status'] === 'published');
+
+        $portfolioPage = \App\Models\Page::findBySlug('realisations') ?? [
+            'title' => 'Réalisations', 'meta_title' => 'Nos Réalisations — Digitalium Group',
+            'meta_description' => 'Découvrez nos projets digitaux sur mesure.',
+            'slug' => 'realisations', 'hero_status' => 0,
+        ];
+
+        $this->render('frontend/portfolio_index', [
+            'page'        => $portfolioPage,
+            'projects'    => $projects,
+            'categories'  => $categories,
+            'activeCategory' => $category,
+            'settings'    => $settings,
+            'menuPages'   => $menuPages,
+            'currentSlug' => 'realisations',
+        ], 'frontend/layout');
+    }
+
+    /**
+     * Frontend: single project detail.
+     */
+    public function publicShow(array $params): void {
+        $slug    = trim($params['slug'] ?? '');
+        $project = Project::findBySlug($slug);
+
+        if (!$project) {
+            http_response_code(404);
+            $this->render('frontend/404', [
+                'page'        => ['title' => '404', 'meta_title' => 'Page introuvable', 'meta_description' => '', 'hero_status' => 0],
+                'settings'    => \App\Models\Setting::getAll(),
+                'menuPages'   => array_filter(\App\Models\Page::all('sort_order ASC'), fn($p) => $p['status'] === 'published'),
+                'currentSlug' => '',
+            ], 'frontend/layout');
+            return;
+        }
+
+        $related   = Project::getPublic($project['category']);
+        $related   = array_filter($related, fn($p) => $p['id'] !== $project['id']);
+        $related   = array_slice(array_values($related), 0, 3);
+        $settings  = \App\Models\Setting::getAll();
+        $menuPages = array_filter(\App\Models\Page::all('sort_order ASC'), fn($p) => $p['status'] === 'published');
+
+        $this->render('frontend/portfolio_show', [
+            'page'        => [
+                'title'            => $project['title'],
+                'meta_title'       => $project['title'] . ' — Digitalium Group',
+                'meta_description' => $project['description'] ?? $project['context'] ?? '',
+                'slug'             => 'realisations/' . $project['slug'],
+                'hero_status'      => 0,
+            ],
+            'project'     => $project,
+            'related'     => $related,
+            'settings'    => $settings,
+            'menuPages'   => $menuPages,
+            'currentSlug' => 'realisations',
+        ], 'frontend/layout');
     }
 
     /**
