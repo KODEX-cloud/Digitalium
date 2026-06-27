@@ -15,7 +15,7 @@ Le CMS est stable, totalement administrable et prêt pour la production.
 | Hash | Description | Date | Production |
 |---|---|---|---|
 | `v1.0.0-enterprise` | TAG — Certification Enterprise | 2026-06-27 | ⏳ Pull hPanel |
-| (en cours) | feat: Certification Enterprise v1.0.0 | 2026-06-27 | ❌ |
+| `d1d3749` | feat: Certification Enterprise v1.0.0 | 2026-06-27 | ❌ |
 | `432f7ae` | chore: PROJECT_STATE mise à jour | 2026-06-24 | ❌ |
 | `6aa3926` | fix: render404 + /blog/comment | 2026-06-24 | ❌ |
 | `2da7bd4` | CMS Enterprise — Stabilisation | 2026-06-24 | ✅ (old) |
