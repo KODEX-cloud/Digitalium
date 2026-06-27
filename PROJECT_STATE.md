@@ -1,12 +1,13 @@
 # PROJECT_STATE — Digitalium Group CMS
-> Dernière mise à jour : 2026-06-27 — DSM Enterprise déployé (commit 4b6dc5f)
+> Dernière mise à jour : 2026-06-27 — DSM Operating System v1.2 — Deploy Center Enterprise
 
 ---
 
-## ÉTAT GLOBAL : ✅ CERTIFIÉ ENTERPRISE v1.0.0
+## ÉTAT GLOBAL : ✅ DSM OPERATING SYSTEM — OPÉRATIONNEL
 
-Le CMS est stable, totalement administrable et prêt pour la production.  
-**Baseline v1.0 établie.** Tout développement futur part de cet état validé.
+Le DSM est désormais le **cœur technique officiel** du CMS Digitalium.  
+Toutes les migrations, synchronisations, audits et déploiements passent par lui.  
+**Baseline v1.2 établie.** Deploy Center accessible à `/admin/system/deploy-center`.
 
 ---
 
@@ -14,7 +15,9 @@ Le CMS est stable, totalement administrable et prêt pour la production.
 
 | Hash | Description | Date | Production |
 |---|---|---|---|
-| `4b6dc5f` | feat: DSM — infrastructure Enterprise complète (31 fichiers) | 2026-06-27 | ⏳ Pull hPanel |
+| En cours   | feat: DSM OS v1.2 — Deploy Center + 8 modes + API + CLI + Self-Heal + Git | 2026-06-27 | ⏳ |
+| `816503b` | chore: PROJECT_STATE DSM v1.1 | 2026-06-27 | ⏳ Pull hPanel |
+| `4b6dc5f` | feat: DSM — infrastructure Enterprise complète (31 fichiers) | 2026-06-27 | ⏳ |
 | `v1.0.0-enterprise` | TAG — Certification Enterprise | 2026-06-27 | ⏳ Pull hPanel |
 | `d1d3749` | feat: Certification Enterprise v1.0.0 | 2026-06-27 | ❌ |
 | `432f7ae` | chore: PROJECT_STATE mise à jour | 2026-06-24 | ❌ |
@@ -48,7 +51,8 @@ Le CMS est stable, totalement administrable et prêt pour la production.
 | Scripts admin | `settings.php` + `layout.php` inject | ✅ head/footer scripts + custom CSS |
 | 404 stylée | `frontend/404.php`, `HomeController::render404()` | ✅ Layout complet |
 | Gouvernance | `CLAUDE.md`, `PROJECT_STATE.md`, `CHANGELOG.md`, `RELEASE_NOTES.md` | ✅ |
-| **DSM** | `app/System/` — 15 managers SOLID + 10 migrations métier | ✅ déployé v1.1 |
+| **DSM v1.1** | `app/System/` — 15 managers SOLID + 10 migrations métier | ✅ déployé |
+| **DSM OS v1.2** | `DeployPipeline`, `SelfHealManager`, `GitManager`, `PerformanceManager`, `SystemApiController`, `bin/dsm_cli.php`, `deploy_center.php` | ✅ Operating System actif |
 
 ---
 

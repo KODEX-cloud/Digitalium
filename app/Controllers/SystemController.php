@@ -16,12 +16,54 @@ use App\System\ReportManager;
 use App\System\DeployManager;
 use App\System\ConfigManager;
 use App\System\ProjectStateManager;
+use App\System\GitManager;
+use App\System\DeployPipeline;
+use App\System\PerformanceManager;
 
 class SystemController extends Controller {
     protected function middlewareAuth(): void {
         if (!\App\Services\Auth::check()) {
             $this->redirect('/admin/login', 'error', 'Accès réservé aux administrateurs.');
         }
+    }
+
+    // ─────────────────────────────────────────
+    // DEPLOY CENTER — GET /admin/system/deploy-center
+    // ─────────────────────────────────────────
+    public function deployCenter(): void {
+        $this->middlewareAuth();
+
+        $health  = HealthManager::check();
+        $score   = HealthManager::score($health);
+        $state   = ProjectStateManager::read();
+        $backups = BackupManager::list();
+        $git     = GitManager::getInfo();
+
+        // Préparer les modes pour la vue
+        $modes = [];
+        foreach (DeployPipeline::$modes as $key => $def) {
+            $modes[] = [
+                'key'         => $key,
+                'label'       => $def['label'],
+                'description' => $def['description'],
+                'steps'       => $def['steps'],
+                'step_count'  => count($def['steps']),
+            ];
+        }
+
+        $this->render('admin/system/deploy_center', [
+            'title'        => 'Deploy Center — DSM Enterprise',
+            'health'       => $health,
+            'score'        => $score,
+            'state'        => $state,
+            'backups'      => $backups['data']['backups'] ?? [],
+            'git'          => $git,
+            'modes'        => $modes,
+            'current_mode' => 'full',
+            'csrf_token'   => $this->generateCsrf(),
+            'currentUser'  => \App\Services\Auth::user(),
+            'reports'      => [],
+        ], 'admin/layout');
     }
 
     // ─────────────────────────────────────────

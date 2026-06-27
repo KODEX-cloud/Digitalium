@@ -489,9 +489,9 @@
                 </a>
             </li>
             <li class="menu-item <?= $isActive('#^/admin/system#') ?>">
-                <a href="<?= url('/admin/system/status') ?>">
-                    <i data-lucide="zap"></i>
-                    <span>Système (DSM)</span>
+                <a href="<?= url('/admin/system/deploy-center') ?>">
+                    <i data-lucide="rocket"></i>
+                    <span>Deploy Center</span>
                 </a>
             </li>
             <li class="menu-item <?= $isActive('#^/admin/settings#') ?>">

@@ -1,3 +1,44 @@
+# RELEASE NOTES — Digitalium CMS Enterprise v1.2.0
+
+**Date :** 2026-06-27
+**Version :** v1.2.0-dsm-os
+**Branche :** `main`
+
+---
+
+## DSM Operating System — Vue d'ensemble
+
+### Philosophie
+Le DSM est désormais le **cœur technique officiel** du CMS Digitalium. Aucune opération technique importante ne doit être exécutée en dehors de lui.
+
+### Pipeline Enterprise Intelligent
+8 modes de déploiement, chacun avec son propre pipeline :
+
+| Mode | Étapes | Usage |
+|---|---|---|
+| `quick` | 4 | Déploiement rapide sans DB |
+| `full` | 11 | Pipeline complet standard |
+| `production` | 20 | Production avec Git + Certification |
+| `repair` | 6 | Auto-réparation des anomalies |
+| `audit` | 8 | Audit read-only complet |
+| `development` | 6 | Dev sans cache warm ni backup |
+| `safe` | 8 | Conservative avec backup préalable |
+| `rollback` | 3 | Liste backups disponibles |
+
+### API Interne
+13 endpoints `/admin/api/system/*` — JSON, Auth, CSRF, Logs, Traçables.
+
+### CLI Multi-Plateforme
+`bin/dsm_cli.php` — Compatible Cron, SSH, GitHub Actions, Webhook, `--json`.
+
+### Self-Heal Engine
+Détection et correction automatique : storage, cache, settings, menus, SEO, uploads, routes, permissions.
+
+### Git Integration
+`GitManager` : commit auto, push, tag, changelog, health check Git.
+
+---
+
 # RELEASE NOTES — Digitalium CMS Enterprise v1.0.0
 
 **Date :** 2026-06-27  

@@ -5,6 +5,43 @@ Format : [Sémantique de version](https://semver.org/lang/fr/)
 
 ---
 
+## [1.2.0-dsm-os] — 2026-06-27
+
+### DSM Operating System — Cœur Technique Officiel
+
+#### Nouveaux Managers (DSM OS v1.2)
+- **`DeployPipeline`** — Orchestrateur multi-modes : Quick / Full / Production / Repair / Audit / Development / Safe / Rollback. Chaque mode = séquence de step-keys avec dispatch unifié.
+- **`SelfHealManager`** — Moteur d'auto-réparation : storage dirs, log file, cache corrompu, settings manquants, menus, SEO, uploads orphelins, routes cassées, permissions.
+- **`GitManager`** — Opérations Git complètes : `getInfo()`, `commitAndPush()`, `createTag()`, `updateChangelog()`, `healthCheck()`.
+- **`PerformanceManager`** — Tests de performance HTTP sur routes clés, audit assets CSS/JS/images avec seuils FAST/SLOW/CRITICAL.
+
+#### API Interne DSM
+- **`SystemApiController`** — 13 endpoints `/admin/api/system/*` (JSON, Auth + CSRF + Logs) :
+  `deploy`, `migrate`, `cache`, `repair`, `health`, `audit`, `rollback`, `git`, `performance`, `backup`, `status`, `modes`, `heal`
+
+#### CLI Multi-Plateforme
+- **`bin/dsm_cli.php`** — Runner CLI compatible Cron, SSH, GitHub Actions, Webhook :
+  `deploy [mode]`, `health`, `migrate`, `business-migrate`, `heal`, `backup`, `git:info`, `git:commit`, `git:tag`, `modes`, `--json`
+
+#### Interface Deploy Center
+- **`/admin/system/deploy-center`** — Interface Enterprise :
+  - Panel système (version, git, branch, commit, score)
+  - Sélecteur de mode (8 modes avec description et step count)
+  - Bouton 🚀 DEPLOY unique
+  - Terminal live-log avec animation step-by-step
+  - Health Dashboard avec refresh AJAX
+  - Statistiques CMS en temps réel (pages, articles, médias, projets)
+
+#### Routes
+- `GET /admin/system/deploy-center` — Deploy Center
+- `GET /admin/api/system/modes` — Liste des modes JSON
+- 12 endpoints POST `/admin/api/system/*`
+
+#### Sidebar Admin
+- Lien "Deploy Center" avec icône Rocket dans la navigation admin
+
+---
+
 ## [1.0.0-enterprise] — 2026-06-27
 
 ### Ajouté

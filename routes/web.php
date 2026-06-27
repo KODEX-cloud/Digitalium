@@ -95,7 +95,8 @@ $router->post('/admin/pages/slides/add', 'PageController@addSlide');
 $router->post('/admin/pages/slides/update', 'PageController@updateSlides');
 $router->post('/admin/pages/slides/delete', 'PageController@deleteSlide');
 
-// --- Admin System Manager (DSM) ---
+// --- Admin System Manager (DSM) — Deploy Center + Legacy dashboard ---
+$router->get('/admin/system/deploy-center',    'SystemController@deployCenter');
 $router->get('/admin/system/status',           'SystemController@status');
 $router->get('/admin/system/health',           'SystemController@health');
 $router->get('/admin/system/report',           'SystemController@report');
@@ -112,6 +113,21 @@ $router->post('/admin/system/routes',          'SystemController@routes');
 $router->post('/admin/system/backup',          'SystemController@backup');
 $router->post('/admin/system/rollback',        'SystemController@rollback');
 $router->post('/admin/system/rebuild',         'SystemController@rebuild');
+
+// --- DSM Internal API (/admin/api/system/*) — JSON only ---
+$router->get('/admin/api/system/modes',        'SystemApiController@modes');
+$router->post('/admin/api/system/deploy',      'SystemApiController@deploy');
+$router->post('/admin/api/system/migrate',     'SystemApiController@migrate');
+$router->post('/admin/api/system/cache',       'SystemApiController@cache');
+$router->post('/admin/api/system/repair',      'SystemApiController@repair');
+$router->post('/admin/api/system/health',      'SystemApiController@health');
+$router->post('/admin/api/system/audit',       'SystemApiController@audit');
+$router->post('/admin/api/system/rollback',    'SystemApiController@rollback');
+$router->post('/admin/api/system/git',         'SystemApiController@git');
+$router->post('/admin/api/system/performance', 'SystemApiController@performance');
+$router->post('/admin/api/system/backup',      'SystemApiController@backup');
+$router->post('/admin/api/system/status',      'SystemApiController@status');
+$router->post('/admin/api/system/heal',        'SystemApiController@heal');
 
 // --- Dynamic Slug Route (Frontend Pages) ---
 // This must be placed last as it captures generic parameters.
