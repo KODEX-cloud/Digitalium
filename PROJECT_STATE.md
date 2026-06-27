@@ -1,5 +1,5 @@
 # PROJECT_STATE — Digitalium Group CMS
-> Dernière mise à jour : 2026-06-27 — Certification Enterprise v1.0.0
+> Dernière mise à jour : 2026-06-27 — DSM Enterprise déployé (commit 4b6dc5f)
 
 ---
 
@@ -14,6 +14,7 @@ Le CMS est stable, totalement administrable et prêt pour la production.
 
 | Hash | Description | Date | Production |
 |---|---|---|---|
+| `4b6dc5f` | feat: DSM — infrastructure Enterprise complète (31 fichiers) | 2026-06-27 | ⏳ Pull hPanel |
 | `v1.0.0-enterprise` | TAG — Certification Enterprise | 2026-06-27 | ⏳ Pull hPanel |
 | `d1d3749` | feat: Certification Enterprise v1.0.0 | 2026-06-27 | ❌ |
 | `432f7ae` | chore: PROJECT_STATE mise à jour | 2026-06-24 | ❌ |
@@ -47,6 +48,7 @@ Le CMS est stable, totalement administrable et prêt pour la production.
 | Scripts admin | `settings.php` + `layout.php` inject | ✅ head/footer scripts + custom CSS |
 | 404 stylée | `frontend/404.php`, `HomeController::render404()` | ✅ Layout complet |
 | Gouvernance | `CLAUDE.md`, `PROJECT_STATE.md`, `CHANGELOG.md`, `RELEASE_NOTES.md` | ✅ |
+| **DSM** | `app/System/` — 15 managers SOLID + 10 migrations métier | ✅ déployé v1.1 |
 
 ---
 
