@@ -84,6 +84,12 @@ $router->get('/admin/blog/categories', 'BlogController@categories');
 $router->post('/admin/blog/categories/create', 'BlogController@createCategory');
 $router->post('/admin/blog/categories/delete/{id}', 'BlogController@deleteCategory');
 
+// --- Admin Blog Comments Moderation ---
+$router->get('/admin/blog/comments', 'BlogController@commentsIndex');
+$router->post('/admin/blog/comments/approve/{id}', 'BlogController@approveComment');
+$router->post('/admin/blog/comments/reject/{id}', 'BlogController@rejectComment');
+$router->post('/admin/blog/comments/delete/{id}', 'BlogController@deleteComment');
+
 // --- Hero Slide Builder AJAX routes ---
 $router->post('/admin/pages/slides/add', 'PageController@addSlide');
 $router->post('/admin/pages/slides/update', 'PageController@updateSlides');

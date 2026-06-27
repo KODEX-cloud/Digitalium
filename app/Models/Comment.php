@@ -39,6 +39,10 @@ class Comment extends Model {
         );
     }
 
+    public static function delete(int $id): void {
+        Database::query("DELETE FROM blog_comments WHERE id = :id", ['id' => $id]);
+    }
+
     public static function getAll(string $status = ''): array {
         if ($status) {
             return Database::fetchAll(

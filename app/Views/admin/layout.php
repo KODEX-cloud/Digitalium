@@ -441,9 +441,24 @@
                 </a>
             </li>
             <li class="menu-item <?= $isActive('#^/admin/blog#') ?>">
-                <a href="<?= url('/admin/blog') ?>">
+                <a href="<?= url('/admin/blog') ?>" style="position: relative;">
                     <i data-lucide="newspaper"></i>
                     <span>Blog</span>
+                    <?php
+                    try {
+                        $pendingComments = \App\Models\Comment::countPending();
+                        if ($pendingComments > 0): ?>
+                        <span style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:#f59e0b;color:#fff;font-size:0.65rem;font-weight:800;padding:1px 7px;border-radius:50px;min-width:20px;text-align:center;" title="<?= $pendingComments ?> commentaire(s) en attente">
+                            <?= $pendingComments ?>
+                        </span>
+                    <?php endif;
+                    } catch (\Throwable $e) {} ?>
+                </a>
+            </li>
+            <li class="menu-item <?= $isActive('#^/admin/blog/comments#') ?>">
+                <a href="<?= url('/admin/blog/comments') ?>">
+                    <i data-lucide="message-circle"></i>
+                    <span>Commentaires</span>
                 </a>
             </li>
             <li class="menu-item <?= $isActive('#^/admin/messages#') ?>">

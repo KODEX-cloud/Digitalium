@@ -298,6 +298,86 @@
                 </div>
             </div>
 
+            <!-- Scripts & CSS -->
+            <div class="card">
+                <div class="card-header" style="margin-bottom: 24px;">
+                    <h2 class="card-title">
+                        <i data-lucide="code-2"></i>
+                        <span>Scripts &amp; CSS personnalisés</span>
+                    </h2>
+                    <p style="font-size:0.8rem;color:var(--text-muted);margin-top:6px;">Injectez vos scripts de tracking (GTM, Analytics, Pixel) et styles CSS additionnels sans toucher au code.</p>
+                </div>
+
+                <div class="admin-form-group">
+                    <label for="header_scripts">Scripts &lt;head&gt; (GTM, Analytics, Pixel Facebook...)</label>
+                    <textarea id="header_scripts" name="header_scripts" class="admin-textarea" rows="5" placeholder="<!-- Google Tag Manager ou autres scripts head -->"><?= htmlspecialchars($settings['header_scripts'] ?? '') ?></textarea>
+                </div>
+
+                <div class="admin-form-group">
+                    <label for="footer_scripts">Scripts avant &lt;/body&gt; (widgets, chat, scripts externes...)</label>
+                    <textarea id="footer_scripts" name="footer_scripts" class="admin-textarea" rows="5" placeholder="<!-- Scripts footer: Intercom, HubSpot, etc. -->"><?= htmlspecialchars($settings['footer_scripts'] ?? '') ?></textarea>
+                </div>
+
+                <div class="admin-form-group">
+                    <label for="custom_css">CSS personnalisé (typographies, overrides, thème personnalisé)</label>
+                    <textarea id="custom_css" name="custom_css" class="admin-textarea" rows="6" placeholder="/* Ex: --font-heading: 'Montserrat', sans-serif; */"><?= htmlspecialchars($settings['custom_css'] ?? '') ?></textarea>
+                    <p style="font-size:0.75rem;color:var(--text-muted);margin-top:6px;">Astuce : Pour changer la typographie, ajoutez d'abord le lien Google Fonts dans les scripts &lt;head&gt;, puis écrivez ici : <code>--font-heading: 'VotrePolice', sans-serif;</code></p>
+                </div>
+            </div>
+
+            <!-- Colours & Theme -->
+            <div class="card">
+                <div class="card-header" style="margin-bottom: 24px;">
+                    <h2 class="card-title">
+                        <i data-lucide="palette"></i>
+                        <span>Couleurs &amp; Thème</span>
+                    </h2>
+                    <p style="font-size:0.8rem;color:var(--text-muted);margin-top:6px;">Personnalisez les couleurs principales du site. Laissez vide pour utiliser les valeurs par défaut.</p>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    <div class="admin-form-group">
+                        <label for="color_primary">Couleur Principale (--primary)</label>
+                        <div style="display:flex;gap:10px;align-items:center;">
+                            <input type="color" id="color_primary_picker" value="<?= htmlspecialchars($settings['color_primary'] ?? '#4f46e5') ?>" style="width:44px;height:38px;padding:2px;border:1px solid var(--border);border-radius:8px;cursor:pointer;background:none;" oninput="document.getElementById('color_primary').value=this.value">
+                            <input type="text" id="color_primary" name="color_primary" class="admin-input" value="<?= htmlspecialchars($settings['color_primary'] ?? '#4f46e5') ?>" placeholder="#4f46e5" oninput="document.getElementById('color_primary_picker').value=this.value">
+                        </div>
+                    </div>
+                    <div class="admin-form-group">
+                        <label for="color_accent">Couleur Accent (--accent)</label>
+                        <div style="display:flex;gap:10px;align-items:center;">
+                            <input type="color" id="color_accent_picker" value="<?= htmlspecialchars($settings['color_accent'] ?? '#818cf8') ?>" style="width:44px;height:38px;padding:2px;border:1px solid var(--border);border-radius:8px;cursor:pointer;background:none;" oninput="document.getElementById('color_accent').value=this.value">
+                            <input type="text" id="color_accent" name="color_accent" class="admin-input" value="<?= htmlspecialchars($settings['color_accent'] ?? '#818cf8') ?>" placeholder="#818cf8" oninput="document.getElementById('color_accent_picker').value=this.value">
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    <div class="admin-form-group">
+                        <label for="color_text_main">Couleur Texte Principal (--text-main)</label>
+                        <div style="display:flex;gap:10px;align-items:center;">
+                            <input type="color" id="color_text_main_picker" value="<?= htmlspecialchars($settings['color_text_main'] ?? '#0f172a') ?>" style="width:44px;height:38px;padding:2px;border:1px solid var(--border);border-radius:8px;cursor:pointer;background:none;" oninput="document.getElementById('color_text_main').value=this.value">
+                            <input type="text" id="color_text_main" name="color_text_main" class="admin-input" value="<?= htmlspecialchars($settings['color_text_main'] ?? '#0f172a') ?>" placeholder="#0f172a" oninput="document.getElementById('color_text_main_picker').value=this.value">
+                        </div>
+                    </div>
+                    <div class="admin-form-group">
+                        <label for="color_text_muted">Couleur Texte Secondaire (--text-muted)</label>
+                        <div style="display:flex;gap:10px;align-items:center;">
+                            <input type="color" id="color_text_muted_picker" value="<?= htmlspecialchars($settings['color_text_muted'] ?? '#64748b') ?>" style="width:44px;height:38px;padding:2px;border:1px solid var(--border);border-radius:8px;cursor:pointer;background:none;" oninput="document.getElementById('color_text_muted').value=this.value">
+                            <input type="text" id="color_text_muted" name="color_text_muted" class="admin-input" value="<?= htmlspecialchars($settings['color_text_muted'] ?? '#64748b') ?>" placeholder="#64748b" oninput="document.getElementById('color_text_muted_picker').value=this.value">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="admin-form-group">
+                    <label for="color_bg_base">Couleur Fond de Page (--bg-base)</label>
+                    <div style="display:flex;gap:10px;align-items:center;">
+                        <input type="color" id="color_bg_base_picker" value="<?= htmlspecialchars($settings['color_bg_base'] ?? '#f0f4ff') ?>" style="width:44px;height:38px;padding:2px;border:1px solid var(--border);border-radius:8px;cursor:pointer;background:none;" oninput="document.getElementById('color_bg_base').value=this.value">
+                        <input type="text" id="color_bg_base" name="color_bg_base" class="admin-input" value="<?= htmlspecialchars($settings['color_bg_base'] ?? '#f0f4ff') ?>" placeholder="#f0f4ff" oninput="document.getElementById('color_bg_base_picker').value=this.value">
+                    </div>
+                </div>
+            </div>
+
             <div class="card" style="text-align: center;">
                 <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; padding: 14px;">
                     <i data-lucide="save"></i>

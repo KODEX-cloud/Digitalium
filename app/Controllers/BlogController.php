@@ -202,6 +202,46 @@ class BlogController extends Controller {
         }
     }
 
+    // ─── ADMIN: Comments moderation ────────────────────────────────────────
+    public function commentsIndex(): void {
+        $this->middlewareAuth();
+        $status       = $_GET['status'] ?? '';
+        $comments     = Comment::getAll($status);
+        $pendingCount = Comment::countPending();
+        $this->render('admin/blog/comments', [
+            'title'        => 'Modération des commentaires',
+            'comments'     => $comments,
+            'pendingCount' => $pendingCount,
+            'filterStatus' => $status,
+            'csrf_token'   => $this->generateCsrf(),
+            'currentUser'  => Auth::user(),
+        ], 'admin/layout');
+    }
+
+    public function approveComment(array $params): void {
+        $this->middlewareAuth();
+        $this->validateCsrf();
+        Comment::approve((int)($params['id'] ?? 0));
+        $ref = $_SERVER['HTTP_REFERER'] ?? '/admin/blog/comments';
+        $this->redirect($ref, 'success', 'Commentaire approuvé.');
+    }
+
+    public function rejectComment(array $params): void {
+        $this->middlewareAuth();
+        $this->validateCsrf();
+        Comment::reject((int)($params['id'] ?? 0));
+        $ref = $_SERVER['HTTP_REFERER'] ?? '/admin/blog/comments';
+        $this->redirect($ref, 'success', 'Commentaire rejeté.');
+    }
+
+    public function deleteComment(array $params): void {
+        $this->middlewareAuth();
+        $this->validateCsrf();
+        Comment::delete((int)($params['id'] ?? 0));
+        $ref = $_SERVER['HTTP_REFERER'] ?? '/admin/blog/comments';
+        $this->redirect($ref, 'success', 'Commentaire supprimé.');
+    }
+
     // ─── FRONTEND: Submit comment ───────────────────────────────────────────
     public function submitComment(): void {
         header('Content-Type: application/json');

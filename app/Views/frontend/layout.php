@@ -245,6 +245,32 @@
             <?php endif; ?>
         }
     </style>
+    <?php if (!empty($settings['header_scripts'])): ?>
+    <!-- Header Scripts (admin-configurable: analytics, GTM, tracking) -->
+    <?= $settings['header_scripts'] ?>
+    <?php endif; ?>
+    <?php if (!empty($settings['custom_css'])): ?>
+    <style>/* Custom CSS (admin-configurable) */
+    <?= $settings['custom_css'] ?>
+    </style>
+    <?php endif; ?>
+    <?php
+    // Inject admin-configurable CSS variable overrides from Settings (Couleurs & Thème)
+    $colorOverrides = array_filter([
+        '--primary'    => $settings['color_primary']    ?? '',
+        '--accent'     => $settings['color_accent']     ?? '',
+        '--text-main'  => $settings['color_text_main']  ?? '',
+        '--text-muted' => $settings['color_text_muted'] ?? '',
+        '--bg-base'    => $settings['color_bg_base']    ?? '',
+    ]);
+    if (!empty($colorOverrides)):
+    ?>
+    <style>:root {
+        <?php foreach ($colorOverrides as $var => $val): ?>
+        <?= htmlspecialchars($var) ?>: <?= htmlspecialchars($val) ?>;
+        <?php endforeach; ?>
+    }</style>
+    <?php endif; ?>
 </head>
 <body>
     <canvas id="particles-canvas" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;"></canvas>
@@ -637,5 +663,9 @@
             }
         });
     </script>
+    <?php if (!empty($settings['footer_scripts'])): ?>
+    <!-- Footer Scripts (admin-configurable) -->
+    <?= $settings['footer_scripts'] ?>
+    <?php endif; ?>
 </body>
 </html>
