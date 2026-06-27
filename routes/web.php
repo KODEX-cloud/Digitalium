@@ -95,6 +95,24 @@ $router->post('/admin/pages/slides/add', 'PageController@addSlide');
 $router->post('/admin/pages/slides/update', 'PageController@updateSlides');
 $router->post('/admin/pages/slides/delete', 'PageController@deleteSlide');
 
+// --- Admin System Manager (DSM) ---
+$router->get('/admin/system/status',           'SystemController@status');
+$router->get('/admin/system/health',           'SystemController@health');
+$router->get('/admin/system/report',           'SystemController@report');
+$router->post('/admin/system/deploy',          'SystemController@deploy');
+$router->post('/admin/system/migrate',         'SystemController@migrate');
+$router->post('/admin/system/business-migrate','SystemController@businessMigrate');
+$router->post('/admin/system/cache',           'SystemController@cache');
+$router->post('/admin/system/verify',          'SystemController@verify');
+$router->post('/admin/system/audit',           'SystemController@audit');
+$router->post('/admin/system/seo',             'SystemController@seo');
+$router->post('/admin/system/assets',          'SystemController@assets');
+$router->post('/admin/system/uploads',         'SystemController@uploads');
+$router->post('/admin/system/routes',          'SystemController@routes');
+$router->post('/admin/system/backup',          'SystemController@backup');
+$router->post('/admin/system/rollback',        'SystemController@rollback');
+$router->post('/admin/system/rebuild',         'SystemController@rebuild');
+
 // --- Dynamic Slug Route (Frontend Pages) ---
 // This must be placed last as it captures generic parameters.
 $router->get('/{slug}', 'HomeController@renderPage');
