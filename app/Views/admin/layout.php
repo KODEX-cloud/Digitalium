@@ -488,10 +488,16 @@
                     <span>Bibliothèque Média</span>
                 </a>
             </li>
-            <li class="menu-item <?= $isActive('#^/admin/system#') ?>">
+            <li class="menu-item <?= $isActive('#^/admin/system/deploy-center#') ?>">
                 <a href="<?= url('/admin/system/deploy-center') ?>">
                     <i data-lucide="rocket"></i>
                     <span>Deploy Center</span>
+                </a>
+            </li>
+            <li class="menu-item <?= $isActive('#^/admin/system/sync-production#') ?>">
+                <a href="<?= url('/admin/system/sync-production') ?>">
+                    <i data-lucide="database-zap"></i>
+                    <span>Sync Production</span>
                 </a>
             </li>
             <li class="menu-item <?= $isActive('#^/admin/settings#') ?>">

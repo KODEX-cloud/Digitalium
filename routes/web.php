@@ -95,6 +95,10 @@ $router->post('/admin/pages/slides/add', 'PageController@addSlide');
 $router->post('/admin/pages/slides/update', 'PageController@updateSlides');
 $router->post('/admin/pages/slides/delete', 'PageController@deleteSlide');
 
+// --- Sync Production — Diagnostic + Migration DB ─────────────────────────────
+$router->get('/admin/system/sync-production',  'SyncProductionController@index');
+$router->post('/admin/api/system/sync-db',     'SyncProductionController@runSync');
+
 // --- Admin System Manager (DSM) — Deploy Center + Legacy dashboard ---
 $router->get('/admin/system/deploy-center',    'SystemController@deployCenter');
 $router->get('/admin/system/status',           'SystemController@status');
