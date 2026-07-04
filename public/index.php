@@ -4,29 +4,76 @@
  * Entry point for all HTTP requests.
  */
 
-// Custom Error & Exception Handler to bypass server blockages and show detailed logs
-register_shutdown_function(function() {
-    $error = error_get_last();
-    if ($error !== null && in_array($error['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR])) {
-        if (!headers_sent()) {
-            header('HTTP/1.1 500 Internal Server Error');
-        }
-        echo "<div style='background:#fee2e2;color:#991b1b;padding:20px;border:1px solid #f87171;border-radius:6px;font-family:monospace;margin:20px;'>";
-        echo "<b>Fatal Error:</b> " . htmlspecialchars($error['message']) . "<br>";
-        echo "in <b>" . htmlspecialchars($error['file']) . "</b> on line <b>" . $error['line'] . "</b><br>";
-        echo "</div>";
+// ─── Bootstrap minimal pour ErrorHandler ─────────────────────────────────────
+// On charge la config d'abord pour avoir ROOT_PATH et ENVIRONMENT disponibles
+// dans le handler AVANT que les routes ne soient chargées.
+// (le require config.php sera répété plus bas — idempotent via define())
+
+// Gestionnaire d'erreurs global — JAMAIS de stack trace publique en production.
+// Voir app/Services/ErrorHandler.php pour la logique complète.
+set_exception_handler(function (\Throwable $e) {
+    // Chemin log sans dépendances (ROOT_PATH peut ne pas être défini encore)
+    $root    = dirname(__DIR__);
+    $logPath = $root . '/storage/logs/errors.log';
+    $env     = defined('ENVIRONMENT') ? ENVIRONMENT : 'production';
+
+    // Log complet dans le fichier (jamais dans le navigateur)
+    $entry = date('Y-m-d H:i:s')
+        . ' [EXCEPTION] ' . get_class($e)
+        . ': ' . $e->getMessage()
+        . ' in ' . $e->getFile() . ':' . $e->getLine()
+        . "\n" . $e->getTraceAsString()
+        . "\n---\n";
+    @file_put_contents($logPath, $entry, FILE_APPEND | LOCK_EX);
+
+    if (!headers_sent()) {
+        http_response_code(500);
+        header('Content-Type: text/html; charset=UTF-8');
     }
+
+    if ($env === 'development') {
+        // Développement : stack trace visible
+        echo "<div style='background:#0f172a;color:#e2e8f0;padding:1.5rem;font-family:monospace;'>";
+        echo "<h2 style='color:#f87171;'>" . get_class($e) . "</h2>";
+        echo "<p style='color:#fbbf24;'>" . htmlspecialchars($e->getMessage()) . "</p>";
+        echo "<p style='color:#94a3b8;'>in " . htmlspecialchars($e->getFile()) . " line " . $e->getLine() . "</p>";
+        echo "<pre style='color:#cbd5e1;overflow:auto;background:#1e293b;padding:1rem;border-radius:8px;margin-top:1rem;'>";
+        echo htmlspecialchars($e->getTraceAsString());
+        echo "</pre></div>";
+    } else {
+        // Production : page propre, aucune info sensible
+        $view500 = $root . '/app/Views/errors/500.php';
+        if (file_exists($view500)) {
+            if (ob_get_level() > 0) ob_end_clean();
+            include $view500;
+        } else {
+            echo '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Erreur</title></head><body style="font-family:sans-serif;text-align:center;padding:4rem;"><h1>Service temporairement indisponible</h1><p>Merci de réessayer dans quelques instants.</p><a href="/">Accueil</a></body></html>';
+        }
+    }
+    exit;
 });
 
-set_exception_handler(function($e) {
-    if (!headers_sent()) {
-        header('HTTP/1.1 500 Internal Server Error');
+register_shutdown_function(function () {
+    $error = error_get_last();
+    if ($error && in_array($error['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR])) {
+        $root    = dirname(__DIR__);
+        $logPath = $root . '/storage/logs/errors.log';
+        $env     = defined('ENVIRONMENT') ? ENVIRONMENT : 'production';
+
+        $entry = date('Y-m-d H:i:s') . ' [FATAL] ' . $error['message']
+            . ' in ' . $error['file'] . ':' . $error['line'] . "\n";
+        @file_put_contents($logPath, $entry, FILE_APPEND | LOCK_EX);
+
+        if (!headers_sent()) {
+            http_response_code(500);
+        }
+
+        if ($env !== 'development') {
+            $view500 = $root . '/app/Views/errors/500.php';
+            if (ob_get_level() > 0) @ob_end_clean();
+            file_exists($view500) ? include $view500 : print('Service temporairement indisponible');
+        }
     }
-    echo "<div style='background:#fee2e2;color:#991b1b;padding:20px;border:1px solid #f87171;border-radius:6px;font-family:monospace;margin:20px;'>";
-    echo "<b>Exception:</b> " . htmlspecialchars($e->getMessage()) . "<br>";
-    echo "in <b>" . htmlspecialchars($e->getFile()) . "</b> on line <b>" . $e->getLine() . "</b><br><br>";
-    echo "<b>Stack trace:</b><pre>" . htmlspecialchars($e->getTraceAsString()) . "</pre>";
-    echo "</div>";
 });
 
 // 0. PHP Built-in Server static files fallback

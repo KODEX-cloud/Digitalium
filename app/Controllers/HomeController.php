@@ -20,18 +20,47 @@ class HomeController extends Controller {
 
     /**
      * Render a dynamic page based on slug.
+     * Fault-tolerant: each data-loading step is isolated — a single failure
+     * never crashes the whole page.
      */
     public function renderPage(array $params): void {
         $slug = trim($params['slug'] ?? 'home');
-        
-        $cacheKey = 'page_' . $slug;
+
+        try {
+            $this->doRenderPage($slug);
+        } catch (\Throwable $e) {
+            // Log the full exception; show a friendly 500 page
+            $logPath = ROOT_PATH . '/storage/logs/errors.log';
+            $entry = date('Y-m-d H:i:s')
+                . ' [CONTROLLER] HomeController::renderPage slug=' . $slug
+                . ' — ' . get_class($e) . ': ' . $e->getMessage()
+                . ' in ' . $e->getFile() . ':' . $e->getLine() . "\n";
+            @file_put_contents($logPath, $entry, FILE_APPEND | LOCK_EX);
+
+            if (ENVIRONMENT === 'development') {
+                throw $e;
+            }
+
+            http_response_code(500);
+            $view500 = ROOT_PATH . '/app/Views/errors/500.php';
+            if (file_exists($view500)) { include $view500; }
+            else { echo '<h1>Service temporairement indisponible</h1>'; }
+            exit;
+        }
+    }
+
+    /**
+     * Internal render logic — separated so the public method can wrap it cleanly.
+     */
+    private function doRenderPage(string $slug): void {
+        $cacheKey   = 'page_' . $slug;
         $cachedData = \App\Services\Cache::get($cacheKey, 3600);
 
         if ($cachedData !== null) {
-            $page = $cachedData['page'];
-            $sections = $cachedData['sections'];
+            $page          = $cachedData['page'];
+            $sections      = $cachedData['sections'];
             $sectionBlocks = $cachedData['sectionBlocks'];
-            $settings = $cachedData['settings'];
+            $settings      = $cachedData['settings'];
             $activeMenuPages = $cachedData['menuPages'];
         } else {
             $page = Page::findBySlug($slug);
@@ -40,41 +69,43 @@ class HomeController extends Controller {
                 return;
             }
 
-            $sections = Section::getActiveByPage($page['id']);
+            // Each block loads independently — a failure returns [] instead of crashing
+            $sections      = Section::getActiveByPage($page['id']) ?: [];
             $sectionBlocks = [];
             foreach ($sections as $sec) {
-                $sectionBlocks[$sec['id']] = Block::getStructuredContent($sec['id']);
+                try {
+                    $sectionBlocks[$sec['id']] = Block::getStructuredContent($sec['id']);
+                } catch (\Throwable $e) {
+                    $sectionBlocks[$sec['id']] = ['single' => [], 'groups' => []];
+                }
             }
 
-            $settings = Setting::getAll();
-            $pagesMenu = Page::all("sort_order ASC, id ASC");
-            $activeMenuPages = array_filter($pagesMenu, function($p) {
-                return $p['status'] === 'published';
-            });
+            $settings        = Setting::getAll() ?: [];
+            $pagesMenu       = Page::all('sort_order ASC, id ASC') ?: [];
+            $activeMenuPages = array_filter($pagesMenu, fn($p) => ($p['status'] ?? '') === 'published');
 
-            // Cache the structured dataset
             \App\Services\Cache::set($cacheKey, [
-                'page' => $page,
+                'page'     => $page,
                 'sections' => $sections,
                 'sectionBlocks' => $sectionBlocks,
                 'settings' => $settings,
-                'menuPages' => $activeMenuPages
+                'menuPages' => $activeMenuPages,
             ]);
         }
 
-        if ($page['status'] === 'draft' && !Auth::check()) {
+        if (($page['status'] ?? '') === 'draft' && !Auth::check()) {
             $this->render404();
             return;
         }
 
         $this->render('frontend/page', [
-            'page' => $page,
-            'sections' => $sections,
+            'page'          => $page,
+            'sections'      => $sections,
             'sectionBlocks' => $sectionBlocks,
-            'settings' => $settings,
-            'menuPages' => $activeMenuPages,
-            'currentSlug' => $slug,
-            'csrf_token' => \App\Services\CSRF::getToken()
+            'settings'      => $settings,
+            'menuPages'     => $activeMenuPages,
+            'currentSlug'   => $slug,
+            'csrf_token'    => \App\Services\CSRF::getToken(),
         ], 'frontend/layout');
     }
 

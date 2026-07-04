@@ -93,6 +93,11 @@ class DeployPipeline {
     private static float $startMs = 0;
     private static string $baseUrl = '';
 
+    // ─── Modes qui déclenchent le pre-deploy check ───────────────────────────
+    private const MODES_WITH_PRECHECK = ['production', 'full', 'safe', 'quick'];
+    // ─── Modes où un check critique ANNULE le pipeline ───────────────────────
+    private const MODES_ABORT_ON_CRITICAL = ['production', 'full'];
+
     // ─── Point d'entrée public ───────────────────────────────────────────────
     public static function run(string $mode = 'full', array $options = []): array {
         self::$steps   = [];
@@ -101,6 +106,34 @@ class DeployPipeline {
 
         $pipelineDef = self::$modes[$mode] ?? self::$modes['full'];
         $stepKeys    = $pipelineDef['steps'];
+
+        // ── Phase 10 : Pre-deploy BootCheck ──────────────────────────────────
+        if (in_array($mode, self::MODES_WITH_PRECHECK)) {
+            $boot       = \App\Services\BootCheck::run();
+            $bootStatus = $boot['critical'] ? 'error' : ($boot['ok'] ? 'ok' : 'warning');
+            self::$steps[] = DSMResult::make(
+                $bootStatus,
+                'Pre-Deploy Check',
+                $boot['summary'],
+                ['counts' => $boot['counts'], 'checks' => $boot['checks']],
+                [],
+                0
+            );
+
+            // Abort production/full if a CRITICAL check failed
+            if ($boot['critical'] && in_array($mode, self::MODES_ABORT_ON_CRITICAL)) {
+                $failedKeys = array_keys(array_filter(
+                    $boot['checks'],
+                    fn($c) => ($c['status'] === 'error') && ($c['critical'] ?? false)
+                ));
+                self::$steps[] = DSMResult::error(
+                    'Pipeline Annulé',
+                    'Déploiement annulé — checks critiques échoués : ' . implode(', ', $failedKeys) . '. Corriger avant de relancer.',
+                    ['failed' => $failedKeys]
+                );
+                return self::buildSummary($mode, $pipelineDef['label']);
+            }
+        }
 
         foreach ($stepKeys as $key) {
             self::execute($key);
@@ -189,6 +222,9 @@ class DeployPipeline {
             // ── Certification ─────────────────────────────────────
             'certify'          => self::certify(),
 
+            // ── Pre-deploy (step standalone) ──────────────────────
+            'pre_check'        => self::runBootCheck(),
+
             default            => DSMResult::error($key, "Step '{$key}' inconnu dans le pipeline"),
         };
     }
@@ -257,6 +293,12 @@ class DeployPipeline {
             'error'       => $errCount,
             'total'       => $total,
         ];
+    }
+
+    private static function runBootCheck(): array {
+        $boot   = \App\Services\BootCheck::run();
+        $status = $boot['critical'] ? 'error' : ($boot['ok'] ? 'ok' : 'warning');
+        return DSMResult::make($status, 'Boot Check', $boot['summary'], ['checks' => $boot['checks']]);
     }
 
     private static function detectBaseUrl(): string {

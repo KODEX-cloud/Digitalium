@@ -62,18 +62,30 @@ class Database {
 
     /**
      * Fetch a single row.
+     * Throws in development, logs + returns null in production.
      */
     public static function fetch(string $sql, array $params = []): ?array {
-        $stmt = self::query($sql, $params);
-        $result = $stmt->fetch();
-        return $result ? $result : null;
+        try {
+            $stmt   = self::query($sql, $params);
+            $result = $stmt->fetch();
+            return $result ?: null;
+        } catch (\Throwable $e) {
+            self::handleReadError($e, $sql);
+            return null;
+        }
     }
 
     /**
      * Fetch all matching rows.
+     * Throws in development, logs + returns [] in production.
      */
     public static function fetchAll(string $sql, array $params = []): array {
-        return self::query($sql, $params)->fetchAll();
+        try {
+            return self::query($sql, $params)->fetchAll();
+        } catch (\Throwable $e) {
+            self::handleReadError($e, $sql);
+            return [];
+        }
     }
 
     /**
@@ -82,6 +94,22 @@ class Database {
     public static function insert(string $sql, array $params = []): string {
         self::query($sql, $params);
         return self::getConnection()->lastInsertId();
+    }
+
+    /**
+     * Handle a read-query error.
+     * In development: rethrows. In production: logs silently and returns safe default.
+     */
+    private static function handleReadError(\Throwable $e, string $sql): void {
+        $logPath  = ROOT_PATH . '/storage/logs/errors.log';
+        $timestamp = date('Y-m-d H:i:s');
+        $entry    = "{$timestamp} [DB READ ERROR] " . $e->getMessage() . " | SQL: {$sql}\n";
+        @file_put_contents($logPath, $entry, FILE_APPEND | LOCK_EX);
+
+        if (ENVIRONMENT === 'development') {
+            throw $e; // rethrow in development for debugging
+        }
+        // Production: swallow, return safe default (null/[]) from the caller
     }
 
     /**
