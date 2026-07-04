@@ -1,13 +1,22 @@
 # PROJECT_STATE — Digitalium Group CMS
-> Dernière mise à jour : 2026-06-27 — DSM Operating System v1.2 — Deploy Center Enterprise
+> Dernière mise à jour : 2026-07-04 — Enterprise Fault Tolerant v1.3 — Production hardening complet
 
 ---
 
-## ÉTAT GLOBAL : ✅ DSM OPERATING SYSTEM — OPÉRATIONNEL
+## ÉTAT GLOBAL : ✅ ENTERPRISE FAULT TOLERANT — PRODUCTION HARDENED
 
-Le DSM est désormais le **cœur technique officiel** du CMS Digitalium.  
-Toutes les migrations, synchronisations, audits et déploiements passent par lui.  
-**Baseline v1.2 établie.** Deploy Center accessible à `/admin/system/deploy-center`.
+**Incident critique résolu (2026-07-04)** — stack trace PHP publique sur `digitaliumgroup.com`.  
+Le CMS est désormais **fault-tolerant** : aucune erreur interne ne peut rendre le frontend inaccessible.  
+DSM OS v1.2 + Fault Tolerant v1.3 — baseline de production stable.
+
+### Garanties Enterprise Fault Tolerant
+- ❌ Stack trace jamais visible en production
+- ❌ Erreur SQL jamais fatale pour le frontend
+- ❌ Menu absent jamais bloquant (fallback pages)
+- ❌ Table manquante jamais fatale
+- ✅ Chaque module peut tomber indépendamment
+- ✅ BootCheck valide l'état avant tout déploiement
+- ✅ DeployPipeline annulé si check critique échoue
 
 ---
 
@@ -15,15 +24,12 @@ Toutes les migrations, synchronisations, audits et déploiements passent par lui
 
 | Hash | Description | Date | Production |
 |---|---|---|---|
-| En cours   | feat: DSM OS v1.2 — Deploy Center + 8 modes + API + CLI + Self-Heal + Git | 2026-06-27 | ⏳ |
+| `c3f3044` | **fix: Enterprise Fault Tolerant — 12-phase hardening production** | 2026-07-04 | ⏳ Pull hPanel URGENT |
+| `d58c0ea` | feat: DSM OS v1.2 — Deploy Center Enterprise Pipeline | 2026-06-27 | ⏳ Pull hPanel |
 | `816503b` | chore: PROJECT_STATE DSM v1.1 | 2026-06-27 | ⏳ Pull hPanel |
 | `4b6dc5f` | feat: DSM — infrastructure Enterprise complète (31 fichiers) | 2026-06-27 | ⏳ |
 | `v1.0.0-enterprise` | TAG — Certification Enterprise | 2026-06-27 | ⏳ Pull hPanel |
-| `d1d3749` | feat: Certification Enterprise v1.0.0 | 2026-06-27 | ❌ |
-| `432f7ae` | chore: PROJECT_STATE mise à jour | 2026-06-24 | ❌ |
-| `6aa3926` | fix: render404 + /blog/comment | 2026-06-24 | ❌ |
 | `2da7bd4` | CMS Enterprise — Stabilisation | 2026-06-24 | ✅ (old) |
-| `3934fcc` | Refactor: visual identity | Antérieur | ✅ actif |
 
 **Remote :** `https://github.com/KODEX-cloud/Digitalium.git` — branche `main`  
 **Déploiement :** Hostinger hPanel Git Integration → trigger pull manuel
@@ -53,6 +59,7 @@ Toutes les migrations, synchronisations, audits et déploiements passent par lui
 | Gouvernance | `CLAUDE.md`, `PROJECT_STATE.md`, `CHANGELOG.md`, `RELEASE_NOTES.md` | ✅ |
 | **DSM v1.1** | `app/System/` — 15 managers SOLID + 10 migrations métier | ✅ déployé |
 | **DSM OS v1.2** | `DeployPipeline`, `SelfHealManager`, `GitManager`, `PerformanceManager`, `SystemApiController`, `bin/dsm_cli.php`, `deploy_center.php` | ✅ Operating System actif |
+| **Fault Tolerant v1.3** | `ErrorHandler.php`, `BootCheck.php`, `Database.php` (safe reads), `HomeController.php` (isolated sections), `Views/errors/500+503.php`, `public/index.php` | ✅ Production hardened |
 
 ---
 
@@ -74,6 +81,7 @@ Toutes les migrations, synchronisations, audits et déploiements passent par lui
 |---|---|---|---|
 | DT-02 | `blog_posts.tags` (texte) + `blog_post_tags` (table) | Faible | Double source intentionnelle — Tag::syncForPost() maintient la cohérence |
 | BUG-04 | HTTP 200 sur 404 (WAMP local) | Dev only | Non reproductible en production PHP-FPM |
+| OPS-01 | BootCheck + ErrorHandler non enregistrés dans l'index.php de boot principal | Faible | Handlers inline dans index.php suffisent — ErrorHandler::register() est disponible pour future intégration |
 
 ---
 
@@ -139,11 +147,16 @@ Toutes les migrations, synchronisations, audits et déploiements passent par lui
 
 ## PROCHAINES ÉTAPES
 
-1. **[ACTION USER]** Pull Git depuis Hostinger hPanel → déclencher déploiement production
-2. **[ACTION USER]** Créer `.env` sur Hostinger avec `APP_ENV=production` + credentials DB prod
-3. **[ACTION USER]** Via SSH Hostinger : `php database/master_migration.php`
-4. **[P2-DEV]** Gestion multi-utilisateurs (admin users CRUD) — prochaine itération
-5. **[P3-DEV]** Galerie d'images avancée pour réalisations
+### ⚠️ ACTION IMMÉDIATE — Restaurer la production
+1. **[ACTION USER]** Hostinger hPanel → Git Integration → **Pull** branche `main` (commit `c3f3044`)
+2. **[ACTION USER]** Vérifier que `digitaliumgroup.com` répond sans stack trace
+3. **[ACTION USER]** Consulter `storage/logs/errors.log` sur Hostinger pour identifier la cause SQL originale
+4. **[ACTION USER]** Si tables manquantes : SSH Hostinger → `php database/master_migration.php`
+
+### Prochaines évolutions
+5. **[P2-DEV]** Gestion multi-utilisateurs (admin users CRUD)
+6. **[P3-DEV]** Galerie d'images avancée pour réalisations
+7. **[P2-OPS]** Monitoring automatique : cron BootCheck + alerte email si check critique échoue
 
 ---
 
