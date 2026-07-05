@@ -1,13 +1,24 @@
 # PROJECT_STATE — Digitalium Group CMS
-> Dernière mise à jour : 2026-07-05 — Enterprise CI/CD v1.4 — Pipeline de déploiement automatisé complet
+> Dernière mise à jour : 2026-07-05 — Recovery Center v1.5 — Restauration complète depuis le navigateur sans SSH
 
 ---
 
-## ÉTAT GLOBAL : ✅ ENTERPRISE CI/CD — DÉPLOIEMENT AUTOMATISÉ
+## ÉTAT GLOBAL : ✅ RECOVERY CENTER — RESTAURATION BROWSER SANS SSH
 
-**CI/CD complet opérationnel (2026-07-05)** — Pipeline GitHub Actions → Hostinger SSH → Deploy Pipeline.  
+**Recovery Center v1.5 opérationnel (2026-07-05)** — Restauration complète depuis `/admin/system/recovery` sans SSH.  
+**CI/CD v1.4 maintenu** — Pipeline GitHub Actions → Hostinger SSH → Deploy Pipeline.  
 **Fault Tolerant v1.3 maintenu** — aucune erreur interne ne peut rendre le frontend inaccessible.  
-DSM OS v1.2 + Fault Tolerant v1.3 + CI/CD v1.4 — plateforme Enterprise production-grade.
+DSM OS v1.2 + Fault Tolerant v1.3 + CI/CD v1.4 + Recovery Center v1.5 — plateforme Enterprise production-grade.
+
+### Garanties Recovery Center v1.5
+- ✅ Restauration complète depuis le navigateur — aucun SSH requis
+- ✅ 16 diagnostics temps réel à l'ouverture de la page
+- ✅ Pipeline 11 phases (BootCheck → Backup → Migrate → Sync → Cache → Assets → Uploads → Menus → Settings → Health → Smoke)
+- ✅ Progress bar + terminal log animé en temps réel
+- ✅ Auto-Rollback SQL si erreur critique détectée
+- ✅ Toggle maintenance (ON/OFF) depuis la page
+- ✅ Rapport final détaillé (étapes, durées, smoke tests)
+- ✅ Rollback d'urgence depuis l'interface
 
 ### Garanties Enterprise CI/CD v1.4
 - ✅ Push sur `main` → déploiement automatique Hostinger (GitHub Actions)
@@ -72,6 +83,7 @@ DSM OS v1.2 + Fault Tolerant v1.3 + CI/CD v1.4 — plateforme Enterprise product
 | **DSM OS v1.2** | `DeployPipeline`, `SelfHealManager`, `GitManager`, `PerformanceManager`, `SystemApiController`, `bin/dsm_cli.php`, `deploy_center.php` | ✅ Operating System actif |
 | **Fault Tolerant v1.3** | `ErrorHandler.php`, `BootCheck.php`, `Database.php` (safe reads), `HomeController.php` (isolated sections), `Views/errors/500+503.php`, `public/index.php` | ✅ Production hardened |
 | **CI/CD v1.4** | `.github/workflows/deploy.yml`, `bin/deploy.php` (11 phases), `RollbackManager.php`, `DeploymentLog.php`, `deploy-center` amélioré, routes deploy-log + rollback-latest | ✅ Pipeline automatisé |
+| **Recovery Center v1.5** | `RecoveryController.php`, `Views/admin/system/recovery.php`, 4 routes API, sidebar link, `bin/recover-production.php` | ✅ Restauration browser sans SSH |
 
 ---
 

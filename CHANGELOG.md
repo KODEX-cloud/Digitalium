@@ -5,6 +5,46 @@ Format : [Sémantique de version](https://semver.org/lang/fr/)
 
 ---
 
+## [1.5.0-recovery-center] — 2026-07-05
+
+### Recovery Center — Restauration Complète Navigateur sans SSH
+
+#### Nouveau Module — RecoveryController
+- **`app/Controllers/RecoveryController.php`** — Contrôleur Recovery Center complet :
+  - `index()` — Page de diagnostic : 16 vérifications système au chargement
+  - `run()` — Pipeline 11 phases JSON : BootCheck → Backup → Migrate → Sync → Cache → Assets → Uploads → Menus → Settings → Health → Smoke + Auto-Rollback si erreur
+  - `diagnostic()` — Endpoint JSON des 16 diagnostics (utilisé pour le refresh temps réel)
+  - `maintenance()` — Toggle `storage/maintenance.lock` ON/OFF
+
+#### Nouvelle Vue — Recovery Center UI
+- **`app/Views/admin/system/recovery.php`** — Interface complète :
+  - Panneau de 16 diagnostics couleur-codés (ok/warning/error)
+  - Liste des 12 étapes pipeline avec icônes et durées
+  - Barre de progression animée + label d'étape en cours
+  - Bouton **RESTAURER LE SITE** (bouton principal) + confirmation
+  - Terminal log sombre temps réel (grille type/label/message/durée)
+  - Toggle Maintenance avec feedback immédiat
+  - Statistiques rapides (ok/warning/erreur/total)
+  - Dernier déploiement (date, mode, durée)
+  - Panneau rollback d'urgence (si backup disponible)
+  - Rapport final détaillé après restauration (tableau étapes + smoke tests)
+
+#### Routes ajoutées
+- `GET  /admin/system/recovery`                → `RecoveryController@index`
+- `POST /admin/api/system/recovery-run`        → `RecoveryController@run`
+- `GET  /admin/api/system/recovery-diagnostic` → `RecoveryController@diagnostic`
+- `POST /admin/api/system/recovery-maintenance`→ `RecoveryController@maintenance`
+
+#### Sidebar admin mise à jour
+- Lien **Recovery Center** ajouté dans `app/Views/admin/layout.php` (icône shield-check)
+
+#### Aucune dépendance externe
+- Smoke tests via `file_get_contents` (pas de curl requis)
+- Toutes les opérations PHP natives
+- Compatible Hostinger shared hosting
+
+---
+
 ## [1.4.0-enterprise-cicd] — 2026-07-05
 
 ### Enterprise CI/CD Pipeline — Déploiement Automatisé Complet

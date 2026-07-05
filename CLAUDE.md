@@ -155,7 +155,8 @@ GET  /{slug}                   → HomeController@renderPage          (catch-all
 /admin/menus + edit + items/save
 /admin/system/deploy-center       → Deploy Center + historique + rollback
 /admin/system/sync-production     → SyncProductionManager + BootCheck
-/admin/api/system/*               → 15 endpoints JSON (deploy, health, rollback-latest, deploy-log, …)
+/admin/system/recovery            → Recovery Center — restauration complète sans SSH
+/admin/api/system/*               → 19 endpoints JSON (deploy, health, rollback-latest, deploy-log, recovery-run, recovery-diagnostic, recovery-maintenance, …)
 ```
 
 ---
@@ -185,6 +186,38 @@ Git push main
 - `HOSTINGER_SITE_PATH`, `HOSTINGER_PHP_BIN`, `APP_URL`
 
 **Rollback d'urgence :** `workflow_dispatch --mode=rollback` ou bouton dans `/admin/system/deploy-center`
+
+---
+
+## 8c. RECOVERY CENTER (v1.5)
+
+Point d'entrée officiel DSM — Restauration complète sans SSH, sans Terminal, sans PHP CLI.
+
+**Route :** `/admin/system/recovery` (auth admin requis)
+
+**Pipeline 11 phases (via POST `/admin/api/system/recovery-run`) :**
+```
+BootCheck → Backup SQL (RollbackManager) → Master Migration → Sync Production →
+Cache Clear → Asset Verify → Upload Verify → Menu Rebuild → Settings Sync →
+Health Check (score min 5) → Smoke Tests HTTP (/, /blog, /realisations, /sitemap.xml)
+→ Auto-Rollback SQL si erreur critique
+```
+
+**Diagnostics temps réel (16 checks) :**
+PHP version, Constants, .env, SQL connection, Tables (10 req), menus.location, Routes count,
+index.php handler, Assets, Uploads, Cache, Menus, Settings, Hero slides, Permissions, Autoloader
+
+**Endpoints API Recovery :**
+```
+GET  /admin/api/system/recovery-diagnostic  → JSON 16 diagnostics
+POST /admin/api/system/recovery-run         → JSON pipeline complet
+POST /admin/api/system/recovery-maintenance → toggle storage/maintenance.lock
+```
+
+**Fichiers :**
+- `app/Controllers/RecoveryController.php` — logique pipeline + diagnostics
+- `app/Views/admin/system/recovery.php` — UI complète (terminal + progress + rapport)
+- `bin/recover-production.php` — version CLI (backup si navigateur inaccessible)
 
 ---
 

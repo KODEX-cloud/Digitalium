@@ -135,6 +135,12 @@ $router->post('/admin/api/system/heal',            'SystemApiController@heal');
 $router->post('/admin/api/system/rollback-latest', 'SystemApiController@rollbackLatest');
 $router->get('/admin/api/system/deploy-log',       'SystemApiController@deployLog');
 
+// --- Recovery Center — Restauration browser sans SSH ─────────────────────────
+$router->get('/admin/system/recovery',               'RecoveryController@index');
+$router->post('/admin/api/system/recovery-run',      'RecoveryController@run');
+$router->get('/admin/api/system/recovery-diagnostic','RecoveryController@diagnostic');
+$router->post('/admin/api/system/recovery-maintenance','RecoveryController@maintenance');
+
 // --- Dynamic Slug Route (Frontend Pages) ---
 // This must be placed last as it captures generic parameters.
 $router->get('/{slug}', 'HomeController@renderPage');

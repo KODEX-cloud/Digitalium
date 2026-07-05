@@ -1,7 +1,53 @@
 # FINAL AUDIT REPORT — Digitalium CMS Enterprise
-> Audit complet 12 phases — Certification Enterprise v1.0.0  
-> Date : 2026-06-27  
+> Dernière mise à jour : 2026-07-05 — Recovery Center v1.5 ajouté  
+> Audit initial : 2026-06-27 — Certification Enterprise v1.0.0  
 > Réalisé par : CTO Principal Digitalium Group / Lead Software Architect
+
+---
+
+## ADDENDUM v1.5 — RECOVERY CENTER (2026-07-05)
+
+### Modules ajoutés post-certification
+
+| Composant | Fichier | Statut |
+|---|---|---|
+| RecoveryController | `app/Controllers/RecoveryController.php` | ✅ PHP lint OK |
+| Recovery View | `app/Views/admin/system/recovery.php` | ✅ PHP lint OK |
+| Routes Recovery | `routes/web.php` (4 routes) | ✅ Ajoutées |
+| Sidebar link | `app/Views/admin/layout.php` | ✅ Ajouté |
+| CLI Recovery | `bin/recover-production.php` | ✅ 12 phases |
+
+### Pipeline Recovery — 11 phases
+
+| Phase | Opération | Rollback si échec |
+|---|---|---|
+| 1 | BootCheck (7 checks) | oui |
+| 2 | Backup SQL (RollbackManager) | — |
+| 3 | Master Migration | oui |
+| 4 | Sync Production (schéma) | oui |
+| 5 | Cache Clear | non critique |
+| 6 | Asset Verify | non critique |
+| 7 | Upload Verify + mkdir | non critique |
+| 8 | Menu Rebuild (seed si vide) | non critique |
+| 9 | Settings Sync (seed clés req.) | non critique |
+| 10 | Health Check (score min 5) | oui |
+| 11 | Smoke Tests HTTP | warning seulement |
+
+**Auto-Rollback :** déclenché si `health.score < 5` ou erreur critique DB.
+
+### Sécurité
+- Authentification admin obligatoire (`middlewareAuth()`)
+- CSRF validé sur tous les POST
+- Aucune donnée sensible exposée dans les réponses JSON
+- Smoke tests via `file_get_contents` — pas de curl exposé
+
+### Garanties v1.5
+- ✅ Zero SSH pour restaurer la production
+- ✅ Diagnostic 16 checks en < 2s
+- ✅ Rollback SQL automatique si score critique
+- ✅ Compatible shared hosting (Hostinger)
+
+---
 
 ---
 

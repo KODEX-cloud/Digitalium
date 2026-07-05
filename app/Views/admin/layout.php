@@ -500,6 +500,12 @@
                     <span>Sync Production</span>
                 </a>
             </li>
+            <li class="menu-item <?= $isActive('#^/admin/system/recovery#') ?>">
+                <a href="<?= url('/admin/system/recovery') ?>">
+                    <i data-lucide="shield-check"></i>
+                    <span>Recovery Center</span>
+                </a>
+            </li>
             <li class="menu-item <?= $isActive('#^/admin/settings#') ?>">
                 <a href="<?= url('/admin/settings') ?>">
                     <i data-lucide="settings"></i>
