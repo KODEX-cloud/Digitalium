@@ -4,6 +4,23 @@
  * Entry point for all HTTP requests.
  */
 
+// ─── MAINTENANCE MODE ─────────────────────────────────────────────────────────
+// Créer storage/maintenance.lock pour activer la maintenance.
+// Supprimer le fichier pour revenir en production.
+$_root = dirname(__DIR__);
+if (file_exists($_root . '/storage/maintenance.lock')) {
+    http_response_code(503);
+    header('Retry-After: 120');
+    $mPage = $_root . '/public/maintenance.php';
+    if (file_exists($mPage)) {
+        include $mPage;
+    } else {
+        echo '<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"><title>Maintenance</title></head><body style="font-family:system-ui;text-align:center;padding:5rem;"><h1>🔧 Maintenance en cours</h1><p>Retour dans quelques minutes.</p></body></html>';
+    }
+    exit;
+}
+unset($_root);
+
 // ─── Bootstrap minimal pour ErrorHandler ─────────────────────────────────────
 // On charge la config d'abord pour avoir ROOT_PATH et ENVIRONMENT disponibles
 // dans le handler AVANT que les routes ne soient chargées.
