@@ -19,6 +19,8 @@ use App\System\ProjectStateManager;
 use App\System\GitManager;
 use App\System\DeployPipeline;
 use App\System\PerformanceManager;
+use App\System\DeploymentLog;
+use App\System\RollbackManager;
 
 class SystemController extends Controller {
     protected function middlewareAuth(): void {
@@ -33,11 +35,13 @@ class SystemController extends Controller {
     public function deployCenter(): void {
         $this->middlewareAuth();
 
-        $health  = HealthManager::check();
-        $score   = HealthManager::score($health);
-        $state   = ProjectStateManager::read();
-        $backups = BackupManager::list();
-        $git     = GitManager::getInfo();
+        $health      = HealthManager::check();
+        $score       = HealthManager::score($health);
+        $state       = ProjectStateManager::read();
+        $backups     = BackupManager::list();
+        $git         = GitManager::getInfo();
+        $deployLogs  = DeploymentLog::getAll(10);
+        $rollbackIds = RollbackManager::list();
 
         // Préparer les modes pour la vue
         $modes = [];
@@ -63,6 +67,8 @@ class SystemController extends Controller {
             'csrf_token'   => $this->generateCsrf(),
             'currentUser'  => \App\Services\Auth::user(),
             'reports'      => [],
+            'deploy_logs'  => $deployLogs,
+            'rollback_ids' => $rollbackIds['data'] ?? [],
         ], 'admin/layout');
     }
 

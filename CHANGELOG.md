@@ -5,6 +5,90 @@ Format : [Sémantique de version](https://semver.org/lang/fr/)
 
 ---
 
+## [1.4.0-enterprise-cicd] — 2026-07-05
+
+### Enterprise CI/CD Pipeline — Déploiement Automatisé Complet
+
+#### GitHub Actions
+- **`.github/workflows/deploy.yml`** — Pipeline CI/CD complet :
+  - Job 1 : PHP Syntax Validation (PHP 8.3, scan `app/`, `database/`, `bin/`)
+  - Job 2 : SSH Production Deploy (`appleboy/ssh-action`) → git pull → migrations → `bin/deploy.php`
+  - Job 3 : Emergency Rollback (`workflow_dispatch --mode=rollback`)
+  - Smoke tests HTTP depuis GitHub (/, /blog, /admin, /sitemap.xml)
+  - Notifications Slack (optionnel)
+  - `concurrency: production-deploy` — empêche les déploiements simultanés
+  - Secrets à configurer : `HOSTINGER_SSH_HOST`, `HOSTINGER_SSH_PORT`, `HOSTINGER_SSH_USER`, `HOSTINGER_SSH_KEY`, `HOSTINGER_SITE_PATH`, `HOSTINGER_PHP_BIN`, `APP_URL`
+
+#### Nouveaux Managers
+- **`app/System/RollbackManager`** — Backup SQL + config + restore :
+  - `create()` : dump PDO complet (TRUNCATE + INSERT par chunks de 100), copie config.php
+  - `restore(id)` : `SET FOREIGN_KEY_CHECKS=0` + statements dans transaction + `FOREIGN_KEY_CHECKS=1`
+  - `list()` / `getLatestId()` : inventaire des backups (max 10 conservés)
+  - Stockage : `storage/backups/backup_YYYY-MM-DD_HH-II-SS/{database.sql, manifest.json, config.php.bak}`
+
+- **`app/System/DeploymentLog`** — Journal persistant JSON des déploiements :
+  - `record(data)` : sauvegarde `{id}.json` dans `storage/deployments/` (max 50 logs)
+  - `getAll(limit)` / `getLatest()` / `getById(id)` : lecture chronologique inverse
+
+#### CLI Orchestrateur Enterprise
+- **`bin/deploy.php`** — 11 phases, idempotent :
+  1. BootCheck (abort si critique)
+  2. RollbackManager::create() — point de sauvegarde avant toute modification
+  3. Master Migration inline — DDL tables critiques
+  4. SyncProductionManager::run() — sync schéma complet
+  5. CacheManager::clear() + AssetManager::check()
+  6. SelfHealManager::run()
+  7. HealthManager::check() (abort si score < 5)
+  8. RouteManager::scan() + vérification Settings
+  9. Smoke Tests HTTP (/, /admin, /blog, /sitemap.xml)
+  10. Auto-rollback si erreur critique (RollbackManager::restore)
+  11. DeploymentLog::record() — journalisation
+  - Exit codes : 0 = succès, 1 = critique + rollback, 2 = warning
+  - Options : `--mode=full|quick|repair|rollback`, `--dry-run`, `--no-rollback`, `--base-url=URL`
+
+#### Intégration Deploy Center
+- **`SystemApiController`** — Nouveaux endpoints :
+  - `POST /admin/api/system/rollback-latest` → `RollbackManager::restore(latest)`
+  - `GET /admin/api/system/deploy-log` → `DeploymentLog::getAll(limit)`
+  - `deploy()` enregistre maintenant automatiquement dans `DeploymentLog` (commit, acteur, mode, durée, statut)
+
+- **`/admin/system/deploy-center`** — Améliorations :
+  - Section "Historique des déploiements" — tableau des 10 derniers deploys (date, mode, statut, commit, acteur, durée)
+  - Section "Rollback d'urgence" — bouton avec confirmation + affichage dernier backup disponible
+  - Fonctions JS : `rollbackLatest()`, `reloadDeployLog()` avec refresh AJAX
+
+#### Routes ajoutées
+- `POST /admin/api/system/rollback-latest`
+- `GET /admin/api/system/deploy-log`
+
+---
+
+## [1.3.0-fault-tolerant] — 2026-07-04
+
+### Enterprise Fault Tolerant — 12 phases de hardening production
+
+#### Modules créés
+- **`app/Services/ErrorHandler`** — Handler global exceptions + shutdown (Phase 7)
+- **`app/Services/BootCheck`** — 7 checks pré-démarrage isolés (Phase 8)
+- **`app/System/SyncProductionManager`** — Sync schéma DB production (inspect/diff/run)
+- **`database/sync_production.php`** — CLI wrapper idempotent
+- **`app/Controllers/SyncProductionController`** — Dashboard `/admin/system/sync-production`
+- **`app/Views/errors/500.php`** / **`503.php`** — Pages d'erreur brandées
+
+#### Modifications critiques
+- **`public/index.php`** — Plus aucune stack trace publique, `set_exception_handler` + `register_shutdown_function`
+- **`app/Services/Database`** — `fetch()` + `fetchAll()` fault-tolerant : try/catch → log → null/[] en production
+- **`app/Controllers/HomeController`** — `renderPage()` wrappé dans try/catch, isolation par section
+- **`app/System/DeployPipeline`** — Pre-deploy BootCheck (abort sur critique en mode `production|full`)
+
+#### Root cause incident production
+- **Cause exacte** : colonne `menus.location` absente → requête `SELECT * FROM menus WHERE location = :l LIMIT 1` échoue → exception propagée → stack trace publique
+- **Fix niveau 1** : `Database::fetch()` swallow en production
+- **Fix niveau 2** : `SyncProductionManager` ajoute la colonne idempotement
+- **Preuve** : `php database/sync_production.php` → 84 skip / 5 corrections / 0 erreurs
+
+---
+
 ## [1.2.0-dsm-os] — 2026-06-27
 
 ### DSM Operating System — Cœur Technique Officiel

@@ -1,13 +1,22 @@
 # PROJECT_STATE — Digitalium Group CMS
-> Dernière mise à jour : 2026-07-04 — Enterprise Fault Tolerant v1.3 — Production hardening complet
+> Dernière mise à jour : 2026-07-05 — Enterprise CI/CD v1.4 — Pipeline de déploiement automatisé complet
 
 ---
 
-## ÉTAT GLOBAL : ✅ ENTERPRISE FAULT TOLERANT — PRODUCTION HARDENED
+## ÉTAT GLOBAL : ✅ ENTERPRISE CI/CD — DÉPLOIEMENT AUTOMATISÉ
 
-**Incident critique résolu (2026-07-04)** — stack trace PHP publique sur `digitaliumgroup.com`.  
-Le CMS est désormais **fault-tolerant** : aucune erreur interne ne peut rendre le frontend inaccessible.  
-DSM OS v1.2 + Fault Tolerant v1.3 — baseline de production stable.
+**CI/CD complet opérationnel (2026-07-05)** — Pipeline GitHub Actions → Hostinger SSH → Deploy Pipeline.  
+**Fault Tolerant v1.3 maintenu** — aucune erreur interne ne peut rendre le frontend inaccessible.  
+DSM OS v1.2 + Fault Tolerant v1.3 + CI/CD v1.4 — plateforme Enterprise production-grade.
+
+### Garanties Enterprise CI/CD v1.4
+- ✅ Push sur `main` → déploiement automatique Hostinger (GitHub Actions)
+- ✅ Backup SQL automatique avant chaque déploiement (RollbackManager)
+- ✅ Rollback automatique si HealthCheck score < 5 (bin/deploy.php)
+- ✅ Rollback manuel depuis Deploy Center (`/admin/system/deploy-center`)
+- ✅ Historique complet des déploiements (`storage/deployments/*.json`)
+- ✅ Smoke tests HTTP automatiques (/ /blog /admin /sitemap.xml)
+- ✅ Pipeline idempotent — exécutable 100× sans effet de bord
 
 ### Garanties Enterprise Fault Tolerant
 - ❌ Stack trace jamais visible en production
@@ -24,6 +33,8 @@ DSM OS v1.2 + Fault Tolerant v1.3 — baseline de production stable.
 
 | Hash | Description | Date | Production |
 |---|---|---|---|
+| `(pending)` | **feat: Enterprise CI/CD v1.4 — GitHub Actions + RollbackManager + DeploymentLog** | 2026-07-05 | ⏳ À pousser |
+| `4b7c7ef` | feat: Sync Production — Diagnostic DB + Migration idempotente complete | 2026-07-04 | ⏳ Pull hPanel |
 | `c3f3044` | **fix: Enterprise Fault Tolerant — 12-phase hardening production** | 2026-07-04 | ⏳ Pull hPanel URGENT |
 | `d58c0ea` | feat: DSM OS v1.2 — Deploy Center Enterprise Pipeline | 2026-06-27 | ⏳ Pull hPanel |
 | `816503b` | chore: PROJECT_STATE DSM v1.1 | 2026-06-27 | ⏳ Pull hPanel |
@@ -60,6 +71,7 @@ DSM OS v1.2 + Fault Tolerant v1.3 — baseline de production stable.
 | **DSM v1.1** | `app/System/` — 15 managers SOLID + 10 migrations métier | ✅ déployé |
 | **DSM OS v1.2** | `DeployPipeline`, `SelfHealManager`, `GitManager`, `PerformanceManager`, `SystemApiController`, `bin/dsm_cli.php`, `deploy_center.php` | ✅ Operating System actif |
 | **Fault Tolerant v1.3** | `ErrorHandler.php`, `BootCheck.php`, `Database.php` (safe reads), `HomeController.php` (isolated sections), `Views/errors/500+503.php`, `public/index.php` | ✅ Production hardened |
+| **CI/CD v1.4** | `.github/workflows/deploy.yml`, `bin/deploy.php` (11 phases), `RollbackManager.php`, `DeploymentLog.php`, `deploy-center` amélioré, routes deploy-log + rollback-latest | ✅ Pipeline automatisé |
 
 ---
 

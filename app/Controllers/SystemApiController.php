@@ -19,6 +19,8 @@ use App\System\PerformanceManager;
 use App\System\RouteManager;
 use App\System\ProjectStateManager;
 use App\System\DSMResult;
+use App\System\DeploymentLog;
+use App\System\RollbackManager;
 
 /**
  * SystemApiController — API JSON interne du DSM.
@@ -44,6 +46,23 @@ class SystemApiController extends Controller {
         $baseUrl = $this->detectBaseUrl();
 
         $result = DeployPipeline::run($mode, ['base_url' => $baseUrl]);
+
+        // Enregistrer dans le log de déploiements
+        try {
+            $user = \App\Services\Auth::user();
+            DeploymentLog::record([
+                'mode'       => $mode,
+                'status'     => $result['status'] ?? 'unknown',
+                'summary'    => $result['message'] ?? '',
+                'steps'      => $result['steps'] ?? [],
+                'duration_ms'=> $result['duration_ms'] ?? null,
+                'actor'      => $user['username'] ?? 'admin',
+                'base_url'   => $baseUrl,
+                'commit'     => GitManager::getInfo()['commit'] ?? null,
+            ]);
+        } catch (\Throwable $e) {
+            // non-bloquant
+        }
 
         // Auto-update PROJECT_STATE après deploy
         try {
@@ -146,6 +165,28 @@ class SystemApiController extends Controller {
             'message' => count($list) . ' backup(s) disponible(s) — restore manuel requis pour éviter la perte de données',
             'data'    => ['backups' => $list],
         ]);
+    }
+
+    // ─── ROLLBACK LATEST — POST /admin/api/system/rollback-latest ───────────
+    public function rollbackLatest(): void {
+        $this->boot();
+
+        $id = RollbackManager::getLatestId();
+        if (!$id) {
+            $this->json(DSMResult::error('Rollback', 'Aucun point de rollback disponible — lancez d\'abord un deploy'));
+            return;
+        }
+
+        $result = RollbackManager::restore($id);
+        $this->json($result);
+    }
+
+    // ─── DEPLOY LOG LIST — GET /admin/api/system/deploy-log ─────────────────
+    public function deployLog(): void {
+        $this->requireAuth();
+        $limit = min(50, (int)($_GET['limit'] ?? 20));
+        $logs  = DeploymentLog::getAll($limit);
+        $this->json(['status' => 'ok', 'label' => 'Deploy Log', 'data' => $logs]);
     }
 
     // ─── GIT INFO — POST /admin/api/system/git ───────────────────────────────

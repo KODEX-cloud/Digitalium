@@ -136,7 +136,7 @@ GET  /sitemap.xml              → HomeController@sitemap
 POST /contact                  → HomeController@contactSubmit
 GET  /blog                     → BlogController@frontendIndex
 GET  /blog/{slug}              → BlogController@frontendPost
-POST /blog/comment             → BlogController@submitComment      ⚠️ À CRÉER
+POST /blog/comment             → BlogController@submitComment
 GET  /realisations             → ProjectController@publicIndex
 GET  /realisations/{slug}      → ProjectController@publicShow
 GET  /{slug}                   → HomeController@renderPage          (catch-all)
@@ -149,11 +149,42 @@ GET  /{slug}                   → HomeController@renderPage          (catch-all
 /admin/pages + CRUD + sections/blocks AJAX
 /admin/projects + CRUD
 /admin/blog + CRUD + /categories
-/admin/blog/comments           ⚠️ À CRÉER
+/admin/blog/comments
 /admin/media
 /admin/messages + show/archive/delete
 /admin/menus + edit + items/save
+/admin/system/deploy-center       → Deploy Center + historique + rollback
+/admin/system/sync-production     → SyncProductionManager + BootCheck
+/admin/api/system/*               → 15 endpoints JSON (deploy, health, rollback-latest, deploy-log, …)
 ```
+
+---
+
+## 8b. PIPELINE CI/CD (v1.4)
+
+```
+Git push main
+  → GitHub Actions (syntax check PHP)
+  → SSH Hostinger (appleboy/ssh-action)
+    → git pull origin main
+    → php database/master_migration.php
+    → php database/sync_production.php
+    → php bin/deploy.php --mode=full
+        ├── BootCheck (abort si critique)
+        ├── RollbackManager::create() (backup SQL)
+        ├── SyncProductionManager::run()
+        ├── CacheManager::clear()
+        ├── HealthManager::check() (abort si score < 5 → rollback)
+        ├── Smoke Tests HTTP
+        └── DeploymentLog::record()
+  → Notification Slack (optionnel)
+```
+
+**Secrets GitHub requis :**
+- `HOSTINGER_SSH_HOST`, `HOSTINGER_SSH_PORT`, `HOSTINGER_SSH_USER`, `HOSTINGER_SSH_KEY`
+- `HOSTINGER_SITE_PATH`, `HOSTINGER_PHP_BIN`, `APP_URL`
+
+**Rollback d'urgence :** `workflow_dispatch --mode=rollback` ou bouton dans `/admin/system/deploy-center`
 
 ---
 

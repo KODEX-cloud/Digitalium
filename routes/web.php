@@ -129,9 +129,11 @@ $router->post('/admin/api/system/audit',       'SystemApiController@audit');
 $router->post('/admin/api/system/rollback',    'SystemApiController@rollback');
 $router->post('/admin/api/system/git',         'SystemApiController@git');
 $router->post('/admin/api/system/performance', 'SystemApiController@performance');
-$router->post('/admin/api/system/backup',      'SystemApiController@backup');
-$router->post('/admin/api/system/status',      'SystemApiController@status');
-$router->post('/admin/api/system/heal',        'SystemApiController@heal');
+$router->post('/admin/api/system/backup',          'SystemApiController@backup');
+$router->post('/admin/api/system/status',          'SystemApiController@status');
+$router->post('/admin/api/system/heal',            'SystemApiController@heal');
+$router->post('/admin/api/system/rollback-latest', 'SystemApiController@rollbackLatest');
+$router->get('/admin/api/system/deploy-log',       'SystemApiController@deployLog');
 
 // --- Dynamic Slug Route (Frontend Pages) ---
 // This must be placed last as it captures generic parameters.

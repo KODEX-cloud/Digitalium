@@ -318,6 +318,93 @@ $statusBorder = ['ok' => '#6ee7b7', 'warning' => '#fcd34d', 'error' => '#fca5a5'
     </div>
   </div>
 
+  <!-- ─── DEPLOYMENT HISTORY + ROLLBACK ─── -->
+  <div style="display:grid;grid-template-columns:1fr 320px;gap:1.25rem;margin-bottom:1.25rem;">
+
+    <!-- Historique des déploiements -->
+    <div class="dc-card" style="margin-bottom:0;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem;">
+        <div class="dc-card-title" style="margin:0;">Historique des déploiements</div>
+        <button onclick="reloadDeployLog()" style="background:none;border:1px solid var(--border);border-radius:7px;padding:.3rem .6rem;font-size:.72rem;cursor:pointer;color:var(--text-muted);">
+          <i data-lucide="refresh-cw" style="width:12px;height:12px;"></i> Refresh
+        </button>
+      </div>
+      <?php if (empty($deploy_logs)): ?>
+        <p style="font-size:.78rem;color:var(--text-muted);padding:.5rem 0;">Aucun déploiement enregistré — le premier deploy sera loggué ici.</p>
+      <?php else: ?>
+        <div style="overflow-x:auto;">
+          <table style="width:100%;border-collapse:collapse;font-size:.78rem;" id="deploy-log-table">
+            <thead>
+              <tr style="background:var(--bg-base);">
+                <th style="padding:.4rem .65rem;text-align:left;font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);border-bottom:1px solid var(--border);">Date</th>
+                <th style="padding:.4rem .65rem;text-align:left;font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);border-bottom:1px solid var(--border);">Mode</th>
+                <th style="padding:.4rem .65rem;text-align:left;font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);border-bottom:1px solid var(--border);">Statut</th>
+                <th style="padding:.4rem .65rem;text-align:left;font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);border-bottom:1px solid var(--border);">Commit</th>
+                <th style="padding:.4rem .65rem;text-align:left;font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);border-bottom:1px solid var(--border);">Acteur</th>
+                <th style="padding:.4rem .65rem;text-align:right;font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);border-bottom:1px solid var(--border);">Durée</th>
+              </tr>
+            </thead>
+            <tbody id="deploy-log-tbody">
+              <?php foreach ($deploy_logs as $log):
+                $ls = $log['status'] ?? 'ok';
+                $lc = $ls === 'ok' ? '#22c55e' : ($ls === 'error' ? '#ef4444' : '#f59e0b');
+                $lb = $ls === 'ok' ? '#d1fae5' : ($ls === 'error' ? '#fee2e2' : '#fef3c7');
+              ?>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:.45rem .65rem;font-family:monospace;font-size:.75rem;color:var(--text-muted);"><?= htmlspecialchars(substr($log['recorded_at'] ?? '—', 0, 16)) ?></td>
+                <td style="padding:.45rem .65rem;font-weight:600;"><?= htmlspecialchars($log['mode'] ?? '—') ?></td>
+                <td style="padding:.45rem .65rem;">
+                  <span style="display:inline-flex;align-items:center;gap:.25rem;padding:.15rem .5rem;border-radius:5px;font-size:.68rem;font-weight:700;background:<?= $lb ?>;color:<?= $lc ?>;">
+                    <?= $ls === 'ok' ? '✓ OK' : ($ls === 'error' ? '✗ ERROR' : '⚠ WARN') ?>
+                  </span>
+                </td>
+                <td style="padding:.45rem .65rem;font-family:monospace;font-size:.72rem;color:var(--text-muted);"><?= htmlspecialchars(substr($log['commit'] ?? '—', 0, 7)) ?></td>
+                <td style="padding:.45rem .65rem;color:var(--text-muted);"><?= htmlspecialchars($log['actor'] ?? '—') ?></td>
+                <td style="padding:.45rem .65rem;text-align:right;font-family:monospace;color:var(--text-muted);"><?= isset($log['duration_ms']) ? round($log['duration_ms']).'ms' : '—' ?></td>
+              </tr>
+              <?php endforeach; ?>
+            </tbody>
+          </table>
+        </div>
+      <?php endif; ?>
+    </div>
+
+    <!-- Rollback d'urgence -->
+    <div class="dc-card" style="margin-bottom:0;">
+      <div class="dc-card-title">Rollback d'urgence</div>
+      <?php
+        $rbList = $rollback_ids['data'] ?? $rollback_ids;
+        $latestBackup = is_array($rbList) && !empty($rbList) ? $rbList[0] : null;
+      ?>
+      <?php if ($latestBackup): ?>
+        <div style="padding:.6rem .75rem;background:var(--bg-base);border-radius:8px;margin-bottom:.75rem;">
+          <div style="font-size:.72rem;color:var(--text-muted);margin-bottom:.2rem;">Dernier point de sauvegarde</div>
+          <div style="font-family:monospace;font-size:.75rem;font-weight:600;color:var(--text-main);"><?= htmlspecialchars($latestBackup['id'] ?? '—') ?></div>
+          <div style="font-size:.7rem;color:var(--text-muted);"><?= htmlspecialchars($latestBackup['created_at'] ?? '') ?></div>
+          <div style="font-size:.7rem;color:var(--text-muted);"><?= isset($latestBackup['size_bytes']) ? round($latestBackup['size_bytes']/1024, 1).'KB' : '' ?></div>
+        </div>
+        <button onclick="rollbackLatest()" id="rollback-btn" style="width:100%;padding:.75rem;font-size:.82rem;font-weight:700;border-radius:10px;border:2px solid #ef4444;background:none;color:#ef4444;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.5rem;transition:.2s;" onmouseover="this.style.background='rgba(239,68,68,.08)'" onmouseout="this.style.background='none'">
+          <i data-lucide="rotate-ccw" style="width:15px;height:15px;"></i>
+          Rollback maintenant
+        </button>
+        <p style="font-size:.68rem;color:var(--text-muted);margin-top:.5rem;text-align:center;">Restaure la base de données au dernier point de sauvegarde.</p>
+      <?php else: ?>
+        <p style="font-size:.78rem;color:var(--text-muted);padding:.5rem 0;">Aucun point de rollback disponible.</p>
+        <p style="font-size:.7rem;color:var(--text-muted);">Un backup est créé automatiquement avant chaque deploy via le pipeline.</p>
+      <?php endif; ?>
+
+      <div style="margin-top:1rem;padding-top:.75rem;border-top:1px solid var(--border);">
+        <div class="dc-card-title" style="margin-bottom:.5rem;">Actions rapides</div>
+        <button onclick="runQuickAction('backup')" style="width:100%;padding:.5rem;font-size:.75rem;font-weight:600;border-radius:8px;border:1px solid var(--border);background:none;color:var(--primary);cursor:pointer;margin-bottom:.4rem;">
+          <i data-lucide="database" style="width:12px;height:12px;"></i> Créer backup maintenant
+        </button>
+        <button onclick="runQuickAction('cache')" style="width:100%;padding:.5rem;font-size:.75rem;font-weight:600;border-radius:8px;border:1px solid var(--border);background:none;color:var(--text-muted);cursor:pointer;">
+          <i data-lucide="zap" style="width:12px;height:12px;"></i> Vider le cache
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- ─── HEALTH DASHBOARD ─── -->
   <div class="dc-card">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
@@ -545,6 +632,60 @@ async function refreshHealth() {
         });
     } catch (e) {
         console.error('Health refresh error:', e);
+    }
+}
+
+// ─── Rollback latest ─────────────────────────────────────────────────────────
+async function rollbackLatest() {
+    if (!confirm('⚠️ Rollback d\'urgence — Restaurer la base de données au dernier backup ?\n\nCette action est irréversible. Continuer ?')) return;
+    const btn = document.getElementById('rollback-btn');
+    if (btn) { btn.disabled = true; btn.textContent = 'Rollback en cours…'; }
+    appendLog('info', 'Rollback', 'Démarrage du rollback au dernier backup…', null);
+    const fd = new FormData();
+    fd.append('_csrf', CSRF);
+    try {
+        const r    = await fetch(BASE_API + '/rollback-latest', { method: 'POST', body: fd });
+        const data = await r.json();
+        appendLog(data.status, data.label || 'Rollback', data.message || '', data.duration_ms);
+        if (data.status === 'ok') {
+            appendLog('ok', 'Rollback', 'Base de données restaurée avec succès.', null);
+        }
+    } catch (e) {
+        appendLog('error', 'Rollback', e.message, null);
+    } finally {
+        if (btn) { btn.disabled = false; btn.innerHTML = '<i data-lucide="rotate-ccw" style="width:15px;height:15px;"></i> Rollback maintenant'; lucide.createIcons(); }
+    }
+}
+
+// ─── Reload deploy log ────────────────────────────────────────────────────────
+async function reloadDeployLog() {
+    try {
+        const r    = await fetch(BASE_API + '/deploy-log?limit=10');
+        const data = await r.json();
+        const logs = data.data || [];
+        const tbody= document.getElementById('deploy-log-tbody');
+        if (!tbody) return;
+        tbody.innerHTML = logs.length === 0
+            ? '<tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:1rem;">Aucun déploiement enregistré.</td></tr>'
+            : logs.map(log => {
+                const ls = log.status || 'ok';
+                const lc = ls === 'ok' ? '#22c55e' : (ls === 'error' ? '#ef4444' : '#f59e0b');
+                const lb = ls === 'ok' ? '#d1fae5' : (ls === 'error' ? '#fee2e2' : '#fef3c7');
+                const ico= ls === 'ok' ? '✓ OK' : (ls === 'error' ? '✗ ERROR' : '⚠ WARN');
+                const date = (log.recorded_at||'—').slice(0,16);
+                const commit = (log.commit||'—').slice(0,7);
+                const ms = log.duration_ms ? Math.round(log.duration_ms)+'ms' : '—';
+                return `<tr style="border-bottom:1px solid var(--border);">
+                  <td style="padding:.45rem .65rem;font-family:monospace;font-size:.75rem;color:var(--text-muted);">${escH(date)}</td>
+                  <td style="padding:.45rem .65rem;font-weight:600;">${escH(log.mode||'—')}</td>
+                  <td style="padding:.45rem .65rem;"><span style="display:inline-flex;align-items:center;gap:.25rem;padding:.15rem .5rem;border-radius:5px;font-size:.68rem;font-weight:700;background:${lb};color:${lc};">${ico}</span></td>
+                  <td style="padding:.45rem .65rem;font-family:monospace;font-size:.72rem;color:var(--text-muted);">${escH(commit)}</td>
+                  <td style="padding:.45rem .65rem;color:var(--text-muted);">${escH(log.actor||'—')}</td>
+                  <td style="padding:.45rem .65rem;text-align:right;font-family:monospace;color:var(--text-muted);">${ms}</td>
+                </tr>`;
+            }).join('');
+    } catch (e) {
+        console.error('Deploy log reload error:', e);
     }
 }
 
