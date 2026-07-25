@@ -1,14 +1,25 @@
 # PROJECT_STATE — Digitalium Group CMS
-> Dernière mise à jour : 2026-07-05 — Recovery Center v1.5 — Restauration complète depuis le navigateur sans SSH
+> Dernière mise à jour : 2026-07-25 — Enterprise CI/CD v2.0 — Pipeline autonome + UI/UX Light Theme
 
 ---
 
-## ÉTAT GLOBAL : ✅ RECOVERY CENTER — RESTAURATION BROWSER SANS SSH
+## ÉTAT GLOBAL : 🚀 ENTERPRISE CI/CD v2.0 — DÉPLOIEMENT TOTALEMENT AUTONOME
 
-**Recovery Center v1.5 opérationnel (2026-07-05)** — Restauration complète depuis `/admin/system/recovery` sans SSH.  
-**CI/CD v1.4 maintenu** — Pipeline GitHub Actions → Hostinger SSH → Deploy Pipeline.  
-**Fault Tolerant v1.3 maintenu** — aucune erreur interne ne peut rendre le frontend inaccessible.  
-DSM OS v1.2 + Fault Tolerant v1.3 + CI/CD v1.4 + Recovery Center v1.5 — plateforme Enterprise production-grade.
+**CI/CD v2.0 (2026-07-25)** — Pipeline GitHub Actions entièrement réécrit. Autonome, auto-réparable, rollback automatique.  
+**⚠ BLOQUEUR** : Secrets GitHub non configurés — déploiement impossible jusqu'à leur ajout (voir `docs/github-secrets.md`).  
+**UI/UX Light Theme (2026-07-25)** — Refonte complète frontend : thème blanc/teal, hero navy, sections redesignées.  
+**Recovery Center v1.5 maintenu** — Restauration complète depuis `/admin/system/recovery` sans SSH.
+
+### Garanties CI/CD v2.0
+- ✅ Pre-flight : validation des secrets avec messages explicites si manquants
+- ✅ PHP Syntax Check avant tout déploiement
+- ✅ Détection premier déploiement (git init + clone automatique)
+- ✅ 8 phases SSH : git sync → permissions → migrations → cache → deploy → intégrité → smoke tests → résumé
+- ✅ Modes : full / quick / repair / rollback (workflow_dispatch)
+- ✅ Notifications Slack optionnelles (succès + échec)
+- ✅ Zero human intervention après configuration des secrets
+- ✅ Rollback SQL via `workflow_dispatch --mode=rollback`
+- ✅ Documentation complète dans `docs/` (6 fichiers)
 
 ### Garanties Recovery Center v1.5
 - ✅ Restauration complète depuis le navigateur — aucun SSH requis
@@ -44,17 +55,16 @@ DSM OS v1.2 + Fault Tolerant v1.3 + CI/CD v1.4 + Recovery Center v1.5 — platef
 
 | Hash | Description | Date | Production |
 |---|---|---|---|
-| `(pending)` | **feat: Enterprise CI/CD v1.4 — GitHub Actions + RollbackManager + DeploymentLog** | 2026-07-05 | ⏳ À pousser |
-| `4b7c7ef` | feat: Sync Production — Diagnostic DB + Migration idempotente complete | 2026-07-04 | ⏳ Pull hPanel |
-| `c3f3044` | **fix: Enterprise Fault Tolerant — 12-phase hardening production** | 2026-07-04 | ⏳ Pull hPanel URGENT |
-| `d58c0ea` | feat: DSM OS v1.2 — Deploy Center Enterprise Pipeline | 2026-06-27 | ⏳ Pull hPanel |
-| `816503b` | chore: PROJECT_STATE DSM v1.1 | 2026-06-27 | ⏳ Pull hPanel |
-| `4b6dc5f` | feat: DSM — infrastructure Enterprise complète (31 fichiers) | 2026-06-27 | ⏳ |
-| `v1.0.0-enterprise` | TAG — Certification Enterprise | 2026-06-27 | ⏳ Pull hPanel |
+| `ff9ee06` | **feat: Enterprise CI/CD v2.0 + Documentation complète** | 2026-07-25 | ⏳ Secrets requis |
+| `3c9264d` | fix: suppression `environment: production` (bloquage deploy) | 2026-07-25 | ⏳ |
+| `5d55994` | feat: UI/UX Light Theme — CSS v3.0, sections redesignées | 2026-07-25 | ⏳ |
+| `258e3b0` | fix: CRITICAL — Restauration production + Mode Maintenance | 2026-07-05 | ⏳ |
+| `e4ac231` | feat: Enterprise CI/CD v1.4 — GitHub Actions + RollbackManager | 2026-07-05 | ⏳ |
+| `4b7c7ef` | feat: Sync Production — Diagnostic DB + Migration idempotente | 2026-07-04 | ⏳ |
 | `2da7bd4` | CMS Enterprise — Stabilisation | 2026-06-24 | ✅ (old) |
 
 **Remote :** `https://github.com/KODEX-cloud/Digitalium.git` — branche `main`  
-**Déploiement :** Hostinger hPanel Git Integration → trigger pull manuel
+**Déploiement :** GitHub Actions → SSH Hostinger (autonome après config secrets)
 
 ---
 
