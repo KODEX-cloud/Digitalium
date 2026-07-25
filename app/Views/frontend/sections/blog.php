@@ -13,19 +13,19 @@
             <?php if (!empty($groups)): ?>
                 <?php foreach ($groups as $i => $post): ?>
                     <div class="blog-card reveal" style="transition-delay:<?= $i * 0.1 ?>s;">
-                        <div class="blog-img-box" style="border-radius:var(--radius-xl) var(--radius-xl) 0 0;">
+                        <div class="blog-img-box">
                             <?php if (!empty($post['post_image'])): ?>
                                 <img src="<?= htmlspecialchars(url($post['post_image'])) ?>" alt="<?= htmlspecialchars($post['post_title'] ?? 'Article') ?>" loading="lazy">
                             <?php else: ?>
-                                <div style="width:100%;height:100%;background:linear-gradient(135deg,rgba(99,102,241,0.15) 0%,rgba(139,92,246,0.08) 100%);display:flex;align-items:center;justify-content:center;">
-                                    <i data-lucide="book-open" style="width:44px;height:44px;color:rgba(99,102,241,0.4);"></i>
+                                <div style="width:100%;height:100%;background:linear-gradient(135deg,rgba(13,148,136,0.08) 0%,rgba(8,145,178,0.05) 100%);display:flex;align-items:center;justify-content:center;">
+                                    <i data-lucide="book-open" style="width:40px;height:40px;color:rgba(13,148,136,0.3);"></i>
                                 </div>
                             <?php endif; ?>
                         </div>
                         <div class="blog-content">
                             <div class="blog-meta">
-                                <span><i data-lucide="tag" style="width:11px;height:11px;display:inline-block;vertical-align:middle;margin-right:4px;"></i><?= htmlspecialchars($post['post_category'] ?? 'Technologie') ?></span>
-                                <span><i data-lucide="calendar" style="width:11px;height:11px;display:inline-block;vertical-align:middle;margin-right:4px;"></i><?= htmlspecialchars($post['post_date'] ?? date('d.m.Y')) ?></span>
+                                <span><?= htmlspecialchars($post['post_category'] ?? 'Technologie') ?></span>
+                                <span><?= htmlspecialchars($post['post_date'] ?? date('d.m.Y')) ?></span>
                             </div>
                             <h3 class="blog-title"><?= htmlspecialchars($post['post_title'] ?? 'Titre de l\'article') ?></h3>
                             <p class="blog-summary"><?= htmlspecialchars($post['post_summary'] ?? '') ?></p>
@@ -46,9 +46,9 @@
                 foreach ($defaults as $i => $d):
                 ?>
                     <div class="blog-card reveal" style="transition-delay:<?= $i * 0.1 ?>s;">
-                        <div class="blog-img-box" style="border-radius:var(--radius-xl) var(--radius-xl) 0 0;">
-                            <div style="width:100%;height:100%;background:linear-gradient(135deg,rgba(99,102,241,0.15) 0%,rgba(<?= $i === 1 ? '139,92,246' : ($i === 2 ? '34,211,238' : '99,102,241') ?>,0.08) 100%);display:flex;align-items:center;justify-content:center;">
-                                <i data-lucide="<?= $d['icon'] ?>" style="width:44px;height:44px;color:rgba(99,102,241,0.4);"></i>
+                        <div class="blog-img-box">
+                            <div style="width:100%;height:100%;background:linear-gradient(135deg,rgba(13,148,136,0.08) 0%,rgba(<?= $i === 1 ? '8,145,178' : ($i === 2 ? '245,158,11' : '13,148,136') ?>,0.05) 100%);display:flex;align-items:center;justify-content:center;">
+                                <i data-lucide="<?= $d['icon'] ?>" style="width:40px;height:40px;color:rgba(13,148,136,0.35);"></i>
                             </div>
                         </div>
                         <div class="blog-content">

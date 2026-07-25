@@ -45,32 +45,32 @@
     $mobileLogoSize = $respSettings['mobile']['logo_size'] ?? '';
     $tabletLogoSize = $respSettings['tablet']['logo_size'] ?? '';
 
-    // Dark-first header background modes
-    $headerBgColorNormal   = 'rgba(6, 12, 24, 0.72)';
-    $headerBgColorScrolled = 'rgba(6, 12, 24, 0.92)';
+    // Light-first header background modes
+    $headerBgColorNormal   = 'rgba(255,255,255,0.95)';
+    $headerBgColorScrolled = 'rgba(255,255,255,0.98)';
     $headerBackdropFilter  = "blur({$headerBlur}px)";
-    $headerBorder          = '1px solid rgba(255, 255, 255, 0.1)';
+    $headerBorder          = '1px solid rgba(0,0,0,0.07)';
 
     if ($headerBgMode === 'sombre' || $headerBgMode === 'glass') {
-        $headerBgColorNormal   = "rgba(6, 12, 24, $headerOpacity)";
-        $headerBgColorScrolled = "rgba(6, 12, 24, " . min(0.97, $headerOpacity + 0.15) . ")";
-        $headerBorder          = '1px solid rgba(255, 255, 255, 0.1)';
+        $headerBgColorNormal   = 'rgba(255,255,255,0.95)';
+        $headerBgColorScrolled = 'rgba(255,255,255,0.98)';
+        $headerBorder          = '1px solid rgba(0,0,0,0.07)';
     } elseif ($headerBgMode === 'clair') {
-        $headerBgColorNormal   = "rgba(6, 12, 24, " . max(0.55, $headerOpacity * 0.8) . ")";
-        $headerBgColorScrolled = "rgba(6, 12, 24, " . min(0.95, $headerOpacity) . ")";
+        $headerBgColorNormal   = 'rgba(255,255,255,0.97)';
+        $headerBgColorScrolled = 'rgba(255,255,255,1)';
     } elseif ($headerBgMode === 'plein') {
-        $headerBgColorNormal   = "#060c18";
-        $headerBgColorScrolled = "#060c18";
+        $headerBgColorNormal   = '#ffffff';
+        $headerBgColorScrolled = '#ffffff';
         $headerBackdropFilter  = 'none';
-        $headerBorder          = '1px solid rgba(255, 255, 255, 0.12)';
+        $headerBorder          = '1px solid rgba(0,0,0,0.08)';
     }
 
     // Shadow strength
-    $headerShadowCss = '0 4px 32px rgba(0,0,0,0.4)';
+    $headerShadowCss = '0 1px 0 rgba(0,0,0,0.06), 0 4px 20px rgba(0,0,0,0.06)';
     if ($headerShadow === 'leger') {
-        $headerShadowCss = '0 4px 16px rgba(0,0,0,0.25)';
+        $headerShadowCss = '0 1px 0 rgba(0,0,0,0.05)';
     } elseif ($headerShadow === 'fort') {
-        $headerShadowCss = '0 8px 48px rgba(0,0,0,0.6)';
+        $headerShadowCss = '0 4px 32px rgba(0,0,0,0.12)';
     }
 
     // Dynamic Logo Selection
@@ -121,11 +121,11 @@
             margin-left: 6px;
             line-height: 1;
         }
-        /* Dark theme — logo text toujours clair */
+        /* Light theme — logo text sombre */
         .logo-text-col strong {
             font-size: 1.1rem;
             font-weight: 700;
-            color: #f1f5f9 !important;
+            color: #111827 !important;
             letter-spacing: -0.01em;
             font-family: var(--font-heading);
             transition: var(--transition);
@@ -133,25 +133,30 @@
         .logo-text-col span {
             font-size: .5rem;
             letter-spacing: .25em;
-            color: #64748b !important;
+            color: #6b7280 !important;
             text-transform: uppercase;
             font-weight: 500;
             transition: var(--transition);
         }
 
-        /* Dynamic Header Styling — dark-first */
+        /* Dynamic Header Styling — light */
         #siteHeader {
             background-color: <?= $headerBgColorNormal ?> !important;
             backdrop-filter: <?= $headerBackdropFilter ?> !important;
             -webkit-backdrop-filter: <?= $headerBackdropFilter ?> !important;
-            border: <?= $headerBorder ?> !important;
-            box-shadow: <?= $headerShadowCss ?>, inset 0 1px 0 rgba(255,255,255,0.06) !important;
+            border-bottom: <?= $headerBorder ?> !important;
+            border-top: none !important;
+            border-left: none !important;
+            border-right: none !important;
+            box-shadow: <?= $headerShadowCss ?> !important;
+            top: 0 !important;
+            border-radius: 0 !important;
         }
         #siteHeader.scrolled {
             background-color: <?= $headerBgColorScrolled ?> !important;
-            height: 62px !important;
-            top: 12px !important;
-            box-shadow: 0 8px 48px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.08) !important;
+            height: 64px !important;
+            top: 0 !important;
+            box-shadow: 0 4px 32px rgba(0,0,0,0.1) !important;
         }
         #siteHeader.scrolled img { height: <?= max(26, $logoSize - 6) ?>px !important; }
         #siteHeader img {
@@ -161,11 +166,11 @@
             transition: var(--transition);
         }
 
-        /* Navigation links — dark theme (toujours clair) */
-        #siteHeader .nav-link { color: #94a3b8 !important; }
-        #siteHeader .nav-link:hover { color: #f1f5f9 !important; }
-        #siteHeader .nav-link.active { color: #f1f5f9 !important; background: rgba(99,102,241,0.12) !important; }
-        #siteHeader .menu-toggle { color: #f1f5f9 !important; }
+        /* Navigation links — light theme */
+        #siteHeader .nav-link { color: #374151 !important; }
+        #siteHeader .nav-link:hover { color: #111827 !important; background: rgba(0,0,0,0.04) !important; }
+        #siteHeader .nav-link.active { color: #0d9488 !important; background: rgba(13,148,136,0.08) !important; }
+        #siteHeader .menu-toggle { color: #111827 !important; }
 
         /* Responsive Breakpoint styling overrides */
         @media (max-width: 768px) {

@@ -1,21 +1,18 @@
-<section class="cta-sec section-padding" style="position:relative;overflow:hidden;text-align:center;background:linear-gradient(135deg,rgba(99,102,241,0.07) 0%,rgba(139,92,246,0.04) 100%);border-top:1px solid rgba(99,102,241,0.15);border-bottom:1px solid rgba(99,102,241,0.15);">
-
-    <!-- Glow -->
-    <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:300px;background:radial-gradient(ellipse,rgba(99,102,241,0.1) 0%,transparent 70%);pointer-events:none;"></div>
+<section class="cta-sec section-padding" style="position:relative;overflow:hidden;text-align:center;">
 
     <div class="container reveal" style="position:relative;z-index:1;">
 
         <?php if (!empty($single['eyebrow'])): ?>
-            <div style="font-size:0.68rem;letter-spacing:0.25em;text-transform:uppercase;color:#818cf8;margin-bottom:16px;font-family:var(--font-heading);font-weight:700;">
+            <div class="section-badge" style="margin-bottom:24px;">
                 <?= htmlspecialchars($single['eyebrow']) ?>
             </div>
         <?php endif; ?>
 
-        <h2 style="font-size:clamp(2rem,4vw,3rem);font-weight:800;color:var(--text-main);margin-bottom:20px;line-height:1.15;font-family:var(--font-heading);letter-spacing:-0.03em;">
+        <h2 class="section-title">
             <?= $single['title'] ?? 'Travaillons ensemble sur votre projet' ?>
         </h2>
 
-        <p style="font-size:1rem;color:var(--text-sub);margin-bottom:40px;line-height:1.8;max-width:680px;margin-left:auto;margin-right:auto;">
+        <p class="section-subtitle" style="margin:20px auto 44px;max-width:640px;">
             <?= htmlspecialchars($single['subtitle'] ?? 'Concevons des architectures performantes à forte valeur ajoutée.') ?>
         </p>
 
