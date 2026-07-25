@@ -127,8 +127,8 @@ if (!empty($page['hero_title'])):
     .glass-feature-card:hover {
         transform: translateY(-5px) !important;
         border-color: rgba(99, 102, 241, 0.4) !important;
-        box-shadow: 0 20px 40px rgba(99, 102, 241, 0.08) !important;
-        background: rgba(255, 255, 255, 0.8) !important;
+        box-shadow: 0 20px 40px rgba(99, 102, 241, 0.15) !important;
+        background: rgba(255, 255, 255, 0.07) !important;
     }
 
     /* Embedded Breakpoint styling overrides */
@@ -532,13 +532,13 @@ if (!empty($page['hero_title'])):
         <div class="container" style="position: relative; z-index: 5; width: 100%; display: flex; justify-content: center;">
             
             <!-- Floating Card -->
-            <div class="floating-glass-card-hero" style="background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(255, 255, 255, 0.75); padding: 48px 40px; border-radius: 24px; box-shadow: 0 30px 60px -15px rgba(15, 23, 42, 0.3), 0 10px 20px -5px rgba(0, 0, 0, 0.05); max-width: 800px; width: 100%; text-align: center; display: flex; flex-direction: column; align-items: center; animation: floatBadge 8s ease-in-out infinite;">
+            <div class="floating-glass-card-hero" style="background: rgba(11,18,34,0.85); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(255,255,255,0.1); padding: 48px 40px; border-radius: 24px; box-shadow: 0 30px 60px -15px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.06); max-width: 800px; width: 100%; text-align: center; display: flex; flex-direction: column; align-items: center; animation: floatBadge 8s ease-in-out infinite;">
                 
                 <?php if (!empty($badge)): ?>
                     <span class="hero-brand-badge" style="display: inline-flex; align-items: center; gap: 8px; background: rgba(99, 102, 241, 0.12); border: 1px solid rgba(99, 102, 241, 0.25); padding: 6px 18px; border-radius: 50px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; color: var(--primary); margin-bottom: 24px; font-family: var(--font-headings);"><?= htmlspecialchars($badge) ?></span>
                 <?php endif; ?>
 
-                <h1 style="font-size: clamp(2.2rem, 5vw, 3.6rem); line-height: 1.15; font-weight: 900; color: #0f172a; margin-bottom: 20px; font-family: var(--font-headings); letter-spacing: -0.02em; text-shadow: none !important;">
+                <h1 style="font-size: clamp(2.2rem, 5vw, 3.6rem); line-height: 1.15; font-weight: 900; color: var(--text-main); margin-bottom: 20px; font-family: var(--font-headings); letter-spacing: -0.02em; text-shadow: none !important;">
                     <?= $page['hero_title'] ?>
                 </h1>
 
@@ -548,7 +548,7 @@ if (!empty($page['hero_title'])):
                 </div>
 
                 <?php if (!empty($page['hero_subtitle'])): ?>
-                    <p style="font-size: 1.12rem; line-height: 1.7; color: #334155; margin-bottom: 36px; max-width: 620px; font-weight: 500; text-shadow: none !important;">
+                    <p style="font-size: 1.12rem; line-height: 1.7; color: var(--text-sub); margin-bottom: 36px; max-width: 620px; font-weight: 500; text-shadow: none !important;">
                         <?= htmlspecialchars($page['hero_subtitle']) ?>
                     </p>
                 <?php endif; ?>
@@ -695,7 +695,7 @@ if (!empty($page['hero_title'])):
                     <?php endif; ?>
 
                     <?php if (!empty($page['hero_cta2_text'])): ?>
-                        <a href="<?= htmlspecialchars($page['hero_cta2_url'] ?? '#services') ?>" class="btn-cta-secondary" style="display: inline-flex; align-items: center; gap: 8px; padding: 14px 28px; border-radius: 12px; font-weight: 600; color: var(--text-main); background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid var(--border); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02); transition: var(--transition);">
+                        <a href="<?= htmlspecialchars($page['hero_cta2_url'] ?? '#services') ?>" class="btn-cta-secondary" style="display: inline-flex; align-items: center; gap: 8px; padding: 14px 28px; border-radius: 12px; font-weight: 600; color: var(--text-main); background: rgba(255,255,255,0.05); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid var(--border-md); box-shadow: none; transition: var(--transition);">
                             <span><?= htmlspecialchars($page['hero_cta2_text']) ?></span>
                         </a>
                     <?php endif; ?>
@@ -752,7 +752,7 @@ if (!empty($page['hero_title'])):
                     <?php endif; ?>
 
                     <?php if (!empty($page['hero_cta2_text'])): ?>
-                        <a href="<?= htmlspecialchars(url($page['hero_cta2_url'] ?? '#services')) ?>" class="btn-cta-secondary" style="display: inline-flex; align-items: center; gap: 8px; padding: 14px 30px; border-radius: 12px; font-weight: 600; color: var(--text-main); background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid var(--border); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02); transition: var(--transition);">
+                        <a href="<?= htmlspecialchars(url($page['hero_cta2_url'] ?? '#services')) ?>" class="btn-cta-secondary" style="display: inline-flex; align-items: center; gap: 8px; padding: 14px 30px; border-radius: 12px; font-weight: 600; color: var(--text-main); background: rgba(255,255,255,0.05); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid var(--border-md); box-shadow: none; transition: var(--transition);">
                             <span><?= htmlspecialchars($page['hero_cta2_text']) ?></span>
                         </a>
                     <?php endif; ?>
@@ -804,7 +804,7 @@ if (!empty($page['hero_title'])):
                             </a>
                         <?php endif; ?>
                         <?php if (!empty($page['hero_cta2_text'])): ?>
-                            <a href="<?= htmlspecialchars(url($page['hero_cta2_url'] ?? '#services')) ?>" class="btn-cta-secondary" style="display: inline-flex; align-items: center; gap: 8px; padding: 14px 28px; border-radius: 12px; font-weight: 600; color: var(--text-main); background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid var(--border); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02); transition: var(--transition);">
+                            <a href="<?= htmlspecialchars(url($page['hero_cta2_url'] ?? '#services')) ?>" class="btn-cta-secondary" style="display: inline-flex; align-items: center; gap: 8px; padding: 14px 28px; border-radius: 12px; font-weight: 600; color: var(--text-main); background: rgba(255,255,255,0.05); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid var(--border-md); box-shadow: none; transition: var(--transition);">
                                 <span><?= htmlspecialchars($page['hero_cta2_text']) ?></span>
                             </a>
                         <?php endif; ?>
@@ -891,7 +891,7 @@ if (!empty($page['hero_title'])):
                             </a>
                         <?php endif; ?>
                         <?php if (!empty($page['hero_cta2_text'])): ?>
-                            <a href="<?= htmlspecialchars(url($page['hero_cta2_url'] ?? '#services')) ?>" class="btn-cta-secondary" style="display: inline-flex; align-items: center; gap: 8px; padding: 14px 28px; border-radius: 12px; font-weight: 600; color: var(--text-main); background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid var(--border); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02); transition: var(--transition);">
+                            <a href="<?= htmlspecialchars(url($page['hero_cta2_url'] ?? '#services')) ?>" class="btn-cta-secondary" style="display: inline-flex; align-items: center; gap: 8px; padding: 14px 28px; border-radius: 12px; font-weight: 600; color: var(--text-main); background: rgba(255,255,255,0.05); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid var(--border-md); box-shadow: none; transition: var(--transition);">
                                 <span><?= htmlspecialchars($page['hero_cta2_text']) ?></span>
                             </a>
                         <?php endif; ?>
@@ -916,7 +916,7 @@ if (!empty($page['hero_title'])):
                 <div class="hero-right-visual" style="<?= $visualOrder ?> position: relative; opacity: 0; transform: scale(0.95) translateY(10px); animation: heroFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards; display: flex; justify-content: center; align-items: center;">
                     <div class="grid-features-wrap" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; width: 100%; max-width: 440px;">
                         <?php foreach (array_slice($gridFeats, 0, 4) as $gf): ?>
-                        <div class="glass-feature-card" style="background: rgba(255,255,255,0.65); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.7); border-radius: 20px; padding: 24px 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.03); display: flex; flex-direction: column; gap: 14px; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);">
+                        <div class="glass-feature-card" style="background: rgba(255,255,255,0.04); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 24px 20px; box-shadow: 0 0 0 1px rgba(255,255,255,0.04), 0 10px 30px rgba(0,0,0,0.25); display: flex; flex-direction: column; gap: 14px; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);">
                             <div style="width: 38px; height: 38px; border-radius: 10px; background: <?= htmlspecialchars($gf['color'] ?? 'rgba(79,70,229,0.1)') ?>; display: flex; align-items: center; justify-content: center; color: <?= htmlspecialchars($gf['iconColor'] ?? 'var(--primary)') ?>;">
                                 <i data-lucide="<?= htmlspecialchars($gf['icon'] ?? 'zap') ?>" style="width: 20px; height: 20px;"></i>
                             </div>
@@ -986,7 +986,7 @@ if (!empty($page['hero_title'])):
                         <?php endif; ?>
 
                         <?php if (!empty($page['hero_cta2_text'])): ?>
-                            <a href="<?= htmlspecialchars($page['hero_cta2_url'] ?? '#services') ?>" class="btn-cta-secondary" style="display: inline-flex; align-items: center; gap: 8px; padding: 14px 28px; border-radius: 12px; font-weight: 600; color: var(--text-main); background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid var(--border); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02); transition: var(--transition);">
+                            <a href="<?= htmlspecialchars($page['hero_cta2_url'] ?? '#services') ?>" class="btn-cta-secondary" style="display: inline-flex; align-items: center; gap: 8px; padding: 14px 28px; border-radius: 12px; font-weight: 600; color: var(--text-main); background: rgba(255,255,255,0.05); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid var(--border-md); box-shadow: none; transition: var(--transition);">
                                 <span><?= htmlspecialchars($page['hero_cta2_text']) ?></span>
                             </a>
                         <?php endif; ?>
@@ -1030,7 +1030,7 @@ if (!empty($page['hero_title'])):
                             </div>
                         <?php else: ?>
                             <!-- Standard Laptop Container Mockup -->
-                            <div class="mockup-frame" style="background: rgba(255, 255, 255, 0.5); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.6); padding: 12px; border-radius: 24px; box-shadow: inset 0 1px 1px rgba(255,255,255,0.8);">
+                            <div class="mockup-frame" style="background: rgba(11,18,34,0.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.08); padding: 12px; border-radius: 24px; box-shadow: 0 0 0 1px rgba(255,255,255,0.04), 0 25px 50px rgba(0,0,0,0.4);">
                                 <div class="screen-frame" style="aspect-ratio: 1.5; background: #0f172a; border-radius: 16px; overflow: hidden; border: 2px solid #334155; position: relative;">
                                     <?php if (!empty($page['hero_image'])): ?>
                                         <picture>
@@ -1073,8 +1073,8 @@ if (!empty($page['hero_title'])):
     box-shadow: 0 15px 30px -5px rgba(226, 109, 54, 0.6) !important;
 }
 .btn-cta-secondary:hover {
-    background: rgba(255, 255, 255, 0.85) !important;
-    border-color: var(--primary-glow) !important;
+    background: rgba(255,255,255,0.09) !important;
+    border-color: rgba(99,102,241,0.4) !important;
     transform: translateY(-2px);
 }
 @media (max-width: 991px) {

@@ -45,52 +45,32 @@
     $mobileLogoSize = $respSettings['mobile']['logo_size'] ?? '';
     $tabletLogoSize = $respSettings['tablet']['logo_size'] ?? '';
 
-    // Map header background modes
-    $headerBgColorNormal = 'rgba(255, 255, 255, 0.45)';
-    $headerBgColorScrolled = 'rgba(255, 255, 255, 0.68)';
-    $headerBackdropFilter = 'blur(20px)';
-    $headerBorder = '1px solid rgba(255, 255, 255, 0.6)';
+    // Dark-first header background modes
+    $headerBgColorNormal   = 'rgba(6, 12, 24, 0.72)';
+    $headerBgColorScrolled = 'rgba(6, 12, 24, 0.92)';
+    $headerBackdropFilter  = "blur({$headerBlur}px)";
+    $headerBorder          = '1px solid rgba(255, 255, 255, 0.1)';
 
-    if ($headerBgMode === 'clair') {
-        $headerBgColorNormal = "rgba(255, 255, 255, $headerOpacity)";
-        $headerBgColorScrolled = "rgba(255, 255, 255, " . min(1.0, $headerOpacity + 0.15) . ")";
-        $headerBorder = '1px solid rgba(255, 255, 255, 0.8)';
-    } elseif ($headerBgMode === 'sombre') {
-        $headerBgColorNormal = "rgba(15, 23, 42, $headerOpacity)";
-        $headerBgColorScrolled = "rgba(15, 23, 42, " . min(1.0, $headerOpacity + 0.15) . ")";
-        $headerBorder = '1px solid rgba(255, 255, 255, 0.1)';
-    } elseif ($headerBgMode === 'semi-transparent') {
-        $headerBgColorNormal = "rgba(255, 255, 255, $headerOpacity)";
-        $headerBgColorScrolled = "rgba(255, 255, 255, " . min(0.85, $headerOpacity + 0.15) . ")";
-    } elseif ($headerBgMode === 'blur') {
-        $headerBgColorNormal = "rgba(255, 255, 255, " . ($headerOpacity * 0.3) . ")";
-        $headerBgColorScrolled = "rgba(255, 255, 255, " . ($headerOpacity * 0.5) . ")";
-        $headerBackdropFilter = "blur({$headerBlur}px)";
+    if ($headerBgMode === 'sombre' || $headerBgMode === 'glass') {
+        $headerBgColorNormal   = "rgba(6, 12, 24, $headerOpacity)";
+        $headerBgColorScrolled = "rgba(6, 12, 24, " . min(0.97, $headerOpacity + 0.15) . ")";
+        $headerBorder          = '1px solid rgba(255, 255, 255, 0.1)';
+    } elseif ($headerBgMode === 'clair') {
+        $headerBgColorNormal   = "rgba(6, 12, 24, " . max(0.55, $headerOpacity * 0.8) . ")";
+        $headerBgColorScrolled = "rgba(6, 12, 24, " . min(0.95, $headerOpacity) . ")";
     } elseif ($headerBgMode === 'plein') {
-        if ($headerContrastMode === 'light_on_dark' || $headerContrastMode === 'light on dark') {
-            $headerBgColorNormal = "#0f172a";
-            $headerBgColorScrolled = "#0f172a";
-            $headerBorder = '1px solid rgba(255, 255, 255, 0.15)';
-        } else {
-            $headerBgColorNormal = "#ffffff";
-            $headerBgColorScrolled = "#ffffff";
-            $headerBorder = '1px solid rgba(0, 0, 0, 0.1)';
-        }
-        $headerBackdropFilter = 'none';
-    } elseif ($headerBgMode === 'glass') {
-        $headerBgColorNormal = "rgba(255, 255, 255, $headerOpacity)";
-        $headerBgColorScrolled = "rgba(255, 255, 255, " . min(0.95, $headerOpacity + 0.15) . ")";
-        $headerBackdropFilter = "blur({$headerBlur}px)";
+        $headerBgColorNormal   = "#060c18";
+        $headerBgColorScrolled = "#060c18";
+        $headerBackdropFilter  = 'none';
+        $headerBorder          = '1px solid rgba(255, 255, 255, 0.12)';
     }
 
-    // Map shadow strength
-    $headerShadowCss = 'none';
+    // Shadow strength
+    $headerShadowCss = '0 4px 32px rgba(0,0,0,0.4)';
     if ($headerShadow === 'leger') {
-        $headerShadowCss = '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)';
-    } elseif ($headerShadow === 'moyen') {
-        $headerShadowCss = '0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04)';
+        $headerShadowCss = '0 4px 16px rgba(0,0,0,0.25)';
     } elseif ($headerShadow === 'fort') {
-        $headerShadowCss = '0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 10px 10px -5px rgba(0, 0, 0, 0.04)';
+        $headerShadowCss = '0 8px 48px rgba(0,0,0,0.6)';
     }
 
     // Dynamic Logo Selection
@@ -141,41 +121,39 @@
             margin-left: 6px;
             line-height: 1;
         }
+        /* Dark theme — logo text toujours clair */
         .logo-text-col strong {
-            font-size: 1.05rem;
+            font-size: 1.1rem;
             font-weight: 700;
-            color: #2d8fe0;
-            letter-spacing: .05em;
+            color: #f1f5f9 !important;
+            letter-spacing: -0.01em;
             font-family: var(--font-heading);
             transition: var(--transition);
         }
         .logo-text-col span {
-            font-size: .55rem;
+            font-size: .5rem;
             letter-spacing: .25em;
-            color: #8aa0be;
+            color: #64748b !important;
             text-transform: uppercase;
             font-weight: 500;
             transition: var(--transition);
         }
 
-        /* Dynamic Header Styling injection */
+        /* Dynamic Header Styling — dark-first */
         #siteHeader {
             background-color: <?= $headerBgColorNormal ?> !important;
             backdrop-filter: <?= $headerBackdropFilter ?> !important;
             -webkit-backdrop-filter: <?= $headerBackdropFilter ?> !important;
             border: <?= $headerBorder ?> !important;
-            box-shadow: <?= $headerShadowCss ?> !important;
+            box-shadow: <?= $headerShadowCss ?>, inset 0 1px 0 rgba(255,255,255,0.06) !important;
         }
         #siteHeader.scrolled {
             background-color: <?= $headerBgColorScrolled ?> !important;
-            height: 64px !important;
+            height: 62px !important;
             top: 12px !important;
-            box-shadow: 0 20px 40px -15px rgba(30, 58, 138, 0.08) !important;
+            box-shadow: 0 8px 48px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.08) !important;
         }
-        #siteHeader.scrolled img {
-            height: <?= max(26, $logoSize - 6) ?>px !important;
-        }
-        
+        #siteHeader.scrolled img { height: <?= max(26, $logoSize - 6) ?>px !important; }
         #siteHeader img {
             height: <?= $logoSize ?>px !important;
             width: auto;
@@ -183,46 +161,11 @@
             transition: var(--transition);
         }
 
-        /* Navigation text contrast modes */
-        <?php if ($headerContrastMode === 'light_on_dark' || $headerContrastMode === 'light on dark' || $headerBgMode === 'sombre'): ?>
-        #siteHeader .nav-link {
-            color: rgba(255, 255, 255, 0.85) !important;
-        }
-        #siteHeader .nav-link:hover, #siteHeader .nav-link.active {
-            color: #ffffff !important;
-        }
-        #siteHeader .nav-link::after {
-            background: #ffffff !important;
-        }
-        #siteHeader .menu-toggle {
-            color: #ffffff !important;
-        }
-        .logo-text-col strong {
-            color: #ffffff !important;
-        }
-        .logo-text-col span {
-            color: rgba(255, 255, 255, 0.6) !important;
-        }
-        <?php elseif ($headerContrastMode === 'dark_on_light' || $headerContrastMode === 'dark on light' || $headerContrastMode === 'solid' || $headerBgMode === 'clair'): ?>
-        #siteHeader .nav-link {
-            color: #0f172a !important;
-        }
-        #siteHeader .nav-link:hover, #siteHeader .nav-link.active {
-            color: var(--primary) !important;
-        }
-        #siteHeader .nav-link::after {
-            background: var(--primary) !important;
-        }
-        #siteHeader .menu-toggle {
-            color: #0f172a !important;
-        }
-        .logo-text-col strong {
-            color: var(--primary) !important;
-        }
-        .logo-text-col span {
-            color: #475569 !important;
-        }
-        <?php endif; ?>
+        /* Navigation links — dark theme (toujours clair) */
+        #siteHeader .nav-link { color: #94a3b8 !important; }
+        #siteHeader .nav-link:hover { color: #f1f5f9 !important; }
+        #siteHeader .nav-link.active { color: #f1f5f9 !important; background: rgba(99,102,241,0.12) !important; }
+        #siteHeader .menu-toggle { color: #f1f5f9 !important; }
 
         /* Responsive Breakpoint styling overrides */
         @media (max-width: 768px) {

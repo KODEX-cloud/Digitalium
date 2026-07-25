@@ -1,89 +1,97 @@
-<section class="hero-section" id="hero-<?= $sectionId ?>" style="position: relative; padding-top: 140px; padding-bottom: 80px; display: flex; align-items: center; overflow: hidden; background: var(--bg-base);">
-    
-    <div class="container hero-layout" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 50px; align-items: center; width: 100%; position: relative; z-index: 2;">
-        
-        <!-- Hero Left Content -->
-        <div class="hero-title reveal">
-            <?php if (!empty($single['badge'])): ?>
-                <div class="hero-tag" style="display: inline-flex; align-items: center; gap: 8px; background: rgba(99, 102, 241, 0.12); border: 1px solid rgba(99, 102, 241, 0.3); padding: 0.35rem 1rem; border-radius: 50px; font-size: 0.68rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.5rem;">
-                    <div class="bdot" style="width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulse 2s ease-in-out infinite;"></div>
-                    <?= htmlspecialchars($single['badge']) ?>
+<section class="hero-section" id="hero-<?= $sectionId ?>">
+
+    <!-- Gradient de fond -->
+    <div style="position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 50% -10%,rgba(99,102,241,0.14) 0%,transparent 65%);pointer-events:none;z-index:0;"></div>
+
+    <div class="container" style="position:relative;z-index:2;">
+        <div class="hero-layout">
+
+            <!-- Colonne gauche : contenu -->
+            <div class="hero-title">
+
+                <?php if (!empty($single['badge'])): ?>
+                    <div class="hero-badge">
+                        <span class="dot"></span>
+                        <?= htmlspecialchars($single['badge']) ?>
+                    </div>
+                <?php endif; ?>
+
+                <div style="font-size:clamp(2.6rem,5vw,4.2rem);line-height:1.06;font-family:var(--font-heading);font-weight:900;letter-spacing:-0.04em;color:var(--text-main);margin-bottom:28px;">
+                    <?= $single['title'] ?? 'Des solutions<br>technologiques<br><span class="hi">innovantes</span>' ?>
                 </div>
-            <?php endif; ?>
 
-            <div style="font-size: clamp(2.2rem, 4.5vw, 3.8rem); line-height: 1.12; color: var(--text-main); font-family: var(--font-heading); margin-bottom: 1.2rem;">
-                <?= $single['title'] ?? '<h1>Des solutions technologiques innovantes</h1>' ?>
-            </div>
+                <p class="hero-description">
+                    <?= htmlspecialchars($single['subtitle'] ?? '') ?>
+                </p>
 
-            <!-- Colorful Accent Bar -->
-            <div class="abar" style="display: flex; gap: 4px; margin: 1.4rem 0;">
-                <span style="width: 32px; height: 3px; border-radius: 2px; background: #e03a3a;"></span>
-                <span style="width: 32px; height: 3px; border-radius: 2px; background: #2eaa5c;"></span>
-                <span style="width: 32px; height: 3px; border-radius: 2px; background: #f5b800;"></span>
-                <span style="width: 32px; height: 3px; border-radius: 2px; background: #f07820;"></span>
-                <span style="width: 32px; height: 3px; border-radius: 2px; background: #2d8fe0;"></span>
-            </div>
-
-            <p class="hero-description" style="font-size: 1.05rem; line-height: 1.8; color: var(--text-muted); margin-bottom: 2.2rem; max-width: 500px;">
-                <?= htmlspecialchars($single['subtitle'] ?? '') ?>
-            </p>
-
-            <div class="hero-actions" style="display: flex; gap: 16px; flex-wrap: wrap;">
-                <?php if (!empty($single['cta_text'])): ?>
-                    <a href="<?= htmlspecialchars($single['cta_url'] ?? '#services') ?>" class="btn-hero-primary" style="padding: 14px 30px; font-weight: 600; border-radius: 8px;">
-                        <span><?= htmlspecialchars($single['cta_text']) ?></span>
-                        <i data-lucide="arrow-up-right" style="width: 18px; height: 18px;"></i>
-                    </a>
-                <?php endif; ?>
-                <?php if (!empty($single['cta2_text'])): ?>
-                    <a href="<?= htmlspecialchars($single['cta2_url'] ?? '#about') ?>" class="btn-hero-secondary" style="padding: 14px 30px; font-weight: 600; border-radius: 8px;">
-                        <span><?= htmlspecialchars($single['cta2_text']) ?></span>
-                    </a>
-                <?php endif; ?>
-            </div>
-        </div>
-
-        <!-- Hero Right AI visual & stats panel -->
-        <div class="hero-right reveal" style="display: flex; flex-direction: column; gap: 20px; align-items: center; width: 100%;">
-            <div class="ai-frame" style="width: 100%; max-width: 380px;">
-                <div class="hero-image-box">
-                    <?php if (!empty($single['bg_image'])): ?>
-                        <img src="<?= htmlspecialchars(url($single['bg_image'])) ?>" alt="Digitalium Hero" loading="lazy">
-                    <?php else: ?>
-                        <img src="<?= htmlspecialchars(url('/assets/images/hero_3d.png')) ?>" alt="Digitalium Hero" loading="lazy">
+                <div class="hero-actions">
+                    <?php if (!empty($single['cta_text'])): ?>
+                        <a href="<?= htmlspecialchars($single['cta_url'] ?? '#services') ?>" class="btn-hero-primary">
+                            <span><?= htmlspecialchars($single['cta_text']) ?></span>
+                            <i data-lucide="arrow-up-right" style="width:18px;height:18px;"></i>
+                        </a>
+                    <?php endif; ?>
+                    <?php if (!empty($single['cta2_text'])): ?>
+                        <a href="<?= htmlspecialchars($single['cta2_url'] ?? '#about') ?>" class="btn-hero-secondary">
+                            <span><?= htmlspecialchars($single['cta2_text']) ?></span>
+                            <i data-lucide="chevron-right" style="width:16px;height:16px;opacity:0.6;"></i>
+                        </a>
                     <?php endif; ?>
                 </div>
-                <div class="ai-label" style="font-size: 0.72rem; letter-spacing: 0.2rem; text-transform: uppercase; color: var(--primary); text-align: center; font-weight: 700; margin-top: 6px;">
-                    <?= htmlspecialchars($settings['site_name'] ?? 'Digitalium Group') ?>
-                    <?php if (!empty($single['visual_label'])): ?>
-                        <strong style="display: block; font-size: 1.15rem; color: var(--text-main); letter-spacing: 0; margin-top: 4px; font-family: var(--font-heading);"><?= htmlspecialchars($single['visual_label']) ?></strong>
-                    <?php endif; ?>
+
+                <!-- Stats -->
+                <div class="hero-stats">
+                    <div class="hstat">
+                        <div class="stat-num" style="font-size:2rem;font-weight:900;font-family:var(--font-heading);background:linear-gradient(135deg,var(--primary),var(--secondary));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;">
+                            <?= htmlspecialchars($single['stats_years'] ?? '10+') ?>
+                        </div>
+                        <div class="stat-label" style="font-size:0.72rem;color:var(--text-muted);font-weight:500;margin-top:6px;text-transform:uppercase;letter-spacing:0.08em;">
+                            <?= htmlspecialchars($single['stats_label_years'] ?? 'Expérience') ?>
+                        </div>
+                    </div>
+                    <div style="width:1px;background:var(--border);align-self:stretch;"></div>
+                    <div class="hstat">
+                        <div class="stat-num" style="font-size:2rem;font-weight:900;font-family:var(--font-heading);background:linear-gradient(135deg,var(--primary),var(--secondary));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;">
+                            <?= htmlspecialchars($single['stats_clients'] ?? '100+') ?>
+                        </div>
+                        <div class="stat-label" style="font-size:0.72rem;color:var(--text-muted);font-weight:500;margin-top:6px;text-transform:uppercase;letter-spacing:0.08em;">
+                            <?= htmlspecialchars($single['stats_label_clients'] ?? 'Clients') ?>
+                        </div>
+                    </div>
+                    <div style="width:1px;background:var(--border);align-self:stretch;"></div>
+                    <div class="hstat">
+                        <div class="stat-num" style="font-size:2rem;font-weight:900;font-family:var(--font-heading);background:linear-gradient(135deg,var(--primary),var(--secondary));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;">
+                            <?= htmlspecialchars($single['stats_satisfaction'] ?? '98%') ?>
+                        </div>
+                        <div class="stat-label" style="font-size:0.72rem;color:var(--text-muted);font-weight:500;margin-top:6px;text-transform:uppercase;letter-spacing:0.08em;">
+                            <?= htmlspecialchars($single['stats_label_satisfaction'] ?? 'Satisfaction') ?>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Stats strip -->
-            <div class="hero-stats" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; width: 100%; max-width: 380px;">
-                <div class="hstat" style="text-align: center; padding: 1rem 0.5rem; background: var(--bg-surface); border: 1px solid var(--border); border-radius: 10px;">
-                    <div class="hstat-n" style="font-size: 1.6rem; font-weight: 800; color: var(--text-main); font-family: var(--font-heading);"><?= htmlspecialchars($single['stats_years'] ?? '10+') ?></div>
-                    <div class="hstat-l" style="font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-top: 4px; font-weight: 600;"><?= htmlspecialchars($single['stats_label_years'] ?? 'Expérience') ?></div>
-                </div>
-                <div class="hstat" style="text-align: center; padding: 1rem 0.5rem; background: var(--bg-surface); border: 1px solid var(--border); border-radius: 10px;">
-                    <div class="hstat-n" style="font-size: 1.6rem; font-weight: 800; color: var(--text-main); font-family: var(--font-heading);"><?= htmlspecialchars($single['stats_clients'] ?? '100+') ?></div>
-                    <div class="hstat-l" style="font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-top: 4px; font-weight: 600;"><?= htmlspecialchars($single['stats_label_clients'] ?? 'Clients') ?></div>
-                </div>
-                <div class="hstat" style="text-align: center; padding: 1rem 0.5rem; background: var(--bg-surface); border: 1px solid var(--border); border-radius: 10px;">
-                    <div class="hstat-n" style="font-size: 1.6rem; font-weight: 800; color: var(--text-main); font-family: var(--font-heading);"><?= htmlspecialchars($single['stats_satisfaction'] ?? '98%') ?></div>
-                    <div class="hstat-l" style="font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-top: 4px; font-weight: 600;"><?= htmlspecialchars($single['stats_label_satisfaction'] ?? 'Satisfaction') ?></div>
+            <!-- Colonne droite : visuel -->
+            <div class="hero-image-wrapper">
+                <div class="ai-frame">
+                    <div class="hero-image-box">
+                        <?php if (!empty($single['bg_image'])): ?>
+                            <img src="<?= htmlspecialchars(url($single['bg_image'])) ?>" alt="Digitalium Hero" loading="eager">
+                        <?php else: ?>
+                            <img src="<?= htmlspecialchars(url('/assets/images/hero_3d.png')) ?>" alt="Digitalium Hero" loading="eager">
+                        <?php endif; ?>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:10px;padding:12px 16px;background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.2);border-radius:12px;width:100%;margin-top:4px;">
+                        <div style="width:8px;height:8px;border-radius:50%;background:var(--success);box-shadow:0 0 8px var(--success);flex-shrink:0;"></div>
+                        <span style="font-size:0.72rem;color:var(--text-sub);font-weight:500;letter-spacing:0.05em;">
+                            <?= htmlspecialchars($settings['site_name'] ?? 'Digitalium Group') ?> — Systèmes actifs
+                        </span>
+                        <?php if (!empty($single['visual_label'])): ?>
+                            <span style="margin-left:auto;font-size:0.72rem;color:#818cf8;font-weight:700;"><?= htmlspecialchars($single['visual_label']) ?></span>
+                        <?php endif; ?>
+                    </div>
                 </div>
             </div>
-        </div>
 
+        </div><!-- /.hero-layout -->
     </div>
 </section>
-
-<style>
-@keyframes glowPulse {
-    0%, 100% { filter: drop-shadow(0 0 4px var(--accent)); transform: scale(1); }
-    50% { filter: drop-shadow(0 0 15px var(--accent)); transform: scale(1.05); }
-}
-</style>
