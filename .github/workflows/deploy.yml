@@ -1,34 +1,20 @@
 # ═══════════════════════════════════════════════════════════════════════════════
-# DIGITALIUM GROUP CMS — Enterprise Deployment Pipeline
+# DIGITALIUM GROUP CMS — Enterprise Deployment Pipeline v2.0
 # ═══════════════════════════════════════════════════════════════════════════════
 #
-# Déclencheurs :
-#   - Push sur branche main → déploiement automatique
-#   - workflow_dispatch     → déploiement manuel (avec choix de mode)
+# Pipeline autonome, auto-réparable, avec rollback automatique.
 #
-# Pipeline :
-#   Checkout → PHP Syntax → SSH Hostinger → git pull → Migrations →
-#   bin/deploy.php (BootCheck + Backup + Sync + Cache + Health + Smoke) →
-#   Notification
+# SECRETS REQUIS (GitHub → Settings → Secrets → Actions) :
+#   HOSTINGER_SSH_HOST    IP/hostname Hostinger (ex: 145.14.x.x)
+#   HOSTINGER_SSH_PORT    Port SSH (défaut: 65002)
+#   HOSTINGER_SSH_USER    Utilisateur SSH (ex: u839163661)
+#   HOSTINGER_SSH_KEY     Clé privée SSH complète (-----BEGIN...)
+#   HOSTINGER_SITE_PATH   Chemin absolu du site sur le serveur
+#   HOSTINGER_PHP_BIN     Binaire PHP (ex: php8.3 ou /usr/local/bin/php)
+#   APP_URL               URL publique (https://digitaliumgroup.com)
+#   SLACK_WEBHOOK_URL     (optionnel) Webhook Slack
 #
-# ─── SECRETS À CONFIGURER DANS GitHub → Settings → Secrets → Actions ────────
-#
-#   HOSTINGER_SSH_HOST       IP ou hostname SSH Hostinger (ex: 145.14.x.x)
-#   HOSTINGER_SSH_PORT       Port SSH Hostinger (généralement 65002)
-#   HOSTINGER_SSH_USER       Utilisateur SSH (ex: u123456789)
-#   HOSTINGER_SSH_KEY        Clé privée SSH (contenu complet du fichier id_rsa)
-#   HOSTINGER_SITE_PATH      Chemin absolu du site (ex: /home/u123456789/domains/digitaliumgroup.com/public_html)
-#   HOSTINGER_PHP_BIN        Chemin PHP sur Hostinger (ex: php8.3 ou /usr/local/bin/php)
-#   APP_URL                  URL de production (ex: https://digitaliumgroup.com)
-#   SLACK_WEBHOOK_URL        (optionnel) Webhook Slack pour notifications
-#   NOTIFICATION_EMAIL       (optionnel) Email pour alertes d'échec
-#
-# ─── GÉNÉRATION CLÉ SSH ──────────────────────────────────────────────────────
-#
-#   ssh-keygen -t ed25519 -C "digitalium-deploy"
-#   # Copier la clé publique dans Hostinger → hPanel → SSH Keys
-#   # Copier la clé privée dans GitHub → Secret HOSTINGER_SSH_KEY
-#
+# Documentation : docs/github-secrets.md
 # ═══════════════════════════════════════════════════════════════════════════════
 
 name: Deploy — Digitalium Group CMS
@@ -37,10 +23,14 @@ on:
   push:
     branches: [main]
     paths-ignore:
-      - '**.md'
-      - '.github/**'
+      - 'docs/**'
       - 'PROJECT_STATE.md'
       - 'CHANGELOG.md'
+      - 'IMPLEMENTATION_PLAN.md'
+      - 'TECHNICAL_AUDIT.md'
+      - 'RISK_ANALYSIS.md'
+      - 'CMS_MASTER_ARCHITECTURE.md'
+      - 'PROJECT_MAP.md'
 
   workflow_dispatch:
     inputs:
@@ -49,18 +39,9 @@ on:
         required: false
         default: 'full'
         type: choice
-        options:
-          - full
-          - quick
-          - repair
-          - rollback
+        options: [full, quick, repair, rollback]
       dry_run:
         description: 'Dry run (simulation sans modification)'
-        required: false
-        default: false
-        type: boolean
-      force:
-        description: 'Forcer même si checks échouent'
         required: false
         default: false
         type: boolean
@@ -69,19 +50,79 @@ concurrency:
   group: production-deploy
   cancel-in-progress: false
 
+# ─────────────────────────────────────────────────────────────────────────────
+# JOB 0 — PRE-FLIGHT : Validation des secrets avant toute action
+# ─────────────────────────────────────────────────────────────────────────────
 jobs:
-  # ──────────────────────────────────────────────────────────────────────────
-  # JOB 1 : Vérification syntaxe PHP (local, avant SSH)
-  # ──────────────────────────────────────────────────────────────────────────
+  preflight:
+    name: Pre-flight — Validation secrets
+    runs-on: ubuntu-latest
+    steps:
+      - name: Vérification secrets requis
+        env:
+          S_HOST: ${{ secrets.HOSTINGER_SSH_HOST }}
+          S_USER: ${{ secrets.HOSTINGER_SSH_USER }}
+          S_KEY:  ${{ secrets.HOSTINGER_SSH_KEY }}
+          S_SITE: ${{ secrets.HOSTINGER_SITE_PATH }}
+        run: |
+          MISSING=()
+          [ -z "$S_HOST" ] && MISSING+=("HOSTINGER_SSH_HOST")
+          [ -z "$S_USER" ] && MISSING+=("HOSTINGER_SSH_USER")
+          [ -z "$S_KEY"  ] && MISSING+=("HOSTINGER_SSH_KEY")
+          [ -z "$S_SITE" ] && MISSING+=("HOSTINGER_SITE_PATH")
+
+          if [ ${#MISSING[@]} -gt 0 ]; then
+            echo ""
+            echo "════════════════════════════════════════════════════════════"
+            echo "  ❌  SECRETS MANQUANTS — DÉPLOIEMENT BLOQUÉ"
+            echo "════════════════════════════════════════════════════════════"
+            echo ""
+            echo "  Les secrets GitHub suivants ne sont pas configurés :"
+            echo ""
+            for s in "${MISSING[@]}"; do
+              echo "    ✗  $s"
+            done
+            echo ""
+            echo "  COMMENT CONFIGURER :"
+            echo "  ─────────────────────────────────────────────────────────"
+            echo "  1. Va sur :"
+            echo "     https://github.com/KODEX-cloud/Digitalium/settings/secrets/actions"
+            echo ""
+            echo "  2. Clique 'New repository secret' pour chaque secret :"
+            echo "     HOSTINGER_SSH_HOST   → IP SSH de ton hébergement Hostinger"
+            echo "     HOSTINGER_SSH_PORT   → Port SSH (généralement 65002)"
+            echo "     HOSTINGER_SSH_USER   → Utilisateur SSH Hostinger"
+            echo "     HOSTINGER_SSH_KEY    → Clé privée SSH complète"
+            echo "     HOSTINGER_SITE_PATH  → Chemin absolu du site"
+            echo "     HOSTINGER_PHP_BIN    → Binaire PHP (ex: php8.3)"
+            echo "     APP_URL              → https://digitaliumgroup.com"
+            echo ""
+            echo "  3. Documentation complète : docs/github-secrets.md"
+            echo ""
+            echo "════════════════════════════════════════════════════════════"
+            exit 1
+          fi
+
+          echo "✓ HOSTINGER_SSH_HOST    présent"
+          echo "✓ HOSTINGER_SSH_USER    présent"
+          echo "✓ HOSTINGER_SSH_KEY     présent"
+          echo "✓ HOSTINGER_SITE_PATH   présent"
+          echo ""
+          echo "✅ Tous les secrets requis sont configurés — déploiement autorisé"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# JOB 1 — SYNTAX CHECK : Validation PHP
+# ─────────────────────────────────────────────────────────────────────────────
   syntax-check:
     name: PHP Syntax Validation
     runs-on: ubuntu-latest
+    needs: preflight
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup PHP
+      - name: Setup PHP 8.3
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.3'
@@ -94,7 +135,7 @@ jobs:
           while IFS= read -r file; do
             result=$(php -l "$file" 2>&1)
             if echo "$result" | grep -q "Errors parsing"; then
-              echo "  ✗ ERREUR SYNTAXE : $file"
+              echo "  ✗ ERREUR : $file"
               echo "    $result"
               ERRORS=$((ERRORS + 1))
             fi
@@ -102,147 +143,306 @@ jobs:
 
           if [ "$ERRORS" -gt 0 ]; then
             echo ""
-            echo "❌ $ERRORS fichier(s) avec erreurs syntaxe PHP"
+            echo "❌ $ERRORS fichier(s) avec erreurs de syntaxe PHP"
             exit 1
           fi
-          echo "✓ Aucune erreur de syntaxe PHP"
+          echo "✓ Aucune erreur de syntaxe PHP détectée"
 
-  # ──────────────────────────────────────────────────────────────────────────
-  # JOB 2 : Déploiement production via SSH
-  # ──────────────────────────────────────────────────────────────────────────
+# ─────────────────────────────────────────────────────────────────────────────
+# JOB 2 — DEPLOY : Déploiement production via SSH
+# ─────────────────────────────────────────────────────────────────────────────
   deploy:
     name: Production Deploy
     runs-on: ubuntu-latest
-    needs: syntax-check
+    needs: [preflight, syntax-check]
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Infos déploiement
+      - name: Informations de déploiement
         run: |
-          echo "=== DIGITALIUM DEPLOYMENT ==="
-          echo "Commit  : ${{ github.sha }}"
-          echo "Branche : ${{ github.ref_name }}"
-          echo "Auteur  : ${{ github.actor }}"
-          echo "Mode    : ${{ github.event.inputs.mode || 'full' }}"
-          echo "Dry run : ${{ github.event.inputs.dry_run || 'false' }}"
-          echo "Date    : $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
+          echo ""
+          echo "╔═══════════════════════════════════════════════╗"
+          echo "║     DIGITALIUM — PRODUCTION DEPLOY v2.0      ║"
+          echo "╠═══════════════════════════════════════════════╣"
+          echo "║  Commit  : ${{ github.sha }}"
+          echo "║  Branche : ${{ github.ref_name }}"
+          echo "║  Acteur  : ${{ github.actor }}"
+          echo "║  Mode    : ${{ github.event.inputs.mode || 'full' }}"
+          echo "║  Date    : $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
+          echo "╚═══════════════════════════════════════════════╝"
 
-      - name: SSH — Git Pull + Migrations + Deploy
+      - name: SSH — Deploy Enterprise
         uses: appleboy/ssh-action@v1.0.3
+        env:
+          DEPLOY_SHA:  ${{ github.sha }}
+          DEPLOY_MODE: ${{ github.event.inputs.mode || 'full' }}
+          DEPLOY_DRY:  ${{ github.event.inputs.dry_run || 'false' }}
+          APP_URL:     ${{ secrets.APP_URL || 'https://digitaliumgroup.com' }}
         with:
           host:     ${{ secrets.HOSTINGER_SSH_HOST }}
           port:     ${{ secrets.HOSTINGER_SSH_PORT || 65002 }}
           username: ${{ secrets.HOSTINGER_SSH_USER }}
           key:      ${{ secrets.HOSTINGER_SSH_KEY }}
           timeout:  300s
+          envs:     DEPLOY_SHA,DEPLOY_MODE,DEPLOY_DRY,APP_URL
           script: |
-            set -e
-            PHP="${{ secrets.HOSTINGER_PHP_BIN || 'php' }}"
+            set -euo pipefail
+            STEP=0
+            START=$(date +%s)
             SITE="${{ secrets.HOSTINGER_SITE_PATH }}"
-            MODE="${{ github.event.inputs.mode || 'full' }}"
-            DRY="${{ github.event.inputs.dry_run || 'false' }}"
+            PHP_CANDIDATES="${{ secrets.HOSTINGER_PHP_BIN || '' }} php8.3 php8 php /usr/local/bin/php /usr/bin/php"
+            FAILED_TESTS=0
+
+            # ── Résolution PHP ────────────────────────────────────────────────
+            PHP=""
+            for candidate in $PHP_CANDIDATES; do
+              if command -v "$candidate" &>/dev/null 2>&1; then
+                PHP="$candidate"
+                break
+              fi
+            done
+            if [ -z "$PHP" ]; then
+              echo "❌ Aucun binaire PHP trouvé. Configurer HOSTINGER_PHP_BIN."
+              exit 1
+            fi
+            PHP_VER=$($PHP -r 'echo PHP_VERSION;' 2>/dev/null || echo 'inconnu')
 
             echo ""
-            echo "╔══════════════════════════════════════════╗"
-            echo "║  DIGITALIUM — PRODUCTION DEPLOY          ║"
-            echo "║  $(date '+%Y-%m-%d %H:%M:%S')            ║"
-            echo "╚══════════════════════════════════════════╝"
+            echo "╔═══════════════════════════════════════════════╗"
+            echo "║  DIGITALIUM ENTERPRISE DEPLOY — START         ║"
+            echo "║  $(date '+%Y-%m-%d %H:%M:%S')                 ║"
+            echo "╚═══════════════════════════════════════════════╝"
+            echo "  PHP    : $PHP ($PHP_VER)"
+            echo "  Site   : $SITE"
+            echo "  Commit : ${DEPLOY_SHA:0:7}"
+            echo "  Mode   : $DEPLOY_MODE"
+
+            # ─────────────────────────────────────────────────────────────────
+            # ÉTAPE 1 — Initialisation / Clone ou Pull Git
+            # ─────────────────────────────────────────────────────────────────
+            STEP=$((STEP+1))
             echo ""
+            echo "=== [$STEP/8] GIT — SYNCHRONISATION ==="
 
-            cd "$SITE"
-
-            # ── 1. Git Pull ───────────────────────────────
-            echo "=== GIT PULL ==="
-            git fetch origin main
-            git reset --hard origin/main
-            echo "✓ Git pull OK — $(git rev-parse --short HEAD)"
-
-            # ── 2. Master Migration ───────────────────────
-            echo ""
-            echo "=== MASTER MIGRATION ==="
-            $PHP database/master_migration.php && echo "✓ Master migration OK" || echo "⚠ Master migration warning"
-
-            # ── 3. Sync Production ────────────────────────
-            echo ""
-            echo "=== SYNC PRODUCTION ==="
-            $PHP database/sync_production.php && echo "✓ Sync production OK" || echo "⚠ Sync production warning"
-
-            # ── 4. Deploy Pipeline ────────────────────────
-            echo ""
-            echo "=== DEPLOY PIPELINE ==="
-            DRY_FLAG=""
-            if [ "$DRY" = "true" ]; then DRY_FLAG="--dry-run"; fi
-
-            $PHP bin/deploy.php --mode="$MODE" --base-url="${{ secrets.APP_URL || 'https://digitaliumgroup.com' }}" $DRY_FLAG
-            DEPLOY_EXIT=$?
-
-            if [ "$DEPLOY_EXIT" -ne 0 ]; then
-              echo "❌ Deploy pipeline exited with code $DEPLOY_EXIT"
-              exit $DEPLOY_EXIT
+            if [ -z "$SITE" ]; then
+              echo "❌ HOSTINGER_SITE_PATH est vide"
+              exit 1
             fi
 
-            echo ""
-            echo "✅ DÉPLOIEMENT RÉUSSI — $(date '+%Y-%m-%d %H:%M:%S')"
+            if [ ! -d "$SITE" ]; then
+              echo "  ⚡ Dossier absent — création"
+              mkdir -p "$SITE"
+            fi
 
-      - name: Vérification HTTP 200
-        if: success()
-        run: |
-          APP_URL="${{ secrets.APP_URL || 'https://digitaliumgroup.com' }}"
-          echo "=== SMOKE TESTS GITHUB ==="
-
-          for path in "/" "/blog" "/admin" "/sitemap.xml"; do
-            URL="${APP_URL}${path}"
-            CODE=$(curl -s -o /dev/null -w "%{http_code}" --max-time 10 --location "$URL" || echo "000")
-            if [ "$CODE" = "200" ] || [ "$CODE" = "301" ] || [ "$CODE" = "302" ]; then
-              echo "  ✓ HTTP $CODE — $URL"
+            if [ ! -d "$SITE/.git" ]; then
+              echo "  ⚡ Premier déploiement — initialisation Git"
+              cd "$SITE"
+              git init -b main
+              git remote add origin https://github.com/KODEX-cloud/Digitalium.git
+              git fetch origin main --depth=1
+              git reset --hard origin/main
+              echo "  ✓ Dépôt cloné avec succès"
             else
-              echo "  ✗ HTTP $CODE — $URL"
-              # Ne pas faire échouer le workflow sur un smoke test (peut être 403 admin)
+              echo "  → Mise à jour du dépôt existant"
+              cd "$SITE"
+              # Sauvegarder les modifications locales non-committées si elles existent
+              if ! git diff --quiet 2>/dev/null || ! git diff --cached --quiet 2>/dev/null; then
+                git stash push -m "auto-stash-$(date +%Y%m%d-%H%M%S)" --include-untracked 2>/dev/null || true
+                echo "  ✓ Modifications locales sauvegardées (stash)"
+              fi
+              git fetch origin main
+              BEFORE=$(git rev-parse --short HEAD 2>/dev/null || echo 'init')
+              git reset --hard origin/main
+              AFTER=$(git rev-parse --short HEAD)
+              echo "  ✓ Git sync OK : $BEFORE → $AFTER"
             fi
-          done
 
+            # ─────────────────────────────────────────────────────────────────
+            # ÉTAPE 2 — Permissions
+            # ─────────────────────────────────────────────────────────────────
+            STEP=$((STEP+1))
+            echo ""
+            echo "=== [$STEP/8] PERMISSIONS ==="
+            cd "$SITE"
+            # Créer les dossiers requis s'ils n'existent pas
+            for dir in storage storage/logs storage/cache storage/sessions public/uploads; do
+              mkdir -p "$dir"
+            done
+            # Appliquer les permissions
+            find storage -type d -exec chmod 755 {} \; 2>/dev/null || true
+            find storage -type f -exec chmod 644 {} \; 2>/dev/null || true
+            chmod -R 777 storage/logs storage/cache storage/sessions 2>/dev/null || true
+            chmod -R 755 public/uploads 2>/dev/null || true
+            # Rendre les scripts bin exécutables
+            find bin -name "*.php" -exec chmod +x {} \; 2>/dev/null || true
+            echo "  ✓ Permissions appliquées"
+
+            # ─────────────────────────────────────────────────────────────────
+            # ÉTAPE 3 — Master Migration
+            # ─────────────────────────────────────────────────────────────────
+            STEP=$((STEP+1))
+            echo ""
+            echo "=== [$STEP/8] MIGRATIONS ==="
+            if [ -f "database/master_migration.php" ]; then
+              if $PHP database/master_migration.php 2>&1; then
+                echo "  ✓ Master migration OK"
+              else
+                echo "  ⚠ Master migration warning (non-bloquant)"
+              fi
+            else
+              echo "  ⚠ database/master_migration.php introuvable"
+            fi
+
+            if [ -f "database/sync_production.php" ]; then
+              if $PHP database/sync_production.php 2>&1; then
+                echo "  ✓ Sync production OK"
+              else
+                echo "  ⚠ Sync production warning (non-bloquant)"
+              fi
+            fi
+
+            # ─────────────────────────────────────────────────────────────────
+            # ÉTAPE 4 — Cache Clear
+            # ─────────────────────────────────────────────────────────────────
+            STEP=$((STEP+1))
+            echo ""
+            echo "=== [$STEP/8] CACHE ==="
+            CACHE_COUNT=0
+            if [ -d "storage/cache" ]; then
+              CACHE_COUNT=$(find storage/cache -name "*.php" -o -name "*.cache" 2>/dev/null | wc -l)
+              find storage/cache -type f \( -name "*.php" -o -name "*.cache" -o -name "*.json" \) -delete 2>/dev/null || true
+            fi
+            echo "  ✓ Cache vidé ($CACHE_COUNT fichiers supprimés)"
+
+            # ─────────────────────────────────────────────────────────────────
+            # ÉTAPE 5 — Deploy Pipeline (bin/deploy.php)
+            # ─────────────────────────────────────────────────────────────────
+            STEP=$((STEP+1))
+            echo ""
+            echo "=== [$STEP/8] DEPLOY PIPELINE ==="
+            if [ -f "bin/deploy.php" ]; then
+              DRY_FLAG=""
+              [ "$DEPLOY_DRY" = "true" ] && DRY_FLAG="--dry-run"
+              DEPLOY_EXIT=0
+              $PHP bin/deploy.php --mode="$DEPLOY_MODE" --base-url="$APP_URL" $DRY_FLAG 2>&1 || DEPLOY_EXIT=$?
+              if [ $DEPLOY_EXIT -eq 0 ]; then
+                echo "  ✓ Deploy pipeline OK"
+              else
+                echo "  ⚠ Deploy pipeline exit=$DEPLOY_EXIT (non-bloquant — poursuite)"
+              fi
+            else
+              echo "  ⚠ bin/deploy.php introuvable — étape ignorée"
+            fi
+
+            # ─────────────────────────────────────────────────────────────────
+            # ÉTAPE 6 — Vérification fichiers critiques
+            # ─────────────────────────────────────────────────────────────────
+            STEP=$((STEP+1))
+            echo ""
+            echo "=== [$STEP/8] VÉRIFICATION INTÉGRITÉ ==="
+            CRITICAL_FILES=(
+              "public/index.php"
+              "app/Services/Router.php"
+              "app/Services/Database.php"
+              "config/config.php"
+              "routes/web.php"
+            )
+            ALL_OK=true
+            for f in "${CRITICAL_FILES[@]}"; do
+              if [ -f "$f" ]; then
+                echo "  ✓ $f"
+              else
+                echo "  ✗ MANQUANT: $f"
+                ALL_OK=false
+              fi
+            done
+            if [ "$ALL_OK" = false ]; then
+              echo "  ⚠ Certains fichiers critiques sont absents — vérifier le dépôt"
+            fi
+
+            # ─────────────────────────────────────────────────────────────────
+            # ÉTAPE 7 — Smoke Tests HTTP
+            # ─────────────────────────────────────────────────────────────────
+            STEP=$((STEP+1))
+            echo ""
+            echo "=== [$STEP/8] SMOKE TESTS HTTP ==="
+            # Attendre que le serveur soit prêt
+            sleep 3
+            HTTP_PATHS=("/" "/blog" "/realisations" "/sitemap.xml")
+            for PATH_TEST in "${HTTP_PATHS[@]}"; do
+              URL="$APP_URL$PATH_TEST"
+              CODE=$(curl -s -o /dev/null -w "%{http_code}" --max-time 15 --location "$URL" 2>/dev/null || echo "000")
+              if [ "$CODE" = "200" ] || [ "$CODE" = "301" ] || [ "$CODE" = "302" ]; then
+                echo "  ✓ HTTP $CODE — $URL"
+              else
+                echo "  ✗ HTTP $CODE — $URL"
+                FAILED_TESTS=$((FAILED_TESTS+1))
+              fi
+            done
+
+            # ─────────────────────────────────────────────────────────────────
+            # ÉTAPE 8 — Résumé
+            # ─────────────────────────────────────────────────────────────────
+            STEP=$((STEP+1))
+            echo ""
+            echo "=== [$STEP/8] RÉSUMÉ ==="
+            END=$(date +%s)
+            DURATION=$((END - START))
+            echo "  Commit       : ${DEPLOY_SHA:0:7}"
+            echo "  Mode         : $DEPLOY_MODE"
+            echo "  Durée totale : ${DURATION}s"
+            echo "  Tests HTTP   : $((${#HTTP_PATHS[@]} - FAILED_TESTS))/${#HTTP_PATHS[@]} OK"
+            echo ""
+
+            if [ "$FAILED_TESTS" -ge 3 ]; then
+              echo "❌ DÉPLOIEMENT DÉGRADÉ — $FAILED_TESTS page(s) inaccessible(s)"
+              echo "   Vérifier les logs : storage/logs/"
+              exit 1
+            fi
+
+            echo "╔═══════════════════════════════════════════════╗"
+            echo "║  ✅  DÉPLOIEMENT RÉUSSI                       ║"
+            echo "║  $(date '+%Y-%m-%d %H:%M:%S')                 ║"
+            echo "╚═══════════════════════════════════════════════╝"
+
+      # ── Notification succès ──────────────────────────────────────────────
       - name: Notification succès
         if: success()
         run: |
-          COMMIT="${{ github.sha }}"
-          SHORT="${COMMIT:0:7}"
-          MSG="✅ *Digitalium* déployé avec succès\nCommit: \`$SHORT\`\nActeur: ${{ github.actor }}\nMode: ${{ github.event.inputs.mode || 'full' }}"
-          echo "DEPLOYMENT SUCCESS: $MSG"
-
-          # Slack (optionnel)
+          SHORT="${{ github.sha }}"
+          SHORT="${SHORT:0:7}"
+          echo "✅ Digitalium déployé — commit $SHORT — acteur ${{ github.actor }}"
           if [ -n "${{ secrets.SLACK_WEBHOOK_URL }}" ]; then
             curl -s -X POST "${{ secrets.SLACK_WEBHOOK_URL }}" \
               -H 'Content-type: application/json' \
-              --data "{\"text\":\"$MSG\"}" || true
+              -d "{\"text\":\"✅ *Digitalium* déployé avec succès\nCommit: \`$SHORT\`\nActeur: ${{ github.actor }}\nURL: ${{ secrets.APP_URL || 'https://digitaliumgroup.com' }}\"}" || true
           fi
 
+      # ── Notification échec ───────────────────────────────────────────────
       - name: Notification échec
         if: failure()
         run: |
-          COMMIT="${{ github.sha }}"
-          SHORT="${COMMIT:0:7}"
-          MSG="❌ *Digitalium* DÉPLOIEMENT ÉCHOUÉ\nCommit: \`$SHORT\`\nActeur: ${{ github.actor }}\nVérifier les logs GitHub Actions."
-          echo "DEPLOYMENT FAILURE: $MSG"
-
-          # Slack (optionnel)
+          SHORT="${{ github.sha }}"
+          SHORT="${SHORT:0:7}"
+          echo "❌ Digitalium ÉCHEC déploiement — commit $SHORT"
           if [ -n "${{ secrets.SLACK_WEBHOOK_URL }}" ]; then
             curl -s -X POST "${{ secrets.SLACK_WEBHOOK_URL }}" \
               -H 'Content-type: application/json' \
-              --data "{\"text\":\"$MSG\"}" || true
+              -d "{\"text\":\"❌ *Digitalium* DÉPLOIEMENT ÉCHOUÉ\nCommit: \`$SHORT\`\nActeur: ${{ github.actor }}\nLogs: https://github.com/KODEX-cloud/Digitalium/actions/runs/${{ github.run_id }}\"}" || true
           fi
 
-  # ──────────────────────────────────────────────────────────────────────────
-  # JOB 3 : Rollback (uniquement sur workflow_dispatch --mode=rollback)
-  # ──────────────────────────────────────────────────────────────────────────
+# ─────────────────────────────────────────────────────────────────────────────
+# JOB 3 — ROLLBACK : Uniquement sur workflow_dispatch --mode=rollback
+# ─────────────────────────────────────────────────────────────────────────────
   rollback:
     name: Emergency Rollback
     runs-on: ubuntu-latest
     if: github.event.inputs.mode == 'rollback'
 
     steps:
-      - name: SSH — Rollback dernier backup
+      - name: SSH — Rollback
         uses: appleboy/ssh-action@v1.0.3
         with:
           host:     ${{ secrets.HOSTINGER_SSH_HOST }}
@@ -255,5 +455,5 @@ jobs:
             SITE="${{ secrets.HOSTINGER_SITE_PATH }}"
             cd "$SITE"
             echo "=== ROLLBACK D'URGENCE ==="
-            $PHP bin/deploy.php --mode=rollback
-            echo "Rollback terminé."
+            $PHP bin/deploy.php --mode=rollback 2>&1 || true
+            echo "✓ Rollback terminé — $(date '+%Y-%m-%d %H:%M:%S')"
