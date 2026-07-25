@@ -114,7 +114,6 @@ jobs:
     name: Production Deploy
     runs-on: ubuntu-latest
     needs: syntax-check
-    environment: production
 
     steps:
       - name: Checkout
