@@ -14,11 +14,11 @@
         <div class="feat-grid">
             <?php if (!empty($groups)): ?>
                 <?php foreach ($groups as $i => $feat):
-                    $fIcon  = $feat['feat_icon']  ?? $feat['icon']        ?? 'check';
-                    $fTitle = $feat['feat_title'] ?? $feat['title']       ?? '';
-                    $fDesc  = $feat['feat_desc']  ?? $feat['description'] ?? '';
-                    $fImage = $feat['feat_image'] ?? $feat['image']       ?? '';
-                    $fLink  = $feat['feat_link']  ?? $feat['link']        ?? '';
+                    $fIcon  = $feat['feat_icon']  ?? $feat['card_icon']        ?? $feat['icon']        ?? 'check';
+                    $fTitle = $feat['feat_title'] ?? $feat['card_title']       ?? $feat['title']       ?? '';
+                    $fDesc  = $feat['feat_desc']  ?? $feat['card_description'] ?? $feat['description'] ?? '';
+                    $fImage = $feat['feat_image'] ?? $feat['card_image']       ?? $feat['image']       ?? '';
+                    $fLink  = $feat['feat_link']  ?? $feat['card_link']        ?? $feat['link']        ?? '';
                     $tag    = !empty($fLink) ? 'a' : 'div';
                     $attr   = !empty($fLink) ? 'href="' . htmlspecialchars($fLink) . '"' : '';
                 ?>

@@ -225,7 +225,7 @@ if (!empty($page['hero_title'])):
 
                                 <?php if (!empty($slide['cta_text'])): ?>
                                     <div style="display: flex; gap: 16px;">
-                                        <a href="<?= htmlspecialchars(url($slide['cta_url'] ?? url('/contact'))) ?>" class="btn-cta-primary" style="display: inline-flex; align-items: center; gap: 10px; padding: 14px 32px; border-radius: 12px; font-weight: 700; color: white; background: linear-gradient(135deg, #e26d36 0%, #f97316 100%); border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 25px -5px rgba(226, 109, 54, 0.4); text-transform: uppercase; font-size: 0.82rem; letter-spacing: 0.05em; transition: var(--transition);">
+                                        <a href="<?= htmlspecialchars(url($slide['cta_url'] ?? url('/contact'))) ?>" class="btn-cta-primary" style="display: inline-flex; align-items: center; gap: 10px; padding: 14px 32px; border-radius: 12px; font-weight: 700; color: white; background: linear-gradient(135deg, #0d9488 0%, #0891b2 100%); border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 25px -5px rgba(13,148,136,0.4); text-transform: uppercase; font-size: 0.82rem; letter-spacing: 0.05em; transition: var(--transition);">
                                             <span><?= htmlspecialchars($slide['cta_text']) ?></span>
                                             <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
                                         </a>
@@ -376,7 +376,7 @@ if (!empty($page['hero_title'])):
 
                 <div style="display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; align-items: center;">
                     <?php if (!empty($page['hero_cta1_text'])): ?>
-                        <a href="<?= htmlspecialchars($page['hero_cta1_url'] ?? '#contact') ?>" class="btn-cta-primary" style="display: inline-flex; align-items: center; gap: 10px; padding: 14px 34px; border-radius: 12px; font-weight: 700; color: white; background: linear-gradient(135deg, #e26d36 0%, #f97316 100%); border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 25px -5px rgba(226, 109, 54, 0.4); text-transform: uppercase; font-size: 0.82rem; letter-spacing: 0.05em; transition: var(--transition);">
+                        <a href="<?= htmlspecialchars($page['hero_cta1_url'] ?? '#contact') ?>" class="btn-cta-primary" style="display: inline-flex; align-items: center; gap: 10px; padding: 14px 34px; border-radius: 12px; font-weight: 700; color: white; background: linear-gradient(135deg, #0d9488 0%, #0891b2 100%); border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 25px -5px rgba(13,148,136,0.4); text-transform: uppercase; font-size: 0.82rem; letter-spacing: 0.05em; transition: var(--transition);">
                             <span><?= htmlspecialchars($page['hero_cta1_text']) ?></span>
                             <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
                         </a>
@@ -500,7 +500,7 @@ if (!empty($page['hero_title'])):
                         ['category' => 'DÉVELOPPEMENT', 'title' => 'Green IT et performances serveurs : optimiser les builds.', 'url' => '/blog'],
                     ];
                 }
-                $magColors = ['var(--secondary)', 'var(--primary)', '#e26d36'];
+                $magColors = ['var(--secondary)', 'var(--primary)', '#0f5f5a'];
                 ?>
                 <div style="display: flex; flex-direction: column; gap: 32px; border-left: 1px solid #e2e8f0; padding-left: 40px; min-height: 250px;">
                     <div style="font-size: 0.75rem; text-transform: uppercase; font-weight: 700; color: #64748b; letter-spacing: 0.15em; font-family: var(--font-headings);">Dernières actualités</div>
@@ -555,7 +555,7 @@ if (!empty($page['hero_title'])):
 
                 <div style="display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; align-items: center;">
                     <?php if (!empty($page['hero_cta1_text'])): ?>
-                        <a href="<?= htmlspecialchars(url($page['hero_cta1_url'] ?? '#contact')) ?>" class="btn-cta-primary" style="display: inline-flex; align-items: center; gap: 10px; padding: 14px 32px; border-radius: 12px; font-weight: 700; color: white; background: linear-gradient(135deg, #e26d36 0%, #f97316 100%); border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 25px -5px rgba(226, 109, 54, 0.4); text-transform: uppercase; font-size: 0.82rem; letter-spacing: 0.05em; transition: var(--transition);">
+                        <a href="<?= htmlspecialchars(url($page['hero_cta1_url'] ?? '#contact')) ?>" class="btn-cta-primary" style="display: inline-flex; align-items: center; gap: 10px; padding: 14px 32px; border-radius: 12px; font-weight: 700; color: white; background: linear-gradient(135deg, #0d9488 0%, #0891b2 100%); border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 25px -5px rgba(13,148,136,0.4); text-transform: uppercase; font-size: 0.82rem; letter-spacing: 0.05em; transition: var(--transition);">
                             <span><?= htmlspecialchars($page['hero_cta1_text']) ?></span>
                             <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
                         </a>
@@ -633,7 +633,7 @@ if (!empty($page['hero_title'])):
                 <!-- Actions -->
                 <div style="display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; align-items: center;">
                     <?php if (!empty($page['hero_cta1_text'])): ?>
-                        <a href="<?= htmlspecialchars($page['hero_cta1_url'] ?? '#contact') ?>" class="btn-cta-primary" style="display: inline-flex; align-items: center; gap: 10px; padding: 14px 34px; border-radius: 12px; font-weight: 700; color: white; background: linear-gradient(135deg, #e26d36 0%, #f97316 100%); border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 25px -5px rgba(226, 109, 54, 0.4); text-transform: uppercase; font-size: 0.82rem; letter-spacing: 0.05em; transition: var(--transition);">
+                        <a href="<?= htmlspecialchars($page['hero_cta1_url'] ?? '#contact') ?>" class="btn-cta-primary" style="display: inline-flex; align-items: center; gap: 10px; padding: 14px 34px; border-radius: 12px; font-weight: 700; color: white; background: linear-gradient(135deg, #0d9488 0%, #0891b2 100%); border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 25px -5px rgba(13,148,136,0.4); text-transform: uppercase; font-size: 0.82rem; letter-spacing: 0.05em; transition: var(--transition);">
                             <span><?= htmlspecialchars($page['hero_cta1_text']) ?></span>
                             <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
                         </a>
@@ -688,7 +688,7 @@ if (!empty($page['hero_title'])):
                 <!-- Actions -->
                 <div style="display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; align-items: center;">
                     <?php if (!empty($page['hero_cta1_text'])): ?>
-                        <a href="<?= htmlspecialchars($page['hero_cta1_url'] ?? '#contact') ?>" class="btn-cta-primary" style="display: inline-flex; align-items: center; gap: 10px; padding: 14px 32px; border-radius: 12px; font-weight: 700; color: white; background: linear-gradient(135deg, #e26d36 0%, #f97316 100%); border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 25px -5px rgba(226, 109, 54, 0.4); text-transform: uppercase; font-size: 0.82rem; letter-spacing: 0.05em; transition: var(--transition);">
+                        <a href="<?= htmlspecialchars($page['hero_cta1_url'] ?? '#contact') ?>" class="btn-cta-primary" style="display: inline-flex; align-items: center; gap: 10px; padding: 14px 32px; border-radius: 12px; font-weight: 700; color: white; background: linear-gradient(135deg, #0d9488 0%, #0891b2 100%); border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 25px -5px rgba(13,148,136,0.4); text-transform: uppercase; font-size: 0.82rem; letter-spacing: 0.05em; transition: var(--transition);">
                             <span><?= htmlspecialchars($page['hero_cta1_text']) ?></span>
                             <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
                         </a>
@@ -745,7 +745,7 @@ if (!empty($page['hero_title'])):
                 <!-- Actions -->
                 <div style="display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; align-items: center;">
                     <?php if (!empty($page['hero_cta1_text'])): ?>
-                        <a href="<?= htmlspecialchars(url($page['hero_cta1_url'] ?? '#contact')) ?>" class="btn-cta-primary" style="display: inline-flex; align-items: center; gap: 10px; padding: 14px 34px; border-radius: 12px; font-weight: 700; color: white; background: linear-gradient(135deg, #e26d36 0%, #f97316 100%); border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 25px -5px rgba(226, 109, 54, 0.4); text-transform: uppercase; font-size: 0.82rem; letter-spacing: 0.05em; transition: var(--transition);">
+                        <a href="<?= htmlspecialchars(url($page['hero_cta1_url'] ?? '#contact')) ?>" class="btn-cta-primary" style="display: inline-flex; align-items: center; gap: 10px; padding: 14px 34px; border-radius: 12px; font-weight: 700; color: white; background: linear-gradient(135deg, #0d9488 0%, #0891b2 100%); border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 25px -5px rgba(13,148,136,0.4); text-transform: uppercase; font-size: 0.82rem; letter-spacing: 0.05em; transition: var(--transition);">
                             <span><?= htmlspecialchars($page['hero_cta1_text']) ?></span>
                             <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
                         </a>
@@ -798,7 +798,7 @@ if (!empty($page['hero_title'])):
 
                     <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center;">
                         <?php if (!empty($page['hero_cta1_text'])): ?>
-                            <a href="<?= htmlspecialchars(url($page['hero_cta1_url'] ?? '#contact')) ?>" class="btn-cta-primary" style="display: inline-flex; align-items: center; gap: 10px; padding: 14px 32px; border-radius: 12px; font-weight: 700; color: white; background: linear-gradient(135deg, #e26d36 0%, #f97316 100%); border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 25px -5px rgba(226, 109, 54, 0.4); text-transform: uppercase; font-size: 0.82rem; letter-spacing: 0.05em; transition: var(--transition);">
+                            <a href="<?= htmlspecialchars(url($page['hero_cta1_url'] ?? '#contact')) ?>" class="btn-cta-primary" style="display: inline-flex; align-items: center; gap: 10px; padding: 14px 32px; border-radius: 12px; font-weight: 700; color: white; background: linear-gradient(135deg, #0d9488 0%, #0891b2 100%); border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 25px -5px rgba(13,148,136,0.4); text-transform: uppercase; font-size: 0.82rem; letter-spacing: 0.05em; transition: var(--transition);">
                                 <span><?= htmlspecialchars($page['hero_cta1_text']) ?></span>
                                 <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
                             </a>
@@ -821,7 +821,7 @@ if (!empty($page['hero_title'])):
                     $heroFeatures = [
                         ['icon' => 'zap', 'title' => htmlspecialchars($settings['site_name'] ?? 'Digitalium'), 'desc' => 'Solutions digitales haute performance.', 'color' => 'rgba(79,70,229,0.1)', 'iconColor' => 'var(--primary)', 'offset' => '-15px'],
                         ['icon' => 'shield-check', 'title' => 'Sécurité & Fiabilité', 'desc' => 'Protection de vos données et transactions.', 'color' => 'rgba(124,58,237,0.1)', 'iconColor' => 'var(--secondary)', 'offset' => '0'],
-                        ['icon' => 'layout-grid', 'title' => 'CMS Modulaire', 'desc' => 'Administration dynamique en temps réel.', 'color' => 'rgba(226,109,54,0.1)', 'iconColor' => '#e26d36', 'offset' => '15px'],
+                        ['icon' => 'layout-grid', 'title' => 'CMS Modulaire', 'desc' => 'Administration dynamique en temps réel.', 'color' => 'rgba(13,148,136,0.12)', 'iconColor' => '#0d9488', 'offset' => '15px'],
                     ];
                 }
                 $stackOffsets = ['-15px', '0', '15px'];
@@ -885,7 +885,7 @@ if (!empty($page['hero_title'])):
 
                     <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center;">
                         <?php if (!empty($page['hero_cta1_text'])): ?>
-                            <a href="<?= htmlspecialchars(url($page['hero_cta1_url'] ?? '#contact')) ?>" class="btn-cta-primary" style="display: inline-flex; align-items: center; gap: 10px; padding: 14px 32px; border-radius: 12px; font-weight: 700; color: white; background: linear-gradient(135deg, #e26d36 0%, #f97316 100%); border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 25px -5px rgba(226, 109, 54, 0.4); text-transform: uppercase; font-size: 0.82rem; letter-spacing: 0.05em; transition: var(--transition);">
+                            <a href="<?= htmlspecialchars(url($page['hero_cta1_url'] ?? '#contact')) ?>" class="btn-cta-primary" style="display: inline-flex; align-items: center; gap: 10px; padding: 14px 32px; border-radius: 12px; font-weight: 700; color: white; background: linear-gradient(135deg, #0d9488 0%, #0891b2 100%); border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 25px -5px rgba(13,148,136,0.4); text-transform: uppercase; font-size: 0.82rem; letter-spacing: 0.05em; transition: var(--transition);">
                                 <span><?= htmlspecialchars($page['hero_cta1_text']) ?></span>
                                 <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
                             </a>
@@ -909,7 +909,7 @@ if (!empty($page['hero_title'])):
                         ['icon' => 'cpu', 'title' => 'IA & Automation', 'desc' => 'Optimisez vos process métiers.', 'color' => 'rgba(79,70,229,0.1)', 'iconColor' => 'var(--primary)'],
                         ['icon' => 'cloud', 'title' => 'Infrastructure Cloud', 'desc' => 'Hébergement sécurisé scalable.', 'color' => 'rgba(124,58,237,0.1)', 'iconColor' => 'var(--secondary)'],
                         ['icon' => 'globe', 'title' => 'Applications Web', 'desc' => 'Solutions sur-mesure modernes.', 'color' => 'rgba(6,182,212,0.1)', 'iconColor' => '#0891b2'],
-                        ['icon' => 'phone-call', 'title' => 'Support 24/7', 'desc' => 'Une équipe d\'experts à votre écoute.', 'color' => 'rgba(226,109,54,0.1)', 'iconColor' => '#e26d36'],
+                        ['icon' => 'phone-call', 'title' => 'Support 24/7', 'desc' => 'Une équipe d\'experts à votre écoute.', 'color' => 'rgba(13,148,136,0.12)', 'iconColor' => '#0d9488'],
                     ];
                 }
                 ?>
@@ -979,7 +979,7 @@ if (!empty($page['hero_title'])):
                     <!-- Actions -->
                     <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center;">
                         <?php if (!empty($page['hero_cta1_text'])): ?>
-                            <a href="<?= htmlspecialchars($page['hero_cta1_url'] ?? '#contact') ?>" class="btn-cta-primary" style="display: inline-flex; align-items: center; gap: 10px; padding: 14px 32px; border-radius: 12px; font-weight: 700; color: white; background: linear-gradient(135deg, #e26d36 0%, #f97316 100%); border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 25px -5px rgba(226, 109, 54, 0.4); text-transform: uppercase; font-size: 0.82rem; letter-spacing: 0.05em; transition: var(--transition);">
+                            <a href="<?= htmlspecialchars($page['hero_cta1_url'] ?? '#contact') ?>" class="btn-cta-primary" style="display: inline-flex; align-items: center; gap: 10px; padding: 14px 32px; border-radius: 12px; font-weight: 700; color: white; background: linear-gradient(135deg, #0d9488 0%, #0891b2 100%); border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 25px -5px rgba(13,148,136,0.4); text-transform: uppercase; font-size: 0.82rem; letter-spacing: 0.05em; transition: var(--transition);">
                                 <span><?= htmlspecialchars($page['hero_cta1_text']) ?></span>
                                 <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
                             </a>
@@ -1070,7 +1070,7 @@ if (!empty($page['hero_title'])):
 }
 .btn-cta-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 15px 30px -5px rgba(226, 109, 54, 0.6) !important;
+    box-shadow: 0 15px 30px -5px rgba(13,148,136,0.6) !important;
 }
 .btn-cta-secondary:hover {
     background: rgba(255,255,255,0.09) !important;
