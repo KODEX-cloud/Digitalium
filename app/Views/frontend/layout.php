@@ -17,7 +17,7 @@
     <meta property="twitter:title" content="<?= htmlspecialchars($page['meta_title'] ?? $page['title']) ?> | <?= htmlspecialchars($settings['site_name'] ?? 'Digitalium Group') ?>">
     <meta property="twitter:description" content="<?= htmlspecialchars($page['meta_description'] ?? 'Solutions logicielles de pointe et transformation digitale sur-mesure pour votre entreprise.') ?>">
 
-    <link rel="stylesheet" href="<?= url('/assets/css/index.css') ?>">
+    <link rel="stylesheet" href="<?= url('/assets/css/index.css') ?>?v=<?= filemtime(ROOT_PATH . '/public/assets/css/index.css') ?>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <?php if (!empty($settings['site_favicon'])): ?>
         <link rel="icon" href="<?= htmlspecialchars(url($settings['site_favicon'])) ?>" type="image/x-icon">
