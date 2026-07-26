@@ -744,3 +744,106 @@ input:focus, textarea:focus, select:focus {
     .section-title { font-size: 1.8rem; }
     .btn-hero-primary, .btn-hero-secondary { width: 100%; justify-content: center; }
 }
+
+/* ============================================================
+   24. HERO PREMIUM — hero_ambient_glow split layout
+   ============================================================ */
+.hero-aglow-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+}
+
+/* Features section — improved card design */
+#features .feat-item {
+    position: relative;
+    overflow: hidden;
+}
+#features .feat-item::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+    opacity: 0;
+    transition: opacity 0.35s cubic-bezier(0.16,1,0.3,1);
+}
+#features .feat-item:hover::before { opacity: 1; }
+
+.feat-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(13,148,136,0.09);
+    border: 1px solid rgba(13,148,136,0.18);
+    color: var(--primary);
+    margin-bottom: 12px;
+    transition: var(--transition);
+}
+.feat-item:hover .feat-icon {
+    background: rgba(13,148,136,0.15);
+    border-color: rgba(13,148,136,0.3);
+    transform: scale(1.05);
+}
+
+/* About split grid */
+.about-split-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+}
+
+/* Val card improvements */
+.val-card {
+    transition: var(--transition);
+}
+.val-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-card-hover);
+    border-color: rgba(13,148,136,0.2);
+}
+
+/* ============================================================
+   25. RESPONSIVE — New layouts
+   ============================================================ */
+@media (max-width: 991px) {
+    .hero-aglow-grid {
+        grid-template-columns: 1fr;
+        gap: 56px;
+        text-align: center;
+    }
+    .hero-aglow-grid > div:first-child {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .hero-aglow-grid > div:first-child > div[style*="display:flex"] {
+        justify-content: center;
+    }
+    .about-split-grid {
+        grid-template-columns: 1fr;
+        gap: 48px;
+    }
+    /* Hide decorative floating elements on tablet/mobile */
+    .hero-aglow-grid .reveal > div[style*="position:absolute;bottom"] {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-aglow-grid {
+        gap: 40px;
+    }
+    .hero-aglow-grid > div:last-child > div > div[style*="position:relative;border-radius:24px"] img {
+        height: 320px !important;
+    }
+    /* Stack about value cards */
+    #about .about-split-grid > div:last-child > div {
+        grid-template-columns: 1fr;
+    }
+}

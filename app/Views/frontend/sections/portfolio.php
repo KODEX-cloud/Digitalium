@@ -46,14 +46,14 @@ foreach ($projectsList as $proj) {
 <style>
 .portfolio-tab-btn:hover {
     color: var(--primary) !important;
-    border-color: rgba(79, 70, 229, 0.25) !important;
-    background: rgba(255,255,255,0.85) !important;
+    border-color: rgba(13,148,136,0.3) !important;
+    background: rgba(13,148,136,0.05) !important;
 }
 .portfolio-tab-btn.active {
-    background: linear-gradient(135deg, var(--primary) 0%, #1e40af 100%) !important;
+    background: linear-gradient(135deg, #0d9488 0%, #0891b2 100%) !important;
     color: white !important;
     border-color: transparent !important;
-    box-shadow: 0 8px 20px -4px rgba(30, 58, 138, 0.25) !important;
+    box-shadow: 0 8px 20px -4px rgba(13,148,136,0.3) !important;
 }
 </style>
 
