@@ -291,18 +291,25 @@ try {
     $done[] = "settings: theme_* — $seeded nouvelles clés seedées (" . count($themeDefaults) . " total)";
 } catch (\PDOException $e) { $errors[] = "theme settings seed: " . $e->getMessage(); }
 
-// ─── 13. Admin account — seed only if no users exist ────────────────────────
+// ─── 13. Admin account — upsert (toujours force le hash à jour) ─────────────
 try {
-    $userCount = (int)$pdo->query("SELECT COUNT(*) FROM users")->fetchColumn();
-    if ($userCount === 0) {
-        $hash = '$argon2id$v=19$m=65536,t=4,p=1$RGp6bjNXMU9jY3FTTUEvVA$gFFCbBYdouC2mDiFw9f19bosV1VjwgPjkVfYlSFyQyw';
+    // Hash généré en local PHP 8.3 — password = Digitalium2026!
+    $hash = '$argon2id$v=19$m=65536,t=4,p=1$dmNDZTBvRjNiNzFMc2dGQw$lVToUfCLuxyE9GRJmSP9+5jstxx729qn3W/xgW5L1g4';
+
+    $existing = $pdo->prepare("SELECT id FROM users WHERE username = 'admin'");
+    $existing->execute();
+    $row = $existing->fetch(\PDO::FETCH_ASSOC);
+
+    if (!$row) {
         $pdo->prepare("INSERT INTO users (username, password, email, created_at, updated_at) VALUES ('admin', ?, 'admin@digitaliumgroup.com', NOW(), NOW())")
             ->execute([$hash]);
-        $done[] = "users: admin account created (Digitalium2026!)";
+        $done[] = "users: admin créé — mot de passe = Digitalium2026!";
     } else {
-        $done[] = "users: " . $userCount . " compte(s) existant(s) — skip seed";
+        $pdo->prepare("UPDATE users SET password = ?, updated_at = NOW() WHERE username = 'admin'")
+            ->execute([$hash]);
+        $done[] = "users: mot de passe admin réinitialisé → Digitalium2026!";
     }
-} catch (\PDOException $e) { $errors[] = "users admin seed: " . $e->getMessage(); }
+} catch (\PDOException $e) { $errors[] = "users admin upsert: " . $e->getMessage(); }
 
 // ─── Output ─────────────────────────────────────────────────────────────────
 $isCli = PHP_SAPI === 'cli';
