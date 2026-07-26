@@ -221,11 +221,6 @@
     <?php endif; ?>
 </head>
 <body>
-    <canvas id="particles-canvas" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;"></canvas>
-    
-    <div class="bg-ambient ambient-1" style="z-index:0;"></div>
-    <div class="bg-ambient ambient-2" style="z-index:0;"></div>
-    <div class="bg-ambient ambient-3" style="z-index:0;"></div>
 
     <header class="site-header" id="siteHeader">
         <div class="container nav-container">
@@ -508,70 +503,6 @@
 
     <script>
         lucide.createIcons();
-
-        // Particle Background Network Animation
-        const canvas = document.getElementById('particles-canvas');
-        if (canvas) {
-            const ctx = canvas.getContext('2d');
-            let W, H, pts = [];
-            
-            function resize() {
-                W = canvas.width = window.innerWidth;
-                H = canvas.height = window.innerHeight;
-            }
-            resize();
-            window.addEventListener('resize', resize);
-            
-            const cols = ['rgba(79,70,229,', 'rgba(124,58,237,', 'rgba(6,182,212,', 'rgba(244,63,94,', 'rgba(255,255,255,'];
-            
-            class P {
-                constructor() { this.reset(); }
-                reset() {
-                    this.x = Math.random() * W;
-                    this.y = Math.random() * H;
-                    this.r = Math.random() * 1.3 + 0.3;
-                    this.vx = (Math.random() - .5) * 0.18;
-                    this.vy = (Math.random() - .5) * 0.18;
-                    this.a = Math.random() * 0.4 + 0.08;
-                    this.c = cols[Math.floor(Math.random() * cols.length)];
-                }
-                update() {
-                    this.x += this.vx;
-                    this.y += this.vy;
-                    if (this.x < 0 || this.x > W || this.y < 0 || this.y > H) this.reset();
-                }
-                draw() {
-                    ctx.beginPath();
-                    ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-                    ctx.fillStyle = this.c + this.a + ')';
-                    ctx.fill();
-                }
-            }
-            
-            for (let i = 0; i < 120; i++) pts.push(new P());
-            
-            function anim() {
-                ctx.clearRect(0, 0, W, H);
-                pts.forEach(p => { p.update(); p.draw(); });
-                for (let i = 0; i < pts.length; i++) {
-                    for (let j = i + 1; j < pts.length; j++) {
-                        const dx = pts[i].x - pts[j].x;
-                        const dy = pts[i].y - pts[j].y;
-                        const d = Math.sqrt(dx * dx + dy * dy);
-                        if (d < 80) {
-                            ctx.beginPath();
-                            ctx.moveTo(pts[i].x, pts[i].y);
-                            ctx.lineTo(pts[j].x, pts[j].y);
-                            ctx.strokeStyle = 'rgba(79,70,229,' + (0.07 * (1 - d / 80)) + ')';
-                            ctx.lineWidth = 0.4;
-                            ctx.stroke();
-                        }
-                    }
-                }
-                requestAnimationFrame(anim);
-            }
-            anim();
-        }
 
         // Scroll Reveal Animation (Intersection Observer)
         const observer = new IntersectionObserver(entries => {
