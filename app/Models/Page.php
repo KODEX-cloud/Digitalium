@@ -76,7 +76,8 @@ class Page extends Model {
                 hero_image_mobile = :hero_image_mobile,
                 responsive_settings = :responsive_settings,
                 hero_features = :hero_features,
-                hero_articles = :hero_articles
+                hero_articles = :hero_articles,
+                hero_title_size = :hero_title_size
                 WHERE id = :id";
         
         try {
@@ -120,6 +121,7 @@ class Page extends Model {
                 'responsive_settings' => $data['responsive_settings'] ?? null,
                 'hero_features' => $data['hero_features'] ?? null,
                 'hero_articles' => $data['hero_articles'] ?? null,
+                'hero_title_size' => $data['hero_title_size'] ?? 'large',
                 'id' => $id
             ]);
             error_log("[{$timestamp}] [Page::updatePage SUCCESS] Affected rows: " . $stmt->rowCount() . "\n", 3, $logPath);

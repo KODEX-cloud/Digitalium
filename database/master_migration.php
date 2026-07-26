@@ -161,6 +161,7 @@ try { addColumnIfNotExists($pdo, 'projects', 'slug',         "VARCHAR(255) NULL 
 try { addColumnIfNotExists($pdo, 'projects', 'client',       "VARCHAR(150) NULL AFTER `category`"); } catch (\PDOException $e) { $errors[] = $e->getMessage(); }
 try { addColumnIfNotExists($pdo, 'projects', 'project_date', "DATE NULL AFTER `client`"); } catch (\PDOException $e) { $errors[] = $e->getMessage(); }
 try { addColumnIfNotExists($pdo, 'projects', 'description',  "TEXT NULL AFTER `project_date`"); } catch (\PDOException $e) { $errors[] = $e->getMessage(); }
+try { addColumnIfNotExists($pdo, 'pages', 'hero_title_size', "VARCHAR(50) NULL DEFAULT 'large' AFTER `hero_overlay_opacity`"); } catch (\PDOException $e) { $errors[] = $e->getMessage(); }
 
 // ─── 10. Seed default data ─────────────────────────────────────────────────
 
@@ -236,12 +237,27 @@ try {
 try {
     $pdo->exec("
         UPDATE pages
-        SET hero_image   = '/assets/images/digitalium-hero-team.png',
-            hero_variant = 'hero_ambient_glow'
+        SET hero_image          = '/assets/images/digitalium-hero-team.png',
+            hero_variant        = 'hero_ambient_glow',
+            hero_title_size     = 'xlarge',
+            hero_overlay_opacity = 0.78
         WHERE slug = 'home'
     ");
-    $done[] = "pages: hero_image + hero_variant home → hero_ambient_glow + team photo";
+    $done[] = "pages: hero_image + hero_variant + hero_title_size home → xlarge / hero_ambient_glow";
 } catch (\PDOException $e) { $errors[] = "pages hero_data: " . $e->getMessage(); }
+
+// ─── 12. Admin account — seed only if no users exist ────────────────────────
+try {
+    $userCount = (int)$pdo->query("SELECT COUNT(*) FROM users")->fetchColumn();
+    if ($userCount === 0) {
+        $hash = '$argon2id$v=19$m=65536,t=4,p=1$RGp6bjNXMU9jY3FTTUEvVA$gFFCbBYdouC2mDiFw9f19bosV1VjwgPjkVfYlSFyQyw';
+        $pdo->prepare("INSERT INTO users (username, password, email, created_at, updated_at) VALUES ('admin', ?, 'admin@digitaliumgroup.com', NOW(), NOW())")
+            ->execute([$hash]);
+        $done[] = "users: admin account created (Digitalium2026!)";
+    } else {
+        $done[] = "users: " . $userCount . " compte(s) existant(s) — skip seed";
+    }
+} catch (\PDOException $e) { $errors[] = "users admin seed: " . $e->getMessage(); }
 
 // ─── Output ─────────────────────────────────────────────────────────────────
 $isCli = PHP_SAPI === 'cli';

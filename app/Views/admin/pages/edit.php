@@ -527,6 +527,17 @@ if (empty($selectedLogo)) {
                                     <label style="font-size: 0.75rem;">Opacité Voile Overlay (<span id="hero_overlay_opacity_val">0.45</span>)</label>
                                     <input type="range" id="hero_overlay_opacity" name="hero_overlay_opacity" min="0.0" max="1.0" step="0.05" class="admin-input visual-simulator-trigger" value="<?= isset($page['hero_overlay_opacity']) ? (float)$page['hero_overlay_opacity'] : 0.45 ?>">
                                 </div>
+
+                                <div class="admin-form-group" style="margin-bottom: 0;">
+                                    <label style="font-size: 0.75rem;">Taille du Titre Hero</label>
+                                    <select id="hero_title_size" name="hero_title_size" class="admin-select">
+                                        <option value="small"   <?= ($page['hero_title_size'] ?? 'large') === 'small'   ? 'selected' : '' ?>>Petit   — ~2.5rem</option>
+                                        <option value="medium"  <?= ($page['hero_title_size'] ?? 'large') === 'medium'  ? 'selected' : '' ?>>Moyen   — ~3.2rem</option>
+                                        <option value="large"   <?= ($page['hero_title_size'] ?? 'large') === 'large'   ? 'selected' : '' ?>>Grand   — ~4.5rem</option>
+                                        <option value="xlarge"  <?= ($page['hero_title_size'] ?? 'large') === 'xlarge'  ? 'selected' : '' ?>>X-Large — ~6rem</option>
+                                        <option value="xxlarge" <?= ($page['hero_title_size'] ?? 'large') === 'xxlarge' ? 'selected' : '' ?>>XX-Large — ~8rem</option>
+                                    </select>
+                                </div>
                             </div>
 
                             <div class="admin-form-group" style="margin-bottom: 0;">

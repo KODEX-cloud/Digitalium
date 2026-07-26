@@ -707,59 +707,74 @@ if (!empty($page['hero_title'])):
 
 <?php elseif ($variant === 'hero_ambient_glow'): ?>
     <?php
-    // Build background style: photo if available, else solid dark navy
+    // Background: photo ou fallback dark
     $heroBg = !empty($page['hero_image'])
-        ? "background: url('" . htmlspecialchars(url($page['hero_image'])) . "') center center / cover no-repeat;"
-        : "background: #0f172a;";
+        ? "background:url('" . htmlspecialchars(url($page['hero_image'])) . "') center center/cover no-repeat;"
+        : "background:#0f172a;";
+
+    // Overlay opacity — depuis DB (admin-configurable)
+    $overlayOp = isset($page['hero_overlay_opacity']) ? (float)$page['hero_overlay_opacity'] : 0.78;
+    $overlayLeft   = min(1.0, $overlayOp + 0.10);
+    $overlayMiddle = min(1.0, $overlayOp);
+    $overlayRight  = max(0.0, $overlayOp - 0.45);
+    $overlayGrad = "linear-gradient(to right,rgba(10,15,30,{$overlayLeft}) 0%,rgba(10,15,30,{$overlayMiddle}) 50%,rgba(10,15,30,{$overlayRight}) 100%)";
+
+    // Taille du titre — depuis DB (admin-configurable)
+    $titleSizeMap = [
+        'small'   => 'clamp(1.8rem, 3.5vw, 2.5rem)',
+        'medium'  => 'clamp(2.4rem, 4.5vw, 3.5rem)',
+        'large'   => 'clamp(3.2rem, 6vw,   4.8rem)',
+        'xlarge'  => 'clamp(4rem,   7.5vw, 6.2rem)',
+        'xxlarge' => 'clamp(5rem,   9vw,   8rem)',
+    ];
+    $titleSize = $titleSizeMap[$page['hero_title_size'] ?? 'xlarge'] ?? $titleSizeMap['xlarge'];
     ?>
     <!-- Variant 6 — Photo Hero (fond plein écran + overlay + texte gauche) -->
     <section id="hero-section-<?= $page['id'] ?>" style="position:relative;overflow:hidden;min-height:100vh;display:flex;align-items:center;<?= $heroBg ?>">
 
-        <!-- Dark gradient overlay — plus opaque à gauche, transparent à droite -->
-        <div style="position:absolute;inset:0;background:linear-gradient(to right,rgba(10,15,30,0.88) 0%,rgba(10,15,30,0.72) 55%,rgba(10,15,30,0.35) 100%);z-index:1;pointer-events:none;"></div>
-
-        <!-- Teal glow subtil en bas gauche -->
+        <!-- Overlay gradient dynamique (admin-configurable) -->
+        <div style="position:absolute;inset:0;background:<?= $overlayGrad ?>;z-index:1;pointer-events:none;"></div>
+        <!-- Teal glow bas-gauche -->
         <div style="position:absolute;bottom:-120px;left:-80px;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(13,148,136,0.12) 0%,transparent 65%);pointer-events:none;z-index:2;"></div>
 
         <div class="container" style="position:relative;z-index:5;width:100%;padding-top:160px;padding-bottom:140px;">
-
-            <div style="max-width:660px;opacity:0;transform:translateY(24px);animation:heroFadeIn 0.85s cubic-bezier(0.16,1,0.3,1) forwards;">
+            <div style="max-width:680px;opacity:0;transform:translateY(28px);animation:heroFadeIn 0.9s cubic-bezier(0.16,1,0.3,1) forwards;">
 
                 <!-- Badge -->
                 <?php if (!empty($badge)): ?>
-                <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(13,148,136,0.15);border:1px solid rgba(13,148,136,0.3);padding:8px 20px;border-radius:100px;margin-bottom:32px;">
+                <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(13,148,136,0.15);border:1px solid rgba(13,148,136,0.3);padding:8px 20px;border-radius:100px;margin-bottom:36px;">
                     <span style="width:7px;height:7px;border-radius:50%;background:#0d9488;box-shadow:0 0 10px rgba(13,148,136,0.9);flex-shrink:0;animation:pulse-dot 2s ease-in-out infinite;"></span>
-                    <span style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.2em;color:#5eead4;font-family:var(--font-heading);"><?= htmlspecialchars($badge) ?></span>
+                    <span style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.2em;color:#5eead4;font-family:var(--font-heading);"><?= htmlspecialchars($badge) ?></span>
                 </div>
                 <?php endif; ?>
 
-                <!-- Heading — blanc, très grand -->
-                <h1 style="font-size:clamp(2.6rem,5.5vw,5rem);line-height:1.06;font-weight:900;letter-spacing:-0.04em;color:#ffffff;margin-bottom:28px;font-family:var(--font-heading);">
+                <!-- H1 — taille administrable depuis le backend -->
+                <h1 style="font-size:<?= $titleSize ?>;line-height:1.06;font-weight:900;letter-spacing:-0.04em;color:#ffffff;margin-bottom:28px;font-family:var(--font-heading);">
                     <?= $page['hero_title'] ?>
                 </h1>
 
                 <!-- Subtitle -->
                 <?php if (!empty($page['hero_subtitle'])): ?>
-                <p style="font-size:1.12rem;line-height:1.8;color:rgba(255,255,255,0.72);margin-bottom:48px;max-width:540px;">
+                <p style="font-size:1.15rem;line-height:1.8;color:rgba(255,255,255,0.72);margin-bottom:52px;max-width:560px;">
                     <?= htmlspecialchars($page['hero_subtitle']) ?>
                 </p>
                 <?php endif; ?>
 
-                <!-- CTA Buttons — style pills comme la référence -->
-                <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center;">
+                <!-- CTA — pills administrables -->
+                <div style="display:flex;gap:18px;flex-wrap:wrap;align-items:center;">
                     <?php if (!empty($page['hero_cta1_text'])): ?>
                     <a href="<?= htmlspecialchars(url($page['hero_cta1_url'] ?? '#services')) ?>"
-                       style="display:inline-flex;align-items:center;gap:10px;padding:16px 36px;border-radius:100px;font-weight:700;font-size:0.92rem;color:#ffffff;background:var(--primary);box-shadow:0 8px 28px rgba(13,148,136,0.45);transition:all 0.3s cubic-bezier(0.16,1,0.3,1);letter-spacing:0.01em;"
-                       onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 14px 36px rgba(13,148,136,0.55)'"
-                       onmouseout="this.style.transform='none';this.style.boxShadow='0 8px 28px rgba(13,148,136,0.45)'">
+                       style="display:inline-flex;align-items:center;gap:10px;padding:18px 42px;border-radius:100px;font-weight:700;font-size:1rem;color:#ffffff;background:var(--primary);box-shadow:0 8px 32px rgba(13,148,136,0.45);transition:all 0.3s cubic-bezier(0.16,1,0.3,1);letter-spacing:0.01em;"
+                       onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 16px 40px rgba(13,148,136,0.6)'"
+                       onmouseout="this.style.transform='none';this.style.boxShadow='0 8px 32px rgba(13,148,136,0.45)'">
                         <span><?= htmlspecialchars($page['hero_cta1_text']) ?></span>
-                        <i data-lucide="arrow-right" style="width:16px;height:16px;"></i>
+                        <i data-lucide="arrow-right" style="width:17px;height:17px;"></i>
                     </a>
                     <?php endif; ?>
                     <?php if (!empty($page['hero_cta2_text'])): ?>
                     <a href="<?= htmlspecialchars(url($page['hero_cta2_url'] ?? '#contact')) ?>"
-                       style="display:inline-flex;align-items:center;gap:10px;padding:15px 34px;border-radius:100px;font-weight:600;font-size:0.92rem;color:#ffffff;background:rgba(255,255,255,0.12);border:1.5px solid rgba(255,255,255,0.35);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);transition:all 0.3s cubic-bezier(0.16,1,0.3,1);"
-                       onmouseover="this.style.background='rgba(255,255,255,0.2)';this.style.transform='translateY(-2px)'"
+                       style="display:inline-flex;align-items:center;gap:10px;padding:17px 40px;border-radius:100px;font-weight:600;font-size:1rem;color:#ffffff;background:rgba(255,255,255,0.12);border:1.5px solid rgba(255,255,255,0.4);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);transition:all 0.3s cubic-bezier(0.16,1,0.3,1);"
+                       onmouseover="this.style.background='rgba(255,255,255,0.22)';this.style.transform='translateY(-3px)'"
                        onmouseout="this.style.background='rgba(255,255,255,0.12)';this.style.transform='none'">
                         <span><?= htmlspecialchars($page['hero_cta2_text']) ?></span>
                     </a>
