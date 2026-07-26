@@ -232,16 +232,16 @@ try {
     if (count($projects) > 0) $done[] = "projects: generated slugs for " . count($projects) . " records";
 } catch (\PDOException $e) { $errors[] = "projects slug gen: " . $e->getMessage(); }
 
-// ─── 11. Hero image — home page (idempotent) ───────────────────────────────
+// ─── 11. Hero data — home page (idempotent) ────────────────────────────────
 try {
     $pdo->exec("
         UPDATE pages
-        SET hero_image = '/assets/images/digitalium-hero-team.png'
+        SET hero_image   = '/assets/images/digitalium-hero-team.png',
+            hero_variant = 'hero_ambient_glow'
         WHERE slug = 'home'
-          AND (hero_image IS NULL OR hero_image = '' OR hero_image LIKE '%digitalium-pic-2%' OR hero_image LIKE '%abstract%')
     ");
-    $done[] = "pages: hero_image home → /assets/images/digitalium-hero-team.png";
-} catch (\PDOException $e) { $errors[] = "pages hero_image: " . $e->getMessage(); }
+    $done[] = "pages: hero_image + hero_variant home → hero_ambient_glow + team photo";
+} catch (\PDOException $e) { $errors[] = "pages hero_data: " . $e->getMessage(); }
 
 // ─── Output ─────────────────────────────────────────────────────────────────
 $isCli = PHP_SAPI === 'cli';

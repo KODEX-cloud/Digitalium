@@ -259,6 +259,9 @@ jobs:
               echo "  ✓ Git sync OK : $BEFORE → $AFTER"
             fi
 
+            # Reset OPcache pour forcer le rechargement des fichiers PHP
+            $PHP -r "if (function_exists('opcache_reset')) { opcache_reset(); echo '  ✓ OPcache reset OK'.PHP_EOL; } else { echo '  · OPcache non disponible'.PHP_EOL; }" 2>/dev/null || true
+
             # ─────────────────────────────────────────────────────────────────
             # ÉTAPE 2 — Permissions
             # ─────────────────────────────────────────────────────────────────
