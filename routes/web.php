@@ -26,6 +26,8 @@ $router->get('/admin/logout', 'AdminController@logout');
 // --- Admin Panel (Dashboard) ---
 $router->get('/admin', 'AdminController@dashboard');
 $router->get('/admin/dashboard', 'AdminController@dashboard');
+$router->get('/admin/settings/theme', 'AdminController@themeForm');
+$router->post('/admin/settings/theme', 'AdminController@themeSubmit');
 $router->get('/admin/settings', 'AdminController@settingsForm');
 $router->post('/admin/settings', 'AdminController@settingsSubmit');
 

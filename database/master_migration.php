@@ -246,7 +246,52 @@ try {
     $done[] = "pages: hero_image + hero_variant + hero_title_size home → xlarge / hero_ambient_glow";
 } catch (\PDOException $e) { $errors[] = "pages hero_data: " . $e->getMessage(); }
 
-// ─── 12. Admin account — seed only if no users exist ────────────────────────
+// ─── 12. Theme Builder — seed default design tokens (skip if already set) ────
+try {
+    $themeDefaults = [
+        'theme_primary'                => '#0d9488',
+        'theme_secondary'              => '#0891b2',
+        'theme_accent'                 => '#f59e0b',
+        'theme_text_main'              => '#0f172a',
+        'theme_text_sub'               => '#334155',
+        'theme_text_muted'             => '#64748b',
+        'theme_bg_base'                => '#ffffff',
+        'theme_bg_alt'                 => '#f8fafc',
+        'theme_bg_card'                => '#ffffff',
+        'theme_radius_pill'            => '100',
+        'theme_radius_card'            => '20',
+        'theme_radius_btn'             => '100',
+        'theme_radius_md'              => '12',
+        'theme_radius_sm'              => '8',
+        'theme_space_section'          => '130',
+        'theme_font_h1'                => '4.2',
+        'theme_font_h2'                => '2.8',
+        'theme_font_h3'                => '1.08',
+        'theme_font_body'              => '1',
+        'theme_font_weight_heading'    => '800',
+        'theme_font_weight_body'       => '400',
+        'theme_line_height_body'       => '1.78',
+        'theme_letter_spacing_heading' => '-0.032',
+        'theme_shadow_card'            => '0 1px 3px rgba(0,0,0,0.04), 0 8px 32px rgba(0,0,0,0.06)',
+        'theme_shadow_btn'             => '0 4px 18px rgba(13,148,136,0.28)',
+        'theme_hero_min_height'        => '100',
+        'theme_hero_overlay_opacity'   => '0.78',
+        'theme_hero_overlay_color'     => '#0a0f1e',
+    ];
+    $seeded = 0;
+    foreach ($themeDefaults as $k => $v) {
+        $row = $pdo->prepare("SELECT id FROM settings WHERE setting_key = ?")->execute([$k])
+               ? $pdo->query("SELECT id FROM settings WHERE setting_key = " . $pdo->quote($k))->fetch()
+               : null;
+        if (!$row) {
+            $pdo->prepare("INSERT INTO settings (setting_key, setting_value) VALUES (?, ?)")->execute([$k, $v]);
+            $seeded++;
+        }
+    }
+    $done[] = "settings: theme_* — $seeded nouvelles clés seedées (" . count($themeDefaults) . " total)";
+} catch (\PDOException $e) { $errors[] = "theme settings seed: " . $e->getMessage(); }
+
+// ─── 13. Admin account — seed only if no users exist ────────────────────────
 try {
     $userCount = (int)$pdo->query("SELECT COUNT(*) FROM users")->fetchColumn();
     if ($userCount === 0) {

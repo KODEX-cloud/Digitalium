@@ -176,6 +176,70 @@ class AdminController extends Controller {
     }
 
     /**
+     * Theme Builder — show form.
+     */
+    public function themeForm(): void {
+        $this->middlewareAuth();
+        $settings = \App\Models\Setting::getAll();
+
+        $this->render('admin/theme', [
+            'title'       => 'Theme Builder — Design System',
+            'settings'    => $settings,
+            'csrf_token'  => $this->generateCsrf(),
+            'currentUser' => Auth::user()
+        ], 'admin/layout');
+    }
+
+    /**
+     * Theme Builder — save all design tokens.
+     */
+    public function themeSubmit(): void {
+        $this->middlewareAuth();
+        $this->validateCsrf();
+
+        $keys = [
+            'theme_primary',
+            'theme_secondary',
+            'theme_accent',
+            'theme_text_main',
+            'theme_text_sub',
+            'theme_text_muted',
+            'theme_bg_base',
+            'theme_bg_alt',
+            'theme_bg_card',
+            'theme_radius_pill',
+            'theme_radius_card',
+            'theme_radius_btn',
+            'theme_radius_md',
+            'theme_radius_sm',
+            'theme_space_section',
+            'theme_font_h1',
+            'theme_font_h2',
+            'theme_font_h3',
+            'theme_font_body',
+            'theme_font_weight_heading',
+            'theme_font_weight_body',
+            'theme_line_height_body',
+            'theme_letter_spacing_heading',
+            'theme_shadow_card',
+            'theme_shadow_btn',
+            'theme_hero_min_height',
+            'theme_hero_overlay_opacity',
+            'theme_hero_overlay_color',
+        ];
+
+        foreach ($keys as $key) {
+            $value = trim($_POST[$key] ?? '');
+            if ($value !== '') {
+                \App\Models\Setting::setVal($key, $value);
+            }
+        }
+
+        \App\Services\Cache::clear();
+        $this->redirect('/admin/settings/theme', 'success', 'Theme Design System enregistré avec succès !');
+    }
+
+    /**
      * Handle logout.
      */
     public function logout(): void {

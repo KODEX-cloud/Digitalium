@@ -506,7 +506,13 @@
                     <span>Recovery Center</span>
                 </a>
             </li>
-            <li class="menu-item <?= $isActive('#^/admin/settings#') ?>">
+            <li class="menu-item <?= $isActive('#^/admin/settings/theme#') ?>">
+                <a href="<?= url('/admin/settings/theme') ?>">
+                    <i data-lucide="palette"></i>
+                    <span>Theme Builder</span>
+                </a>
+            </li>
+            <li class="menu-item <?= $isActive('#^/admin/settings(?!/theme)#') ?>">
                 <a href="<?= url('/admin/settings') ?>">
                     <i data-lucide="settings"></i>
                     <span>Configuration</span>

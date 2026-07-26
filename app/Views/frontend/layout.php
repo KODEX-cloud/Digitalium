@@ -19,6 +19,68 @@
 
     <link rel="stylesheet" href="<?= url('/assets/css/index.css') ?>?v=<?= filemtime(ROOT_PATH . '/public/assets/css/index.css') ?>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <?php
+    // ─── CMS Theme Builder — Inject design tokens from settings ──────────────
+    $_thP    = htmlspecialchars($settings['theme_primary']                ?? '#0d9488', ENT_QUOTES);
+    $_thS    = htmlspecialchars($settings['theme_secondary']              ?? '#0891b2', ENT_QUOTES);
+    $_thAc   = htmlspecialchars($settings['theme_accent']                 ?? '#f59e0b', ENT_QUOTES);
+    $_thTM   = htmlspecialchars($settings['theme_text_main']              ?? '#0f172a', ENT_QUOTES);
+    $_thTS   = htmlspecialchars($settings['theme_text_sub']               ?? '#334155', ENT_QUOTES);
+    $_thTMu  = htmlspecialchars($settings['theme_text_muted']             ?? '#64748b', ENT_QUOTES);
+    $_thBB   = htmlspecialchars($settings['theme_bg_base']                ?? '#ffffff', ENT_QUOTES);
+    $_thBA   = htmlspecialchars($settings['theme_bg_alt']                 ?? '#f8fafc', ENT_QUOTES);
+    $_thBC   = htmlspecialchars($settings['theme_bg_card']                ?? '#ffffff', ENT_QUOTES);
+    $_thShC  = htmlspecialchars($settings['theme_shadow_card']            ?? '0 1px 3px rgba(0,0,0,0.04), 0 8px 32px rgba(0,0,0,0.06)', ENT_QUOTES);
+    $_thShB  = htmlspecialchars($settings['theme_shadow_btn']             ?? '0 4px 18px rgba(13,148,136,0.28)', ENT_QUOTES);
+    $_thRP   = (int)($settings['theme_radius_pill']            ?? 100);
+    $_thRC   = (int)($settings['theme_radius_card']            ?? 20);
+    $_thRBtn = (int)($settings['theme_radius_btn']             ?? 100);
+    $_thRMd  = (int)($settings['theme_radius_md']              ?? 12);
+    $_thRSm  = (int)($settings['theme_radius_sm']              ?? 8);
+    $_thSS   = (int)($settings['theme_space_section']          ?? 130);
+    $_thSSSm = max(60, $_thSS - 50);
+    $_thSSXs = max(40, $_thSS - 76);
+    $_thFH1  = (float)($settings['theme_font_h1']              ?? 4.2);
+    $_thFH2  = (float)($settings['theme_font_h2']              ?? 2.8);
+    $_thFH3  = (float)($settings['theme_font_h3']              ?? 1.08);
+    $_thFB   = (float)($settings['theme_font_body']            ?? 1);
+    $_thWH   = (int)($settings['theme_font_weight_heading']    ?? 800);
+    $_thWB   = (int)($settings['theme_font_weight_body']       ?? 400);
+    $_thLH   = (float)($settings['theme_line_height_body']     ?? 1.78);
+    $_thLS   = (float)($settings['theme_letter_spacing_heading']?? -0.032);
+    ?>
+    <style id="cms-theme">
+    :root {
+        --primary:                  <?= $_thP ?>;
+        --primary-dark:             <?= $_thP ?>;
+        --secondary:                <?= $_thS ?>;
+        --accent:                   <?= $_thAc ?>;
+        --text-main:                <?= $_thTM ?>;
+        --text-sub:                 <?= $_thTS ?>;
+        --text-muted:               <?= $_thTMu ?>;
+        --bg-base:                  <?= $_thBB ?>;
+        --bg-alt:                   <?= $_thBA ?>;
+        --bg-card:                  <?= $_thBC ?>;
+        --radius-pill:              <?= $_thRP ?>px;
+        --radius-lg:                <?= $_thRC ?>px;
+        --radius-md:                <?= $_thRMd ?>px;
+        --radius-sm:                <?= $_thRSm ?>px;
+        --radius-btn:               <?= $_thRBtn ?>px;
+        --space-section:            <?= $_thSS ?>px;
+        --space-section-sm:         <?= $_thSSSm ?>px;
+        --space-section-xs:         <?= $_thSSXs ?>px;
+        --shadow-card:              <?= $_thShC ?>;
+        --shadow-btn:               <?= $_thShB ?>;
+        --font-size-h1:             clamp(2rem, 5vw, <?= $_thFH1 ?>rem);
+        --font-size-h2:             clamp(1.5rem, 3.5vw, <?= $_thFH2 ?>rem);
+        --font-size-h3:             <?= $_thFH3 ?>rem;
+        --font-size-body:           <?= $_thFB ?>rem;
+        --font-weight-heading:      <?= $_thWH ?>;
+        --font-weight-body:         <?= $_thWB ?>;
+        --line-height-body:         <?= $_thLH ?>;
+        --letter-spacing-heading:   <?= $_thLS ?>em;
+    }
+    </style>
     <?php if (!empty($settings['site_favicon'])): ?>
         <link rel="icon" href="<?= htmlspecialchars(url($settings['site_favicon'])) ?>" type="image/x-icon">
     <?php else: ?>
