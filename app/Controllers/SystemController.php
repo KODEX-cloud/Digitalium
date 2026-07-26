@@ -35,32 +35,41 @@ class SystemController extends Controller {
     public function deployCenter(): void {
         $this->middlewareAuth();
 
-        $health      = HealthManager::check();
-        $score       = HealthManager::score($health);
-        $state       = ProjectStateManager::read();
-        $backups     = BackupManager::list();
-        $git         = GitManager::getInfo();
-        $deployLogs  = DeploymentLog::getAll(10);
-        $rollbackIds = RollbackManager::list();
+        $health = [];
+        try { $health = HealthManager::check(); } catch (\Throwable $e) { $health = []; }
+        $score = 0;
+        try { $score = HealthManager::score($health); } catch (\Throwable $e) {}
+        $state = [];
+        try { $state = ProjectStateManager::read(); } catch (\Throwable $e) {}
+        $backups = [];
+        try { $raw = BackupManager::list(); $backups = $raw['data']['backups'] ?? []; } catch (\Throwable $e) {}
+        $git = [];
+        try { $git = GitManager::getInfo(); } catch (\Throwable $e) {}
+        $deployLogs = [];
+        try { $deployLogs = DeploymentLog::getAll(10); } catch (\Throwable $e) {}
+        $rollbackIds = [];
+        try { $raw2 = RollbackManager::list(); $rollbackIds = $raw2['data'] ?? []; } catch (\Throwable $e) {}
 
         // Préparer les modes pour la vue
         $modes = [];
-        foreach (DeployPipeline::$modes as $key => $def) {
-            $modes[] = [
-                'key'         => $key,
-                'label'       => $def['label'],
-                'description' => $def['description'],
-                'steps'       => $def['steps'],
-                'step_count'  => count($def['steps']),
-            ];
-        }
+        try {
+            foreach (DeployPipeline::$modes as $key => $def) {
+                $modes[] = [
+                    'key'         => $key,
+                    'label'       => $def['label'],
+                    'description' => $def['description'],
+                    'steps'       => $def['steps'],
+                    'step_count'  => count($def['steps']),
+                ];
+            }
+        } catch (\Throwable $e) {}
 
         $this->render('admin/system/deploy_center', [
             'title'        => 'Deploy Center — DSM Enterprise',
             'health'       => $health,
             'score'        => $score,
             'state'        => $state,
-            'backups'      => $backups['data']['backups'] ?? [],
+            'backups'      => $backups,
             'git'          => $git,
             'modes'        => $modes,
             'current_mode' => 'full',
@@ -68,7 +77,7 @@ class SystemController extends Controller {
             'currentUser'  => \App\Services\Auth::user(),
             'reports'      => [],
             'deploy_logs'  => $deployLogs,
-            'rollback_ids' => $rollbackIds['data'] ?? [],
+            'rollback_ids' => $rollbackIds,
         ], 'admin/layout');
     }
 

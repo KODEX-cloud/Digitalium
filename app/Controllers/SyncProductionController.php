@@ -18,6 +18,12 @@ use App\Models\Menu;
  */
 class SyncProductionController extends Controller {
 
+    protected function middlewareAuth(): void {
+        if (!\App\Services\Auth::check()) {
+            $this->redirect('/admin/login', 'error', 'Accès réservé aux administrateurs.');
+        }
+    }
+
     // ─── GET /admin/system/sync-production ───────────────────────────────────
     public function index(): void {
         $this->middlewareAuth();
@@ -38,7 +44,7 @@ class SyncProductionController extends Controller {
 
         $this->render('admin/system/sync_production', [
             'title'          => 'Sync Production — Diagnostic DB',
-            'currentUser'    => $this->getUser(),
+            'currentUser'    => \App\Services\Auth::user(),
             'csrf_token'     => \App\Services\CSRF::getToken(),
             'diff'           => $diff,
             'inspect'        => $inspect,

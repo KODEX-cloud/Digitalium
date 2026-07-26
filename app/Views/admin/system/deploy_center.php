@@ -255,11 +255,11 @@ $statusBorder = ['ok' => '#6ee7b7', 'warning' => '#fcd34d', 'error' => '#fca5a5'
         <?php
         try {
             $pagesCount   = \App\Services\Database::fetch("SELECT COUNT(*) as n FROM pages")['n'] ?? 0;
-            $postsCount   = \App\Services\Database::fetch("SELECT COUNT(*) as n FROM blog_posts WHERE is_published=1")['n'] ?? 0;
+            $postsCount   = \App\Services\Database::fetch("SELECT COUNT(*) as n FROM blog_posts WHERE status='published'")['n'] ?? 0;
             $mediaCount   = \App\Services\Database::fetch("SELECT COUNT(*) as n FROM media")['n'] ?? 0;
-            $projCount    = \App\Services\Database::fetch("SELECT COUNT(*) as n FROM projects WHERE is_active=1")['n'] ?? 0;
+            $projCount    = \App\Services\Database::fetch("SELECT COUNT(*) as n FROM projects")['n'] ?? 0;
             $settingsCount= \App\Services\Database::fetch("SELECT COUNT(*) as n FROM settings")['n'] ?? 0;
-            $messagesCount= \App\Services\Database::fetch("SELECT COUNT(*) as n FROM contact_messages WHERE is_read=0")['n'] ?? 0;
+            $messagesCount= \App\Services\Database::fetch("SELECT COUNT(*) as n FROM contact_messages WHERE statut='new'")['n'] ?? 0;
         } catch (\Throwable $e) { $pagesCount=$postsCount=$mediaCount=$projCount=$settingsCount=$messagesCount=0; }
         $statsGrid = [
             [$pagesCount,    'Pages',    '#4f46e5'],

@@ -280,9 +280,9 @@ try {
     ];
     $seeded = 0;
     foreach ($themeDefaults as $k => $v) {
-        $row = $pdo->prepare("SELECT id FROM settings WHERE setting_key = ?")->execute([$k])
-               ? $pdo->query("SELECT id FROM settings WHERE setting_key = " . $pdo->quote($k))->fetch()
-               : null;
+        $chk = $pdo->prepare("SELECT id FROM settings WHERE setting_key = ?");
+        $chk->execute([$k]);
+        $row = $chk->fetch();
         if (!$row) {
             $pdo->prepare("INSERT INTO settings (setting_key, setting_value) VALUES (?, ?)")->execute([$k, $v]);
             $seeded++;

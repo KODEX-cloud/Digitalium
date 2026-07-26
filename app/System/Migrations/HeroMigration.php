@@ -31,7 +31,7 @@ class HeroMigration implements MigrationInterface {
             if (!$heroSection) {
                 // Create hero section
                 Database::query(
-                    "INSERT INTO sections (page_id, type, name, is_active, sort_order) VALUES (:pid, 'hero', 'Hero Principal', 1, 1)",
+                    "INSERT INTO sections (page_id, type, name, status, sort_order) VALUES (:pid, 'hero', 'Hero Principal', 'active', 1)",
                     ['pid' => $pageId]
                 );
                 $sectionId = Database::getConnection()->lastInsertId();
