@@ -706,111 +706,64 @@ if (!empty($page['hero_title'])):
     </section>
 
 <?php elseif ($variant === 'hero_ambient_glow'): ?>
-    <!-- Variant 6: Premium Split Hero — Digitalium Enterprise -->
-    <section id="hero-section-<?= $page['id'] ?>" style="position:relative;background:#0f172a;overflow:hidden;min-height:100vh;display:flex;align-items:center;">
+    <?php
+    // Build background style: photo if available, else solid dark navy
+    $heroBg = !empty($page['hero_image'])
+        ? "background: url('" . htmlspecialchars(url($page['hero_image'])) . "') center center / cover no-repeat;"
+        : "background: #0f172a;";
+    ?>
+    <!-- Variant 6 — Photo Hero (fond plein écran + overlay + texte gauche) -->
+    <section id="hero-section-<?= $page['id'] ?>" style="position:relative;overflow:hidden;min-height:100vh;display:flex;align-items:center;<?= $heroBg ?>">
 
-        <!-- Background grid texture -->
-        <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(13,148,136,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(13,148,136,0.03) 1px,transparent 1px);background-size:64px 64px;pointer-events:none;z-index:0;"></div>
+        <!-- Dark gradient overlay — plus opaque à gauche, transparent à droite -->
+        <div style="position:absolute;inset:0;background:linear-gradient(to right,rgba(10,15,30,0.88) 0%,rgba(10,15,30,0.72) 55%,rgba(10,15,30,0.35) 100%);z-index:1;pointer-events:none;"></div>
 
-        <!-- Teal radial glow — top left -->
-        <div style="position:absolute;top:-200px;left:-150px;width:700px;height:700px;border-radius:50%;background:radial-gradient(circle,rgba(13,148,136,0.14) 0%,transparent 65%);pointer-events:none;z-index:1;"></div>
-        <!-- Cyan radial glow — bottom right -->
-        <div style="position:absolute;bottom:-200px;right:-100px;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(8,145,178,0.08) 0%,transparent 70%);pointer-events:none;z-index:1;"></div>
+        <!-- Teal glow subtil en bas gauche -->
+        <div style="position:absolute;bottom:-120px;left:-80px;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(13,148,136,0.12) 0%,transparent 65%);pointer-events:none;z-index:2;"></div>
 
-        <div class="container" style="position:relative;z-index:5;width:100%;padding-top:140px;padding-bottom:100px;">
-            <div class="hero-aglow-grid">
+        <div class="container" style="position:relative;z-index:5;width:100%;padding-top:160px;padding-bottom:140px;">
 
-                <!-- ── LEFT — Text content ──────────────────────────── -->
-                <div style="opacity:0;transform:translateY(24px);animation:heroFadeIn 0.85s cubic-bezier(0.16,1,0.3,1) forwards;">
+            <div style="max-width:660px;opacity:0;transform:translateY(24px);animation:heroFadeIn 0.85s cubic-bezier(0.16,1,0.3,1) forwards;">
 
-                    <?php if (!empty($badge)): ?>
-                    <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(13,148,136,0.1);border:1px solid rgba(13,148,136,0.25);padding:8px 18px;border-radius:100px;margin-bottom:32px;">
-                        <span style="width:7px;height:7px;border-radius:50%;background:#0d9488;box-shadow:0 0 10px rgba(13,148,136,0.8);flex-shrink:0;"></span>
-                        <span style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.18em;color:#5eead4;font-family:var(--font-heading);"><?= htmlspecialchars($badge) ?></span>
-                    </div>
-                    <?php endif; ?>
-
-                    <h1 style="font-size:clamp(2.8rem,5.5vw,5rem);line-height:1.05;font-weight:900;letter-spacing:-0.04em;color:#f8fafc;margin-bottom:24px;font-family:var(--font-heading);">
-                        <?= $page['hero_title'] ?>
-                    </h1>
-
-                    <div style="display:flex;gap:10px;margin-bottom:28px;">
-                        <span style="width:52px;height:4px;border-radius:2px;background:#0d9488;"></span>
-                        <span style="width:28px;height:4px;border-radius:2px;background:#0891b2;opacity:0.55;"></span>
-                    </div>
-
-                    <?php if (!empty($page['hero_subtitle'])): ?>
-                    <p style="font-size:1.1rem;line-height:1.8;color:#94a3b8;margin-bottom:44px;max-width:500px;">
-                        <?= htmlspecialchars($page['hero_subtitle']) ?>
-                    </p>
-                    <?php endif; ?>
-
-                    <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center;">
-                        <?php if (!empty($page['hero_cta1_text'])): ?>
-                        <a href="<?= htmlspecialchars(url($page['hero_cta1_url'] ?? '#services')) ?>" class="btn-hero-primary" style="background:linear-gradient(135deg,#0d9488,#0891b2);box-shadow:0 12px 32px rgba(13,148,136,0.38);">
-                            <span><?= htmlspecialchars($page['hero_cta1_text']) ?></span>
-                            <i data-lucide="arrow-right" style="width:17px;height:17px;"></i>
-                        </a>
-                        <?php endif; ?>
-                        <?php if (!empty($page['hero_cta2_text'])): ?>
-                        <a href="<?= htmlspecialchars(url($page['hero_cta2_url'] ?? '#contact')) ?>" class="btn-hero-secondary">
-                            <?= htmlspecialchars($page['hero_cta2_text']) ?>
-                        </a>
-                        <?php endif; ?>
-                    </div>
-
+                <!-- Badge -->
+                <?php if (!empty($badge)): ?>
+                <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(13,148,136,0.15);border:1px solid rgba(13,148,136,0.3);padding:8px 20px;border-radius:100px;margin-bottom:32px;">
+                    <span style="width:7px;height:7px;border-radius:50%;background:#0d9488;box-shadow:0 0 10px rgba(13,148,136,0.9);flex-shrink:0;animation:pulse-dot 2s ease-in-out infinite;"></span>
+                    <span style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.2em;color:#5eead4;font-family:var(--font-heading);"><?= htmlspecialchars($badge) ?></span>
                 </div>
+                <?php endif; ?>
 
-                <!-- ── RIGHT — Visual panel ────────────────────────── -->
-                <div style="position:relative;opacity:0;transform:translateY(24px);animation:heroFadeIn 0.85s cubic-bezier(0.16,1,0.3,1) 0.18s forwards;">
+                <!-- Heading — blanc, très grand -->
+                <h1 style="font-size:clamp(2.6rem,5.5vw,5rem);line-height:1.06;font-weight:900;letter-spacing:-0.04em;color:#ffffff;margin-bottom:28px;font-family:var(--font-heading);">
+                    <?= $page['hero_title'] ?>
+                </h1>
 
-                    <?php if (!empty($page['hero_image'])): ?>
-                    <!-- Image premium frame -->
-                    <div style="position:relative;">
-                        <!-- Outer decorative ring -->
-                        <div style="position:absolute;inset:-16px;border-radius:32px;border:1px solid rgba(13,148,136,0.12);z-index:0;pointer-events:none;"></div>
-                        <div style="position:absolute;inset:-32px;border-radius:40px;border:1px solid rgba(13,148,136,0.05);z-index:0;pointer-events:none;"></div>
+                <!-- Subtitle -->
+                <?php if (!empty($page['hero_subtitle'])): ?>
+                <p style="font-size:1.12rem;line-height:1.8;color:rgba(255,255,255,0.72);margin-bottom:48px;max-width:540px;">
+                    <?= htmlspecialchars($page['hero_subtitle']) ?>
+                </p>
+                <?php endif; ?>
 
-                        <!-- Main image -->
-                        <div style="position:relative;border-radius:24px;overflow:hidden;box-shadow:0 40px 80px rgba(0,0,0,0.5),0 0 0 1px rgba(255,255,255,0.05);z-index:1;">
-                            <img src="<?= htmlspecialchars(url($page['hero_image'])) ?>"
-                                 alt="<?= htmlspecialchars($page['hero_title'] ?? 'Digitalium Group') ?>"
-                                 style="width:100%;height:520px;object-fit:cover;display:block;"
-                                 loading="eager">
-                            <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(15,23,42,0.5) 0%,transparent 50%);z-index:2;pointer-events:none;"></div>
-                        </div>
-
-                        <!-- Floating trust badge — bottom left -->
-                        <div style="position:absolute;bottom:-20px;left:-28px;z-index:10;background:rgba(10,20,40,0.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(13,148,136,0.2);border-radius:18px;padding:18px 22px;box-shadow:0 20px 40px rgba(0,0,0,0.35);">
-                            <div style="display:flex;align-items:center;gap:12px;">
-                                <div style="width:44px;height:44px;border-radius:12px;background:rgba(13,148,136,0.15);border:1px solid rgba(13,148,136,0.25);display:flex;align-items:center;justify-content:center;color:#0d9488;flex-shrink:0;">
-                                    <i data-lucide="shield-check" style="width:20px;height:20px;"></i>
-                                </div>
-                                <div>
-                                    <div style="font-size:0.82rem;font-weight:800;color:#f8fafc;font-family:var(--font-heading);line-height:1.2;">Agence Certifiée</div>
-                                    <div style="font-size:0.68rem;color:#64748b;margin-top:2px;letter-spacing:0.04em;">Digitalium Group</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Floating stat badge — top right -->
-                        <div style="position:absolute;top:-16px;right:-24px;z-index:10;background:rgba(10,20,40,0.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(13,148,136,0.18);border-radius:18px;padding:18px 22px;box-shadow:0 20px 40px rgba(0,0,0,0.35);">
-                            <div style="font-size:2rem;font-weight:900;color:#0d9488;font-family:var(--font-heading);line-height:1;">15+</div>
-                            <div style="font-size:0.68rem;color:#64748b;margin-top:3px;letter-spacing:0.06em;font-weight:600;">Années d'expérience</div>
-                        </div>
-                    </div>
-
-                    <?php else: ?>
-                    <!-- Abstract visual fallback -->
-                    <div style="position:relative;height:500px;border-radius:24px;overflow:hidden;border:1px solid rgba(13,148,136,0.12);background:linear-gradient(135deg,rgba(13,148,136,0.06) 0%,rgba(8,145,178,0.04) 100%);">
-                        <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:20px;opacity:0.25;">
-                            <i data-lucide="monitor" style="width:80px;height:80px;color:#0d9488;"></i>
-                        </div>
-                        <div style="position:absolute;top:20%;right:10%;width:120px;height:120px;border-radius:50%;background:rgba(13,148,136,0.06);"></div>
-                        <div style="position:absolute;bottom:15%;left:8%;width:80px;height:80px;border-radius:50%;background:rgba(8,145,178,0.05);"></div>
-                    </div>
+                <!-- CTA Buttons — style pills comme la référence -->
+                <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center;">
+                    <?php if (!empty($page['hero_cta1_text'])): ?>
+                    <a href="<?= htmlspecialchars(url($page['hero_cta1_url'] ?? '#services')) ?>"
+                       style="display:inline-flex;align-items:center;gap:10px;padding:16px 36px;border-radius:100px;font-weight:700;font-size:0.92rem;color:#ffffff;background:var(--primary);box-shadow:0 8px 28px rgba(13,148,136,0.45);transition:all 0.3s cubic-bezier(0.16,1,0.3,1);letter-spacing:0.01em;"
+                       onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 14px 36px rgba(13,148,136,0.55)'"
+                       onmouseout="this.style.transform='none';this.style.boxShadow='0 8px 28px rgba(13,148,136,0.45)'">
+                        <span><?= htmlspecialchars($page['hero_cta1_text']) ?></span>
+                        <i data-lucide="arrow-right" style="width:16px;height:16px;"></i>
+                    </a>
                     <?php endif; ?>
-
+                    <?php if (!empty($page['hero_cta2_text'])): ?>
+                    <a href="<?= htmlspecialchars(url($page['hero_cta2_url'] ?? '#contact')) ?>"
+                       style="display:inline-flex;align-items:center;gap:10px;padding:15px 34px;border-radius:100px;font-weight:600;font-size:0.92rem;color:#ffffff;background:rgba(255,255,255,0.12);border:1.5px solid rgba(255,255,255,0.35);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);transition:all 0.3s cubic-bezier(0.16,1,0.3,1);"
+                       onmouseover="this.style.background='rgba(255,255,255,0.2)';this.style.transform='translateY(-2px)'"
+                       onmouseout="this.style.background='rgba(255,255,255,0.12)';this.style.transform='none'">
+                        <span><?= htmlspecialchars($page['hero_cta2_text']) ?></span>
+                    </a>
+                    <?php endif; ?>
                 </div>
 
             </div>
