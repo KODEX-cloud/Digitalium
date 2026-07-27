@@ -100,7 +100,7 @@
                         <span class="status-badge <?= $statusClass ?>"><?= $statusLabel ?></span>
                     </td>
                     <td style="padding: 16px 20px; vertical-align: top; font-size: 0.78rem; color: var(--text-muted); white-space: nowrap;">
-                        <?= date('d/m/Y H:i', strtotime($comment['created_at'])) ?>
+                        <?= !empty($comment['created_at']) ? date('d/m/Y H:i', strtotime($comment['created_at'])) : '—' ?>
                     </td>
                     <td style="padding: 16px 20px; vertical-align: top; text-align: right;">
                         <div style="display: flex; gap: 6px; justify-content: flex-end; flex-wrap: wrap;">

@@ -205,17 +205,24 @@ class BlogController extends Controller {
     // ─── ADMIN: Comments moderation ────────────────────────────────────────
     public function commentsIndex(): void {
         $this->middlewareAuth();
-        $status       = $_GET['status'] ?? '';
-        $comments     = Comment::getAll($status);
-        $pendingCount = Comment::countPending();
-        $this->render('admin/blog/comments', [
-            'title'        => 'Modération des commentaires',
-            'comments'     => $comments,
-            'pendingCount' => $pendingCount,
-            'filterStatus' => $status,
-            'csrf_token'   => $this->generateCsrf(),
-            'currentUser'  => Auth::user(),
-        ], 'admin/layout');
+        try {
+            $status       = $_GET['status'] ?? '';
+            $comments     = Comment::getAll($status);
+            $pendingCount = Comment::countPending();
+            $this->render('admin/blog/comments', [
+                'title'        => 'Modération des commentaires',
+                'comments'     => $comments,
+                'pendingCount' => $pendingCount,
+                'filterStatus' => $status,
+                'csrf_token'   => $this->generateCsrf(),
+                'currentUser'  => Auth::user(),
+            ], 'admin/layout');
+        } catch (\Throwable $e) {
+            $entry = date('Y-m-d H:i:s') . ' [COMMENTS-ERROR] ' . get_class($e) . ': ' . $e->getMessage()
+                . ' in ' . $e->getFile() . ':' . $e->getLine() . "\n";
+            @file_put_contents(ROOT_PATH . '/storage/logs/errors.log', $entry, FILE_APPEND | LOCK_EX);
+            $this->redirect('/admin/blog', 'error', 'Erreur de chargement des commentaires — journalisé.');
+        }
     }
 
     public function approveComment(array $params): void {

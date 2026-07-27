@@ -189,6 +189,21 @@ class SystemApiController extends Controller {
         $this->json(['status' => 'ok', 'label' => 'Deploy Log', 'data' => $logs]);
     }
 
+    // ─── ERROR LOG — GET /admin/api/system/error-log ─────────────────────────
+    public function errorLog(): void {
+        $this->requireAuth();
+        $logPath = ROOT_PATH . '/storage/logs/errors.log';
+        if (!file_exists($logPath)) {
+            $this->json(['status' => 'ok', 'lines' => [], 'size' => 0]);
+            return;
+        }
+        $limit   = min(100, (int)($_GET['limit'] ?? 50));
+        $content = file_get_contents($logPath);
+        $lines   = array_filter(explode("\n", trim($content)));
+        $lines   = array_values(array_slice($lines, -$limit));
+        $this->json(['status' => 'ok', 'size' => filesize($logPath), 'count' => count($lines), 'lines' => $lines]);
+    }
+
     // ─── GIT INFO — POST /admin/api/system/git ───────────────────────────────
     public function git(): void {
         $this->boot();

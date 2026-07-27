@@ -136,6 +136,7 @@ $router->post('/admin/api/system/status',          'SystemApiController@status')
 $router->post('/admin/api/system/heal',            'SystemApiController@heal');
 $router->post('/admin/api/system/rollback-latest', 'SystemApiController@rollbackLatest');
 $router->get('/admin/api/system/deploy-log',       'SystemApiController@deployLog');
+$router->get('/admin/api/system/error-log',        'SystemApiController@errorLog');
 
 // --- Recovery Center — Restauration browser sans SSH ─────────────────────────
 $router->get('/admin/system/recovery',               'RecoveryController@index');
