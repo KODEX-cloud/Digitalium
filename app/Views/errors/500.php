@@ -1,20 +1,3 @@
-<?php
-// DIAGNOSTIC TEMPORAIRE — À supprimer après identification de l'erreur
-if (($_GET['_dg_diag'] ?? '') === 'dg2026secret') {
-    $root    = defined('ROOT_PATH') ? ROOT_PATH : dirname(dirname(dirname(__FILE__)));
-    $logPath = $root . '/storage/logs/errors.log';
-    header('Content-Type: text/plain; charset=UTF-8');
-    if (file_exists($logPath)) {
-        $lines = file($logPath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-        $last  = array_slice($lines, -30);
-        echo "=== LAST 30 LINES OF errors.log ===\n\n";
-        echo implode("\n", $last);
-    } else {
-        echo "errors.log NOT FOUND at: " . $logPath;
-    }
-    exit;
-}
-?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
