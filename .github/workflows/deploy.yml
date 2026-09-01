@@ -306,6 +306,14 @@ jobs:
               fi
             fi
 
+            if [ -f "database/build_home_v2.php" ]; then
+              if $PHP database/build_home_v2.php 2>&1; then
+                echo "  ✓ Build Homepage v2 OK (no-op si déjà activée — voir storage/homepage_v2.lock)"
+              else
+                echo "  ⚠ Build Homepage v2 warning (non-bloquant)"
+              fi
+            fi
+
             # ─────────────────────────────────────────────────────────────────
             # ÉTAPE 4 — Cache Clear
             # ─────────────────────────────────────────────────────────────────

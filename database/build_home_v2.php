@@ -2,10 +2,13 @@
 /**
  * Build Homepage v2 — Digitalium Group
  * Assemble la page d'accueil (hero + sections + blocs) selon la maquette validée.
- * Idempotent : les sections cibles ne sont créées qu'une fois (ré-exécuter ce script
- * réinitialise leur contenu aux valeurs par défaut ci-dessous — l'édition ultérieure
- * se fait ensuite depuis /admin/pages).
- * Run once via CLI: php database/build_home_v2.php
+ *
+ * Auto-exécuté à chaque déploiement (voir .github/workflows/deploy.yml, étape MIGRATIONS)
+ * pour que l'activation ne demande plus aucune action manuelle. Protégé par un flag
+ * (storage/homepage_v2.lock) : une fois la homepage construite une première fois,
+ * les exécutions suivantes ne font RIEN — afin de ne jamais écraser le contenu que
+ * l'admin aura ensuite modifié depuis /admin/pages. Supprimer ce flag force une
+ * reconstruction complète (retour aux valeurs par défaut ci-dessous).
  */
 
 define('SECURE_ACCESS', true);
@@ -35,6 +38,13 @@ use App\Services\Database;
 
 echo "=== BUILD HOMEPAGE V2 ===\n";
 
+$lockFile = ROOT_PATH . '/storage/homepage_v2.lock';
+if (file_exists($lockFile)) {
+    echo "Homepage v2 déjà activée (flag storage/homepage_v2.lock présent) — script ignoré, aucune donnée écrasée.\n";
+    echo "Pour forcer une reconstruction complète : supprimer ce fichier puis relancer.\n";
+    exit(0);
+}
+
 try {
     $page = Page::findBySlug('home');
     if (!$page) {
@@ -56,9 +66,11 @@ try {
     $heroData['hero_cta2_text']  = 'Demander un audit';
     $heroData['hero_cta2_url']   = '/contact';
     $heroData['hero_status']     = 1;
+    if (empty($heroData['hero_image'])) {
+        $heroData['hero_image'] = '/assets/images/digitalium-hero-team.png';
+    }
     Page::updatePage($pageId, $heroData);
     echo "Hero mis à jour (variant hero_corporate).\n";
-    echo "  -> ATTENTION: hero_image laissée vide. Uploader la photo depuis /admin/pages/edit/{$pageId} (Médiathèque).\n";
 
     // ─── 2. Sections cibles (ordre exact du visuel) ───────────────────────────
     $targetTypes = [
@@ -131,7 +143,7 @@ try {
 
     // ─── 5. about_visual ───────────────────────────────────────────────────────
     $id = $sec('about_visual', 'Votre partenaire de confiance');
-    Block::setVal($id, 'image', 'image', '');
+    Block::setVal($id, 'image', 'image', '/assets/uploads/digitalium-pic-3-1780069686.webp');
     Block::setVal($id, 'badge_years', 'text', '8+');
     Block::setVal($id, 'badge_label', 'text', "Années d'expérience");
     Block::setVal($id, 'title', 'text', 'Votre partenaire de confiance pour la transformation digitale');
@@ -141,7 +153,6 @@ try {
     Block::setVal($id, 'check_3', 'text', 'Intelligence artificielle & automatisation');
     Block::setVal($id, 'check_4', 'text', 'Maintenance informatique & support');
     Block::setVal($id, 'check_5', 'text', 'Accompagnement & formation des équipes');
-    echo "  -> ATTENTION: about_visual.image laissée vide. Uploader la photo depuis /admin/pages/edit/{$pageId}.\n";
 
     // ─── 6. services_grid ──────────────────────────────────────────────────────
     $id = $sec('services_grid', 'Nos services');
@@ -191,19 +202,18 @@ try {
     Block::setVal($id, 'more_text', 'text', 'Voir plus de réalisations');
     Block::setVal($id, 'more_url', 'link', '/realisations');
     $projects = [
-        ['FINANCE', 'Plateforme de gestion financière', 'Solution web de gestion financière et reporting pour une institution financière.', '-40% de temps de traitement des rapports'],
-        ['LOGISTIQUE', 'Application mobile de livraison', 'Application mobile de suivi des livraisons en temps réel avec géolocalisation.', '+60% de satisfaction client'],
-        ['SANTÉ', "Système d'information hospitalier", 'Digitalisation des processus hospitaliers et gestion des dossiers patients.', 'Meilleure traçabilité et efficacité opérationnelle'],
+        ['FINANCE', 'Plateforme de gestion financière', 'Solution web de gestion financière et reporting pour une institution financière.', '-40% de temps de traitement des rapports', '/assets/uploads/website-design-featuring-user-interface-elements-displaying-the-latest-trends-in-web-design-interfa-1780069994.webp'],
+        ['LOGISTIQUE', 'Application mobile de livraison', 'Application mobile de suivi des livraisons en temps réel avec géolocalisation.', '+60% de satisfaction client', '/assets/uploads/digitalium-pic-8-1780069994.webp'],
+        ['SANTÉ', "Système d'information hospitalier", 'Digitalisation des processus hospitaliers et gestion des dossiers patients.', 'Meilleure traçabilité et efficacité opérationnelle', '/assets/uploads/ivoire-kita-1780071304.webp'],
     ];
     foreach ($projects as $g => $p) {
-        Block::setVal($id, 'proj_image', 'image', '', $g + 1, 0);
+        Block::setVal($id, 'proj_image', 'image', $p[4], $g + 1, 0);
         Block::setVal($id, 'proj_category', 'text', $p[0], $g + 1, 1);
         Block::setVal($id, 'proj_title', 'text', $p[1], $g + 1, 2);
         Block::setVal($id, 'proj_desc', 'textarea', $p[2], $g + 1, 3);
         Block::setVal($id, 'proj_result', 'text', $p[3], $g + 1, 4);
         Block::setVal($id, 'proj_link', 'link', '/realisations', $g + 1, 5);
     }
-    echo "  -> ATTENTION: proj_image laissées vides pour les 3 réalisations. Uploader depuis /admin/pages/edit/{$pageId}.\n";
 
     // ─── 9. testimonials_carousel ──────────────────────────────────────────────
     $id = $sec('testimonials_carousel', 'Témoignages');
@@ -242,7 +252,7 @@ try {
         Block::setVal($id, 'member_role', 'text', $m[1], $g + 1, 2);
         Block::setVal($id, 'member_dept', 'text', $m[2], $g + 1, 3);
     }
-    echo "  -> ATTENTION: member_avatar laissés vides pour les 6 membres. Uploader depuis /admin/pages/edit/{$pageId}.\n";
+    echo "  -> ATTENTION: photos d'équipe (6) laissées vides à dessein — voir note ci-dessous.\n";
 
     // ─── 11. cta ───────────────────────────────────────────────────────────────
     $id = $sec('cta', 'CTA final');
@@ -255,8 +265,12 @@ try {
     Block::setVal($id, 'cta2_url', 'link', '/contact');
 
     \App\Services\Cache::clear();
+    file_put_contents($lockFile, date('Y-m-d H:i:s') . " — Homepage v2 construite (page_id={$pageId})\n");
     echo "\n=== HOMEPAGE V2 CONSTRUITE AVEC SUCCÈS ===\n";
-    echo "Images à uploader manuellement (Médiathèque) : hero_image, about_visual.image, 3x proj_image, 6x member_avatar.\n";
+    echo "Flag créé : storage/homepage_v2.lock (empêche toute réexécution automatique future)\n";
+    echo "Hero, photo équipe et 3 visuels de réalisations : assignés automatiquement depuis la médiathèque existante.\n";
+    echo "Reste à faire manuellement (Médiathèque, /admin/pages/edit/{$pageId}) : les 6 avatars de l'équipe —\n";
+    echo "  volontairement non assignés, faute de photos réelles correctement associées à chaque nom.\n";
 
 } catch (\Throwable $e) {
     echo "ERREUR: " . $e->getMessage() . " (" . $e->getFile() . ":" . $e->getLine() . ")\n";
