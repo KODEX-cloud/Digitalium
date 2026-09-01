@@ -89,7 +89,7 @@
     filter: grayscale(0);
     opacity: 1;
     color: var(--primary);
-    border-color: rgba(13,148,136,0.3);
-    background: rgba(13,148,136,0.04);
+    border-color: rgba(37,99,235,0.3);
+    background: rgba(37,99,235,0.04);
 }
 </style>

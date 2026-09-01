@@ -1092,7 +1092,7 @@ if (!empty($page['hero_title'])):
 }
 .btn-cta-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 15px 30px -5px rgba(13,148,136,0.6) !important;
+    box-shadow: 0 15px 30px -5px rgba(37,99,235,0.6) !important;
 }
 .btn-cta-secondary:hover {
     background: rgba(255,255,255,0.09) !important;

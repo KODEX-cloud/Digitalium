@@ -73,8 +73,8 @@
 .stat-intro-icon {
     width: 44px; height: 44px;
     border-radius: var(--radius-md);
-    background: rgba(13,148,136,0.08);
-    border: 1px solid rgba(13,148,136,0.16);
+    background: rgba(37,99,235,0.08);
+    border: 1px solid rgba(37,99,235,0.16);
     color: var(--primary);
     display: flex; align-items: center; justify-content: center;
     margin-bottom: 16px;

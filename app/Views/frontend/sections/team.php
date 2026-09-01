@@ -142,7 +142,7 @@ $teamAccents = ['var(--primary)', 'var(--secondary)', 'var(--accent)', 'var(--pr
 
 .team-card:hover .team-avatar-ring {
     transform: scale(1.05);
-    box-shadow: 0 8px 28px rgba(13,148,136,0.28);
+    box-shadow: 0 8px 28px rgba(37,99,235,0.28);
 }
 
 .team-avatar-img {
@@ -202,8 +202,8 @@ $teamAccents = ['var(--primary)', 'var(--secondary)', 'var(--accent)', 'var(--pr
 .team-social-link {
     width: 34px; height: 34px;
     border-radius: 50%;
-    background: rgba(13,148,136,0.06);
-    border: 1.5px solid rgba(13,148,136,0.15);
+    background: rgba(37,99,235,0.06);
+    border: 1.5px solid rgba(37,99,235,0.15);
     color: var(--text-muted);
     display: flex; align-items: center; justify-content: center;
     transition: var(--transition-fast);
@@ -214,6 +214,6 @@ $teamAccents = ['var(--primary)', 'var(--secondary)', 'var(--accent)', 'var(--pr
     border-color: var(--primary);
     color: #fff;
     transform: translateY(-3px);
-    box-shadow: 0 6px 16px rgba(13,148,136,0.28);
+    box-shadow: 0 6px 16px rgba(37,99,235,0.28);
 }
 </style>

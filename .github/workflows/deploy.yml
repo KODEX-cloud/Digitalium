@@ -314,6 +314,14 @@ jobs:
               fi
             fi
 
+            if [ -f "database/set_brand_theme_v2.php" ]; then
+              if $PHP database/set_brand_theme_v2.php 2>&1; then
+                echo "  ✓ Set Brand Theme v2 OK"
+              else
+                echo "  ⚠ Set Brand Theme v2 warning (non-bloquant)"
+              fi
+            fi
+
             # ─────────────────────────────────────────────────────────────────
             # ÉTAPE 4 — Cache Clear
             # ─────────────────────────────────────────────────────────────────
