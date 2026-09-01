@@ -56,10 +56,11 @@ try {
 
     // ─── 1. HERO — mise à jour des champs page.hero_* (conserve le reste) ────
     $heroData = $page; // repart des valeurs existantes pour ne rien écraser d'autre
-    $heroData['hero_title']      = 'Digitaliser. Automatiser. <span style="color:var(--primary);">Faire avancer votre entreprise.</span>';
+    $heroData['hero_title']      = 'Digitaliser.<br>Automatiser.<br><span style="color:var(--primary);">Faire avancer votre entreprise.</span>';
     $heroData['hero_subtitle']   = "Digitalium Group est votre partenaire de confiance pour la transformation digitale, l'intelligence artificielle, le développement logiciel, la maintenance et l'innovation en Côte d'Ivoire et en Afrique.";
     $heroData['hero_badge']      = '';
     $heroData['hero_variant']    = 'hero_corporate';
+    $heroData['hero_text_alignment'] = 'left';
     $heroData['hero_image_layout'] = 'right';
     $heroData['hero_cta1_text']  = 'Découvrir nos services';
     $heroData['hero_cta1_url']   = '#services-grid';

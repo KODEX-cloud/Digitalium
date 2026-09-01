@@ -28,7 +28,7 @@
                             <img src="<?= htmlspecialchars(url($logo['logo_image'])) ?>" alt="<?= htmlspecialchars($logo['logo_name'] ?? 'Client') ?>" loading="lazy">
                         <?php else: ?>
                             <?php if (!empty($logo['logo_icon'])): ?>
-                                <?= \App\Helpers\IconHelper::render($logo['logo_icon'], ['size' => '18px']) ?>
+                                <?= \App\Helpers\IconHelper::render($logo['logo_icon'], ['size' => '16px']) ?>
                             <?php endif; ?>
                             <span><?= htmlspecialchars($logo['logo_name'] ?? '') ?></span>
                         <?php endif; ?>
@@ -58,38 +58,47 @@
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    gap: 12px 16px;
+    gap: 0;
+    row-gap: 14px;
 }
 
 .logos-strip-item {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    padding: 10px 20px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-pill);
+    gap: 7px;
+    padding: 0 20px;
     color: var(--text-muted);
     font-size: 0.82rem;
-    font-weight: 700;
-    letter-spacing: 0.02em;
-    filter: grayscale(1);
-    opacity: 0.75;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    opacity: 0.8;
     transition: var(--transition-fast);
     text-decoration: none;
+    border-left: 1px solid var(--border);
+}
+
+.logos-strip-item:first-child {
+    border-left: none;
+    padding-left: 0;
 }
 
 .logos-strip-item img {
-    height: 20px;
+    height: 18px;
     width: auto;
-    max-width: 110px;
+    max-width: 100px;
     object-fit: contain;
+    filter: grayscale(1);
+    opacity: 0.85;
+    transition: var(--transition-fast);
 }
 
 .logos-strip-item:hover {
-    filter: grayscale(0);
     opacity: 1;
     color: var(--primary);
-    border-color: rgba(37,99,235,0.3);
-    background: rgba(37,99,235,0.04);
+}
+
+.logos-strip-item:hover img {
+    filter: grayscale(0);
+    opacity: 1;
 }
 </style>

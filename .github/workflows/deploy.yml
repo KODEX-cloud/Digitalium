@@ -321,6 +321,13 @@ jobs:
                 echo "  ⚠ Set Brand Theme v2 warning (non-bloquant)"
               fi
             fi
+            if [ -f "database/fix_hero_layout_v2.php" ]; then
+              if $PHP database/fix_hero_layout_v2.php 2>&1; then
+                echo "  ✓ Fix Hero Layout v2 OK"
+              else
+                echo "  ⚠ Fix Hero Layout v2 warning (non-bloquant)"
+              fi
+            fi
 
             # ─────────────────────────────────────────────────────────────────
             # ÉTAPE 4 — Cache Clear
