@@ -57,7 +57,7 @@ class Router {
                     ]);
                 } else {
                     echo "<!DOCTYPE html><html><head><meta charset='UTF-8'><title>Accès Interdit - CSRF</title>";
-                    echo "<style>body{background:#0b0f19;color:#9ca3af;font-family:sans-serif;display:flex;justify-content:center;align-items:center;height:100vh;flex-direction:column;margin:0;} h1{color:#f87171;} a{color:#6366f1;text-decoration:none;border:1px solid #6366f1;padding:8px 16px;border-radius:4px;}</style></head>";
+                    echo "<style>body{background:#0b0f19;color:#9ca3af;font-family:sans-serif;display:flex;justify-content:center;align-items:center;height:100vh;flex-direction:column;margin:0;} h1{color:#f87171;} a{color:#2563eb;text-decoration:none;border:1px solid #2563eb;padding:8px 16px;border-radius:4px;}</style></head>";
                     echo "<body><h1>Échec de la validation de sécurité CSRF</h1><p>Votre jeton de session a expiré ou est invalide.</p><a href='javascript:history.back()'>Retourner en arrière</a></body></html>";
                 }
                 exit;
@@ -128,7 +128,7 @@ class Router {
             require_once $viewPath;
         } else {
             echo "<!DOCTYPE html><html lang='fr'><head><meta charset='UTF-8'><title>Page non trouvée - 404</title>";
-            echo "<style>body{background:#0b0f19;color:#cbd5e1;font-family:sans-serif;display:flex;justify-content:center;align-items:center;height:100vh;flex-direction:column;margin:0;} h1{color:#f87171;font-size:3rem;margin:0;} p{font-size:1.2rem;} a{color:#6366f1;text-decoration:none;}</style></head>";
+            echo "<style>body{background:#0b0f19;color:#cbd5e1;font-family:sans-serif;display:flex;justify-content:center;align-items:center;height:100vh;flex-direction:column;margin:0;} h1{color:#f87171;font-size:3rem;margin:0;} p{font-size:1.2rem;} a{color:#2563eb;text-decoration:none;}</style></head>";
             echo "<body><h1>404</h1><p>Désolé, la page que vous recherchez n'existe pas.</p><a href='/'>Retour à l'accueil</a></body></html>";
         }
     }

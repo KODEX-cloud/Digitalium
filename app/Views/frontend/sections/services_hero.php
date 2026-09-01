@@ -86,7 +86,7 @@
 
 <style>
 .ps-item:hover {
-    border-color: rgba(99, 102, 241, 0.45) !important;
+    border-color: rgba(37, 99, 235, 0.45) !important;
 }
 .ps-item:hover .ps-arrow {
     color: var(--accent) !important;

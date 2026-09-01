@@ -15,16 +15,16 @@
         display: flex;
         align-items: center;
         gap: 20px;
-        box-shadow: 0 20px 40px -15px rgba(99, 102, 241, 0.05), 0 5px 15px -5px rgba(0, 0, 0, 0.02);
+        box-shadow: 0 20px 40px -15px rgba(37, 99, 235, 0.05), 0 5px 15px -5px rgba(0, 0, 0, 0.02);
         transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .stat-card:hover {
         transform: translateY(-4px);
-        box-shadow: 0 25px 50px -12px rgba(99, 102, 241, 0.08);
-        border-color: rgba(99, 102, 241, 0.2);
+        box-shadow: 0 25px 50px -12px rgba(37, 99, 235, 0.08);
+        border-color: rgba(37, 99, 235, 0.2);
     }
     .stat-icon {
-        background-color: rgba(79, 70, 229, 0.08);
+        background-color: rgba(37, 99, 235, 0.08);
         color: var(--primary);
         padding: 16px;
         border-radius: 14px;

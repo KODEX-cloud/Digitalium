@@ -11,12 +11,12 @@
     <style>
         :root {
             --bg-primary: #f1f3f9;
-            --bg-gradient: linear-gradient(135deg, #eef2f8 0%, #f6f5fa 40%, #e0e6ff 100%);
+            --bg-gradient: linear-gradient(135deg, #eef2f8 0%, #f6f5fa 40%, #dbe7ff 100%);
             --bg-secondary: rgba(255, 255, 255, 0.58);
             --text-primary: #1e293b;
             --text-secondary: #475569;
-            --primary: #4f46e5;
-            --primary-hover: #7c3aed;
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
             --border: rgba(255, 255, 255, 0.65);
             --danger: #ef4444;
             --success: #10b981;
@@ -49,7 +49,7 @@
             width: 100%;
             max-width: 440px;
             padding: 40px;
-            box-shadow: 0 30px 60px -15px rgba(99, 102, 241, 0.1), 0 10px 20px -5px rgba(0, 0, 0, 0.03);
+            box-shadow: 0 30px 60px -15px rgba(37, 99, 235, 0.1), 0 10px 20px -5px rgba(0, 0, 0, 0.03);
             position: relative;
             z-index: 10;
         }
@@ -58,7 +58,7 @@
             position: absolute;
             width: 400px;
             height: 400px;
-            background: radial-gradient(circle, rgba(99, 102, 241, 0.12) 0%, rgba(244, 245, 248, 0) 70%);
+            background: radial-gradient(circle, rgba(37, 99, 235, 0.12) 0%, rgba(244, 245, 248, 0) 70%);
             border-radius: 50%;
             z-index: 1;
             pointer-events: none;
@@ -75,7 +75,7 @@
             font-family: 'Outfit', sans-serif;
             font-size: 2rem;
             font-weight: 900;
-            background: linear-gradient(135deg, #1e293b 0%, #4f46e5 100%);
+            background: linear-gradient(135deg, #1e293b 0%, #2563eb 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             letter-spacing: -0.03em;
@@ -115,13 +115,13 @@
             outline: none;
             background-color: white;
             border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.15);
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
         }
 
         .btn-submit {
             width: 100%;
             padding: 14px;
-            background: linear-gradient(135deg, var(--primary) 0%, #7c3aed 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, #1d4ed8 100%);
             color: white;
             border: none;
             border-radius: 50px;
@@ -129,14 +129,14 @@
             font-size: 0.98rem;
             font-weight: 700;
             cursor: pointer;
-            box-shadow: 0 10px 20px -5px rgba(79, 70, 229, 0.3);
+            box-shadow: 0 10px 20px -5px rgba(37, 99, 235, 0.3);
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             margin-top: 10px;
         }
 
         .btn-submit:hover {
             transform: translateY(-2px);
-            box-shadow: 0 15px 25px -5px rgba(79, 70, 229, 0.4);
+            box-shadow: 0 15px 25px -5px rgba(37, 99, 235, 0.4);
             filter: brightness(1.05);
         }
 

@@ -30,7 +30,7 @@
 
 <style>
 .proc-card:hover {
-    border-color: rgba(99, 102, 241, 0.4) !important;
+    border-color: rgba(37, 99, 235, 0.4) !important;
     transform: translateY(-3px);
 }
 </style>

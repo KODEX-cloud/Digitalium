@@ -48,7 +48,7 @@ foreach ($health as $check) {
 .badge-danger   { background:#fee2e2; color:#991b1b; }
 
 .btn-dsm        { display:inline-flex; align-items:center; gap:.4rem; padding:.55rem 1.1rem; border-radius:8px; font-size:.8rem; font-weight:600; border:none; cursor:pointer; transition:.2s; white-space:nowrap; }
-.btn-primary    { background:var(--primary,#4f46e5); color:#fff; }
+.btn-primary    { background:var(--primary,#2563eb); color:#fff; }
 .btn-primary:hover { opacity:.88; }
 .btn-secondary  { background:var(--bg-surface,#fff); color:var(--text-main); border:1px solid var(--border); }
 .btn-secondary:hover { background:var(--border); }
@@ -85,7 +85,7 @@ foreach ($health as $check) {
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;flex-wrap:wrap;gap:1rem;">
     <div>
       <h1 style="font-size:1.5rem;font-weight:800;margin:0;color:var(--text-main);">
-        <i data-lucide="zap" style="width:20px;height:20px;vertical-align:middle;margin-right:.4rem;color:var(--primary,#4f46e5);"></i>
+        <i data-lucide="zap" style="width:20px;height:20px;vertical-align:middle;margin-right:.4rem;color:var(--primary,#2563eb);"></i>
         Digitalium System Manager
       </h1>
       <p style="margin:.25rem 0 0;color:var(--text-muted);font-size:.85rem;">

@@ -38,7 +38,7 @@
                         </td>
                         <td style="font-weight: 700; color: var(--text-main);"><?= htmlspecialchars($proj['title']) ?></td>
                         <td>
-                            <span class="badge" style="background-color: rgba(124, 58, 237, 0.08); color: var(--secondary); border: 1px solid rgba(124, 58, 237, 0.2);">
+                            <span class="badge" style="background-color: rgba(8, 145, 178, 0.08); color: var(--secondary); border: 1px solid rgba(8, 145, 178, 0.2);">
                                 <?= htmlspecialchars($proj['category']) ?>
                             </span>
                         </td>

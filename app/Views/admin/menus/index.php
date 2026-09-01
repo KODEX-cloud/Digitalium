@@ -4,10 +4,10 @@
     border-radius: 50px; font-size: 0.72rem; font-weight: 700;
     text-transform: uppercase; letter-spacing: 0.05em;
 }
-.loc-primary   { background: rgba(79,70,229,0.1); color: #6366f1; border: 1px solid rgba(79,70,229,0.2); }
+.loc-primary   { background: rgba(37,99,235,0.1); color: #2563eb; border: 1px solid rgba(37,99,235,0.2); }
 .loc-footer    { background: rgba(16,185,129,0.1); color: #10b981; border: 1px solid rgba(16,185,129,0.2); }
 .loc-mobile    { background: rgba(245,158,11,0.1); color: #d97706; border: 1px solid rgba(245,158,11,0.2); }
-.loc-secondary { background: rgba(99,102,241,0.1); color: #818cf8; border: 1px solid rgba(99,102,241,0.2); }
+.loc-secondary { background: rgba(37,99,235,0.1); color: #60a5fa; border: 1px solid rgba(37,99,235,0.2); }
 </style>
 
 <div class="card" style="margin-bottom: 28px;">

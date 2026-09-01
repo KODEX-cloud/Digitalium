@@ -25,11 +25,11 @@ class SettingsMigration implements MigrationInterface {
         'header_cta_url'     => '/contact',
         'meta_title_default' => 'Digitalium Group',
         'meta_description_default' => 'CMS Enterprise Digitalium Group',
-        'color_primary'      => '#4f46e5',
-        'color_accent'       => '#818cf8',
+        'color_primary'      => '#2563eb',
+        'color_accent'       => '#f59e0b',
         'color_text_main'    => '#0f172a',
         'color_text_muted'   => '#64748b',
-        'color_bg_base'      => '#f0f4ff',
+        'color_bg_base'      => '#ffffff',
     ];
 
     public static function run(): array {

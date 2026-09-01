@@ -121,13 +121,13 @@ if (!empty($page['hero_title'])):
     }
     .glass-stack-card:hover {
         transform: scale(1.05) translateY(-2px) !important;
-        border-color: rgba(99, 102, 241, 0.45) !important;
-        box-shadow: 0 20px 40px rgba(99, 102, 241, 0.1) !important;
+        border-color: rgba(37, 99, 235, 0.45) !important;
+        box-shadow: 0 20px 40px rgba(37, 99, 235, 0.1) !important;
     }
     .glass-feature-card:hover {
         transform: translateY(-5px) !important;
-        border-color: rgba(99, 102, 241, 0.4) !important;
-        box-shadow: 0 20px 40px rgba(99, 102, 241, 0.15) !important;
+        border-color: rgba(37, 99, 235, 0.4) !important;
+        box-shadow: 0 20px 40px rgba(37, 99, 235, 0.15) !important;
         background: rgba(255, 255, 255, 0.07) !important;
     }
 
@@ -202,8 +202,8 @@ if (!empty($page['hero_title'])):
                             <!-- Slide Content -->
                             <div class="hero-text-block" style="<?= $textOrder ?> max-width: <?= $heroTextWidth ?>; <?= $textMarginCss ?> <?= $textAlignmentCss ?> display: flex; flex-direction: column; <?= ($heroTextAlignment === 'center' || $heroTextAlignment === 'centre') ? 'align-items: center;' : (($heroTextAlignment === 'right' || $heroTextAlignment === 'droite') ? 'align-items: flex-end;' : 'align-items: flex-start;') ?>">
                                 <?php if (!empty($slide['badge'])): ?>
-                                    <div class="hero-brand-badge" style="display: inline-flex; align-items: center; gap: 8px; background: rgba(99, 102, 241, 0.25); border: 1px solid rgba(99, 102, 241, 0.4); padding: 6px 18px; border-radius: 50px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; color: #a5b4fc; margin-bottom: 28px; font-family: var(--font-heading);">
-                                        <div style="width: 6px; height: 6px; border-radius: 50%; background: #818cf8; box-shadow: 0 0 8px #818cf8;"></div>
+                                    <div class="hero-brand-badge" style="display: inline-flex; align-items: center; gap: 8px; background: rgba(37, 99, 235, 0.25); border: 1px solid rgba(37, 99, 235, 0.4); padding: 6px 18px; border-radius: 50px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; color: #93c5fd; margin-bottom: 28px; font-family: var(--font-heading);">
+                                        <div style="width: 6px; height: 6px; border-radius: 50%; background: #60a5fa; box-shadow: 0 0 8px #60a5fa;"></div>
                                         <span><?= htmlspecialchars($slide['badge']) ?></span>
                                     </div>
                                 <?php endif; ?>
@@ -235,7 +235,7 @@ if (!empty($page['hero_title'])):
 
                             <!-- Slide Image visual -->
                             <div class="hero-right-visual" style="<?= $visualOrder ?> display: flex; justify-content: center; align-items: center;">
-                                <div class="visual-wrap" style="position: relative; <?= $sizeStyle ?> max-width: <?= $visualMaxWidth ?>; filter: drop-shadow(0 25px 50px rgba(99, 102, 241, 0.25));">
+                                <div class="visual-wrap" style="position: relative; <?= $sizeStyle ?> max-width: <?= $visualMaxWidth ?>; filter: drop-shadow(0 25px 50px rgba(37, 99, 235, 0.25));">
                                     <div class="mockup-frame" style="background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.2); padding: 12px; border-radius: 24px; box-shadow: inset 0 1px 1px rgba(255,255,255,0.4);">
                                         <div class="screen-frame" style="aspect-ratio: 1.5; background: #0f172a; border-radius: 16px; overflow: hidden; border: 2px solid rgba(255,255,255,0.2); position: relative;">
                                             <?php if (!empty($slide['image'])): ?>
@@ -353,8 +353,8 @@ if (!empty($page['hero_title'])):
             <div class="hero-text-block" style="max-width: <?= $heroTextWidth ?>; <?= $textMarginCss ?> <?= $textAlignmentCss ?> display: flex; flex-direction: column; <?= ($heroTextAlignment === 'center' || $heroTextAlignment === 'centre') ? 'align-items: center;' : (($heroTextAlignment === 'right' || $heroTextAlignment === 'droite') ? 'align-items: flex-end;' : 'align-items: flex-start;') ?> opacity: 0; transform: translateY(20px); animation: heroFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;">
                 
                 <?php if (!empty($badge)): ?>
-                    <div class="hero-brand-badge" style="display: inline-flex; align-items: center; gap: 8px; background: rgba(99, 102, 241, 0.2); border: 1px solid rgba(99, 102, 241, 0.3); padding: 6px 18px; border-radius: 50px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; color: #a5b4fc; margin-bottom: 28px; font-family: var(--font-heading); box-shadow: 0 0 15px rgba(99, 102, 241, 0.15);">
-                        <div style="width: 6px; height: 6px; border-radius: 50%; background: #818cf8;"></div>
+                    <div class="hero-brand-badge" style="display: inline-flex; align-items: center; gap: 8px; background: rgba(37, 99, 235, 0.2); border: 1px solid rgba(37, 99, 235, 0.3); padding: 6px 18px; border-radius: 50px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; color: #93c5fd; margin-bottom: 28px; font-family: var(--font-heading); box-shadow: 0 0 15px rgba(37, 99, 235, 0.15);">
+                        <div style="width: 6px; height: 6px; border-radius: 50%; background: #60a5fa;"></div>
                         <span><?= htmlspecialchars($badge) ?></span>
                     </div>
                 <?php endif; ?>
@@ -391,7 +391,7 @@ if (!empty($page['hero_title'])):
     <!-- Variant: Corporate Hero -->
     <section class="premium-hero hero-corporate-layout" id="hero-section-<?= $page['id'] ?>" style="position: relative; padding: <?= $heroPadding ?>; overflow: hidden; display: flex; <?= $verticalAlignCss ?> min-height: <?= $heroMinHeight ?>; background: linear-gradient(to right, #f8fafc, #f1f5f9);">
         
-        <div class="hero-glow" style="position: absolute; top: 0; right: 0; width: 500px; height: 100%; background: radial-gradient(circle, rgba(99, 102, 241, 0.04) 0%, transparent 80%); pointer-events: none;"></div>
+        <div class="hero-glow" style="position: absolute; top: 0; right: 0; width: 500px; height: 100%; background: radial-gradient(circle, rgba(37, 99, 235, 0.04) 0%, transparent 80%); pointer-events: none;"></div>
 
         <div class="container" style="position: relative; z-index: 5; width: 100%;">
             <div class="hero-grid" style="display: grid; <?= $gridOrder ?> gap: 60px; align-items: center;">
@@ -534,7 +534,7 @@ if (!empty($page['hero_title'])):
             <div class="floating-glass-card-hero" style="background: rgba(11,18,34,0.85); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(255,255,255,0.1); padding: 48px 40px; border-radius: 24px; box-shadow: 0 30px 60px -15px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.06); max-width: 800px; width: 100%; text-align: center; display: flex; flex-direction: column; align-items: center; animation: floatBadge 8s ease-in-out infinite;">
                 
                 <?php if (!empty($badge)): ?>
-                    <span class="hero-brand-badge" style="display: inline-flex; align-items: center; gap: 8px; background: rgba(99, 102, 241, 0.12); border: 1px solid rgba(99, 102, 241, 0.25); padding: 6px 18px; border-radius: 50px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; color: var(--primary); margin-bottom: 24px; font-family: var(--font-heading);"><?= htmlspecialchars($badge) ?></span>
+                    <span class="hero-brand-badge" style="display: inline-flex; align-items: center; gap: 8px; background: rgba(37, 99, 235, 0.12); border: 1px solid rgba(37, 99, 235, 0.25); padding: 6px 18px; border-radius: 50px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; color: var(--primary); margin-bottom: 24px; font-family: var(--font-heading);"><?= htmlspecialchars($badge) ?></span>
                 <?php endif; ?>
 
                 <h1 style="font-size: clamp(2.2rem, 5vw, 3.6rem); line-height: 1.15; font-weight: 900; color: var(--text-main); margin-bottom: 20px; font-family: var(--font-heading); letter-spacing: -0.02em; text-shadow: none !important;">
@@ -594,7 +594,7 @@ if (!empty($page['hero_title'])):
         </div>
 
         <!-- Ambient Radial Glows -->
-        <div class="hero-glow-1" style="position: absolute; width: 600px; height: 600px; border-radius: 50%; background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, rgba(99, 102, 241, 0) 70%); top: -200px; right: -100px; z-index: 2; pointer-events: none;"></div>
+        <div class="hero-glow-1" style="position: absolute; width: 600px; height: 600px; border-radius: 50%; background: radial-gradient(circle, rgba(37, 99, 235, 0.15) 0%, rgba(37, 99, 235, 0) 70%); top: -200px; right: -100px; z-index: 2; pointer-events: none;"></div>
         <div class="hero-glow-2" style="position: absolute; width: 600px; height: 600px; border-radius: 50%; background: radial-gradient(circle, rgba(236, 72, 153, 0.08) 0%, rgba(236, 72, 153, 0) 70%); bottom: -200px; left: -100px; z-index: 2; pointer-events: none;"></div>
 
         <div class="container" style="position: relative; z-index: 5; width: 100%;">
@@ -602,8 +602,8 @@ if (!empty($page['hero_title'])):
                 
                 <!-- Badge / Label -->
                 <?php if (!empty($badge)): ?>
-                    <div class="hero-brand-badge" style="display: inline-flex; align-items: center; gap: 8px; background: rgba(99, 102, 241, 0.12); border: 1px solid rgba(99, 102, 241, 0.25); padding: 6px 18px; border-radius: 50px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; color: #a5b4fc; margin-bottom: 28px; font-family: var(--font-heading); box-shadow: 0 0 15px rgba(99, 102, 241, 0.1);">
-                        <div style="width: 6px; height: 6px; border-radius: 50%; background: #818cf8; box-shadow: 0 0 8px #818cf8;"></div>
+                    <div class="hero-brand-badge" style="display: inline-flex; align-items: center; gap: 8px; background: rgba(37, 99, 235, 0.12); border: 1px solid rgba(37, 99, 235, 0.25); padding: 6px 18px; border-radius: 50px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; color: #93c5fd; margin-bottom: 28px; font-family: var(--font-heading); box-shadow: 0 0 15px rgba(37, 99, 235, 0.1);">
+                        <div style="width: 6px; height: 6px; border-radius: 50%; background: #60a5fa; box-shadow: 0 0 8px #60a5fa;"></div>
                         <span><?= htmlspecialchars($badge) ?></span>
                     </div>
                 <?php endif; ?>
@@ -653,14 +653,14 @@ if (!empty($page['hero_title'])):
     <!-- Variant 2: Minimalist Text Only Hero -->
     <section class="premium-hero hero-text-only-layout" id="hero-section-<?= $page['id'] ?>" style="<?= $bgStyle ?> position: relative; padding: <?= $heroPadding ?>; overflow: hidden; display: flex; <?= $verticalAlignCss ?> min-height: <?= $heroMinHeight ?>;">
         
-        <div class="hero-glow-1" style="position: absolute; width: 500px; height: 500px; border-radius: 50%; background: radial-gradient(circle, rgba(124, 58, 237, 0.08) 0%, rgba(124, 58, 237, 0) 70%); top: -100px; right: -50px; z-index: 1; pointer-events: none;"></div>
+        <div class="hero-glow-1" style="position: absolute; width: 500px; height: 500px; border-radius: 50%; background: radial-gradient(circle, rgba(8, 145, 178, 0.08) 0%, rgba(8, 145, 178, 0) 70%); top: -100px; right: -50px; z-index: 1; pointer-events: none;"></div>
 
         <div class="container" style="position: relative; z-index: 5; width: 100%;">
             <div class="hero-text-block" style="max-width: <?= $heroTextWidth ?>; <?= $textMarginCss ?> <?= $textAlignmentCss ?> display: flex; flex-direction: column; <?= ($heroTextAlignment === 'center' || $heroTextAlignment === 'centre') ? 'align-items: center;' : (($heroTextAlignment === 'right' || $heroTextAlignment === 'droite') ? 'align-items: flex-end;' : 'align-items: flex-start;') ?> opacity: 0; transform: translateY(20px); animation: heroFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;">
                 
                 <!-- Badge -->
                 <?php if (!empty($badge)): ?>
-                    <div class="hero-brand-badge" style="display: inline-flex; align-items: center; gap: 8px; background: rgba(124, 58, 237, 0.08); border: 1px solid rgba(124, 58, 237, 0.2); padding: 6px 16px; border-radius: 50px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; color: var(--secondary); margin-bottom: 24px; font-family: var(--font-heading);">
+                    <div class="hero-brand-badge" style="display: inline-flex; align-items: center; gap: 8px; background: rgba(8, 145, 178, 0.08); border: 1px solid rgba(8, 145, 178, 0.2); padding: 6px 16px; border-radius: 50px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; color: var(--secondary); margin-bottom: 24px; font-family: var(--font-heading);">
                         <div style="width: 6px; height: 6px; border-radius: 50%; background: var(--secondary); box-shadow: 0 0 8px var(--secondary);"></div>
                         <span><?= htmlspecialchars($badge) ?></span>
                     </div>
@@ -788,7 +788,7 @@ if (!empty($page['hero_title'])):
     <!-- Variant 7: Asymmetric Stack Hero -->
     <section class="premium-hero hero-asymmetric-layout" id="hero-section-<?= $page['id'] ?>" style="<?= $bgStyle ?> position: relative; padding: <?= $heroPadding ?>; overflow: hidden; display: flex; <?= $verticalAlignCss ?> min-height: <?= $heroMinHeight ?>;">
         
-        <div class="hero-glow-1" style="position: absolute; width: 600px; height: 600px; border-radius: 50%; background: radial-gradient(circle, rgba(124, 58, 237, 0.12) 0%, rgba(124, 58, 237, 0) 70%); top: -100px; right: -50px; z-index: 1; pointer-events: none;"></div>
+        <div class="hero-glow-1" style="position: absolute; width: 600px; height: 600px; border-radius: 50%; background: radial-gradient(circle, rgba(8, 145, 178, 0.12) 0%, rgba(8, 145, 178, 0) 70%); top: -100px; right: -50px; z-index: 1; pointer-events: none;"></div>
 
         <div class="container" style="position: relative; z-index: 5; width: 100%;">
             <div class="hero-grid" style="display: grid; <?= $gridOrder ?> gap: 60px; align-items: center;">
@@ -797,7 +797,7 @@ if (!empty($page['hero_title'])):
                 <div class="hero-left-content hero-text-block" style="<?= $textOrder ?> max-width: <?= $heroTextWidth ?>; <?= $textMarginCss ?> <?= $textAlignmentCss ?> display: flex; flex-direction: column; <?= ($heroTextAlignment === 'center' || $heroTextAlignment === 'centre') ? 'align-items: center;' : (($heroTextAlignment === 'right' || $heroTextAlignment === 'droite') ? 'align-items: flex-end;' : 'align-items: flex-start;') ?> opacity: 0; transform: translateY(20px); animation: heroFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;">
                     
                     <?php if (!empty($badge)): ?>
-                        <div class="hero-brand-badge" style="display: inline-flex; align-items: center; gap: 8px; background: rgba(124, 58, 237, 0.08); border: 1px solid rgba(124, 58, 237, 0.2); padding: 6px 16px; border-radius: 50px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.15em; color: var(--secondary); margin-bottom: 24px; font-family: var(--font-heading);">
+                        <div class="hero-brand-badge" style="display: inline-flex; align-items: center; gap: 8px; background: rgba(8, 145, 178, 0.08); border: 1px solid rgba(8, 145, 178, 0.2); padding: 6px 16px; border-radius: 50px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.15em; color: var(--secondary); margin-bottom: 24px; font-family: var(--font-heading);">
                             <div style="width: 6px; height: 6px; border-radius: 50%; background: var(--secondary); box-shadow: 0 0 8px var(--secondary);"></div>
                             <span><?= htmlspecialchars($badge) ?></span>
                         </div>
@@ -841,8 +841,8 @@ if (!empty($page['hero_title'])):
                 }
                 if (empty($heroFeatures)) {
                     $heroFeatures = [
-                        ['icon' => 'zap', 'title' => htmlspecialchars($settings['site_name'] ?? 'Digitalium'), 'desc' => 'Solutions digitales haute performance.', 'color' => 'rgba(79,70,229,0.1)', 'iconColor' => 'var(--primary)', 'offset' => '-15px'],
-                        ['icon' => 'shield-check', 'title' => 'Sécurité & Fiabilité', 'desc' => 'Protection de vos données et transactions.', 'color' => 'rgba(124,58,237,0.1)', 'iconColor' => 'var(--secondary)', 'offset' => '0'],
+                        ['icon' => 'zap', 'title' => htmlspecialchars($settings['site_name'] ?? 'Digitalium'), 'desc' => 'Solutions digitales haute performance.', 'color' => 'rgba(37,99,235,0.1)', 'iconColor' => 'var(--primary)', 'offset' => '-15px'],
+                        ['icon' => 'shield-check', 'title' => 'Sécurité & Fiabilité', 'desc' => 'Protection de vos données et transactions.', 'color' => 'rgba(8,145,178,0.1)', 'iconColor' => 'var(--secondary)', 'offset' => '0'],
                         ['icon' => 'layout-grid', 'title' => 'CMS Modulaire', 'desc' => 'Administration dynamique en temps réel.', 'color' => 'rgba(13,148,136,0.12)', 'iconColor' => '#0d9488', 'offset' => '15px'],
                     ];
                 }
@@ -854,8 +854,8 @@ if (!empty($page['hero_title'])):
                             $offset = $stackOffsets[$fi] ?? '0';
                             $isBordered = $fi === 1;
                         ?>
-                        <div class="glass-stack-card" style="background: rgba(255,255,255,<?= $isBordered ? '0.7' : '0.65' ?>); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,<?= $isBordered ? '0.8' : '0.7' ?>); <?= $isBordered ? 'border-left: 4px solid var(--secondary);' : '' ?> border-radius: 16px; padding: 18px 24px; box-shadow: <?= $isBordered ? '0 20px 40px rgba(79,70,229,0.06)' : '0 10px 30px rgba(0,0,0,0.05)' ?>; display: flex; align-items: center; gap: 16px; transform: <?= $isBordered ? 'scale(1.03)' : "translateX($offset)" ?>; transition: all 0.4s ease-in-out;">
-                            <div style="width: 42px; height: 42px; border-radius: 12px; background: <?= htmlspecialchars($feat['color'] ?? 'rgba(79,70,229,0.1)') ?>; display: flex; align-items: center; justify-content: center; color: <?= htmlspecialchars($feat['iconColor'] ?? 'var(--primary)') ?>;">
+                        <div class="glass-stack-card" style="background: rgba(255,255,255,<?= $isBordered ? '0.7' : '0.65' ?>); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,<?= $isBordered ? '0.8' : '0.7' ?>); <?= $isBordered ? 'border-left: 4px solid var(--secondary);' : '' ?> border-radius: 16px; padding: 18px 24px; box-shadow: <?= $isBordered ? '0 20px 40px rgba(37,99,235,0.06)' : '0 10px 30px rgba(0,0,0,0.05)' ?>; display: flex; align-items: center; gap: 16px; transform: <?= $isBordered ? 'scale(1.03)' : "translateX($offset)" ?>; transition: all 0.4s ease-in-out;">
+                            <div style="width: 42px; height: 42px; border-radius: 12px; background: <?= htmlspecialchars($feat['color'] ?? 'rgba(37,99,235,0.1)') ?>; display: flex; align-items: center; justify-content: center; color: <?= htmlspecialchars($feat['iconColor'] ?? 'var(--primary)') ?>;">
                                 <i data-lucide="<?= htmlspecialchars($feat['icon'] ?? 'zap') ?>" style="width: 22px; height: 22px;"></i>
                             </div>
                             <div>
@@ -875,7 +875,7 @@ if (!empty($page['hero_title'])):
     <!-- Variant 8: Grid Features Hero -->
     <section class="premium-hero hero-grid-features-layout" id="hero-section-<?= $page['id'] ?>" style="<?= $bgStyle ?> position: relative; padding: <?= $heroPadding ?>; overflow: hidden; display: flex; <?= $verticalAlignCss ?> min-height: <?= $heroMinHeight ?>;">
         
-        <div class="hero-glow-1" style="position: absolute; width: 600px; height: 600px; border-radius: 50%; background: radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%, rgba(99, 102, 241, 0) 70%); top: -100px; right: -50px; z-index: 1; pointer-events: none;"></div>
+        <div class="hero-glow-1" style="position: absolute; width: 600px; height: 600px; border-radius: 50%; background: radial-gradient(circle, rgba(37, 99, 235, 0.1) 0%, rgba(37, 99, 235, 0) 70%); top: -100px; right: -50px; z-index: 1; pointer-events: none;"></div>
 
         <div class="container" style="position: relative; z-index: 5; width: 100%;">
             <div class="hero-grid" style="display: grid; <?= $gridOrder ?> gap: 60px; align-items: center;">
@@ -884,7 +884,7 @@ if (!empty($page['hero_title'])):
                 <div class="hero-left-content hero-text-block" style="<?= $textOrder ?> max-width: <?= $heroTextWidth ?>; <?= $textMarginCss ?> <?= $textAlignmentCss ?> display: flex; flex-direction: column; <?= ($heroTextAlignment === 'center' || $heroTextAlignment === 'centre') ? 'align-items: center;' : (($heroTextAlignment === 'right' || $heroTextAlignment === 'droite') ? 'align-items: flex-end;' : 'align-items: flex-start;') ?> opacity: 0; transform: translateY(20px); animation: heroFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;">
                     
                     <?php if (!empty($badge)): ?>
-                        <div class="hero-brand-badge" style="display: inline-flex; align-items: center; gap: 8px; background: rgba(99, 102, 241, 0.08); border: 1px solid rgba(99, 102, 241, 0.2); padding: 6px 16px; border-radius: 50px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.15em; color: var(--primary); margin-bottom: 24px; font-family: var(--font-heading);">
+                        <div class="hero-brand-badge" style="display: inline-flex; align-items: center; gap: 8px; background: rgba(37, 99, 235, 0.08); border: 1px solid rgba(37, 99, 235, 0.2); padding: 6px 16px; border-radius: 50px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.15em; color: var(--primary); margin-bottom: 24px; font-family: var(--font-heading);">
                             <div style="width: 6px; height: 6px; border-radius: 50%; background: var(--primary); box-shadow: 0 0 8px var(--primary);"></div>
                             <span><?= htmlspecialchars($badge) ?></span>
                         </div>
@@ -928,8 +928,8 @@ if (!empty($page['hero_title'])):
                 }
                 if (empty($gridFeats)) {
                     $gridFeats = [
-                        ['icon' => 'cpu', 'title' => 'IA & Automation', 'desc' => 'Optimisez vos process métiers.', 'color' => 'rgba(79,70,229,0.1)', 'iconColor' => 'var(--primary)'],
-                        ['icon' => 'cloud', 'title' => 'Infrastructure Cloud', 'desc' => 'Hébergement sécurisé scalable.', 'color' => 'rgba(124,58,237,0.1)', 'iconColor' => 'var(--secondary)'],
+                        ['icon' => 'cpu', 'title' => 'IA & Automation', 'desc' => 'Optimisez vos process métiers.', 'color' => 'rgba(37,99,235,0.1)', 'iconColor' => 'var(--primary)'],
+                        ['icon' => 'cloud', 'title' => 'Infrastructure Cloud', 'desc' => 'Hébergement sécurisé scalable.', 'color' => 'rgba(8,145,178,0.1)', 'iconColor' => 'var(--secondary)'],
                         ['icon' => 'globe', 'title' => 'Applications Web', 'desc' => 'Solutions sur-mesure modernes.', 'color' => 'rgba(6,182,212,0.1)', 'iconColor' => '#0891b2'],
                         ['icon' => 'phone-call', 'title' => 'Support 24/7', 'desc' => 'Une équipe d\'experts à votre écoute.', 'color' => 'rgba(13,148,136,0.12)', 'iconColor' => '#0d9488'],
                     ];
@@ -939,7 +939,7 @@ if (!empty($page['hero_title'])):
                     <div class="grid-features-wrap" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; width: 100%; max-width: 440px;">
                         <?php foreach (array_slice($gridFeats, 0, 4) as $gf): ?>
                         <div class="glass-feature-card" style="background: rgba(255,255,255,0.04); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 24px 20px; box-shadow: 0 0 0 1px rgba(255,255,255,0.04), 0 10px 30px rgba(0,0,0,0.25); display: flex; flex-direction: column; gap: 14px; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);">
-                            <div style="width: 38px; height: 38px; border-radius: 10px; background: <?= htmlspecialchars($gf['color'] ?? 'rgba(79,70,229,0.1)') ?>; display: flex; align-items: center; justify-content: center; color: <?= htmlspecialchars($gf['iconColor'] ?? 'var(--primary)') ?>;">
+                            <div style="width: 38px; height: 38px; border-radius: 10px; background: <?= htmlspecialchars($gf['color'] ?? 'rgba(37,99,235,0.1)') ?>; display: flex; align-items: center; justify-content: center; color: <?= htmlspecialchars($gf['iconColor'] ?? 'var(--primary)') ?>;">
                                 <i data-lucide="<?= htmlspecialchars($gf['icon'] ?? 'zap') ?>" style="width: 20px; height: 20px;"></i>
                             </div>
                             <div>
@@ -964,7 +964,7 @@ if (!empty($page['hero_title'])):
     <section class="premium-hero hero-split-layout" id="hero-section-<?= $page['id'] ?>" style="<?= $bgStyle ?> position: relative; padding: <?= $heroPadding ?>; overflow: hidden; display: flex; <?= $verticalAlignCss ?> min-height: <?= $heroMinHeight ?>;">
         
         <!-- Ambient Glows -->
-        <div class="hero-glow-1" style="position: absolute; width: 500px; height: 500px; border-radius: 50%; background: radial-gradient(circle, rgba(124, 58, 237, 0.12) 0%, rgba(124, 58, 237, 0) 70%); top: -100px; right: -50px; z-index: 1; pointer-events: none;"></div>
+        <div class="hero-glow-1" style="position: absolute; width: 500px; height: 500px; border-radius: 50%; background: radial-gradient(circle, rgba(8, 145, 178, 0.12) 0%, rgba(8, 145, 178, 0) 70%); top: -100px; right: -50px; z-index: 1; pointer-events: none;"></div>
         <div class="hero-glow-2" style="position: absolute; width: 500px; height: 500px; border-radius: 50%; background: radial-gradient(circle, rgba(30, 58, 138, 0.08) 0%, rgba(30, 58, 138, 0) 70%); bottom: -100px; left: -50px; z-index: 1; pointer-events: none;"></div>
 
         <div class="container" style="position: relative; z-index: 5; width: 100%;">
@@ -974,7 +974,7 @@ if (!empty($page['hero_title'])):
                 <div class="hero-left-content hero-text-block" style="<?= $textOrder ?> max-width: <?= $heroTextWidth ?>; <?= $textMarginCss ?> <?= $textAlignmentCss ?> display: flex; flex-direction: column; <?= ($heroTextAlignment === 'center' || $heroTextAlignment === 'centre') ? 'align-items: center;' : (($heroTextAlignment === 'right' || $heroTextAlignment === 'droite') ? 'align-items: flex-end;' : 'align-items: flex-start;') ?> opacity: 0; transform: translateY(20px); animation: heroFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;">
                     
                     <!-- Brand Badge / Label -->
-                    <div class="hero-brand-badge" style="display: inline-flex; align-items: center; gap: 8px; background: rgba(124, 58, 237, 0.08); border: 1px solid rgba(124, 58, 237, 0.2); padding: 6px 16px; border-radius: 50px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.15em; color: var(--secondary); margin-bottom: 24px; font-family: var(--font-heading);">
+                    <div class="hero-brand-badge" style="display: inline-flex; align-items: center; gap: 8px; background: rgba(8, 145, 178, 0.08); border: 1px solid rgba(8, 145, 178, 0.2); padding: 6px 16px; border-radius: 50px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.15em; color: var(--secondary); margin-bottom: 24px; font-family: var(--font-heading);">
                         <div style="width: 6px; height: 6px; border-radius: 50%; background: var(--secondary); box-shadow: 0 0 8px var(--secondary);"></div>
                         <span><?= htmlspecialchars(!empty($badge) ? $badge : ($settings['site_name'] ?? 'Digitalium Group')) ?></span>
                     </div>
@@ -1033,7 +1033,7 @@ if (!empty($page['hero_title'])):
                         <?php if ($isFloating): ?>
                             <!-- Floating Card Style with subtle neon borders -->
                             <div class="floating-glass-card" style="background: rgba(30, 41, 59, 0.45); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.12); padding: 16px; border-radius: 24px; box-shadow: 0 30px 60px rgba(0,0,0,0.3); animation: floatBadge 8s ease-in-out infinite; overflow: hidden; position: relative;">
-                                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, transparent 100%); pointer-events: none;"></div>
+                                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, rgba(37, 99, 235, 0.08) 0%, transparent 100%); pointer-events: none;"></div>
                                 <div class="card-screen" style="aspect-ratio: 1.4; border-radius: 16px; overflow: hidden; border: 1px solid rgba(255,255,255,0.15); position: relative;">
                                     <?php if (!empty($page['hero_image'])): ?>
                                         <picture>
@@ -1063,7 +1063,7 @@ if (!empty($page['hero_title'])):
                                         </picture>
                                     <?php else: ?>
                                         <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #0b1329 0%, #1e1b4b 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; color: white; padding: 20px; text-align: center;">
-                                            <div style="width: 60px; height: 60px; border-radius: 50%; background: rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: center; box-shadow: 0 0 20px rgba(99, 102, 241, 0.1);">
+                                            <div style="width: 60px; height: 60px; border-radius: 50%; background: rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: center; box-shadow: 0 0 20px rgba(37, 99, 235, 0.1);">
                                                 <i data-lucide="cpu" style="width: 28px; height: 28px; color: var(--accent);"></i>
                                             </div>
                                             <h4 style="color: white; font-size: 1rem; font-family: var(--font-heading); font-weight: 600;"><?= htmlspecialchars($page['title']) ?></h4>
@@ -1096,7 +1096,7 @@ if (!empty($page['hero_title'])):
 }
 .btn-cta-secondary:hover {
     background: rgba(255,255,255,0.09) !important;
-    border-color: rgba(99,102,241,0.4) !important;
+    border-color: rgba(37,99,235,0.4) !important;
     transform: translateY(-2px);
 }
 @media (max-width: 991px) {

@@ -11,7 +11,7 @@
     }
 
     .upload-zone {
-        border: 2px dashed rgba(79, 70, 229, 0.25);
+        border: 2px dashed rgba(37, 99, 235, 0.25);
         border-radius: 20px;
         background-color: rgba(255, 255, 255, 0.4);
         padding: 40px;
@@ -26,7 +26,7 @@
     }
     .upload-zone:hover, .upload-zone.dragover {
         border-color: var(--primary);
-        background-color: rgba(79, 70, 229, 0.08);
+        background-color: rgba(37, 99, 235, 0.08);
     }
     .upload-zone i {
         color: var(--text-muted);
@@ -61,13 +61,13 @@
         display: flex;
         flex-direction: column;
         position: relative;
-        box-shadow: 0 10px 20px -5px rgba(99, 102, 241, 0.04), 0 4px 6px -2px rgba(0, 0, 0, 0.01);
+        box-shadow: 0 10px 20px -5px rgba(37, 99, 235, 0.04), 0 4px 6px -2px rgba(0, 0, 0, 0.01);
         transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .media-card:hover {
         transform: translateY(-4px);
-        border-color: rgba(99, 102, 241, 0.25);
-        box-shadow: 0 20px 30px -10px rgba(99, 102, 241, 0.08);
+        border-color: rgba(37, 99, 235, 0.25);
+        box-shadow: 0 20px 30px -10px rgba(37, 99, 235, 0.08);
     }
 
     .media-preview-container {

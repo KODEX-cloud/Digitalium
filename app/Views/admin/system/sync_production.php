@@ -16,7 +16,7 @@
 .table-tag    { padding:3px 10px; border-radius:4px; font-size:.75rem; font-weight:500; }
 .tag-present  { background:#e0f2fe; color:#0369a1; }
 .tag-missing  { background:#fee2e2; color:#991b1b; }
-.run-btn { width:100%; padding:14px; font-size:1rem; font-weight:700; border-radius:10px; border:none; cursor:pointer; background:linear-gradient(135deg,#4f46e5,#7c3aed); color:#fff; transition:.2s; }
+.run-btn { width:100%; padding:14px; font-size:1rem; font-weight:700; border-radius:10px; border:none; cursor:pointer; background:linear-gradient(135deg,#2563eb,#1d4ed8); color:#fff; transition:.2s; }
 .run-btn:hover { opacity:.9; }
 .run-btn:disabled { opacity:.5; cursor:not-allowed; }
 #syncLog { background:#0f172a; color:#e2e8f0; border-radius:10px; padding:16px; font-family:monospace; font-size:.8rem; min-height:120px; max-height:400px; overflow-y:auto; white-space:pre-wrap; margin-top:16px; display:none; }
@@ -116,7 +116,7 @@
 <!-- ACTION -->
 <div class="sync-card" style="margin-bottom:24px;">
     <div class="section-title">
-        <i data-lucide="zap" style="width:18px;height:18px;color:#4f46e5;"></i>
+        <i data-lucide="zap" style="width:18px;height:18px;color:#2563eb;"></i>
         Lancer la Synchronisation Production
     </div>
     <p style="font-size:.83rem; color:var(--text-muted); margin:0 0 16px;">

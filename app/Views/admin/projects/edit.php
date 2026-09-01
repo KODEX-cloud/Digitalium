@@ -41,7 +41,7 @@
         display: flex;
         flex-direction: column;
         overflow: hidden;
-        box-shadow: 0 30px 60px -15px rgba(99, 102, 241, 0.15), 0 10px 20px -5px rgba(0, 0, 0, 0.03);
+        box-shadow: 0 30px 60px -15px rgba(37, 99, 235, 0.15), 0 10px 20px -5px rgba(0, 0, 0, 0.03);
     }
     .modal-header {
         padding: 20px;
@@ -73,7 +73,7 @@
     .modal-media-item:hover {
         border-color: var(--primary);
         transform: translateY(-2px);
-        box-shadow: 0 8px 16px -4px rgba(79, 70, 229, 0.2);
+        box-shadow: 0 8px 16px -4px rgba(37, 99, 235, 0.2);
     }
     .modal-media-item img {
         width: 100%;

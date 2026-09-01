@@ -90,7 +90,7 @@ try {
         
         // --- 1. HERO SECTION ---
         $secHeroId = (int)Section::addSection($pageId, 'Bannière Principale', 'hero', 0);
-        Block::setVal($secHeroId, 'title', 'wysiwyg', '<h1>Concevons ensemble<br><span style="color: #6366f1;">l\'architecture</span> de votre futur</h1>');
+        Block::setVal($secHeroId, 'title', 'wysiwyg', '<h1>Concevons ensemble<br><span style="color: #2563eb;">l\'architecture</span> de votre futur</h1>');
         Block::setVal($secHeroId, 'subtitle', 'textarea', 'Nous sommes un groupe technologique d\'élite. Nous façonnons des logiciels sur mesure stables, performants et hautement sécurisés.');
         Block::setVal($secHeroId, 'cta_text', 'text', 'Démarrer mon projet');
         Block::setVal($secHeroId, 'cta_url', 'link', '#contact');

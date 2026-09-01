@@ -18,8 +18,8 @@
             --border-highlight: rgba(255, 255, 255, 0.65);
             --text-main: #1e293b;
             --text-muted: #64748b;
-            --primary: #4f46e5;
-            --primary-hover: #7c3aed;
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
             --success: #10b981;
             --warning: #f59e0b;
             --danger: #ef4444;
@@ -35,7 +35,7 @@
 
         body {
             font-family: var(--font-main);
-            background: linear-gradient(135deg, #eef2f8 0%, #f6f5fa 40%, #e0e6ff 100%);
+            background: linear-gradient(135deg, #eef2f8 0%, #f6f5fa 40%, #dbe7ff 100%);
             background-attachment: fixed;
             color: var(--text-main);
             display: flex;
@@ -70,7 +70,7 @@
             font-family: var(--font-headings);
             font-size: 1.4rem;
             font-weight: 700;
-            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             letter-spacing: -0.025em;
@@ -101,7 +101,7 @@
         .menu-item a:hover,
         .menu-item.active a {
             color: var(--primary);
-            background-color: rgba(79, 70, 229, 0.08);
+            background-color: rgba(37, 99, 235, 0.08);
         }
 
         .menu-item.active a {
@@ -192,7 +192,7 @@
             background-color: rgba(255, 255, 255, 0.6);
             backdrop-filter: blur(10px);
             color: var(--primary);
-            border: 1px solid rgba(79, 70, 229, 0.25);
+            border: 1px solid rgba(37, 99, 235, 0.25);
             border-radius: 50px;
             text-decoration: none;
             font-size: 0.85rem;
@@ -204,7 +204,7 @@
             background-color: white;
             border-color: var(--primary);
             transform: translateY(-1px);
-            box-shadow: 0 6px 12px -3px rgba(79, 70, 229, 0.15);
+            box-shadow: 0 6px 12px -3px rgba(37, 99, 235, 0.15);
         }
 
         .workspace-content {
@@ -251,7 +251,7 @@
         }
 
         .toast-info {
-            background-color: rgba(99, 102, 241, 0.95);
+            background-color: rgba(37, 99, 235, 0.95);
             color: white;
             border-left: 4px solid #4338ca;
         }
@@ -269,7 +269,7 @@
             border-radius: 20px;
             padding: 24px;
             margin-bottom: 24px;
-            box-shadow: 0 20px 40px -15px rgba(99, 102, 241, 0.05), 0 5px 15px -5px rgba(0, 0, 0, 0.02);
+            box-shadow: 0 20px 40px -15px rgba(37, 99, 235, 0.05), 0 5px 15px -5px rgba(0, 0, 0, 0.02);
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
@@ -320,7 +320,7 @@
             outline: none;
             background-color: white;
             border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
 
         .btn-primary {
@@ -337,13 +337,13 @@
             font-weight: 600;
             cursor: pointer;
             text-decoration: none;
-            box-shadow: 0 6px 14px -4px rgba(79, 70, 229, 0.25);
+            box-shadow: 0 6px 14px -4px rgba(37, 99, 235, 0.25);
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .btn-primary:hover {
             transform: translateY(-1px);
-            box-shadow: 0 10px 18px -4px rgba(79, 70, 229, 0.35);
+            box-shadow: 0 10px 18px -4px rgba(37, 99, 235, 0.35);
             filter: brightness(1.05);
         }
 
@@ -367,7 +367,7 @@
 
         .btn-secondary:hover {
             background: rgba(255, 255, 255, 0.95);
-            border-color: rgba(79, 70, 229, 0.2);
+            border-color: rgba(37, 99, 235, 0.2);
             transform: translateY(-1px);
         }
 
@@ -469,7 +469,7 @@
                     try {
                         $unreadCount = \App\Models\Message::countNew();
                         if ($unreadCount > 0): ?>
-                        <span style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:#6366f1;color:#fff;font-size:0.65rem;font-weight:800;padding:1px 7px;border-radius:50px;min-width:20px;text-align:center;">
+                        <span style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:#2563eb;color:#fff;font-size:0.65rem;font-weight:800;padding:1px 7px;border-radius:50px;min-width:20px;text-align:center;">
                             <?= $unreadCount ?>
                         </span>
                     <?php endif;
@@ -575,7 +575,7 @@
     $layoutMediaList = \App\Models\Media::all('id DESC');
     ?>
     <div class="media-modal" id="mediaPickerModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(15, 23, 42, 0.25); z-index: 9999; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);">
-        <div class="modal-content" style="background-color: rgba(255, 255, 255, 0.9); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.6); border-radius: 24px; width: 100%; max-width: 800px; max-height: 80vh; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 30px 60px -15px rgba(99, 102, 241, 0.15), 0 10px 20px -5px rgba(0, 0, 0, 0.03);">
+        <div class="modal-content" style="background-color: rgba(255, 255, 255, 0.9); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.6); border-radius: 24px; width: 100%; max-width: 800px; max-height: 80vh; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 30px 60px -15px rgba(37, 99, 235, 0.15), 0 10px 20px -5px rgba(0, 0, 0, 0.03);">
             <div class="modal-header" style="padding: 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between;">
                 <h3 class="card-title">
                     <i data-lucide="image" style="color: var(--primary)"></i>
@@ -611,7 +611,7 @@
         .modal-media-item:hover {
             border-color: var(--primary) !important;
             transform: translateY(-2px);
-            box-shadow: 0 8px 16px -4px rgba(79, 70, 229, 0.2);
+            box-shadow: 0 8px 16px -4px rgba(37, 99, 235, 0.2);
         }
     </style>
 

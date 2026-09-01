@@ -29,7 +29,7 @@
         border: 1px solid var(--border-highlight);
         border-radius: 20px;
         overflow: hidden;
-        box-shadow: 0 20px 40px -15px rgba(99, 102, 241, 0.05), 0 5px 15px -5px rgba(0, 0, 0, 0.02);
+        box-shadow: 0 20px 40px -15px rgba(37, 99, 235, 0.05), 0 5px 15px -5px rgba(0, 0, 0, 0.02);
     }
     .sidebar-header {
         padding: 16px 20px;
@@ -73,11 +73,11 @@
     }
     .section-nav-item.active {
         border-color: var(--primary);
-        background-color: rgba(79, 70, 229, 0.08);
-        box-shadow: 0 4px 12px -3px rgba(79, 70, 229, 0.15);
+        background-color: rgba(37, 99, 235, 0.08);
+        box-shadow: 0 4px 12px -3px rgba(37, 99, 235, 0.15);
     }
     .section-nav-item:hover:not(.active) {
-        border-color: rgba(79, 70, 229, 0.2);
+        border-color: rgba(37, 99, 235, 0.2);
         background-color: rgba(255, 255, 255, 0.7);
     }
 
@@ -220,7 +220,7 @@
         display: flex;
         flex-direction: column;
         overflow: hidden;
-        box-shadow: 0 30px 60px -15px rgba(99, 102, 241, 0.15), 0 10px 20px -5px rgba(0, 0, 0, 0.03);
+        box-shadow: 0 30px 60px -15px rgba(37, 99, 235, 0.15), 0 10px 20px -5px rgba(0, 0, 0, 0.03);
     }
     .modal-header {
         padding: 20px;
@@ -252,7 +252,7 @@
     .modal-media-item:hover {
         border-color: var(--primary);
         transform: translateY(-2px);
-        box-shadow: 0 8px 16px -4px rgba(79, 70, 229, 0.2);
+        box-shadow: 0 8px 16px -4px rgba(37, 99, 235, 0.2);
     }
     .modal-media-item img {
         width: 100%;
@@ -843,7 +843,7 @@ if (empty($selectedLogo)) {
         }
         function addHeroFeature() {
             if (heroFeatures.length >= 4) { alert('Maximum 4 cartes.'); return; }
-            heroFeatures.push({icon:'zap',title:'Nouveau service',desc:'Description courte.',color:'rgba(79,70,229,0.1)',iconColor:'var(--primary)'});
+            heroFeatures.push({icon:'zap',title:'Nouveau service',desc:'Description courte.',color:'rgba(37,99,235,0.1)',iconColor:'var(--primary)'});
             renderHeroFeatures(); syncHeroFeatures();
         }
         function removeHeroFeature(i) { heroFeatures.splice(i,1); renderHeroFeatures(); syncHeroFeatures(); }
@@ -880,7 +880,7 @@ if (empty($selectedLogo)) {
     </div>
 
     <!-- Interactive Simulator Panel -->
-    <div class="card visual-simulator-card" style="padding: 20px; position: sticky; top: 20px; display: flex; flex-direction: column; gap: 14px; border: 1px solid rgba(79, 70, 229, 0.15); background: rgba(255, 255, 255, 0.45); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); box-shadow: 0 15px 35px rgba(30,58,138,0.04);">
+    <div class="card visual-simulator-card" style="padding: 20px; position: sticky; top: 20px; display: flex; flex-direction: column; gap: 14px; border: 1px solid rgba(37, 99, 235, 0.15); background: rgba(255, 255, 255, 0.45); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); box-shadow: 0 15px 35px rgba(30,58,138,0.04);">
         <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); padding-bottom: 10px;">
             <h4 style="font-family: var(--font-heading); font-size: 0.9rem; color: var(--primary); display: flex; align-items: center; gap: 6px; margin: 0;">
                 <i data-lucide="eye" style="width: 16px; height: 16px; color: var(--secondary);"></i>
@@ -904,7 +904,7 @@ if (empty($selectedLogo)) {
             <div id="sim_container" style="position: relative; width: 100%; height: calc(100% - 20px); overflow-y: auto; overflow-x: hidden; background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 50%, #e2e8f0 100%);">
                 
                 <!-- Simulated ambient glows -->
-                <div style="position: absolute; width: 100px; height: 100px; border-radius: 50%; background: radial-gradient(circle, rgba(99, 102, 241, 0.12) 0%, transparent 70%); top: -20px; right: -20px; pointer-events: none;"></div>
+                <div style="position: absolute; width: 100px; height: 100px; border-radius: 50%; background: radial-gradient(circle, rgba(37, 99, 235, 0.12) 0%, transparent 70%); top: -20px; right: -20px; pointer-events: none;"></div>
                 <div style="position: absolute; width: 100px; height: 100px; border-radius: 50%; background: radial-gradient(circle, rgba(236, 72, 153, 0.06) 0%, transparent 70%); bottom: -20px; left: -20px; pointer-events: none;"></div>
 
                 <!-- Simulated Header -->
@@ -936,7 +936,7 @@ if (empty($selectedLogo)) {
                         
                         <!-- Text Block -->
                         <div id="sim_hero_text_block" style="display:flex; flex-direction: column; gap: 2px; transition: all 0.3s;">
-                            <span id="sim_hero_badge" style="display:inline-flex; align-self: flex-start; padding: 1px 5px; border-radius: 20px; background: rgba(99,102,241,0.1); color: var(--secondary); font-size: 0.42rem; font-weight: 700; border: 1px solid rgba(99,102,241,0.2);">BADGE</span>
+                            <span id="sim_hero_badge" style="display:inline-flex; align-self: flex-start; padding: 1px 5px; border-radius: 20px; background: rgba(37,99,235,0.1); color: var(--secondary); font-size: 0.42rem; font-weight: 700; border: 1px solid rgba(37,99,235,0.2);">BADGE</span>
                             <h2 id="sim_hero_title" style="font-size: 0.85rem; line-height: 1.1; font-weight: 800; font-family: var(--font-heading); margin: 0; color: var(--text-main);">Titre principal</h2>
                             <p id="sim_hero_subtitle" style="font-size: 0.5rem; color: var(--text-muted); margin: 0;">Description de la Hero section.</p>
                             <div id="sim_hero_ctas" style="display:flex; gap: 4px; margin-top: 3px;">
@@ -962,7 +962,7 @@ if (empty($selectedLogo)) {
                         ?>
                             <div class="sim-section-box" data-id="<?= $sec['id'] ?>" style="background: rgba(255, 255, 255, 0.45); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.6); border-radius: 10px; padding: 12px 14px; cursor: pointer; transition: all 0.3s ease-in-out; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02);" onclick="switchSection(<?= $sec['id'] ?>)">
                                 <div style="display: flex; align-items: center; gap: 10px;">
-                                    <div style="width: 26px; height: 26px; border-radius: 6px; background: rgba(79, 70, 229, 0.08); display: flex; align-items: center; justify-content: center; color: var(--primary);">
+                                    <div style="width: 26px; height: 26px; border-radius: 6px; background: rgba(37, 99, 235, 0.08); display: flex; align-items: center; justify-content: center; color: var(--primary);">
                                         <i data-lucide="layout" style="width: 14px; height: 14px;"></i>
                                     </div>
                                     <div style="display: flex; flex-direction: column; gap: 2px;">
@@ -1041,7 +1041,7 @@ if (empty($selectedLogo)) {
                             <h2 class="card-title">
                                 <i data-lucide="layout"></i>
                                 <span id="panel-title-<?= $sec['id'] ?>"><?= htmlspecialchars($sec['name']) ?></span>
-                                <span style="font-size: 0.75rem; background-color: rgba(99,102,241,0.15); color: #a5b4fc; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; font-weight: 600;"><?= $sec['type'] ?></span>
+                                <span style="font-size: 0.75rem; background-color: rgba(37,99,235,0.15); color: #93c5fd; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; font-weight: 600;"><?= $sec['type'] ?></span>
                             </h2>
                             <button class="btn-primary" onclick="saveSectionContent(<?= $sec['id'] ?>)">
                                 <i data-lucide="save"></i>
@@ -1842,7 +1842,7 @@ if (empty($selectedLogo)) {
                     <div class="sim-slide-item" data-index="${idx}" style="position: absolute; inset: 0; display: flex; align-items: center; transition: opacity 0.5s ease-in-out; ${isActive}">
                         <div style="width: 100%; display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 12px; align-items: center; padding: 0 12px;">
                             <div style="display: flex; flex-direction: column; gap: 4px;">
-                                ${slide.badge ? `<span style="display: inline-flex; align-self: flex-start; padding: 1px 5px; border-radius: 20px; background: rgba(99,102,241,0.25); color: #a5b4fc; font-size: 0.42rem; font-weight: 700; border: 1px solid rgba(99,102,241,0.3); text-transform: uppercase;">${slide.badge}</span>` : ''}
+                                ${slide.badge ? `<span style="display: inline-flex; align-self: flex-start; padding: 1px 5px; border-radius: 20px; background: rgba(37,99,235,0.25); color: #93c5fd; font-size: 0.42rem; font-weight: 700; border: 1px solid rgba(37,99,235,0.3); text-transform: uppercase;">${slide.badge}</span>` : ''}
                                 <h2 style="font-size: 0.85rem; line-height: 1.1; font-weight: 800; font-family: var(--font-heading); margin: 0; color: #ffffff; text-shadow: ${textShadowCss};">${slide.title}</h2>
                                 <p style="font-size: 0.5rem; color: #cbd5e1; margin: 0; text-shadow: ${textShadowCss};">${slide.subtitle}</p>
                                 <div style="display: flex; gap: 4px; margin-top: 3px;">
@@ -1943,7 +1943,7 @@ if (empty($selectedLogo)) {
             simHeroGrid.style.gridTemplateColumns = '1fr';
         } else if (heroVariant === 'hero_ambient_glow') {
             simHeroBg.style.backgroundImage = 'none';
-            simHeroBg.style.background = `radial-gradient(circle, rgba(124, 58, 237, 0.22) 0%, rgba(30, 58, 138, 0.08) 50%, rgba(0,0,0,0) 80%), ${bgInput}`;
+            simHeroBg.style.background = `radial-gradient(circle, rgba(8, 145, 178, 0.22) 0%, rgba(30, 58, 138, 0.08) 50%, rgba(0,0,0,0) 80%), ${bgInput}`;
             simHeroOverlay.style.opacity = '0';
             simHeroTitle.style.color = 'var(--text-main)';
             simHeroSubtitle.style.color = 'var(--text-muted)';
@@ -1960,11 +1960,11 @@ if (empty($selectedLogo)) {
             simHeroVisual.innerHTML = `
               <div style="display: flex; flex-direction: column; gap: 8px; width: 100%; max-width: 220px; font-size: 0.35rem;">
                 <div style="background: rgba(255,255,255,0.7); border: 1px solid rgba(255,255,255,0.8); border-radius: 8px; padding: 6px 10px; display: flex; align-items: center; gap: 8px; transform: translateX(-10px);">
-                  <div style="width: 14px; height: 14px; border-radius: 4px; background: rgba(79, 70, 229, 0.1); display: flex; align-items: center; justify-content: center; color: var(--primary);"><i data-lucide="zap" style="width: 8px; height: 8px;"></i></div>
+                  <div style="width: 14px; height: 14px; border-radius: 4px; background: rgba(37, 99, 235, 0.1); display: flex; align-items: center; justify-content: center; color: var(--primary);"><i data-lucide="zap" style="width: 8px; height: 8px;"></i></div>
                   <div><strong>Haute Performance</strong><div style="font-size:0.28rem;color:var(--text-muted);">Web rapide.</div></div>
                 </div>
                 <div style="background: rgba(255,255,255,0.85); border: 1px solid rgba(255,255,255,0.9); border-radius: 8px; padding: 6px 10px; display: flex; align-items: center; gap: 8px; border-left: 2px solid var(--secondary);">
-                  <div style="width: 14px; height: 14px; border-radius: 4px; background: rgba(124, 58, 237, 0.1); display: flex; align-items: center; justify-content: center; color: var(--secondary);"><i data-lucide="shield-check" style="width: 8px; height: 8px;"></i></div>
+                  <div style="width: 14px; height: 14px; border-radius: 4px; background: rgba(8, 145, 178, 0.1); display: flex; align-items: center; justify-content: center; color: var(--secondary);"><i data-lucide="shield-check" style="width: 8px; height: 8px;"></i></div>
                   <div><strong>Sécurité</strong><div style="font-size:0.28rem;color:var(--text-muted);">Données protégées.</div></div>
                 </div>
                 <div style="background: rgba(255,255,255,0.7); border: 1px solid rgba(255,255,255,0.8); border-radius: 8px; padding: 6px 10px; display: flex; align-items: center; gap: 8px; transform: translateX(10px);">
@@ -1985,11 +1985,11 @@ if (empty($selectedLogo)) {
             simHeroVisual.innerHTML = `
               <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; width: 100%; max-width: 220px; font-size: 0.35rem;">
                 <div style="background: rgba(255,255,255,0.7); border: 1px solid rgba(255,255,255,0.8); border-radius: 8px; padding: 8px 6px; display: flex; flex-direction: column; gap: 4px;">
-                  <div style="width: 14px; height: 14px; border-radius: 4px; background: rgba(79, 70, 229, 0.1); display: flex; align-items: center; justify-content: center; color: var(--primary);"><i data-lucide="cpu" style="width: 8px; height: 8px;"></i></div>
+                  <div style="width: 14px; height: 14px; border-radius: 4px; background: rgba(37, 99, 235, 0.1); display: flex; align-items: center; justify-content: center; color: var(--primary);"><i data-lucide="cpu" style="width: 8px; height: 8px;"></i></div>
                   <div><strong>IA & Automation</strong></div>
                 </div>
                 <div style="background: rgba(255,255,255,0.7); border: 1px solid rgba(255,255,255,0.8); border-radius: 8px; padding: 8px 6px; display: flex; flex-direction: column; gap: 4px;">
-                  <div style="width: 14px; height: 14px; border-radius: 4px; background: rgba(124, 58, 237, 0.1); display: flex; align-items: center; justify-content: center; color: var(--secondary);"><i data-lucide="cloud" style="width: 8px; height: 8px;"></i></div>
+                  <div style="width: 14px; height: 14px; border-radius: 4px; background: rgba(8, 145, 178, 0.1); display: flex; align-items: center; justify-content: center; color: var(--secondary);"><i data-lucide="cloud" style="width: 8px; height: 8px;"></i></div>
                   <div><strong>Infrastructure</strong></div>
                 </div>
                 <div style="background: rgba(255,255,255,0.7); border: 1px solid rgba(255,255,255,0.8); border-radius: 8px; padding: 8px 6px; display: flex; flex-direction: column; gap: 4px;">

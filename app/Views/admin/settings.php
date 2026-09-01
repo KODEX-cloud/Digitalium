@@ -42,7 +42,7 @@
         display: flex;
         flex-direction: column;
         overflow: hidden;
-        box-shadow: 0 30px 60px -15px rgba(99, 102, 241, 0.15), 0 10px 20px -5px rgba(0, 0, 0, 0.03);
+        box-shadow: 0 30px 60px -15px rgba(37, 99, 235, 0.15), 0 10px 20px -5px rgba(0, 0, 0, 0.03);
     }
     .modal-header {
         padding: 20px;
@@ -74,7 +74,7 @@
     .modal-media-item:hover {
         border-color: var(--primary);
         transform: translateY(-2px);
-        box-shadow: 0 8px 16px -4px rgba(79, 70, 229, 0.2);
+        box-shadow: 0 8px 16px -4px rgba(37, 99, 235, 0.2);
     }
     .modal-media-item img {
         width: 100%;
@@ -339,15 +339,15 @@
                     <div class="admin-form-group">
                         <label for="color_primary">Couleur Principale (--primary)</label>
                         <div style="display:flex;gap:10px;align-items:center;">
-                            <input type="color" id="color_primary_picker" value="<?= htmlspecialchars($settings['color_primary'] ?? '#4f46e5') ?>" style="width:44px;height:38px;padding:2px;border:1px solid var(--border);border-radius:8px;cursor:pointer;background:none;" oninput="document.getElementById('color_primary').value=this.value">
-                            <input type="text" id="color_primary" name="color_primary" class="admin-input" value="<?= htmlspecialchars($settings['color_primary'] ?? '#4f46e5') ?>" placeholder="#4f46e5" oninput="document.getElementById('color_primary_picker').value=this.value">
+                            <input type="color" id="color_primary_picker" value="<?= htmlspecialchars($settings['color_primary'] ?? '#2563eb') ?>" style="width:44px;height:38px;padding:2px;border:1px solid var(--border);border-radius:8px;cursor:pointer;background:none;" oninput="document.getElementById('color_primary').value=this.value">
+                            <input type="text" id="color_primary" name="color_primary" class="admin-input" value="<?= htmlspecialchars($settings['color_primary'] ?? '#2563eb') ?>" placeholder="#2563eb" oninput="document.getElementById('color_primary_picker').value=this.value">
                         </div>
                     </div>
                     <div class="admin-form-group">
                         <label for="color_accent">Couleur Accent (--accent)</label>
                         <div style="display:flex;gap:10px;align-items:center;">
-                            <input type="color" id="color_accent_picker" value="<?= htmlspecialchars($settings['color_accent'] ?? '#818cf8') ?>" style="width:44px;height:38px;padding:2px;border:1px solid var(--border);border-radius:8px;cursor:pointer;background:none;" oninput="document.getElementById('color_accent').value=this.value">
-                            <input type="text" id="color_accent" name="color_accent" class="admin-input" value="<?= htmlspecialchars($settings['color_accent'] ?? '#818cf8') ?>" placeholder="#818cf8" oninput="document.getElementById('color_accent_picker').value=this.value">
+                            <input type="color" id="color_accent_picker" value="<?= htmlspecialchars($settings['color_accent'] ?? '#f59e0b') ?>" style="width:44px;height:38px;padding:2px;border:1px solid var(--border);border-radius:8px;cursor:pointer;background:none;" oninput="document.getElementById('color_accent').value=this.value">
+                            <input type="text" id="color_accent" name="color_accent" class="admin-input" value="<?= htmlspecialchars($settings['color_accent'] ?? '#f59e0b') ?>" placeholder="#f59e0b" oninput="document.getElementById('color_accent_picker').value=this.value">
                         </div>
                     </div>
                 </div>

@@ -82,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #7c3aed;
+            --primary: #1d4ed8;
             --primary-hover: #6d28d9;
             --bg: #0f172a;
             --card-bg: rgba(30, 41, 59, 0.7);
@@ -102,7 +102,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             padding: 20px;
             box-sizing: border-box;
             background-image: 
-                radial-gradient(circle at 10% 20%, rgba(124, 58, 237, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 10% 20%, rgba(8, 145, 178, 0.1) 0%, transparent 40%),
                 radial-gradient(circle at 90% 80%, rgba(30, 58, 138, 0.1) 0%, transparent 40%);
         }
         .card {
@@ -153,7 +153,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         input:focus {
             outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.2);
+            box-shadow: 0 0 0 3px rgba(8, 145, 178, 0.2);
         }
         button {
             width: 100%;

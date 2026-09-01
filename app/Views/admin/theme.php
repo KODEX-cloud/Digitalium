@@ -9,8 +9,8 @@ function thv(array $s, string $key, string $default): string {
 .tb-wrap        { display: grid; grid-template-columns: 240px 1fr; gap: 0; min-height: calc(100vh - 70px - 80px); }
 .tb-nav         { background: rgba(255,255,255,0.55); border-right: 1px solid rgba(0,0,0,0.07); padding: 24px 0; position: sticky; top: 70px; height: fit-content; border-radius: 16px 0 0 16px; }
 .tb-nav-item    { display: flex; align-items: center; gap: 10px; padding: 11px 20px; font-size: 0.88rem; font-weight: 500; color: #64748b; cursor: pointer; transition: all 0.2s; border-left: 3px solid transparent; margin: 1px 0; }
-.tb-nav-item:hover { color: #4f46e5; background: rgba(79,70,229,0.05); }
-.tb-nav-item.active { color: #4f46e5; background: rgba(79,70,229,0.08); border-left-color: #4f46e5; font-weight: 600; }
+.tb-nav-item:hover { color: #2563eb; background: rgba(37,99,235,0.05); }
+.tb-nav-item.active { color: #2563eb; background: rgba(37,99,235,0.08); border-left-color: #2563eb; font-weight: 600; }
 .tb-nav-item i  { width: 16px; height: 16px; flex-shrink: 0; }
 .tb-content     { padding: 32px 40px; }
 .tb-panel       { display: none; }
@@ -30,7 +30,7 @@ function thv(array $s, string $key, string $default): string {
 
 /* Color picker group */
 .color-group    { display: flex; align-items: center; gap: 0; border: 1.5px solid rgba(0,0,0,0.1); border-radius: 10px; overflow: hidden; background: #f8fafc; transition: border-color 0.2s; }
-.color-group:focus-within { border-color: #4f46e5; box-shadow: 0 0 0 3px rgba(79,70,229,0.1); }
+.color-group:focus-within { border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
 .color-swatch   { width: 44px; height: 44px; border: none; outline: none; cursor: pointer; padding: 4px; background: transparent; flex-shrink: 0; }
 .color-swatch::-webkit-color-swatch-wrapper { padding: 0; border-radius: 6px; }
 .color-swatch::-webkit-color-swatch { border: none; border-radius: 6px; }
@@ -38,17 +38,17 @@ function thv(array $s, string $key, string $default): string {
 
 /* Range slider */
 .tb-range-wrap  { display: flex; align-items: center; gap: 12px; }
-.tb-range       { flex: 1; -webkit-appearance: none; height: 5px; border-radius: 10px; background: linear-gradient(90deg, #4f46e5, #7c3aed); outline: none; cursor: pointer; }
-.tb-range::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: #fff; border: 2px solid #4f46e5; box-shadow: 0 2px 6px rgba(79,70,229,0.3); cursor: pointer; }
-.tb-range-val   { min-width: 48px; text-align: right; font-size: 0.82rem; font-weight: 700; color: #4f46e5; background: rgba(79,70,229,0.08); padding: 3px 8px; border-radius: 6px; }
+.tb-range       { flex: 1; -webkit-appearance: none; height: 5px; border-radius: 10px; background: linear-gradient(90deg, #2563eb, #1d4ed8); outline: none; cursor: pointer; }
+.tb-range::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: #fff; border: 2px solid #2563eb; box-shadow: 0 2px 6px rgba(37,99,235,0.3); cursor: pointer; }
+.tb-range-val   { min-width: 48px; text-align: right; font-size: 0.82rem; font-weight: 700; color: #2563eb; background: rgba(37,99,235,0.08); padding: 3px 8px; border-radius: 6px; }
 
 /* Input text */
 .tb-input       { width: 100%; padding: 10px 14px; border: 1.5px solid rgba(0,0,0,0.1); border-radius: 10px; font-size: 0.88rem; color: #1e293b; font-family: 'Inter', sans-serif; background: #f8fafc; outline: none; transition: border-color 0.2s, box-shadow 0.2s; }
-.tb-input:focus { border-color: #4f46e5; background: #fff; box-shadow: 0 0 0 3px rgba(79,70,229,0.1); }
+.tb-input:focus { border-color: #2563eb; background: #fff; box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
 
 /* Select */
 .tb-select      { width: 100%; padding: 10px 14px; border: 1.5px solid rgba(0,0,0,0.1); border-radius: 10px; font-size: 0.88rem; color: #1e293b; font-family: 'Inter', sans-serif; background: #f8fafc; outline: none; appearance: none; cursor: pointer; }
-.tb-select:focus{ border-color: #4f46e5; background: #fff; box-shadow: 0 0 0 3px rgba(79,70,229,0.1); }
+.tb-select:focus{ border-color: #2563eb; background: #fff; box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
 
 /* Preview bar */
 .tb-preview-bar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; padding: 16px 20px; background: #f8fafc; border-radius: 10px; margin-bottom: 20px; border: 1px solid rgba(0,0,0,0.06); }
@@ -57,8 +57,8 @@ function thv(array $s, string $key, string $default): string {
 
 /* Save bar */
 .tb-save-bar    { position: sticky; bottom: 0; background: rgba(255,255,255,0.95); backdrop-filter: blur(12px); border-top: 1px solid rgba(0,0,0,0.07); padding: 16px 40px; display: flex; align-items: center; justify-content: space-between; z-index: 50; margin: 0 -40px -32px; border-radius: 0 0 0 0; }
-.tb-btn-save    { display: inline-flex; align-items: center; gap: 8px; padding: 12px 28px; background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); color: white; border: none; border-radius: 50px; font-size: 0.9rem; font-weight: 600; cursor: pointer; box-shadow: 0 6px 20px rgba(79,70,229,0.35); transition: all 0.2s; font-family: 'Inter', sans-serif; }
-.tb-btn-save:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(79,70,229,0.45); }
+.tb-btn-save    { display: inline-flex; align-items: center; gap: 8px; padding: 12px 28px; background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); color: white; border: none; border-radius: 50px; font-size: 0.9rem; font-weight: 600; cursor: pointer; box-shadow: 0 6px 20px rgba(37,99,235,0.35); transition: all 0.2s; font-family: 'Inter', sans-serif; }
+.tb-btn-save:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(37,99,235,0.45); }
 .tb-btn-reset   { display: inline-flex; align-items: center; gap: 8px; padding: 12px 22px; background: transparent; color: #64748b; border: 1.5px solid rgba(0,0,0,0.1); border-radius: 50px; font-size: 0.88rem; font-weight: 500; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; }
 .tb-btn-reset:hover { color: #ef4444; border-color: rgba(239,68,68,0.3); background: rgba(239,68,68,0.04); }
 </style>
@@ -67,7 +67,7 @@ function thv(array $s, string $key, string $default): string {
 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;">
     <div>
         <h1 style="font-size:1.5rem;font-weight:700;color:#1e293b;letter-spacing:-0.02em;margin-bottom:4px;">
-            <i data-lucide="palette" style="width:22px;height:22px;display:inline;vertical-align:-4px;margin-right:8px;color:#4f46e5;"></i>
+            <i data-lucide="palette" style="width:22px;height:22px;display:inline;vertical-align:-4px;margin-right:8px;color:#2563eb;"></i>
             Theme Builder
         </h1>
         <p style="font-size:0.88rem;color:#64748b;">Contrôlez l'identité graphique complète du site depuis le Backend — sans toucher au code.</p>

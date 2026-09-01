@@ -14,7 +14,7 @@
 .badge-approved { background: rgba(16,185,129,0.15); color: #059669; border: 1px solid rgba(16,185,129,0.3); }
 .badge-rejected { background: rgba(239,68,68,0.15);  color: #dc2626; border: 1px solid rgba(239,68,68,0.3); }
 .comment-row { transition: background 0.2s; }
-.comment-row:hover { background: rgba(99,102,241,0.03) !important; }
+.comment-row:hover { background: rgba(37,99,235,0.03) !important; }
 .comment-body { font-size: 0.88rem; color: var(--text-muted); line-height: 1.6; margin-top: 6px; max-width: 480px; }
 .filter-tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
 .filter-tab  { padding: 6px 16px; border-radius: 50px; font-size: 0.78rem; font-weight: 600; border: 1px solid var(--border); color: var(--text-muted); text-decoration: none; transition: all 0.2s; }
@@ -56,7 +56,7 @@
     <div class="card" style="padding: 0; overflow: hidden;">
         <table style="width: 100%; border-collapse: collapse;">
             <thead>
-                <tr style="background: rgba(99,102,241,0.06); border-bottom: 1px solid var(--border);">
+                <tr style="background: rgba(37,99,235,0.06); border-bottom: 1px solid var(--border);">
                     <th style="padding: 12px 20px; text-align: left; font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); font-weight: 600;">Auteur</th>
                     <th style="padding: 12px 20px; text-align: left; font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); font-weight: 600;">Commentaire</th>
                     <th style="padding: 12px 20px; text-align: left; font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); font-weight: 600;">Article</th>

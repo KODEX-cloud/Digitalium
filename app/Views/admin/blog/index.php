@@ -2,7 +2,7 @@
 .blog-table { width: 100%; border-collapse: collapse; }
 .blog-table th { padding: 10px 14px; text-align: left; font-size: 0.75rem; text-transform: uppercase; letter-spacing: .08em; color: var(--text-muted); border-bottom: 1px solid var(--border); }
 .blog-table td { padding: 12px 14px; border-bottom: 1px solid var(--border); font-size: 0.9rem; vertical-align: middle; }
-.blog-table tr:hover td { background: rgba(99,102,241,0.03); }
+.blog-table tr:hover td { background: rgba(37,99,235,0.03); }
 .status-badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 50px; font-size: 0.72rem; font-weight: 700; }
 .status-published { background: rgba(34,197,94,0.12); color: #16a34a; }
 .status-draft { background: rgba(148,163,184,0.12); color: #64748b; }

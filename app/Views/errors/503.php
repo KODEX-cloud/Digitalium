@@ -7,7 +7,7 @@
 <style>
   * { margin:0; padding:0; box-sizing:border-box; }
   body { font-family: system-ui, -apple-system, sans-serif; background: linear-gradient(135deg,#eef2f8,#e0e6ff); min-height:100vh; display:flex; align-items:center; justify-content:center; }
-  .card { background:#fff; border-radius:20px; padding:3rem 2.5rem; text-align:center; box-shadow:0 8px 32px rgba(79,70,229,.12); max-width:520px; width:90%; }
+  .card { background:#fff; border-radius:20px; padding:3rem 2.5rem; text-align:center; box-shadow:0 8px 32px rgba(37,99,235,.12); max-width:520px; width:90%; }
   .code { font-size:5rem; font-weight:900; background:linear-gradient(135deg,#f59e0b,#ef4444); -webkit-background-clip:text; -webkit-text-fill-color:transparent; line-height:1; }
   h1 { font-size:1.3rem; color:#1e293b; margin:.75rem 0 .5rem; font-weight:700; }
   p  { color:#64748b; line-height:1.7; font-size:.95rem; }

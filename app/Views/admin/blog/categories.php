@@ -28,7 +28,7 @@
                     <td style="padding:12px 16px;font-weight:600;"><?= htmlspecialchars($cat['name']) ?></td>
                     <td style="padding:12px 16px;font-size:0.82rem;color:var(--text-muted);"><?= htmlspecialchars($cat['slug']) ?></td>
                     <td style="padding:12px 16px;text-align:center;">
-                        <span style="background:rgba(99,102,241,0.1);color:var(--primary);padding:2px 10px;border-radius:50px;font-size:0.78rem;font-weight:700;"><?= (int)($cat['post_count'] ?? 0) ?></span>
+                        <span style="background:rgba(37,99,235,0.1);color:var(--primary);padding:2px 10px;border-radius:50px;font-size:0.78rem;font-weight:700;"><?= (int)($cat['post_count'] ?? 0) ?></span>
                     </td>
                     <td style="padding:12px 16px;">
                         <form method="POST" action="<?= url('/admin/blog/categories/delete/' . $cat['id']) ?>" onsubmit="return confirm('Supprimer cette catégorie ?');">

@@ -53,7 +53,7 @@
 }
 .search-box:focus-within {
     border-color: var(--secondary) !important;
-    box-shadow: 0 12px 30px -10px rgba(124, 58, 237, 0.25) !important;
+    box-shadow: 0 12px 30px -10px rgba(8, 145, 178, 0.25) !important;
 }
 .search-box button {
     border-radius: 0 12px 12px 0 !important;
@@ -80,7 +80,7 @@
     background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
     border-color: transparent;
     color: white;
-    box-shadow: 0 10px 20px -8px rgba(79, 70, 229, 0.3);
+    box-shadow: 0 10px 20px -8px rgba(37, 99, 235, 0.3);
     transform: translateY(-1px);
 }
 </style>

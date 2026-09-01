@@ -23,7 +23,7 @@ body {
   border-radius: 24px;
   padding: 3.5rem 3rem;
   text-align: center;
-  box-shadow: 0 20px 60px rgba(79,70,229,0.1), 0 5px 15px rgba(0,0,0,0.03);
+  box-shadow: 0 20px 60px rgba(37,99,235,0.1), 0 5px 15px rgba(0,0,0,0.03);
   max-width: 540px;
   width: 100%;
 }
@@ -37,7 +37,7 @@ body {
 .logo-icon {
   width: 42px;
   height: 42px;
-  background: linear-gradient(135deg,#4f46e5,#7c3aed);
+  background: linear-gradient(135deg,#2563eb,#1d4ed8);
   border-radius: 10px;
   display: flex;
   align-items: center;
@@ -49,7 +49,7 @@ body {
 .logo-text {
   font-size: 1.3rem;
   font-weight: 700;
-  background: linear-gradient(135deg,#4f46e5,#7c3aed);
+  background: linear-gradient(135deg,#2563eb,#1d4ed8);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   letter-spacing: -0.025em;
@@ -82,11 +82,11 @@ p {
   display: inline-block;
   margin-top: 1.25rem;
   padding: 0.5rem 1.25rem;
-  background: rgba(79,70,229,0.08);
-  border: 1px solid rgba(79,70,229,0.15);
+  background: rgba(37,99,235,0.08);
+  border: 1px solid rgba(37,99,235,0.15);
   border-radius: 50px;
   font-size: 0.82rem;
-  color: #4f46e5;
+  color: #2563eb;
   font-weight: 600;
 }
 .pulse {
@@ -100,7 +100,7 @@ p {
 .pulse-dot {
   width: 8px;
   height: 8px;
-  background: #4f46e5;
+  background: #2563eb;
   border-radius: 50%;
   animation: pulse 1.5s ease-in-out infinite;
 }
@@ -116,7 +116,7 @@ p {
   color: #94a3b8;
 }
 .contact a {
-  color: #4f46e5;
+  color: #2563eb;
   text-decoration: none;
   font-weight: 500;
 }

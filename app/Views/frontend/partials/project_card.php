@@ -18,7 +18,7 @@ if (isset($project)):
     $catColorClass = '';
     switch (strtolower($category)) {
         case 'politique':
-            $catColor = 'background: rgba(124, 58, 237, 0.09); border: 1px solid rgba(124, 58, 237, 0.35); color: #7c3aed;';
+            $catColor = 'background: rgba(8, 145, 178, 0.09); border: 1px solid rgba(8, 145, 178, 0.35); color: #1d4ed8;';
             break;
         case 'institutionnel':
             $catColor = 'background: rgba(132, 204, 22, 0.09); border: 1px solid rgba(132, 204, 22, 0.35); color: #65a30d;';
@@ -37,7 +37,7 @@ if (isset($project)):
             $catColor = 'background: rgba(59, 130, 246, 0.09); border: 1px solid rgba(59, 130, 246, 0.35); color: #2563eb;';
             break;
         default:
-            $catColor = 'background: rgba(79, 70, 229, 0.09); border: 1px solid rgba(79, 70, 229, 0.35); color: #4f46e5;';
+            $catColor = 'background: rgba(37, 99, 235, 0.09); border: 1px solid rgba(37, 99, 235, 0.35); color: #2563eb;';
             break;
     }
 ?>
@@ -72,7 +72,7 @@ if (isset($project)):
         <!-- Context & Impact Pills (Exact replicated layout) -->
         <div style="display: flex; gap: 8px; flex-wrap: wrap;">
             <span style="font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; padding: 4px 10px; border-radius: 6px; background: rgba(226, 109, 54, 0.09); border: 1.5px solid rgba(226, 109, 54, 0.25); color: var(--accent); font-family: var(--font-heading);">Contexte</span>
-            <span style="font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; padding: 4px 10px; border-radius: 6px; background: rgba(124, 58, 237, 0.09); border: 1.5px solid rgba(124, 58, 237, 0.25); color: var(--secondary); font-family: var(--font-heading);">Impact</span>
+            <span style="font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; padding: 4px 10px; border-radius: 6px; background: rgba(8, 145, 178, 0.09); border: 1.5px solid rgba(8, 145, 178, 0.25); color: var(--secondary); font-family: var(--font-heading);">Impact</span>
         </div>
 
         <!-- Description Paragraphs -->
@@ -114,7 +114,7 @@ if (isset($project)):
 .project-card:hover {
     transform: translateY(-8px);
     box-shadow: 0 25px 50px -15px rgba(30, 58, 138, 0.15) !important;
-    border-color: rgba(79, 70, 229, 0.25) !important;
+    border-color: rgba(37, 99, 235, 0.25) !important;
 }
 .project-card:hover .project-client-logo-wrapper {
     transform: scale(1.1) rotate(-3deg);

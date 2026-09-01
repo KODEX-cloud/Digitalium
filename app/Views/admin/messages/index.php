@@ -1,9 +1,9 @@
 <style>
 .msg-status { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 50px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
-.msg-nouveau  { background: rgba(99,102,241,0.1); color: #6366f1; border: 1px solid rgba(99,102,241,0.25); }
+.msg-nouveau  { background: rgba(37,99,235,0.1); color: #2563eb; border: 1px solid rgba(37,99,235,0.25); }
 .msg-lu       { background: rgba(16,185,129,0.08); color: #10b981; border: 1px solid rgba(16,185,129,0.2); }
 .msg-archive  { background: rgba(107,114,128,0.08); color: #6b7280; border: 1px solid rgba(107,114,128,0.2); }
-.msg-row-new  { background: rgba(99,102,241,0.03); }
+.msg-row-new  { background: rgba(37,99,235,0.03); }
 </style>
 
 <div class="card-header" style="margin-bottom: 20px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
@@ -11,7 +11,7 @@
         <i data-lucide="inbox"></i>
         <span>Messages reçus</span>
         <?php if ($newCount > 0): ?>
-            <span style="background: #6366f1; color: white; font-size: 0.72rem; padding: 2px 8px; border-radius: 50px; margin-left: 8px; font-weight: 700;"><?= $newCount ?> nouveau<?= $newCount > 1 ? 'x' : '' ?></span>
+            <span style="background: #2563eb; color: white; font-size: 0.72rem; padding: 2px 8px; border-radius: 50px; margin-left: 8px; font-weight: 700;"><?= $newCount ?> nouveau<?= $newCount > 1 ? 'x' : '' ?></span>
         <?php endif; ?>
     </h2>
     <div style="display: flex; gap: 8px;">

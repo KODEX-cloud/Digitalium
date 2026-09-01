@@ -150,7 +150,7 @@
                     <?php if (!empty($postTags)): ?>
                     <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;">
                         <?php foreach ($postTags as $t): ?>
-                        <span style="background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.2);color:var(--primary);padding:2px 10px;border-radius:50px;font-size:0.72rem;font-weight:600;">
+                        <span style="background:rgba(37,99,235,0.08);border:1px solid rgba(37,99,235,0.2);color:var(--primary);padding:2px 10px;border-radius:50px;font-size:0.72rem;font-weight:600;">
                             <?= htmlspecialchars($t['name']) ?>
                         </span>
                         <?php endforeach; ?>

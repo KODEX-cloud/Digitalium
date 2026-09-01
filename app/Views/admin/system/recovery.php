@@ -57,7 +57,7 @@ $sp = $statusPalette[$globalStatus];
 .step-list      { display:flex;flex-direction:column;gap:.2rem;max-height:220px;overflow-y:auto; }
 .step-item      { display:flex;align-items:center;gap:.6rem;padding:.3rem .5rem;border-radius:6px;font-size:.78rem; }
 .step-item.pending  { color:var(--text-muted); }
-.step-item.running  { color:#4f46e5;font-weight:600; animation:pulse 1s infinite; }
+.step-item.running  { color:#2563eb;font-weight:600; animation:pulse 1s infinite; }
 .step-item.ok       { color:#065f46;background:#d1fae5; }
 .step-item.warning  { color:#92400e;background:#fef3c7; }
 .step-item.error    { color:#991b1b;background:#fee2e2; }
@@ -68,8 +68,8 @@ $sp = $statusPalette[$globalStatus];
 .step-ms        { font-size:.68rem;color:var(--text-muted);font-family:monospace;flex-shrink:0; }
 
 /* Recovery button */
-.recover-btn    { width:100%;padding:1rem;font-size:.95rem;font-weight:800;border-radius:12px;border:none;cursor:pointer;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;display:flex;align-items:center;justify-content:center;gap:.6rem;box-shadow:0 4px 14px rgba(79,70,229,.35);transition:.2s;letter-spacing:.02em; }
-.recover-btn:hover:not(:disabled) { transform:translateY(-1px);box-shadow:0 6px 20px rgba(79,70,229,.45); }
+.recover-btn    { width:100%;padding:1rem;font-size:.95rem;font-weight:800;border-radius:12px;border:none;cursor:pointer;background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;display:flex;align-items:center;justify-content:center;gap:.6rem;box-shadow:0 4px 14px rgba(37,99,235,.35);transition:.2s;letter-spacing:.02em; }
+.recover-btn:hover:not(:disabled) { transform:translateY(-1px);box-shadow:0 6px 20px rgba(37,99,235,.45); }
 .recover-btn:disabled { opacity:.6;cursor:not-allowed;transform:none; }
 
 /* Maintenance toggle */
@@ -128,7 +128,7 @@ input:checked + .toggle-slider:before { transform:translateX(24px); }
   <div class="rc-header">
     <div>
       <h1 class="rc-title">
-        <i data-lucide="shield-check" style="width:22px;height:22px;color:#4f46e5;"></i>
+        <i data-lucide="shield-check" style="width:22px;height:22px;color:#2563eb;"></i>
         Recovery Center
       </h1>
       <p class="rc-subtitle">Point d'entrée officiel DSM — Restauration complète sans SSH</p>
@@ -214,7 +214,7 @@ input:checked + .toggle-slider:before { transform:translateX(24px); }
             <span id="prog-pct">0%</span>
           </div>
           <div class="prog-bar">
-            <div class="prog-fill" id="prog-fill" style="width:0%;background:#4f46e5;"></div>
+            <div class="prog-fill" id="prog-fill" style="width:0%;background:#2563eb;"></div>
           </div>
         </div>
 
@@ -278,7 +278,7 @@ input:checked + .toggle-slider:before { transform:translateX(24px); }
             ['OK',      $oks,      '#22c55e'],
             ['Warning', $warnings, '#f59e0b'],
             ['Erreur',  $errors,   '#ef4444'],
-            ['Total',   $total,    '#4f46e5'],
+            ['Total',   $total,    '#2563eb'],
         ];
         ?>
         <?php foreach ($quickStats as [$lbl, $num, $clr]): ?>
@@ -582,7 +582,7 @@ function markStep(key, status, ms) {
 function setProgress(pct, label) {
   const fill = document.getElementById('prog-fill');
   fill.style.width = pct + '%';
-  fill.style.background = pct < 100 ? '#4f46e5' : '#22c55e';
+  fill.style.background = pct < 100 ? '#2563eb' : '#22c55e';
   document.getElementById('prog-pct').textContent   = Math.round(pct) + '%';
   document.getElementById('prog-label').textContent  = label || '';
 }
@@ -617,7 +617,7 @@ function showBanner(data) {
     [data.ok||0,      'OK',      '#22c55e'],
     [data.warning||0, 'Warning', '#f59e0b'],
     [data.error||0,   'Erreur',  '#ef4444'],
-    [data.total||0,   'Total',   '#4f46e5'],
+    [data.total||0,   'Total',   '#2563eb'],
   ].map(([n,l,c]) => `<div class="report-card"><div class="report-stat" style="color:${c};">${n}</div><div class="report-lbl">${l}</div></div>`).join('');
 }
 
@@ -643,7 +643,7 @@ function showReport(data) {
   const stepsErr  = (data.steps||[]).filter(s=>s.status==='error');
 
   let html = `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.6rem;margin-bottom:1rem;">`;
-  [[stepsOk.length,'Étapes OK','#22c55e'],[stepsWarn.length,'Warnings','#f59e0b'],[stepsErr.length,'Erreurs','#ef4444'],[Math.round(data.duration_ms||0)+'ms','Durée','#4f46e5']].forEach(([v,l,c])=>{
+  [[stepsOk.length,'Étapes OK','#22c55e'],[stepsWarn.length,'Warnings','#f59e0b'],[stepsErr.length,'Erreurs','#ef4444'],[Math.round(data.duration_ms||0)+'ms','Durée','#2563eb']].forEach(([v,l,c])=>{
     html+=`<div class="report-card"><div class="report-stat" style="color:${c};">${v}</div><div class="report-lbl">${l}</div></div>`;
   });
   html += '</div>';

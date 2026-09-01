@@ -12,8 +12,8 @@
     transition: all 0.2s;
     position: relative;
 }
-.menu-item-row:hover { border-color: rgba(99,102,241,0.3); box-shadow: 0 4px 12px rgba(99,102,241,0.06); }
-.menu-item-row.child { margin-left: 36px; border-left: 3px solid rgba(99,102,241,0.3); }
+.menu-item-row:hover { border-color: rgba(37,99,235,0.3); box-shadow: 0 4px 12px rgba(37,99,235,0.06); }
+.menu-item-row.child { margin-left: 36px; border-left: 3px solid rgba(37,99,235,0.3); }
 .menu-item-row.dragging { opacity: 0.5; cursor: grabbing; }
 
 .item-header { display: flex; align-items: center; gap: 12px; }

@@ -43,8 +43,8 @@ $statusBorder = ['ok' => '#6ee7b7', 'warning' => '#fcd34d', 'error' => '#fca5a5'
 /* Modes */
 .mode-grid      { display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:1rem; }
 .mode-btn       { background:transparent;border:1.5px solid var(--border);border-radius:10px;padding:.6rem .75rem;cursor:pointer;text-align:left;transition:.2s;position:relative; }
-.mode-btn:hover { border-color:var(--primary);background:rgba(79,70,229,.04); }
-.mode-btn.active{ border-color:var(--primary);background:rgba(79,70,229,.08); }
+.mode-btn:hover { border-color:var(--primary);background:rgba(37,99,235,.04); }
+.mode-btn.active{ border-color:var(--primary);background:rgba(37,99,235,.08); }
 .mode-btn .mode-name  { font-size:.8rem;font-weight:700;color:var(--text-main); }
 .mode-btn .mode-desc  { font-size:.68rem;color:var(--text-muted);margin-top:.15rem;line-height:1.3; }
 .mode-btn .mode-steps { font-size:.65rem;color:var(--primary);margin-top:.2rem;font-weight:600; }
@@ -54,8 +54,8 @@ $statusBorder = ['ok' => '#6ee7b7', 'warning' => '#fcd34d', 'error' => '#fca5a5'
 .badge-danger   { background:#fee2e2;color:#991b1b; }
 
 /* Deploy button */
-.deploy-main-btn { width:100%;padding:1.1rem;font-size:1rem;font-weight:800;border-radius:12px;border:none;cursor:pointer;background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;display:flex;align-items:center;justify-content:center;gap:.6rem;transition:.2s;letter-spacing:.02em;box-shadow:0 4px 14px rgba(79,70,229,.35); }
-.deploy-main-btn:hover:not(:disabled) { transform:translateY(-1px);box-shadow:0 6px 20px rgba(79,70,229,.45); }
+.deploy-main-btn { width:100%;padding:1.1rem;font-size:1rem;font-weight:800;border-radius:12px;border:none;cursor:pointer;background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;display:flex;align-items:center;justify-content:center;gap:.6rem;transition:.2s;letter-spacing:.02em;box-shadow:0 4px 14px rgba(37,99,235,.35); }
+.deploy-main-btn:hover:not(:disabled) { transform:translateY(-1px);box-shadow:0 6px 20px rgba(37,99,235,.45); }
 .deploy-main-btn:disabled { opacity:.6;cursor:not-allowed;transform:none; }
 
 /* Stats */
@@ -124,7 +124,7 @@ $statusBorder = ['ok' => '#6ee7b7', 'warning' => '#fcd34d', 'error' => '#fca5a5'
   <div class="dc-header">
     <div>
       <h1 class="dc-title">
-        <i data-lucide="rocket" style="width:22px;height:22px;vertical-align:middle;margin-right:.4rem;color:#4f46e5;"></i>
+        <i data-lucide="rocket" style="width:22px;height:22px;vertical-align:middle;margin-right:.4rem;color:#2563eb;"></i>
         Deploy Center
       </h1>
       <p class="dc-subtitle">Digitalium System Manager — Operating System du CMS Enterprise</p>
@@ -183,7 +183,7 @@ $statusBorder = ['ok' => '#6ee7b7', 'warning' => '#fcd34d', 'error' => '#fca5a5'
         <div style="font-size:.75rem;color:var(--text-muted);line-height:1.6;">
           <?php if (!empty($git['message'])): ?>
             <div style="font-family:monospace;padding:.35rem .5rem;background:var(--bg-base);border-radius:6px;margin-bottom:.5rem;">
-              <span style="color:#4f46e5;font-weight:600;"><?= htmlspecialchars($git['commit'] ?? '') ?></span>
+              <span style="color:#2563eb;font-weight:600;"><?= htmlspecialchars($git['commit'] ?? '') ?></span>
               <?= htmlspecialchars($git['message'] ?? '') ?>
             </div>
             <div style="color:var(--text-muted);">par <?= htmlspecialchars($git['author'] ?? '') ?> — <?= htmlspecialchars($git['date'] ?? '') ?></div>
@@ -231,7 +231,7 @@ $statusBorder = ['ok' => '#6ee7b7', 'warning' => '#fcd34d', 'error' => '#fca5a5'
             <span id="prog-pct">0%</span>
           </div>
           <div class="prog-bar">
-            <div class="prog-fill" id="prog-fill" style="width:0%;background:#4f46e5;"></div>
+            <div class="prog-fill" id="prog-fill" style="width:0%;background:#2563eb;"></div>
           </div>
         </div>
 
@@ -262,7 +262,7 @@ $statusBorder = ['ok' => '#6ee7b7', 'warning' => '#fcd34d', 'error' => '#fca5a5'
             $messagesCount= \App\Services\Database::fetch("SELECT COUNT(*) as n FROM contact_messages WHERE statut='new'")['n'] ?? 0;
         } catch (\Throwable $e) { $pagesCount=$postsCount=$mediaCount=$projCount=$settingsCount=$messagesCount=0; }
         $statsGrid = [
-            [$pagesCount,    'Pages',    '#4f46e5'],
+            [$pagesCount,    'Pages',    '#2563eb'],
             [$postsCount,    'Articles', '#0ea5e9'],
             [$mediaCount,    'Médias',   '#8b5cf6'],
             [$projCount,     'Projets',  '#06b6d4'],
@@ -489,7 +489,7 @@ function selectMode(mode, btn) {
     const info = modeInfos[mode] || {};
     document.getElementById('mode-info').innerHTML =
         `<strong style="color:var(--text-main);">${escH(info.label||mode)}</strong> — ${escH(info.description||'')}` +
-        `<br><span style="color:#4f46e5;font-size:.72rem;">${(info.steps||[]).join(' → ')}</span>`;
+        `<br><span style="color:#2563eb;font-size:.72rem;">${(info.steps||[]).join(' → ')}</span>`;
 }
 
 // ─── Deploy ───────────────────────────────────────────────────────────────────
@@ -581,7 +581,7 @@ function setProgress(pct, label) {
     document.getElementById('prog-label').textContent  = label || '';
     const color = pct === 100
         ? (document.getElementById('result-banner').style.background?.includes('d1fae5') ? '#22c55e' : '#f59e0b')
-        : '#4f46e5';
+        : '#2563eb';
     document.getElementById('prog-fill').style.background = color;
 }
 
@@ -602,7 +602,7 @@ function showBanner(data) {
         [data.ok||0,      'OK',      '#22c55e'],
         [data.warning||0, 'Warning', '#f59e0b'],
         [data.error||0,   'Error',   '#ef4444'],
-        [data.total||0,   'Total',   '#4f46e5'],
+        [data.total||0,   'Total',   '#2563eb'],
     ].map(([n,l,c]) =>
         `<div class="result-stat"><div class="result-stat-n" style="color:${c};">${n}</div><div class="result-stat-l">${l}</div></div>`
     ).join('');
@@ -714,6 +714,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const info = modeInfos[currentMode] || {};
     document.getElementById('mode-info').innerHTML =
         `<strong style="color:var(--text-main);">${escH(info.label||currentMode)}</strong> — ${escH(info.description||'')}` +
-        `<br><span style="color:#4f46e5;font-size:.72rem;">${(info.steps||[]).join(' → ')}</span>`;
+        `<br><span style="color:#2563eb;font-size:.72rem;">${(info.steps||[]).join(' → ')}</span>`;
 });
 </script>

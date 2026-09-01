@@ -48,7 +48,7 @@
 .info-label { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); flex-shrink: 0; min-width: 90px; padding-top: 2px; }
 .info-value { font-size: 0.9rem; color: var(--text-main); font-weight: 500; }
 
-.tech-tag { display: inline-flex; padding: 3px 10px; background: rgba(99,102,241,0.06); border: 1px solid rgba(99,102,241,0.15); border-radius: 4px; font-size: 0.72rem; font-weight: 600; color: var(--primary); margin: 2px; }
+.tech-tag { display: inline-flex; padding: 3px 10px; background: rgba(37,99,235,0.06); border: 1px solid rgba(37,99,235,0.15); border-radius: 4px; font-size: 0.72rem; font-weight: 600; color: var(--primary); margin: 2px; }
 
 .project-section { margin-bottom: 36px; }
 .project-section h2 { font-size: 1.2rem; font-weight: 700; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
@@ -56,7 +56,7 @@
 
 .related-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
 .related-card { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; text-decoration: none; color: inherit; transition: all 0.25s; display: flex; flex-direction: column; }
-.related-card:hover { transform: translateY(-4px); box-shadow: 0 16px 32px -8px rgba(99,102,241,0.1); border-color: rgba(99,102,241,0.2); }
+.related-card:hover { transform: translateY(-4px); box-shadow: 0 16px 32px -8px rgba(37,99,235,0.1); border-color: rgba(37,99,235,0.2); }
 .related-card img { width: 100%; aspect-ratio: 16/9; object-fit: cover; }
 .related-card-body { padding: 16px; }
 </style>
@@ -73,7 +73,7 @@
 
         <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 12px;">
             <?php if (!empty($project['category'])): ?>
-                <span style="background: rgba(99,102,241,0.1); color: var(--primary); padding: 4px 14px; border-radius: 50px; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; border: 1px solid rgba(99,102,241,0.2);">
+                <span style="background: rgba(37,99,235,0.1); color: var(--primary); padding: 4px 14px; border-radius: 50px; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; border: 1px solid rgba(37,99,235,0.2);">
                     <?= htmlspecialchars($project['category']) ?>
                 </span>
             <?php endif; ?>

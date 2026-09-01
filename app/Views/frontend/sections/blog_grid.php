@@ -33,7 +33,7 @@
                         <!-- Card Content Body -->
                         <div class="bcard-body" style="padding: 1.8rem; display: flex; flex-direction: column; flex-grow: 1;">
                             <div class="bcard-meta" style="display: flex; gap: 10px; align-items: center; margin-bottom: 1rem; flex-wrap: wrap;">
-                                <span class="pill" style="padding: 4px 12px; border-radius: 8px; font-size: 0.65rem; letter-spacing: 0.05em; text-transform: uppercase; font-weight: 700; background: rgba(124, 58, 237, 0.08); color: var(--secondary); border: 1px solid rgba(124, 58, 237, 0.15);">
+                                <span class="pill" style="padding: 4px 12px; border-radius: 8px; font-size: 0.65rem; letter-spacing: 0.05em; text-transform: uppercase; font-weight: 700; background: rgba(8, 145, 178, 0.08); color: var(--secondary); border: 1px solid rgba(8, 145, 178, 0.15);">
                                     <?= htmlspecialchars($category) ?>
                                 </span>
                                 <span class="bcard-date" style="font-size: 0.72rem; color: var(--text-muted); font-family: monospace;">
@@ -79,9 +79,9 @@
     box-shadow: 0 12px 30px -10px rgba(30, 58, 138, 0.04), inset 0 1px 1px rgba(255,255,255,0.9) !important;
 }
 .bcard:hover {
-    border-color: rgba(124, 58, 237, 0.35) !important;
+    border-color: rgba(8, 145, 178, 0.35) !important;
     transform: translateY(-5px);
-    box-shadow: 0 24px 48px -12px rgba(124, 58, 237, 0.12), inset 0 1px 2px rgba(255,255,255,1) !important;
+    box-shadow: 0 24px 48px -12px rgba(8, 145, 178, 0.12), inset 0 1px 2px rgba(255,255,255,1) !important;
 }
 .bcard-title-link {
     transition: var(--transition);

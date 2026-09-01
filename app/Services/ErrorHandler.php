@@ -116,8 +116,8 @@ class ErrorHandler {
 <title>Service temporairement indisponible</title>
 <style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:system-ui,sans-serif;background:#f1f5f9;display:flex;align-items:center;justify-content:center;min-height:100vh}
 .card{background:#fff;border-radius:16px;padding:3rem;text-align:center;box-shadow:0 4px 24px rgba(0,0,0,.08);max-width:480px;width:90%}
-h1{font-size:4rem;color:#4f46e5;line-height:1}.title{font-size:1.4rem;font-weight:700;color:#1e293b;margin:.75rem 0}.sub{color:#64748b;line-height:1.6}
-.btn{display:inline-block;margin-top:1.5rem;padding:.7rem 1.5rem;background:#4f46e5;color:#fff;text-decoration:none;border-radius:8px;font-weight:600}
+h1{font-size:4rem;color:#2563eb;line-height:1}.title{font-size:1.4rem;font-weight:700;color:#1e293b;margin:.75rem 0}.sub{color:#64748b;line-height:1.6}
+.btn{display:inline-block;margin-top:1.5rem;padding:.7rem 1.5rem;background:#2563eb;color:#fff;text-decoration:none;border-radius:8px;font-weight:600}
 </style></head><body>
 <div class="card">
 <div style="font-size:3rem">⚡</div>

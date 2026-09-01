@@ -10,12 +10,12 @@
 .image-field-preview img { width: 100%; height: 100%; object-fit: cover; }
 .media-modal { display:none; position:fixed; inset:0; background:rgba(15,23,42,0.3); z-index:9999; align-items:center; justify-content:center; padding:20px; backdrop-filter:blur(8px); }
 .media-modal.active { display:flex; }
-.modal-content { background:rgba(255,255,255,0.92); backdrop-filter:blur(20px); border:1px solid rgba(255,255,255,0.6); border-radius:24px; width:100%; max-width:760px; max-height:80vh; display:flex; flex-direction:column; overflow:hidden; box-shadow:0 30px 60px -15px rgba(99,102,241,0.15); }
+.modal-content { background:rgba(255,255,255,0.92); backdrop-filter:blur(20px); border:1px solid rgba(255,255,255,0.6); border-radius:24px; width:100%; max-width:760px; max-height:80vh; display:flex; flex-direction:column; overflow:hidden; box-shadow:0 30px 60px -15px rgba(37,99,235,0.15); }
 .modal-header { padding:18px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
 .modal-body { padding:20px; overflow-y:auto; flex-grow:1; }
 .modal-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(110px,1fr)); gap:14px; }
 .modal-media-item { border:1px solid var(--border); border-radius:10px; aspect-ratio:1; overflow:hidden; cursor:pointer; transition:all 0.2s; }
-.modal-media-item:hover { border-color:var(--primary); transform:translateY(-2px); box-shadow:0 6px 14px -3px rgba(79,70,229,0.2); }
+.modal-media-item:hover { border-color:var(--primary); transform:translateY(-2px); box-shadow:0 6px 14px -3px rgba(37,99,235,0.2); }
 .modal-media-item img { width:100%; height:100%; object-fit:cover; }
 </style>
 
