@@ -68,7 +68,7 @@ try {
     $heroData['hero_cta2_url']   = '/contact';
     $heroData['hero_status']     = 1;
     if (empty($heroData['hero_image'])) {
-        $heroData['hero_image'] = '/assets/images/digitalium-hero-team.png';
+        $heroData['hero_image'] = '/assets/uploads/hero-pro-dashboard-1893001.jpg';
     }
     Page::updatePage($pageId, $heroData);
     echo "Hero mis à jour (variant hero_corporate).\n";
@@ -144,7 +144,7 @@ try {
 
     // ─── 5. about_visual ───────────────────────────────────────────────────────
     $id = $sec('about_visual', 'Votre partenaire de confiance');
-    Block::setVal($id, 'image', 'image', '/assets/uploads/digitalium-pic-3-1780069686.webp');
+    Block::setVal($id, 'image', 'image', '/assets/uploads/about-team-meeting-1893001.jpg');
     Block::setVal($id, 'badge_years', 'text', '8+');
     Block::setVal($id, 'badge_label', 'text', "Années d'expérience");
     Block::setVal($id, 'title', 'text', 'Votre partenaire de confiance pour la transformation digitale');
@@ -203,9 +203,9 @@ try {
     Block::setVal($id, 'more_text', 'text', 'Voir plus de réalisations');
     Block::setVal($id, 'more_url', 'link', '/realisations');
     $projects = [
-        ['FINANCE', 'Plateforme de gestion financière', 'Solution web de gestion financière et reporting pour une institution financière.', '-40% de temps de traitement des rapports', '/assets/uploads/website-design-featuring-user-interface-elements-displaying-the-latest-trends-in-web-design-interfa-1780069994.webp'],
-        ['LOGISTIQUE', 'Application mobile de livraison', 'Application mobile de suivi des livraisons en temps réel avec géolocalisation.', '+60% de satisfaction client', '/assets/uploads/digitalium-pic-8-1780069994.webp'],
-        ['SANTÉ', "Système d'information hospitalier", 'Digitalisation des processus hospitaliers et gestion des dossiers patients.', 'Meilleure traçabilité et efficacité opérationnelle', '/assets/uploads/ivoire-kita-1780071304.webp'],
+        ['FINANCE', 'Plateforme de gestion financière', 'Solution web de gestion financière et reporting pour une institution financière.', '-40% de temps de traitement des rapports', '/assets/uploads/proj-finance-dashboard-1893001.jpg'],
+        ['LOGISTIQUE', 'Application mobile de livraison', 'Application mobile de suivi des livraisons en temps réel avec géolocalisation.', '+60% de satisfaction client', '/assets/uploads/proj-logistics-map-1893001.jpg'],
+        ['SANTÉ', "Système d'information hospitalier", 'Digitalisation des processus hospitaliers et gestion des dossiers patients.', 'Meilleure traçabilité et efficacité opérationnelle', '/assets/uploads/proj-health-tablet-1893001.jpg'],
     ];
     foreach ($projects as $g => $p) {
         Block::setVal($id, 'proj_image', 'image', $p[4], $g + 1, 0);

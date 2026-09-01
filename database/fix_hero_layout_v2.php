@@ -4,7 +4,12 @@
  * Corrige la mise en page du hero "hero_corporate" de la Homepage v2 pour la
  * rendre fidèle au visuel de référence : titre empilé sur plusieurs lignes,
  * alignement à gauche (au lieu du centrage par défaut de hero.php quand
- * hero_text_alignment est vide).
+ * hero_text_alignment est vide) — et remplace les images d'illustration
+ * (hero, "8+ années d'expérience", 3 cartes Réalisations) qui pointaient vers
+ * des visuels IA génériques sans rapport avec le sujet (l'une d'elles était
+ * même la capture d'écran d'un site tiers, ivoirekita.com, présentée à tort
+ * comme un projet Digitalium) par des photos réelles et thématiquement
+ * cohérentes (licence Pexels, usage commercial libre).
  *
  * build_home_v2.php ne peut pas rejouer ce correctif car il est verrouillé par
  * storage/homepage_v2.lock une fois la page construite (pour ne jamais écraser
@@ -12,8 +17,8 @@
  * une seule fois, sans toucher au lock.
  *
  * Idempotent : ne modifie QUE si les valeurs sont encore celles du premier
- * build (titre inline sans <br>, alignement vide/centré) — si un admin a déjà
- * personnalisé le hero depuis /admin/pages, ce script ne l'écrase pas.
+ * build — si un admin a déjà personnalisé le hero ou les images depuis
+ * /admin/pages, ce script ne les écrase pas.
  * Auto-exécuté au déploiement (voir .github/workflows/deploy.yml).
  */
 
@@ -32,8 +37,10 @@ spl_autoload_register(function ($class) {
 });
 
 use App\Models\Page;
+use App\Models\Section;
+use App\Models\Block;
 
-echo "=== FIX HERO LAYOUT V2 (alignement gauche + titre empilé) ===\n";
+echo "=== FIX HERO LAYOUT V2 (alignement gauche + titre empilé + images) ===\n";
 
 try {
     $page = Page::findBySlug('home');
@@ -63,14 +70,62 @@ try {
         echo "hero_text_alignment déjà personnalisé ({$currentAlignment}) — non modifié.\n";
     }
 
-    if ($changed) {
-        Page::updatePage((int)$page['id'], $data);
-        \App\Services\Cache::clear();
-        echo "Page 'home' mise à jour.\n";
+    $oldHeroImage = '/assets/images/digitalium-hero-team.png';
+    if (($page['hero_image'] ?? '') === $oldHeroImage) {
+        $data['hero_image'] = '/assets/uploads/hero-pro-dashboard-1893001.jpg';
+        $changed = true;
+        echo "hero_image : photo générique (étudiants) -> photo professionnelle (homme, tableau de bord).\n";
     } else {
-        echo "Aucun changement nécessaire.\n";
+        echo "hero_image déjà personnalisé — non modifié.\n";
     }
 
+    if ($changed) {
+        Page::updatePage((int)$page['id'], $data);
+        echo "Page 'home' mise à jour.\n";
+    } else {
+        echo "Aucun changement nécessaire sur le hero.\n";
+    }
+
+    // ─── Sections : about_visual (image "8+ années") + projects_showcase ─────
+    $sections = Section::getByPage((int)$page['id']);
+    $sectionByType = [];
+    foreach ($sections as $s) {
+        if (!isset($sectionByType[$s['type']])) {
+            $sectionByType[$s['type']] = $s;
+        }
+    }
+
+    if (isset($sectionByType['about_visual'])) {
+        $secId = (int)$sectionByType['about_visual']['id'];
+        $content = Block::getStructuredContent($secId);
+        $oldAboutImage = '/assets/uploads/digitalium-pic-3-1780069686.webp';
+        if (($content['single']['image'] ?? '') === $oldAboutImage) {
+            Block::setVal($secId, 'image', 'image', '/assets/uploads/about-team-meeting-1893001.jpg');
+            echo "about_visual.image : homme + hologramme ville -> équipe réunie autour d'un ordinateur portable.\n";
+        } else {
+            echo "about_visual.image déjà personnalisé — non modifié.\n";
+        }
+    }
+
+    if (isset($sectionByType['projects_showcase'])) {
+        $secId = (int)$sectionByType['projects_showcase']['id'];
+        $content = Block::getStructuredContent($secId);
+        $imageFixes = [
+            '/assets/uploads/website-design-featuring-user-interface-elements-displaying-the-latest-trends-in-web-design-interfa-1780069994.webp' => '/assets/uploads/proj-finance-dashboard-1893001.jpg',
+            '/assets/uploads/digitalium-pic-8-1780069994.webp' => '/assets/uploads/proj-logistics-map-1893001.jpg',
+            '/assets/uploads/ivoire-kita-1780071304.webp' => '/assets/uploads/proj-health-tablet-1893001.jpg',
+        ];
+        foreach ($content['groups'] as $group) {
+            $groupId = (int)$group['_group_id'];
+            $current = $group['proj_image'] ?? '';
+            if (isset($imageFixes[$current])) {
+                Block::setVal($secId, 'proj_image', 'image', $imageFixes[$current], $groupId, 0);
+                echo "projects_showcase (groupe {$groupId}) : image incorrecte -> photo cohérente ({$group['proj_category']}).\n";
+            }
+        }
+    }
+
+    \App\Services\Cache::clear();
     echo "=== TERMINÉ ===\n";
 } catch (\Throwable $e) {
     echo "ERREUR: " . $e->getMessage() . "\n";
