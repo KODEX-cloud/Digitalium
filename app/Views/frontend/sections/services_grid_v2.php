@@ -9,7 +9,11 @@
  * sans perte de contenu.
  * Design System v4.1 — variables CSS uniquement, zéro hardcode
  */
-$svcAccents = ['var(--primary)', 'var(--secondary)', 'var(--accent)'];
+$svcAccents = [
+    ['var(--primary)', 'rgba(37,99,235,0.1)'],
+    ['var(--secondary)', 'rgba(8,145,178,0.1)'],
+    ['var(--accent)', 'rgba(245,158,11,0.1)'],
+];
 ?>
 
 <section class="section-padding" id="services-grid" style="background:var(--bg-alt);">
@@ -28,11 +32,11 @@ $svcAccents = ['var(--primary)', 'var(--secondary)', 'var(--accent)'];
         <div class="svc-v2-grid">
             <?php if (!empty($groups)): ?>
                 <?php foreach ($groups as $i => $svc):
-                    $accent = $svcAccents[$i % count($svcAccents)];
+                    [$accent, $accentBg] = $svcAccents[$i % count($svcAccents)];
                     $desc = trim(str_replace('|', ' ', $svc['svc_points'] ?? ''));
                 ?>
                     <div class="svc-v2-card reveal" style="transition-delay:<?= $i * 0.08 ?>s;">
-                        <div class="svc-v2-icon" style="background:<?= $accent ?>18;color:<?= $accent ?>;">
+                        <div class="svc-v2-icon" style="background:<?= $accentBg ?>;color:<?= $accent ?>;">
                             <?= \App\Helpers\IconHelper::render($svc['svc_icon'] ?? 'check', ['size' => '26px']) ?>
                         </div>
                         <h3 class="svc-v2-title"><?= htmlspecialchars($svc['svc_title'] ?? '') ?></h3>

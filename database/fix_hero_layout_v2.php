@@ -39,6 +39,7 @@ spl_autoload_register(function ($class) {
 use App\Models\Page;
 use App\Models\Section;
 use App\Models\Block;
+use App\Models\Setting;
 use App\Services\Database;
 
 echo "=== FIX HERO LAYOUT V2 (alignement gauche + titre empilé + images) ===\n";
@@ -148,6 +149,24 @@ try {
         } else {
             echo "Aucune section de type '{$oldType}' trouvée sur la page 'home' — non modifié.\n";
         }
+    }
+
+    // ─── Footer (site entier) : texte vide car settings.footer_slogan /
+    // footer_copyright existent en base avec une valeur '' (chaîne vide), ce qui
+    // empêchait le texte par défaut de layout.php de s'afficher (?? ne couvre
+    // pas les chaînes vides, seulement null) — le footer entier de la Homepage
+    // v2 apparaissait donc sans description ni copyright.
+    if (empty(Setting::getVal('footer_slogan', ''))) {
+        Setting::setVal('footer_slogan', "Nous accompagnons les entreprises et organisations en Afrique dans leur transformation digitale à des solutions innovantes, fiables et durables.");
+        echo "footer_slogan : vide -> texte de présentation renseigné.\n";
+    } else {
+        echo "footer_slogan déjà personnalisé — non modifié.\n";
+    }
+    if (empty(Setting::getVal('footer_copyright', ''))) {
+        Setting::setVal('footer_copyright', '© ' . date('Y') . ' Digitalium Group. Tous droits réservés.');
+        echo "footer_copyright : vide -> texte par défaut renseigné.\n";
+    } else {
+        echo "footer_copyright déjà personnalisé — non modifié.\n";
     }
 
     \App\Services\Cache::clear();

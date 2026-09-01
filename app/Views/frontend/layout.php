@@ -418,7 +418,7 @@
                     <?php endif; ?>
                 </a>
                 <p class="footer-description">
-                    <?= htmlspecialchars($settings['footer_slogan'] ?? $settings['footer_pitch'] ?? 'Nous concevons des produits technologiques haut de gamme et des solutions digitales.') ?>
+                    <?= htmlspecialchars(!empty($settings['footer_slogan']) ? $settings['footer_slogan'] : (!empty($settings['footer_pitch']) ? $settings['footer_pitch'] : 'Nous concevons des produits technologiques haut de gamme et des solutions digitales.')) ?>
                 </p>
                 <?php if (!empty($settings['footer_cta_text'])): ?>
                     <div style="margin-top: 15px; margin-bottom: 20px;">
@@ -548,7 +548,7 @@
         </div>
 
         <div class="container footer-bottom">
-            <span><?= htmlspecialchars($settings['footer_copyright'] ?? '© ' . date('Y') . ' Digitalium Group. Tous droits réservés.') ?></span>
+            <span><?= htmlspecialchars(!empty($settings['footer_copyright']) ? $settings['footer_copyright'] : '© ' . date('Y') . ' Digitalium Group. Tous droits réservés.') ?></span>
             <div style="display: flex; gap: 20px; align-items: center;">
                 <?php if (!empty($settings['footer_legal_text'])): ?>
                     <a href="<?= htmlspecialchars(url($settings['footer_legal_url'] ?? '/mentions-legales')) ?>" style="color: var(--text-muted); font-size: 0.88rem; font-weight: 500;">
