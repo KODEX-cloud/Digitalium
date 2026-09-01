@@ -1,9 +1,22 @@
 # PROJECT_STATE — Digitalium Group CMS
-> Dernière mise à jour : 2026-07-25 — Enterprise CI/CD v2.0 — Pipeline autonome + UI/UX Light Theme
+> Dernière mise à jour : 2026-08-31 — Homepage v2 — Refonte fidèle au visuel, 100% CMS
 
 ---
 
 ## ÉTAT GLOBAL : 🚀 ENTERPRISE CI/CD v2.0 — DÉPLOIEMENT TOTALEMENT AUTONOME
+
+**Homepage v2 (2026-08-31)** — Nouvelle page d'accueil construite fidèlement à la maquette fournie par le client, 100% pilotée par le CMS (`pages` → `sections` → `blocks`), zéro hardcode.
+**⚠ ACTION REQUISE UTILISATEUR** : exécuter `php database/build_home_v2.php` sur l'environnement WAMP local (cette session n'a pas de PHP CLI accessible — aucun `php.exe` trouvé sur `C:\`, à vérifier), puis uploader les images manquantes (hero, photo équipe "8+ ans", 3 réalisations, 6 avatars membres) depuis `/admin/pages/edit/{id}` → onglet Médiathèque. Voir détail en fin de fichier.
+
+### Nouveaux types de section (Homepage v2)
+- `logos_strip` — bandeau logos/clients ("Ils nous font confiance")
+- `stats_intro` — intro texte + grille de 4 statistiques
+- `about_visual` — image + badge overlay + checklist
+- `projects_showcase` — vitrine curatée de 3 réalisations (distinct de `portfolio`, qui liste toute la table `projects`)
+- `testimonials_carousel` — témoignages en carrousel (flèches nav, sans étoiles ; distinct de `testimonials`)
+- `team` (existant, enrichi) — nouveau champ `member_dept` (pastille département colorée) + `single.more_text`/`more_url`
+
+Fichiers : `app/Views/frontend/sections/{logos_strip,stats_intro,about_visual,projects_showcase,testimonials_carousel}.php`, `team.php` (modifié), `database/build_home_v2.php` (seed idempotent).
 
 **CI/CD v2.0 (2026-07-25)** — Pipeline GitHub Actions entièrement réécrit. Autonome, auto-réparable, rollback automatique.  
 **⚠ BLOQUEUR** : Secrets GitHub non configurés — déploiement impossible jusqu'à leur ajout (voir `docs/github-secrets.md`).  
@@ -55,13 +68,13 @@
 
 | Hash | Description | Date | Production |
 |---|---|---|---|
-| `ff9ee06` | **feat: Enterprise CI/CD v2.0 + Documentation complète** | 2026-07-25 | ⏳ Secrets requis |
-| `3c9264d` | fix: suppression `environment: production` (bloquage deploy) | 2026-07-25 | ⏳ |
-| `5d55994` | feat: UI/UX Light Theme — CSS v3.0, sections redesignées | 2026-07-25 | ⏳ |
-| `258e3b0` | fix: CRITICAL — Restauration production + Mode Maintenance | 2026-07-05 | ⏳ |
-| `e4ac231` | feat: Enterprise CI/CD v1.4 — GitHub Actions + RollbackManager | 2026-07-05 | ⏳ |
-| `4b7c7ef` | feat: Sync Production — Diagnostic DB + Migration idempotente | 2026-07-04 | ⏳ |
-| `2da7bd4` | CMS Enterprise — Stabilisation | 2026-06-24 | ✅ (old) |
+| `5862b4d` | **feat: amélioration premium page À Propos — Design System v4.1** | 2026-07-29 | ✅ Déployé |
+| `ff9ee06` | feat: Enterprise CI/CD v2.0 + Documentation complète | 2026-07-25 | ✅ |
+| `3c9264d` | fix: suppression `environment: production` (bloquage deploy) | 2026-07-25 | ✅ |
+| `5d55994` | feat: UI/UX Light Theme — CSS v3.0, sections redesignées | 2026-07-25 | ✅ |
+| `258e3b0` | fix: CRITICAL — Restauration production + Mode Maintenance | 2026-07-05 | ✅ |
+| `e4ac231` | feat: Enterprise CI/CD v1.4 — GitHub Actions + RollbackManager | 2026-07-05 | ✅ |
+| `2da7bd4` | CMS Enterprise — Stabilisation | 2026-06-24 | ✅ |
 
 **Remote :** `https://github.com/KODEX-cloud/Digitalium.git` — branche `main`  
 **Déploiement :** GitHub Actions → SSH Hostinger (autonome après config secrets)
@@ -181,16 +194,33 @@
 
 ## PROCHAINES ÉTAPES
 
-### ⚠️ ACTION IMMÉDIATE — Restaurer la production
-1. **[ACTION USER]** Hostinger hPanel → Git Integration → **Pull** branche `main` (commit `c3f3044`)
-2. **[ACTION USER]** Vérifier que `digitaliumgroup.com` répond sans stack trace
-3. **[ACTION USER]** Consulter `storage/logs/errors.log` sur Hostinger pour identifier la cause SQL originale
-4. **[ACTION USER]** Si tables manquantes : SSH Hostinger → `php database/master_migration.php`
+### ⚠️ ACTION IMMÉDIATE — Activer la Homepage v2 (2026-08-31)
+1. **[ACTION USER]** Exécuter `php database/build_home_v2.php` (chemin PHP CLI documenté en §1 de CLAUDE.md à vérifier — non trouvé dans cette session).
+2. **[ACTION USER]** Ouvrir `/admin/pages/edit/{id de la page home}` et uploader via la Médiathèque : l'image hero, la photo "8+ ans d'expérience", les 3 images de réalisations, les 6 avatars de l'équipe.
+3. **[ACTION USER]** Vérifier le rendu sur `/` (desktop, tablette, mobile) et confirmer la fidélité au visuel fourni.
+4. **[ACTION USER]** Vérifier que le menu principal contient bien Accueil/À propos/Services/Réalisations/Blog/Contact (`/admin/menus`) — non modifié par cette tâche.
+
+### ✅ Dashboard production restauré (2026-07-29)
+- `/admin/dashboard` en production : HTTP 200 confirmé par l'utilisateur
+- Commit `5862b4d` déployé via CI/CD Hostinger
+
+### En attente de validation utilisateur
+- **[USER]** Valider la page `/a-propos` en production (Desktop, Tablette, Mobile)
+- Après validation → amélioration page suivante (stratégie page par page)
+
+### Amélioration Design System v4.1 — À Propos (commit `5862b4d`)
+- `sections/about.php` — gradient checkpoints, val-cards accent cyclique, décoration glow
+- `sections/mission.php` — icônes gradient, bg-alt, bordure latérale accent
+- `sections/values.php` — vbar-top animée, icon→gradient hover, transition-delay
+- `sections/team.php` — avatar ring gradient, social links premium
+- `sections/team_roles.php` — ::before top bar, avatar gradient hover, flèche hint
+- 17/17 tests régression backend passés
 
 ### Prochaines évolutions
-5. **[P2-DEV]** Gestion multi-utilisateurs (admin users CRUD)
-6. **[P3-DEV]** Galerie d'images avancée pour réalisations
-7. **[P2-OPS]** Monitoring automatique : cron BootCheck + alerte email si check critique échoue
+- **[P1-UX]** Amélioration page suivante (après validation À Propos)
+- **[P2-DEV]** Gestion multi-utilisateurs (admin users CRUD)
+- **[P3-DEV]** Galerie d'images avancée pour réalisations
+- **[P2-OPS]** Monitoring automatique : cron BootCheck + alerte email si check critique échoue
 
 ---
 

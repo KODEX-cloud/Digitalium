@@ -1,9 +1,11 @@
 <?php
 /**
  * Section: team — Notre Équipe (grille de membres)
- * Données CMS : $single (title, subtitle), $groups (member_avatar, member_name, member_role, member_linkedin, member_twitter, member_github)
+ * Données CMS : $single (title, subtitle, more_text, more_url),
+ *               $groups (member_avatar, member_name, member_role, member_dept, member_linkedin, member_twitter, member_github)
  * Design System v4.1 — variables CSS uniquement
  */
+$teamAccents = ['var(--primary)', 'var(--secondary)', 'var(--accent)', 'var(--primary)'];
 ?>
 
 <section class="section-padding team-section" id="team">
@@ -43,6 +45,12 @@
                     <div class="team-info">
                         <h3 class="team-name"><?= htmlspecialchars($member['member_name'] ?? 'Nom du Membre') ?></h3>
                         <p class="team-role"><?= htmlspecialchars($member['member_role'] ?? 'Consultant') ?></p>
+
+                        <?php if (!empty($member['member_dept'])): ?>
+                            <span class="team-dept-pill" style="border-color:<?= $teamAccents[$idx % count($teamAccents)] ?>;color:<?= $teamAccents[$idx % count($teamAccents)] ?>;">
+                                <?= htmlspecialchars($member['member_dept']) ?>
+                            </span>
+                        <?php endif; ?>
 
                         <!-- Socials -->
                         <?php if (!empty($linkedin) || !empty($twitter) || !empty($github)): ?>
@@ -99,6 +107,15 @@
                 </div>
                 <?php endforeach; endif; ?>
         </div>
+
+        <?php if (!empty($single['more_text'])): ?>
+            <div style="text-align:center;margin-top:44px;">
+                <a href="<?= htmlspecialchars(url($single['more_url'] ?? '/contact')) ?>" style="display:inline-flex;align-items:center;gap:8px;font-size:0.85rem;font-weight:700;color:var(--primary);letter-spacing:0.04em;">
+                    <span><?= htmlspecialchars($single['more_text']) ?></span>
+                    <i data-lucide="arrow-right" style="width:15px;height:15px;"></i>
+                </a>
+            </div>
+        <?php endif; ?>
 
     </div>
 </section>
@@ -157,8 +174,20 @@
     font-size: 0.8rem;
     color: var(--text-muted);
     font-weight: 500;
-    margin-bottom: 16px;
+    margin-bottom: 12px;
     letter-spacing: 0.04em;
+}
+
+.team-dept-pill {
+    display: inline-block;
+    padding: 4px 14px;
+    margin-bottom: 16px;
+    border: 1.5px solid;
+    border-radius: var(--radius-pill);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
 }
 
 /* Social links */
