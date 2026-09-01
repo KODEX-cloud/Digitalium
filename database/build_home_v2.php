@@ -75,8 +75,8 @@ try {
 
     // ─── 2. Sections cibles (ordre exact du visuel) ───────────────────────────
     $targetTypes = [
-        'logos_strip', 'stats_intro', 'about_visual', 'services_grid',
-        'process', 'projects_showcase', 'testimonials_carousel', 'team', 'cta',
+        'logos_strip', 'stats_intro', 'about_visual', 'services_grid_v2',
+        'process_timeline', 'projects_showcase', 'testimonials_carousel', 'team', 'cta',
     ];
 
     $existingSections = Section::getByPage($pageId);
@@ -155,8 +155,8 @@ try {
     Block::setVal($id, 'check_4', 'text', 'Maintenance informatique & support');
     Block::setVal($id, 'check_5', 'text', 'Accompagnement & formation des équipes');
 
-    // ─── 6. services_grid ──────────────────────────────────────────────────────
-    $id = $sec('services_grid', 'Nos services');
+    // ─── 6. services_grid_v2 ───────────────────────────────────────────────────
+    $id = $sec('services_grid_v2', 'Nos services');
     Block::setVal($id, 'tag', 'text', 'Nos services');
     Block::setVal($id, 'title', 'text', 'Des solutions complètes pour accélérer votre transformation');
     Block::setVal($id, 'subtitle', 'textarea', '');
@@ -176,8 +176,8 @@ try {
         Block::setVal($id, 'svc_link', 'link', '/contact', $g + 1, 4);
     }
 
-    // ─── 7. process ────────────────────────────────────────────────────────────
-    $id = $sec('process', 'Notre approche en 6 étapes');
+    // ─── 7. process_timeline ───────────────────────────────────────────────────
+    $id = $sec('process_timeline', 'Notre approche en 6 étapes');
     Block::setVal($id, 'tag', 'text', 'Pourquoi Digitalium ?');
     Block::setVal($id, 'title', 'text', 'Notre approche en 6 étapes');
     $steps = [

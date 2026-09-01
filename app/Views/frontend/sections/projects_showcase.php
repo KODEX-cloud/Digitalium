@@ -7,6 +7,7 @@
  *               $groups (proj_image, proj_category, proj_title, proj_desc, proj_result, proj_link)
  * Design System v4.1 — variables CSS uniquement, zéro hardcode
  */
+$projAccents = ['var(--primary)', 'var(--secondary)', 'var(--accent)'];
 ?>
 
 <section class="section-padding projects-showcase-section" style="background:var(--bg-alt);">
@@ -35,7 +36,7 @@
                                 </div>
                             <?php endif; ?>
                             <?php if (!empty($proj['proj_category'])): ?>
-                                <span class="project-showcase-tag"><?= htmlspecialchars($proj['proj_category']) ?></span>
+                                <span class="project-showcase-tag" style="background:<?= $projAccents[$i % count($projAccents)] ?>;"><?= htmlspecialchars($proj['proj_category']) ?></span>
                             <?php endif; ?>
                         </div>
                         <div class="project-showcase-body">
@@ -90,8 +91,8 @@
     position: absolute; top: 14px; left: 14px;
     padding: 4px 12px; border-radius: 100px;
     font-size: 0.62rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
-    background: rgba(15,23,42,0.75); color: #fff;
-    backdrop-filter: blur(6px);
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(15,23,42,0.2);
 }
 
 .project-showcase-body { padding: 24px; flex: 1; }

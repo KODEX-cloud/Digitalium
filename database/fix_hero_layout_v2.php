@@ -39,6 +39,7 @@ spl_autoload_register(function ($class) {
 use App\Models\Page;
 use App\Models\Section;
 use App\Models\Block;
+use App\Services\Database;
 
 echo "=== FIX HERO LAYOUT V2 (alignement gauche + titre empilé + images) ===\n";
 
@@ -122,6 +123,30 @@ try {
                 Block::setVal($secId, 'proj_image', 'image', $imageFixes[$current], $groupId, 0);
                 echo "projects_showcase (groupe {$groupId}) : image incorrecte -> photo cohérente ({$group['proj_category']}).\n";
             }
+        }
+    }
+
+    // ─── Sections partagées avec d'autres pages : bascule vers un type dédié ──
+    // "services_grid" (carte bannière/tag/liste à puces) et "process" (grille de
+    // cartes) sont réutilisés sur d'autres pages du site — les muter directement
+    // régresserait leur rendu ailleurs. On bascule donc uniquement les sections
+    // de CETTE page vers les nouveaux types dédiés services_grid_v2 /
+    // process_timeline, qui lisent les mêmes clés de blocs (aucune perte de
+    // contenu, juste un changement de gabarit visuel).
+    $typeSwaps = [
+        'services_grid' => 'services_grid_v2',
+        'process'       => 'process_timeline',
+    ];
+    foreach ($typeSwaps as $oldType => $newType) {
+        if (isset($sectionByType[$oldType])) {
+            $secId = (int)$sectionByType[$oldType]['id'];
+            Database::query("UPDATE sections SET type = :new_type WHERE id = :id", [
+                'new_type' => $newType,
+                'id' => $secId,
+            ]);
+            echo "Section #{$secId} : type {$oldType} -> {$newType} (gabarit fidèle à la référence).\n";
+        } else {
+            echo "Aucune section de type '{$oldType}' trouvée sur la page 'home' — non modifié.\n";
         }
     }
 

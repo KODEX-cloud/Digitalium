@@ -527,6 +527,8 @@ img { max-width: 100%; display: block; }
 .cta-sec .section-badge::before { background: #5eead4; }
 .cta-sec .btn-hero-secondary { background: rgba(255,255,255,0.08); color: white !important; border-color: rgba(255,255,255,0.18); }
 .cta-sec .btn-hero-secondary:hover { background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.3); }
+.cta-sec .btn-hero-primary { background: #ffffff; color: var(--primary) !important; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.25); }
+.cta-sec .btn-hero-primary:hover { background: #f1f5f9; filter: none; }
 
 /* ============================================================
    14. ABOUT

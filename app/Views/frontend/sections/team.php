@@ -47,7 +47,7 @@ $teamAccents = ['var(--primary)', 'var(--secondary)', 'var(--accent)', 'var(--pr
                         <p class="team-role"><?= htmlspecialchars($member['member_role'] ?? 'Consultant') ?></p>
 
                         <?php if (!empty($member['member_dept'])): ?>
-                            <span class="team-dept-pill" style="border-color:<?= $teamAccents[$idx % count($teamAccents)] ?>;color:<?= $teamAccents[$idx % count($teamAccents)] ?>;">
+                            <span class="team-dept-pill" style="background:<?= $teamAccents[$idx % count($teamAccents)] ?>;">
                                 <?= htmlspecialchars($member['member_dept']) ?>
                             </span>
                         <?php endif; ?>
@@ -180,10 +180,10 @@ $teamAccents = ['var(--primary)', 'var(--secondary)', 'var(--accent)', 'var(--pr
 
 .team-dept-pill {
     display: inline-block;
-    padding: 4px 14px;
+    padding: 5px 16px;
     margin-bottom: 16px;
-    border: 1.5px solid;
     border-radius: var(--radius-pill);
+    color: #fff;
     font-size: 0.68rem;
     font-weight: 700;
     letter-spacing: 0.06em;
