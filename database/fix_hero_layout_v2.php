@@ -162,15 +162,57 @@ try {
         'process'       => 'process_timeline',
     ];
     foreach ($typeSwaps as $oldType => $newType) {
-        if (isset($sectionByType[$oldType])) {
-            $secId = (int)$sectionByType[$oldType]['id'];
+        if (!isset($sectionByType[$oldType])) {
+            echo "Aucune section de type '{$oldType}' trouvée sur la page 'home' — non modifié.\n";
+            continue;
+        }
+        $secId = (int)$sectionByType[$oldType]['id'];
+        if (isset($sectionByType[$newType])) {
+            // Une section du nouveau type existe déjà : la renommer créerait un
+            // doublon affiché deux fois sur la page. On désactive l'ancienne.
+            Database::query("UPDATE sections SET status = 'inactive' WHERE id = :id", ['id' => $secId]);
+            echo "Section #{$secId} [{$oldType}] désactivée : une section '{$newType}' existe déjà (pas de doublon).\n";
+        } else {
             Database::query("UPDATE sections SET type = :new_type WHERE id = :id", [
                 'new_type' => $newType,
                 'id' => $secId,
             ]);
             echo "Section #{$secId} : type {$oldType} -> {$newType} (gabarit fidèle à la référence).\n";
-        } else {
-            echo "Aucune section de type '{$oldType}' trouvée sur la page 'home' — non modifié.\n";
+        }
+    }
+
+    // ─── Dédoublonnage : une seule section active par type sur la page ────────
+    // Filet de sécurité auto-réparateur : si un enchaînement de scripts a laissé
+    // deux sections actives du même type (la page affichait alors deux fois les
+    // blocs "Nos services" et "Notre approche en 6 étapes"), on ne garde que
+    // celle qui porte le plus de blocs de contenu — les autres sont désactivées,
+    // jamais supprimées (Règle #4), donc réactivables depuis /admin/pages.
+    $sections = Section::getByPage((int)$page['id']);
+    $activeByType = [];
+    foreach ($sections as $s) {
+        if (($s['status'] ?? 'active') !== 'active') {
+            continue;
+        }
+        $activeByType[$s['type']][] = $s;
+    }
+    foreach ($activeByType as $type => $list) {
+        if (count($list) < 2) {
+            continue;
+        }
+        // Trier : le plus de blocs d'abord, puis le sort_order le plus bas
+        usort($list, function ($a, $b) {
+            $ca = count(Block::getBySection((int)$a['id']));
+            $cb = count(Block::getBySection((int)$b['id']));
+            if ($ca !== $cb) {
+                return $cb <=> $ca;
+            }
+            return ((int)$a['sort_order']) <=> ((int)$b['sort_order']);
+        });
+        $keep = array_shift($list);
+        echo "Doublons [{$type}] : section #{$keep['id']} conservée (" . count(Block::getBySection((int)$keep['id'])) . " blocs).\n";
+        foreach ($list as $dup) {
+            Database::query("UPDATE sections SET status = 'inactive' WHERE id = :id", ['id' => (int)$dup['id']]);
+            echo "  -> section #{$dup['id']} [{$type}] désactivée (doublon affiché en double sur la page).\n";
         }
     }
 
