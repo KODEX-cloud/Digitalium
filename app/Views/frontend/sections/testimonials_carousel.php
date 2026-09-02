@@ -15,7 +15,9 @@ $tcId = 'testi-carousel-' . $sectionId;
             <?php if (!empty($single['tag'])): ?>
                 <span class="section-badge"><?= htmlspecialchars($single['tag']) ?></span>
             <?php endif; ?>
-            <h2 class="section-title"><?= htmlspecialchars($single['title'] ?? 'Témoignages') ?></h2>
+            <?php if (!empty($single['title'])): ?>
+                <h2 class="section-title"><?= htmlspecialchars($single['title']) ?></h2>
+            <?php endif; ?>
             <?php if (!empty($single['subtitle'])): ?>
                 <p class="section-subtitle"><?= htmlspecialchars($single['subtitle']) ?></p>
             <?php endif; ?>
@@ -37,7 +39,7 @@ $tcId = 'testi-carousel-' . $sectionId;
                         <div class="testi-carousel-client">
                             <div class="testi-carousel-avatar">
                                 <?php if (!empty($testi['client_avatar'])): ?>
-                                    <img src="<?= htmlspecialchars(url($testi['client_avatar'])) ?>" alt="<?= htmlspecialchars($testi['client_name'] ?? 'Client') ?>" loading="lazy">
+                                    <img src="<?= htmlspecialchars(url($testi['client_avatar'])) ?>" alt="<?= htmlspecialchars($testi['client_name'] ?? '') ?>" loading="lazy">
                                 <?php else: ?>
                                     <i data-lucide="user" style="width:18px;height:18px;color:var(--primary);"></i>
                                 <?php endif; ?>
@@ -55,8 +57,6 @@ $tcId = 'testi-carousel-' . $sectionId;
                 <i data-lucide="chevron-right" style="width:18px;height:18px;"></i>
             </button>
         </div>
-        <?php else: ?>
-            <div style="text-align:center;color:var(--text-muted);">Aucun témoignage configuré pour le moment.</div>
         <?php endif; ?>
 
     </div>

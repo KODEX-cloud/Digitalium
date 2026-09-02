@@ -17,18 +17,22 @@
                     <span class="section-badge"><?= htmlspecialchars($single['badge']) ?></span>
                 <?php endif; ?>
 
-                <h2 class="section-title" style="margin-top:0;margin-bottom:16px;">
-                    <?= htmlspecialchars($single['title'] ?? '') ?>
-                </h2>
+                <?php if (!empty($single['title'])): ?>
+                    <h2 class="section-title" style="margin-top:0;margin-bottom:16px;">
+                        <?= htmlspecialchars($single['title']) ?>
+                    </h2>
+                <?php endif; ?>
 
                 <div class="section-divider" style="margin:0 0 24px 0;"></div>
 
-                <p style="font-size:1rem;line-height:1.8;color:var(--text-muted);margin-bottom:28px;">
-                    <?= htmlspecialchars($single['description'] ?? '') ?>
-                </p>
+                <?php if (!empty($single['description'])): ?>
+                    <p style="font-size:1rem;line-height:1.8;color:var(--text-muted);margin-bottom:28px;">
+                        <?= htmlspecialchars($single['description']) ?>
+                    </p>
+                <?php endif; ?>
 
-                <?php if (!empty($single['link_text'])): ?>
-                    <a href="<?= htmlspecialchars(url($single['link_url'] ?? '/contact')) ?>" style="display:inline-flex;align-items:center;gap:8px;font-size:0.85rem;font-weight:700;color:var(--primary);letter-spacing:0.04em;">
+                <?php if (!empty($single['link_text']) && !empty($single['link_url'])): ?>
+                    <a href="<?= htmlspecialchars(url($single['link_url'])) ?>" style="display:inline-flex;align-items:center;gap:8px;font-size:0.85rem;font-weight:700;color:var(--primary);letter-spacing:0.04em;">
                         <span><?= htmlspecialchars($single['link_text']) ?></span>
                         <i data-lucide="arrow-right" style="width:15px;height:15px;"></i>
                     </a>
@@ -40,11 +44,17 @@
                 <?php if (!empty($groups)): ?>
                     <?php foreach ($groups as $stat): ?>
                         <div class="card stat-intro-card">
-                            <div class="stat-intro-icon">
-                                <?= \App\Helpers\IconHelper::render($stat['stat_icon'] ?? 'star', ['size' => '22px']) ?>
-                            </div>
-                            <div class="stat-intro-value"><?= htmlspecialchars($stat['stat_value'] ?? '') ?></div>
-                            <p class="stat-intro-desc"><?= htmlspecialchars($stat['stat_desc'] ?? '') ?></p>
+                            <?php if (!empty($stat['stat_icon'])): ?>
+                                <div class="stat-intro-icon">
+                                    <?= \App\Helpers\IconHelper::render($stat['stat_icon'], ['size' => '22px']) ?>
+                                </div>
+                            <?php endif; ?>
+                            <?php if (!empty($stat['stat_value'])): ?>
+                                <div class="stat-intro-value"><?= htmlspecialchars($stat['stat_value']) ?></div>
+                            <?php endif; ?>
+                            <?php if (!empty($stat['stat_desc'])): ?>
+                                <p class="stat-intro-desc"><?= htmlspecialchars($stat['stat_desc']) ?></p>
+                            <?php endif; ?>
                         </div>
                     <?php endforeach; ?>
                 <?php endif; ?>

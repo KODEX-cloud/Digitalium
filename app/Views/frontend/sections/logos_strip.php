@@ -25,7 +25,7 @@
                     ?>
                     <<?= $tag ?> <?= $attr ?> class="logos-strip-item reveal">
                         <?php if (!empty($logo['logo_image'])): ?>
-                            <img src="<?= htmlspecialchars(url($logo['logo_image'])) ?>" alt="<?= htmlspecialchars($logo['logo_name'] ?? 'Client') ?>" loading="lazy">
+                            <img src="<?= htmlspecialchars(url($logo['logo_image'])) ?>" alt="<?= htmlspecialchars($logo['logo_name'] ?? '') ?>" loading="lazy">
                         <?php else: ?>
                             <?php if (!empty($logo['logo_icon'])): ?>
                                 <?= \App\Helpers\IconHelper::render($logo['logo_icon'], ['size' => '16px']) ?>

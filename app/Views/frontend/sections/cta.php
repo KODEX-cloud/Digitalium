@@ -8,21 +8,27 @@
             </div>
         <?php endif; ?>
 
-        <h2 class="section-title">
-            <?= $single['title'] ?? 'Travaillons ensemble sur votre projet' ?>
-        </h2>
+        <?php if (!empty($single['title'])): ?>
+            <h2 class="section-title">
+                <?= $single['title'] ?>
+            </h2>
+        <?php endif; ?>
 
-        <p class="section-subtitle" style="margin:20px auto 44px;max-width:640px;">
-            <?= htmlspecialchars($single['subtitle'] ?? 'Concevons des architectures performantes à forte valeur ajoutée.') ?>
-        </p>
+        <?php if (!empty($single['subtitle'])): ?>
+            <p class="section-subtitle" style="margin:20px auto 44px;max-width:640px;">
+                <?= htmlspecialchars($single['subtitle']) ?>
+            </p>
+        <?php endif; ?>
 
         <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
-            <a href="<?= htmlspecialchars(url($single['cta_url'] ?? '/contact')) ?>" class="btn-hero-primary">
-                <span><?= htmlspecialchars($single['cta_text'] ?? 'Commencer aujourd\'hui') ?></span>
-                <i data-lucide="arrow-up-right" style="width:16px;height:16px;"></i>
-            </a>
-            <?php if (!empty($single['cta2_text'])): ?>
-                <a href="<?= htmlspecialchars(url($single['cta2_url'] ?? '/service')) ?>" class="btn-hero-secondary">
+            <?php if (!empty($single['cta_text']) && !empty($single['cta_url'])): ?>
+                <a href="<?= htmlspecialchars(url($single['cta_url'])) ?>" class="btn-hero-primary">
+                    <span><?= htmlspecialchars($single['cta_text']) ?></span>
+                    <i data-lucide="arrow-up-right" style="width:16px;height:16px;"></i>
+                </a>
+            <?php endif; ?>
+            <?php if (!empty($single['cta2_text']) && !empty($single['cta2_url'])): ?>
+                <a href="<?= htmlspecialchars(url($single['cta2_url'])) ?>" class="btn-hero-secondary">
                     <span><?= htmlspecialchars($single['cta2_text']) ?></span>
                 </a>
             <?php endif; ?>

@@ -432,7 +432,7 @@ if (!empty($page['hero_title'])):
                     <div style="width: 100%; max-width: 560px; position: relative;">
                         <div style="aspect-ratio: 1.4; border-radius: var(--radius-lg); overflow: hidden; background: #f8fafc; box-shadow: 0 24px 48px rgba(15,23,42,0.14);">
                             <?php if (!empty($page['hero_image'])): ?>
-                                <img src="<?= htmlspecialchars(url($page['hero_image'])) ?>" alt="Corporate Visual" style="width: 100%; height: 100%; object-fit: cover; object-position: center 30%; <?= $imageFilter ?>">
+                                <img src="<?= htmlspecialchars(url($page['hero_image'])) ?>" alt="<?= htmlspecialchars(strip_tags($page['hero_title'] ?? ($page['title'] ?? ''))) ?>" style="width: 100%; height: 100%; object-fit: cover; object-position: center 30%; <?= $imageFilter ?>">
                             <?php endif; ?>
                         </div>
                     </div>

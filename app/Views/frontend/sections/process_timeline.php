@@ -16,8 +16,12 @@ $stepAccents = ['var(--primary)', 'var(--secondary)'];
     <div class="container">
 
         <div class="section-header reveal">
-            <span class="section-badge"><?= htmlspecialchars($single['tag'] ?? 'Méthodologie') ?></span>
-            <h2 class="section-title"><?= htmlspecialchars($single['title'] ?? 'Notre approche') ?></h2>
+            <?php if (!empty($single['tag'])): ?>
+                <span class="section-badge"><?= htmlspecialchars($single['tag']) ?></span>
+            <?php endif; ?>
+            <?php if (!empty($single['title'])): ?>
+                <h2 class="section-title"><?= htmlspecialchars($single['title']) ?></h2>
+            <?php endif; ?>
         </div>
 
         <div class="proc-timeline">
@@ -26,14 +30,20 @@ $stepAccents = ['var(--primary)', 'var(--secondary)'];
                     $accent = $stepAccents[$i % count($stepAccents)];
                 ?>
                     <div class="proc-timeline-step reveal" style="transition-delay:<?= $i * 0.08 ?>s;">
-                        <div class="proc-timeline-icon" style="color:<?= $accent ?>;">
-                            <?= \App\Helpers\IconHelper::render($step['proc_icon'] ?? 'check', ['size' => '20px']) ?>
-                        </div>
+                        <?php if (!empty($step['proc_icon'])): ?>
+                            <div class="proc-timeline-icon" style="color:<?= $accent ?>;">
+                                <?= \App\Helpers\IconHelper::render($step['proc_icon'], ['size' => '20px']) ?>
+                            </div>
+                        <?php endif; ?>
                         <div class="proc-timeline-num" style="background:<?= $accent ?>;">
-                            <?= htmlspecialchars($i + 1) ?>
+                            <?= htmlspecialchars(ltrim($step['proc_num'] ?? (string)($i + 1), '0') ?: (string)($i + 1)) ?>
                         </div>
-                        <h3 class="proc-timeline-title"><?= htmlspecialchars($step['proc_title'] ?? '') ?></h3>
-                        <p class="proc-timeline-desc"><?= htmlspecialchars($step['proc_desc'] ?? '') ?></p>
+                        <?php if (!empty($step['proc_title'])): ?>
+                            <h3 class="proc-timeline-title"><?= htmlspecialchars($step['proc_title']) ?></h3>
+                        <?php endif; ?>
+                        <?php if (!empty($step['proc_desc'])): ?>
+                            <p class="proc-timeline-desc"><?= htmlspecialchars($step['proc_desc']) ?></p>
+                        <?php endif; ?>
                     </div>
                 <?php endforeach; ?>
             <?php endif; ?>

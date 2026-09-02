@@ -202,6 +202,7 @@ try {
     Block::setVal($id, 'subtitle', 'textarea', '');
     Block::setVal($id, 'more_text', 'text', 'Voir plus de réalisations');
     Block::setVal($id, 'more_url', 'link', '/realisations');
+    Block::setVal($id, 'result_label', 'text', 'Résultat :');
     $projects = [
         ['FINANCE', 'Plateforme de gestion financière', 'Solution web de gestion financière et reporting pour une institution financière.', '-40% de temps de traitement des rapports', '/assets/uploads/proj-finance-dashboard-1893001.jpg'],
         ['LOGISTIQUE', 'Application mobile de livraison', 'Application mobile de suivi des livraisons en temps réel avec géolocalisation.', '+60% de satisfaction client', '/assets/uploads/proj-logistics-map-1893001.jpg'],
@@ -235,6 +236,7 @@ try {
 
     // ─── 10. team ──────────────────────────────────────────────────────────────
     $id = $sec('team', 'Les experts derrière Digitalium');
+    Block::setVal($id, 'tag', 'text', 'Notre équipe');
     Block::setVal($id, 'title', 'text', 'Les experts derrière Digitalium');
     Block::setVal($id, 'subtitle', 'textarea', '');
     Block::setVal($id, 'more_text', 'text', 'Rejoignez notre équipe');

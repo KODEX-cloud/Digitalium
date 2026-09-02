@@ -127,6 +127,29 @@ try {
         }
     }
 
+    // ─── Règle #2 (zéro hardcode) : textes autrefois écrits en dur dans les
+    // gabarits, désormais lus depuis les blocs CMS — on les crée s'ils manquent
+    // pour que l'affichage reste identique tout en devenant administrable.
+    $missingBlocks = [
+        'team'               => ['tag' => 'Notre équipe'],
+        'projects_showcase'  => ['result_label' => 'Résultat :'],
+    ];
+    foreach ($missingBlocks as $type => $keys) {
+        if (!isset($sectionByType[$type])) {
+            continue;
+        }
+        $secId = (int)$sectionByType[$type]['id'];
+        $content = Block::getStructuredContent($secId);
+        foreach ($keys as $key => $value) {
+            if (($content['single'][$key] ?? '') === '') {
+                Block::setVal($secId, $key, 'text', $value);
+                echo "{$type}.{$key} : créé en base (\"{$value}\") — était codé en dur dans le gabarit.\n";
+            } else {
+                echo "{$type}.{$key} déjà renseigné — non modifié.\n";
+            }
+        }
+    }
+
     // ─── Sections partagées avec d'autres pages : bascule vers un type dédié ──
     // "services_grid" (carte bannière/tag/liste à puces) et "process" (grille de
     // cartes) sont réutilisés sur d'autres pages du site — les muter directement

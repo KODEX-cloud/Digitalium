@@ -17,7 +17,9 @@ $projAccents = ['var(--primary)', 'var(--secondary)', 'var(--accent)'];
             <?php if (!empty($single['tag'])): ?>
                 <span class="section-badge"><?= htmlspecialchars($single['tag']) ?></span>
             <?php endif; ?>
-            <h2 class="section-title"><?= htmlspecialchars($single['title'] ?? 'Nos Réalisations') ?></h2>
+            <?php if (!empty($single['title'])): ?>
+                <h2 class="section-title"><?= htmlspecialchars($single['title']) ?></h2>
+            <?php endif; ?>
             <?php if (!empty($single['subtitle'])): ?>
                 <p class="section-subtitle"><?= htmlspecialchars($single['subtitle']) ?></p>
             <?php endif; ?>
@@ -44,7 +46,10 @@ $projAccents = ['var(--primary)', 'var(--secondary)', 'var(--accent)'];
                             <p class="project-showcase-desc"><?= htmlspecialchars($proj['proj_desc'] ?? '') ?></p>
                             <?php if (!empty($proj['proj_result'])): ?>
                                 <div class="project-showcase-result">
-                                    <strong>Résultat :</strong> <?= htmlspecialchars($proj['proj_result']) ?>
+                                    <?php if (!empty($single['result_label'])): ?>
+                                        <strong><?= htmlspecialchars($single['result_label']) ?></strong>
+                                    <?php endif; ?>
+                                    <?= htmlspecialchars($proj['proj_result']) ?>
                                 </div>
                             <?php endif; ?>
                         </div>
@@ -56,9 +61,9 @@ $projAccents = ['var(--primary)', 'var(--secondary)', 'var(--accent)'];
             <?php endif; ?>
         </div>
 
-        <?php if (!empty($single['more_text'])): ?>
+        <?php if (!empty($single['more_text']) && !empty($single['more_url'])): ?>
             <div class="projects-showcase-more reveal">
-                <a href="<?= htmlspecialchars(url($single['more_url'] ?? '/realisations')) ?>" style="display:inline-flex;align-items:center;gap:8px;font-size:0.85rem;font-weight:700;color:var(--primary);letter-spacing:0.04em;">
+                <a href="<?= htmlspecialchars(url($single['more_url'])) ?>" style="display:inline-flex;align-items:center;gap:8px;font-size:0.85rem;font-weight:700;color:var(--primary);letter-spacing:0.04em;">
                     <span><?= htmlspecialchars($single['more_text']) ?></span>
                     <i data-lucide="arrow-right" style="width:15px;height:15px;"></i>
                 </a>

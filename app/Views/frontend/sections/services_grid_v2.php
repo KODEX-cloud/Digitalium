@@ -23,7 +23,9 @@ $svcAccents = [
             <?php if (!empty($single['tag'])): ?>
                 <span class="section-badge"><?= htmlspecialchars($single['tag']) ?></span>
             <?php endif; ?>
-            <h2 class="section-title"><?= htmlspecialchars($single['title'] ?? 'Nos Expertises') ?></h2>
+            <?php if (!empty($single['title'])): ?>
+                <h2 class="section-title"><?= htmlspecialchars($single['title']) ?></h2>
+            <?php endif; ?>
             <?php if (!empty($single['subtitle'])): ?>
                 <p class="section-subtitle"><?= htmlspecialchars($single['subtitle']) ?></p>
             <?php endif; ?>
@@ -36,16 +38,22 @@ $svcAccents = [
                     $desc = trim(str_replace('|', ' ', $svc['svc_points'] ?? ''));
                 ?>
                     <div class="svc-v2-card reveal" style="transition-delay:<?= $i * 0.08 ?>s;">
-                        <div class="svc-v2-icon" style="background:<?= $accentBg ?>;color:<?= $accent ?>;">
-                            <?= \App\Helpers\IconHelper::render($svc['svc_icon'] ?? 'check', ['size' => '26px']) ?>
-                        </div>
-                        <h3 class="svc-v2-title"><?= htmlspecialchars($svc['svc_title'] ?? '') ?></h3>
+                        <?php if (!empty($svc['svc_icon'])): ?>
+                            <div class="svc-v2-icon" style="background:<?= $accentBg ?>;color:<?= $accent ?>;">
+                                <?= \App\Helpers\IconHelper::render($svc['svc_icon'], ['size' => '26px']) ?>
+                            </div>
+                        <?php endif; ?>
+                        <?php if (!empty($svc['svc_title'])): ?>
+                            <h3 class="svc-v2-title"><?= htmlspecialchars($svc['svc_title']) ?></h3>
+                        <?php endif; ?>
                         <?php if (!empty($desc)): ?>
                             <p class="svc-v2-desc"><?= htmlspecialchars($desc) ?></p>
                         <?php endif; ?>
-                        <a href="<?= htmlspecialchars(url($svc['svc_link'] ?? '/contact')) ?>" class="svc-v2-arrow" aria-label="En savoir plus">
-                            <i data-lucide="arrow-up-right" style="width:16px;height:16px;"></i>
-                        </a>
+                        <?php if (!empty($svc['svc_link'])): ?>
+                            <a href="<?= htmlspecialchars(url($svc['svc_link'])) ?>" class="svc-v2-arrow" aria-label="<?= htmlspecialchars($svc['svc_title'] ?? '') ?>">
+                                <i data-lucide="arrow-up-right" style="width:16px;height:16px;"></i>
+                            </a>
+                        <?php endif; ?>
                     </div>
                 <?php endforeach; ?>
             <?php endif; ?>

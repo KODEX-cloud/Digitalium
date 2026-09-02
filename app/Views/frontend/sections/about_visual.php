@@ -13,7 +13,7 @@
             <!-- ── LEFT — Image + badge flottant ────────────────────── -->
             <div class="about-visual-media reveal">
                 <?php if (!empty($single['image'])): ?>
-                    <img src="<?= htmlspecialchars(url($single['image'])) ?>" alt="<?= htmlspecialchars($single['title'] ?? 'Digitalium Group') ?>" loading="lazy">
+                    <img src="<?= htmlspecialchars(url($single['image'])) ?>" alt="<?= htmlspecialchars($single['title'] ?? '') ?>" loading="lazy">
                 <?php else: ?>
                     <div class="about-visual-placeholder">
                         <i data-lucide="image" style="width:48px;height:48px;color:rgba(37,99,235,0.3);"></i>
@@ -34,15 +34,19 @@
                     <span class="section-badge"><?= htmlspecialchars($single['tag']) ?></span>
                 <?php endif; ?>
 
-                <h2 class="section-title" style="margin-top:0;margin-bottom:16px;">
-                    <?= htmlspecialchars($single['title'] ?? '') ?>
-                </h2>
+                <?php if (!empty($single['title'])): ?>
+                    <h2 class="section-title" style="margin-top:0;margin-bottom:16px;">
+                        <?= htmlspecialchars($single['title']) ?>
+                    </h2>
+                <?php endif; ?>
 
                 <div class="section-divider" style="margin:0 0 24px 0;"></div>
 
-                <p style="font-size:1rem;line-height:1.8;color:var(--text-muted);margin-bottom:32px;">
-                    <?= htmlspecialchars($single['description'] ?? '') ?>
-                </p>
+                <?php if (!empty($single['description'])): ?>
+                    <p style="font-size:1rem;line-height:1.8;color:var(--text-muted);margin-bottom:32px;">
+                        <?= htmlspecialchars($single['description']) ?>
+                    </p>
+                <?php endif; ?>
 
                 <?php
                 $hasChecks = false;

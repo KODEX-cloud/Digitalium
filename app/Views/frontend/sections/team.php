@@ -1,8 +1,10 @@
 <?php
 /**
  * Section: team — Notre Équipe (grille de membres)
- * Données CMS : $single (title, subtitle, more_text, more_url),
+ * Données CMS : $single (tag, title, subtitle, more_text, more_url),
  *               $groups (member_avatar, member_name, member_role, member_dept, member_linkedin, member_twitter, member_github)
+ * Règle #2 (zéro hardcode) : aucun texte affiché n'est écrit en dur — tout provient
+ * des blocs CMS, et chaque élément non renseigné est simplement masqué.
  * Design System v4.1 — variables CSS uniquement
  */
 $teamAccents = ['var(--primary)', 'var(--secondary)', 'var(--accent)', 'var(--primary)'];
@@ -13,9 +15,15 @@ $teamAccents = ['var(--primary)', 'var(--secondary)', 'var(--accent)', 'var(--pr
 
         <!-- Section header -->
         <div class="section-header reveal">
-            <span class="section-badge">Équipe</span>
-            <h2 class="section-title"><?= htmlspecialchars($single['title'] ?? 'Nos Experts') ?></h2>
-            <p class="section-subtitle"><?= htmlspecialchars($single['subtitle'] ?? 'Une équipe d\'ingénieurs d\'élite et de concepteurs chevronnés.') ?></p>
+            <?php if (!empty($single['tag'])): ?>
+                <span class="section-badge"><?= htmlspecialchars($single['tag']) ?></span>
+            <?php endif; ?>
+            <?php if (!empty($single['title'])): ?>
+                <h2 class="section-title"><?= htmlspecialchars($single['title']) ?></h2>
+            <?php endif; ?>
+            <?php if (!empty($single['subtitle'])): ?>
+                <p class="section-subtitle"><?= htmlspecialchars($single['subtitle']) ?></p>
+            <?php endif; ?>
             <div class="section-divider"></div>
         </div>
 
@@ -32,7 +40,7 @@ $teamAccents = ['var(--primary)', 'var(--secondary)', 'var(--accent)', 'var(--pr
                     <div class="team-avatar-ring">
                         <?php if (!empty($member['member_avatar'])): ?>
                             <img src="<?= htmlspecialchars(url($member['member_avatar'])) ?>"
-                                 alt="<?= htmlspecialchars($member['member_name'] ?? 'Membre') ?>"
+                                 alt="<?= htmlspecialchars($member['member_name'] ?? '') ?>"
                                  loading="lazy" class="team-avatar-img">
                         <?php else: ?>
                             <div class="team-avatar-placeholder">
@@ -43,8 +51,12 @@ $teamAccents = ['var(--primary)', 'var(--secondary)', 'var(--accent)', 'var(--pr
 
                     <!-- Info -->
                     <div class="team-info">
-                        <h3 class="team-name"><?= htmlspecialchars($member['member_name'] ?? 'Nom du Membre') ?></h3>
-                        <p class="team-role"><?= htmlspecialchars($member['member_role'] ?? 'Consultant') ?></p>
+                        <?php if (!empty($member['member_name'])): ?>
+                            <h3 class="team-name"><?= htmlspecialchars($member['member_name']) ?></h3>
+                        <?php endif; ?>
+                        <?php if (!empty($member['member_role'])): ?>
+                            <p class="team-role"><?= htmlspecialchars($member['member_role']) ?></p>
+                        <?php endif; ?>
 
                         <?php if (!empty($member['member_dept'])): ?>
                             <span class="team-dept-pill" style="background:<?= $teamAccents[$idx % count($teamAccents)] ?>;">
@@ -74,43 +86,12 @@ $teamAccents = ['var(--primary)', 'var(--secondary)', 'var(--accent)', 'var(--pr
                         <?php endif; ?>
                     </div>
                 </div>
-            <?php endforeach; else: ?>
-
-                <!-- Fallback team membres par défaut (depuis settings) -->
-                <?php
-                $defaultMembers = [
-                    ['icon' => 'shield-check', 'name' => 'Alexandre Dumas', 'role' => 'Lead Architect & Fondateur'],
-                    ['icon' => 'terminal',     'name' => 'Thomas Morel',    'role' => 'Expert Core PHP & SecOps'],
-                ];
-                foreach ($defaultMembers as $dm):
-                ?>
-                <div class="team-card reveal">
-                    <div class="team-avatar-ring">
-                        <div class="team-avatar-placeholder">
-                            <i data-lucide="<?= $dm['icon'] ?>" style="width:40px;height:40px;color:var(--primary);opacity:0.6;"></i>
-                        </div>
-                    </div>
-                    <div class="team-info">
-                        <h3 class="team-name"><?= htmlspecialchars($dm['name']) ?></h3>
-                        <p class="team-role"><?= htmlspecialchars($dm['role']) ?></p>
-                        <div class="team-socials">
-                            <a href="<?= htmlspecialchars($settings['social_linkedin'] ?? url('/contact')) ?>"
-                               class="team-social-link" target="_blank" rel="noopener" aria-label="LinkedIn">
-                                <i data-lucide="linkedin" style="width:16px;height:16px;"></i>
-                            </a>
-                            <a href="<?= htmlspecialchars($settings['social_github'] ?? url('/contact')) ?>"
-                               class="team-social-link" target="_blank" rel="noopener" aria-label="GitHub">
-                                <i data-lucide="github" style="width:16px;height:16px;"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <?php endforeach; endif; ?>
+            <?php endforeach; endif; ?>
         </div>
 
-        <?php if (!empty($single['more_text'])): ?>
+        <?php if (!empty($single['more_text']) && !empty($single['more_url'])): ?>
             <div style="text-align:center;margin-top:44px;">
-                <a href="<?= htmlspecialchars(url($single['more_url'] ?? '/contact')) ?>" style="display:inline-flex;align-items:center;gap:8px;font-size:0.85rem;font-weight:700;color:var(--primary);letter-spacing:0.04em;">
+                <a href="<?= htmlspecialchars(url($single['more_url'])) ?>" style="display:inline-flex;align-items:center;gap:8px;font-size:0.85rem;font-weight:700;color:var(--primary);letter-spacing:0.04em;">
                     <span><?= htmlspecialchars($single['more_text']) ?></span>
                     <i data-lucide="arrow-right" style="width:15px;height:15px;"></i>
                 </a>
