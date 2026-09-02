@@ -224,6 +224,59 @@ Fichiers : `app/Views/frontend/sections/{logos_strip,stats_intro,about_visual,pr
 
 ---
 
+## HOMEPAGE V2 — ZÉRO HARDCODE + DÉDOUBLONNAGE (2026-09-02)
+
+### Règle #2 appliquée intégralement à la page d'accueil (commit `8f09dd6`)
+Audit des 9 sections + hero. Tout texte/libellé/lien écrit en dur supprimé :
+- `sections/team.php` — badge « Équipe » en dur → bloc CMS `tag` ; **suppression du bloc
+  de repli contenant 2 faux membres fictifs codés en dur** (« Alexandre Dumas »,
+  « Thomas Morel ») affichés dès que la grille était vide ; fallbacks « Nos Experts »,
+  « Nom du Membre », « Consultant » supprimés
+- `sections/projects_showcase.php` — libellé « Résultat : » en dur → bloc `result_label`
+- `sections/process_timeline.php` — numéro d'étape calculé (`$i+1`) ignorait le champ CMS
+  `proc_num` → lit désormais la valeur saisie en admin
+- `sections/testimonials_carousel.php` — message d'état vide en dur supprimé
+- `stats_intro`, `about_visual`, `services_grid_v2`, `logos_strip`, `cta` — tous les
+  fallbacks de titres/sous-titres et liens en dur (`/contact`, `/realisations`, `/service`)
+  supprimés ; chaque champ vide est masqué au lieu d'afficher du texte du code
+- `partials/hero.php` — `alt="Corporate Visual"` → titre du hero (contenu CMS)
+
+**Nouveaux blocs CMS :** `team.tag`, `projects_showcase.result_label` — créés en production
+par `database/fix_hero_layout_v2.php` (idempotent, auto-exécuté au déploiement).
+
+### BUG-DUP-01 — Sections dupliquées (commit `2cd92db`) — CORRIGÉ
+La page rendait **11 sections au lieu de 9** : `services_grid_v2` et `process_timeline`
+affichées deux fois (12 cartes de services, frise des 6 étapes en double).
+Cause : le type-swap de `fix_hero_layout_v2.php` renommait l'ancienne section vers le
+nouveau type même si une section de ce type existait déjà.
+Correctifs : (1) le swap désactive l'ancienne section au lieu de la renommer si le type
+cible existe ; (2) passe de dédoublonnage auto-réparatrice à chaque déploiement —
+conserve la section portant le plus de blocs, désactive les autres (statut `inactive`,
+jamais de suppression — Règle #4, réactivable depuis `/admin/pages`).
+
+### Preuves production (Règle #5) — `https://digitaliumgroup.com/`, HTTP 200
+| Contrôle | Avant | Après |
+|---|---|---|
+| Sections rendues | 11 | **9** |
+| Types en double | 2 | **0** |
+| `.svc-v2-card` | 12 | **6** |
+| `.proc-timeline-step` | 12 | **6** |
+| Poids page | 100 551 o | **84 019 o** |
+| Badge équipe | (en dur) | **« Notre équipe »** depuis la base |
+| Libellés `Résultat :` | (en dur) | **3/3** depuis la base |
+| Faux membres en dur | 2 | **0** |
+| Membres réels affichés | — | **6/6** |
+
+Runs CI/CD : #31 (`8f09dd6`) et #32 (`2cd92db`) — succès.
+
+### Reste à faire — page d'accueil
+- **[USER]** Uploader les 6 photos réelles de l'équipe et les 3 avatars clients
+  (témoignages) via `/admin/pages` → Médiathèque — actuellement icônes de substitution
+- **[USER]** Remplacer si besoin les 5 photos d'illustration (hero, « 8+ ans », 3 cartes
+  Réalisations), aujourd'hui des photos de banque d'images sous licence libre
+
+---
+
 ## FICHIERS INTOUCHABLES SANS ANALYSE
 
 - `app/Services/Router.php`
