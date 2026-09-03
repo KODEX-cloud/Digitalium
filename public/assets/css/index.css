@@ -593,7 +593,39 @@ input:focus, textarea:focus, select:focus {
     border-top: 1px solid rgba(255,255,255,0.05);
     padding: 96px 0 44px; position: relative; z-index: 1;
 }
-.footer-layout { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 60px; margin-bottom: 60px; }
+.footer-layout { display: grid; grid-template-columns: 1.6fr 1fr 1.15fr 1.25fr 1.3fr; gap: 40px; margin-bottom: 56px; }
+@media (max-width: 1100px) { .footer-layout { grid-template-columns: 1.6fr 1fr 1.15fr 1.25fr; } .footer-newsletter { grid-column: 1 / -1; } }
+@media (max-width: 780px)  { .footer-layout { grid-template-columns: 1fr 1fr; gap: 32px; } }
+@media (max-width: 520px)  { .footer-layout { grid-template-columns: 1fr; } }
+
+/* Footer — colonne Newsletter (contenu piloté par Settings) */
+.footer-newsletter-text { font-size: 0.86rem; color: #94a3b8; line-height: 1.7; margin-bottom: 16px; }
+.footer-newsletter-form { display: flex; gap: 8px; align-items: stretch; max-width: 320px; }
+.footer-newsletter-input {
+    flex: 1; min-width: 0;
+    padding: 10px 14px;
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(255,255,255,0.14);
+    background: rgba(255,255,255,0.06);
+    color: #e2e8f0;
+    font-family: inherit;
+    font-size: 0.85rem;
+    transition: var(--transition-fast);
+}
+.footer-newsletter-input::placeholder { color: #64748b; }
+.footer-newsletter-input:focus { outline: none; border-color: var(--primary); background: rgba(255,255,255,0.1); }
+.footer-newsletter-btn {
+    flex-shrink: 0;
+    width: 42px;
+    border: none;
+    border-radius: var(--radius-sm);
+    background: var(--primary);
+    color: #fff;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: var(--transition-fast);
+}
+.footer-newsletter-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
 .footer-col-title { font-size: 0.77rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.18em; color: #64748b; margin-bottom: 20px; font-family: var(--font-heading); }
 .footer-link { display: block; font-size: 0.9rem; color: #94a3b8; margin-bottom: 12px; transition: var(--transition-fast); }
 .footer-link:hover { color: var(--primary); transform: translateX(4px); }

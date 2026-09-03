@@ -408,12 +408,14 @@
                             <strong style="font-size:1.15rem; color: var(--primary); font-family: var(--font-heading);"><?= htmlspecialchars($settings['site_logo_text']) ?></strong>
                             <span style="font-size:0.6rem; color: #8aa0be; text-transform: uppercase; letter-spacing: .2em; font-weight: 500;"><?= htmlspecialchars($settings['site_logo_subtext'] ?? 'Group') ?></span>
                         </div>
-                    <?php elseif (empty($settings['site_logo'])): ?>
+                    <?php elseif (empty($settings['site_logo']) && !empty($settings['site_name'])): ?>
                         <div class="logo-d-mark"></div>
                         <div class="logo-ring-mark"></div>
                         <div class="logo-text-col">
-                            <strong style="font-size:1.15rem;">Digitalium</strong>
-                            <span style="font-size:0.6rem;">Group</span>
+                            <strong style="font-size:1.15rem;"><?= htmlspecialchars($settings['site_name']) ?></strong>
+                            <?php if (!empty($settings['site_logo_subtext'])): ?>
+                                <span style="font-size:0.6rem;"><?= htmlspecialchars($settings['site_logo_subtext']) ?></span>
+                            <?php endif; ?>
                         </div>
                     <?php endif; ?>
                 </a>
@@ -463,41 +465,15 @@
             </div>
 
             <div>
-                <h4 class="footer-col-title">Services</h4>
+                <?php if (!empty($settings['footer_nav_title'])): ?>
+                    <h4 class="footer-col-title"><?= htmlspecialchars($settings['footer_nav_title']) ?></h4>
+                <?php endif; ?>
                 <ul class="footer-links">
-                    <?php 
-                    $servicesSec = \App\Services\Database::fetch("SELECT id FROM sections WHERE type = 'services_grid' AND status = 'active' LIMIT 1");
-                    $servicesList = [];
-                    if ($servicesSec) {
-                        $servicesBlocks = \App\Models\Block::getStructuredContent($servicesSec['id']);
-                        $servicesList = $servicesBlocks['groups'] ?? [];
-                    }
-                    if (empty($servicesList)) {
-                        $servicesList = [
-                            ['svc_title' => 'Ingénierie Logicielle', 'svc_link' => '/service'],
-                            ['svc_title' => 'Applications Cloud', 'svc_link' => '/service'],
-                            ['svc_title' => 'Audit & Conseil', 'svc_link' => '/service'],
-                            ['svc_title' => 'SEO & Stratégie', 'svc_link' => '/service']
-                        ];
-                    }
-                    $footerServices = array_slice($servicesList, 0, 4);
-                    foreach ($footerServices as $svc):
-                        $svcTitle = $svc['svc_title'] ?? $svc['title'] ?? '';
-                        $svcLink = $svc['svc_link'] ?? $svc['link'] ?? '/service';
-                    ?>
-                        <li><a href="<?= htmlspecialchars(url($svcLink)) ?>" class="footer-link"><?= htmlspecialchars($svcTitle) ?></a></li>
-                    <?php endforeach; ?>
-                </ul>
-            </div>
-
-            <div>
-                <h4 class="footer-col-title">Navigation</h4>
-                <ul class="footer-links">
-                    <?php 
+                    <?php
                     $footPages = array_filter($menuPages, function($p) {
                         return (int)($p['in_navigation'] ?? 1) === 1;
                     });
-                    foreach ($footPages as $menuPage): 
+                    foreach ($footPages as $menuPage):
                         $menuSlug = $menuPage['slug'];
                         $menuUrl = url($menuSlug === 'home' ? '/' : '/' . htmlspecialchars($menuSlug));
                     ?>
@@ -511,28 +487,70 @@
             </div>
 
             <div>
-                <h4 class="footer-col-title">Coordonnées</h4>
+                <?php if (!empty($settings['footer_services_title'])): ?>
+                    <h4 class="footer-col-title"><?= htmlspecialchars($settings['footer_services_title']) ?></h4>
+                <?php endif; ?>
+                <ul class="footer-links">
+                    <?php
+                    // Les services affichés proviennent de la section Services de la page
+                    // d'accueil (services_grid_v2 ou services_grid selon le gabarit choisi
+                    // en admin) — aucune liste écrite en dur (Règle #2).
+                    $servicesSec = \App\Services\Database::fetch(
+                        "SELECT id FROM sections WHERE type IN ('services_grid_v2', 'services_grid') AND status = 'active' ORDER BY FIELD(type, 'services_grid_v2', 'services_grid') LIMIT 1"
+                    );
+                    $servicesList = [];
+                    if ($servicesSec) {
+                        $servicesBlocks = \App\Models\Block::getStructuredContent($servicesSec['id']);
+                        $servicesList = $servicesBlocks['groups'] ?? [];
+                    }
+                    $footerServices = array_slice($servicesList, 0, 6);
+                    foreach ($footerServices as $svc):
+                        $svcTitle = $svc['svc_title'] ?? $svc['title'] ?? '';
+                        $svcLink  = $svc['svc_link']  ?? $svc['link']  ?? '';
+                        if ($svcTitle === '') continue;
+                    ?>
+                        <li>
+                            <?php if ($svcLink !== ''): ?>
+                                <a href="<?= htmlspecialchars(url($svcLink)) ?>" class="footer-link"><?= htmlspecialchars($svcTitle) ?></a>
+                            <?php else: ?>
+                                <span class="footer-link"><?= htmlspecialchars($svcTitle) ?></span>
+                            <?php endif; ?>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+
+            <div>
+                <?php if (!empty($settings['footer_contact_title'])): ?>
+                    <h4 class="footer-col-title"><?= htmlspecialchars($settings['footer_contact_title']) ?></h4>
+                <?php endif; ?>
                 <ul class="footer-links" style="color: var(--text-muted); font-size: 0.95rem; display: flex; flex-direction: column; gap: 10px;">
-                    <li style="display: flex; gap: 8px; align-items: flex-start;">
-                        <i data-lucide="map-pin" style="width: 16px; height: 16px; color: var(--primary); flex-shrink: 0; margin-top: 3px;"></i>
-                        <span><?= htmlspecialchars($settings['contact_address'] ?? 'Paris, France') ?></span>
-                    </li>
-                    <li style="display: flex; gap: 8px; align-items: center;">
-                        <i data-lucide="phone" style="width: 16px; height: 16px; color: var(--primary); flex-shrink: 0;"></i>
-                        <span style="font-family: monospace;">
-                            <a href="tel:<?= htmlspecialchars($settings['contact_phone'] ?? '0101782919') ?>">
-                                <?= htmlspecialchars($settings['contact_phone'] ?? '0101782919') ?>
-                            </a>
-                        </span>
-                    </li>
-                    <li style="display: flex; gap: 8px; align-items: center;">
-                        <i data-lucide="mail" style="width: 16px; height: 16px; color: var(--primary); flex-shrink: 0;"></i>
-                        <span>
-                            <a href="mailto:<?= htmlspecialchars($settings['contact_email'] ?? 'contact@digitaliumgroup.com') ?>">
-                                <?= htmlspecialchars($settings['contact_email'] ?? 'contact@digitaliumgroup.com') ?>
-                            </a>
-                        </span>
-                    </li>
+                    <?php if (!empty($settings['contact_address'])): ?>
+                        <li style="display: flex; gap: 8px; align-items: flex-start;">
+                            <i data-lucide="map-pin" style="width: 16px; height: 16px; color: var(--primary); flex-shrink: 0; margin-top: 3px;"></i>
+                            <span><?= htmlspecialchars($settings['contact_address']) ?></span>
+                        </li>
+                    <?php endif; ?>
+                    <?php if (!empty($settings['contact_phone'])): ?>
+                        <li style="display: flex; gap: 8px; align-items: center;">
+                            <i data-lucide="phone" style="width: 16px; height: 16px; color: var(--primary); flex-shrink: 0;"></i>
+                            <span style="font-family: monospace;">
+                                <a href="tel:<?= htmlspecialchars($settings['contact_phone']) ?>">
+                                    <?= htmlspecialchars($settings['contact_phone']) ?>
+                                </a>
+                            </span>
+                        </li>
+                    <?php endif; ?>
+                    <?php if (!empty($settings['contact_email'])): ?>
+                        <li style="display: flex; gap: 8px; align-items: center;">
+                            <i data-lucide="mail" style="width: 16px; height: 16px; color: var(--primary); flex-shrink: 0;"></i>
+                            <span>
+                                <a href="mailto:<?= htmlspecialchars($settings['contact_email']) ?>">
+                                    <?= htmlspecialchars($settings['contact_email']) ?>
+                                </a>
+                            </span>
+                        </li>
+                    <?php endif; ?>
                     <?php if (!empty($settings['site_whatsapp'])): ?>
                         <li style="display: flex; gap: 8px; align-items: center;">
                             <i data-lucide="message-square" style="width: 16px; height: 16px; color: var(--success); flex-shrink: 0;"></i>
@@ -545,6 +563,29 @@
                     <?php endif; ?>
                 </ul>
             </div>
+
+            <?php if (!empty($settings['footer_newsletter_title']) || !empty($settings['footer_newsletter_text'])): ?>
+            <div class="footer-newsletter">
+                <?php if (!empty($settings['footer_newsletter_title'])): ?>
+                    <h4 class="footer-col-title"><?= htmlspecialchars($settings['footer_newsletter_title']) ?></h4>
+                <?php endif; ?>
+                <?php if (!empty($settings['footer_newsletter_text'])): ?>
+                    <p class="footer-newsletter-text"><?= htmlspecialchars($settings['footer_newsletter_text']) ?></p>
+                <?php endif; ?>
+                <form class="footer-newsletter-form" method="POST" action="<?= url('/contact') ?>">
+                    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token ?? '') ?>">
+                    <input type="hidden" name="subject" value="<?= htmlspecialchars($settings['footer_newsletter_title'] ?? '') ?>">
+                    <input type="hidden" name="message" value="<?= htmlspecialchars($settings['footer_newsletter_text'] ?? '') ?>">
+                    <input type="hidden" name="name" value="Newsletter">
+                    <input type="text" name="website" value="" style="display:none" tabindex="-1" autocomplete="off">
+                    <input type="email" name="email" class="footer-newsletter-input"
+                           placeholder="<?= htmlspecialchars($settings['footer_newsletter_placeholder'] ?? '') ?>" required>
+                    <button type="submit" class="footer-newsletter-btn" aria-label="<?= htmlspecialchars($settings['footer_newsletter_title'] ?? '') ?>">
+                        <i data-lucide="send" style="width:16px;height:16px;"></i>
+                    </button>
+                </form>
+            </div>
+            <?php endif; ?>
         </div>
 
         <div class="container footer-bottom">
@@ -555,8 +596,10 @@
                         <?= htmlspecialchars($settings['footer_legal_text']) ?>
                     </a>
                 <?php endif; ?>
-                <a href="#siteHeader" style="display: flex; align-items: center; gap: 6px; color: var(--text-muted); font-weight: 500;" title="Remonter">
-                    <span>Remonter</span>
+                <a href="#siteHeader" style="display: flex; align-items: center; gap: 6px; color: var(--text-muted); font-weight: 500;" title="<?= htmlspecialchars($settings['footer_backtotop_text'] ?? '') ?>">
+                    <?php if (!empty($settings['footer_backtotop_text'])): ?>
+                        <span><?= htmlspecialchars($settings['footer_backtotop_text']) ?></span>
+                    <?php endif; ?>
                     <i data-lucide="arrow-up-circle" style="width: 18px; height: 18px; color: var(--primary);"></i>
                 </a>
             </div>

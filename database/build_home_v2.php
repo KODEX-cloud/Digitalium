@@ -130,16 +130,18 @@ try {
     Block::setVal($id, 'description', 'textarea', "Nous accompagnons les entreprises et organisations dans leur croissance grâce à des solutions digitales fiables, sécurisées et évolutives.");
     Block::setVal($id, 'link_text', 'text', 'En savoir plus sur nous');
     Block::setVal($id, 'link_url', 'link', '/a-propos');
+    // [icône, valeur mise en avant, libellé, description]
     $stats = [
-        ['users', '100+', "Clients accompagnés dans divers secteurs d'activité"],
-        ['star', '95%', 'Taux de satisfaction grâce à notre engagement et à la qualité de nos services'],
-        ['headphones', 'Support réactif', 'Une équipe disponible et réactive pour vous accompagner au quotidien'],
-        ['puzzle', 'Solutions sur mesure', 'Des solutions adaptées à vos besoins et à vos objectifs business'],
+        ['users', '100+', 'Clients accompagnés', "dans divers secteurs d'activité"],
+        ['star', '95%', 'Taux de satisfaction', 'grâce à notre engagement et à la qualité de nos services'],
+        ['headphones', '', 'Support réactif', 'Une équipe disponible et réactive pour vous accompagner au quotidien'],
+        ['puzzle', '', 'Solutions sur mesure', 'Des solutions adaptées à vos besoins et à vos objectifs business'],
     ];
     foreach ($stats as $g => $s) {
         Block::setVal($id, 'stat_icon', 'text', $s[0], $g + 1, 0);
         Block::setVal($id, 'stat_value', 'text', $s[1], $g + 1, 1);
-        Block::setVal($id, 'stat_desc', 'textarea', $s[2], $g + 1, 2);
+        Block::setVal($id, 'stat_label', 'text', $s[2], $g + 1, 2);
+        Block::setVal($id, 'stat_desc', 'textarea', $s[3], $g + 1, 3);
     }
 
     // ─── 5. about_visual ───────────────────────────────────────────────────────

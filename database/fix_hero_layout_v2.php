@@ -150,6 +150,58 @@ try {
         }
     }
 
+    // ─── stats_intro : séparation valeur / libellé / description ─────────────
+    // Le gabarit fidèle au modèle affiche trois niveaux par carte (nombre bleu,
+    // libellé en gras, description grise). L'ancien seed ne portait que deux
+    // champs — on répartit le contenu existant sur le nouveau champ stat_label.
+    if (isset($sectionByType['stats_intro'])) {
+        $secId = (int)$sectionByType['stats_intro']['id'];
+        $content = Block::getStructuredContent($secId);
+        // [valeur attendue en base, nouvelle valeur, nouveau libellé, nouvelle description]
+        $statSplit = [
+            '100+'                 => ['100+', 'Clients accompagnés', "dans divers secteurs d'activité"],
+            '95%'                  => ['95%',  'Taux de satisfaction', 'grâce à notre engagement et à la qualité de nos services'],
+            'Support réactif'      => ['',     'Support réactif',      'Une équipe disponible et réactive pour vous accompagner au quotidien'],
+            'Solutions sur mesure' => ['',     'Solutions sur mesure', 'Des solutions adaptées à vos besoins et à vos objectifs business'],
+        ];
+        foreach ($content['groups'] as $group) {
+            $groupId = (int)$group['_group_id'];
+            if (($group['stat_label'] ?? '') !== '') {
+                continue; // déjà migré ou personnalisé en admin
+            }
+            $current = $group['stat_value'] ?? '';
+            if (!isset($statSplit[$current])) {
+                continue;
+            }
+            [$newValue, $newLabel, $newDesc] = $statSplit[$current];
+            Block::setVal($secId, 'stat_value', 'text', $newValue, $groupId, 1);
+            Block::setVal($secId, 'stat_label', 'text', $newLabel, $groupId, 2);
+            Block::setVal($secId, 'stat_desc', 'textarea', $newDesc, $groupId, 3);
+            echo "stats_intro (groupe {$groupId}) : \"{$current}\" réparti en valeur/libellé/description.\n";
+        }
+    }
+
+    // ─── Footer : titres de colonnes et bloc Newsletter (Règle #2) ───────────
+    // Ces libellés étaient écrits en dur dans layout.php — ils deviennent des
+    // réglages modifiables depuis /admin/settings.
+    $footerSettings = [
+        'footer_nav_title'              => 'Liens utiles',
+        'footer_services_title'         => 'Services',
+        'footer_contact_title'          => 'Contact',
+        'footer_newsletter_title'       => 'Newsletter',
+        'footer_newsletter_text'        => 'Recevez nos actualités et conseils digitaux chaque mois.',
+        'footer_newsletter_placeholder' => 'Votre email',
+        'footer_backtotop_text'         => 'Remonter',
+    ];
+    foreach ($footerSettings as $key => $value) {
+        if (empty(Setting::getVal($key, ''))) {
+            Setting::setVal($key, $value);
+            echo "{$key} : créé (\"{$value}\") — était codé en dur dans layout.php.\n";
+        } else {
+            echo "{$key} déjà renseigné — non modifié.\n";
+        }
+    }
+
     // ─── Sections partagées avec d'autres pages : bascule vers un type dédié ──
     // "services_grid" (carte bannière/tag/liste à puces) et "process" (grille de
     // cartes) sont réutilisés sur d'autres pages du site — les muter directement
