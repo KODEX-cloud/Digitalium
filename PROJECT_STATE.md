@@ -269,6 +269,36 @@ jamais de suppression — Règle #4, réactivable depuis `/admin/pages`).
 
 Runs CI/CD : #31 (`8f09dd6`) et #32 (`2cd92db`) — succès.
 
+### Reconstruction fidèle au modèle de référence (commit `037ecf6`, run #33)
+Alignement des gabarits sur le visuel fourni, sans réintroduire de hardcode :
+- `sections/stats_intro.php` — 4 cartes sur **une rangée** (au lieu d'une grille 2×2) et
+  nouveau bloc **`stat_label`** : chaque carte porte le nombre en bleu, le libellé en gras
+  et la description grise
+- `sections/services_grid_v2.php` — carte **horizontale** (`grid-template-columns: 52px 1fr`) :
+  pastille d'icône colorée à gauche, titre + texte à droite, flèche ronde en bas à droite
+- `sections/process_timeline.php` — pastille numérotée pleine **suivie** de la pastille
+  d'icône (côte à côte), reliées par la ligne pointillée
+- `sections/cta.php` — bandeau en **dégradé bleu** avec motif réseau, titre/sous-titre à
+  gauche et boutons à droite (au lieu d'un bloc sombre centré)
+- `frontend/layout.php` — footer réordonné selon le modèle
+  (**Liens utiles / Services / Contact / Newsletter**), **colonne Newsletter ajoutée**
+  (champ email + bouton, protégée CSRF + honeypot) ; titres de colonnes, coordonnées,
+  libellé « Remonter » et logo de repli désormais pilotés par Settings ; la liste des
+  services du footer est lue depuis la section Services de l'accueil (`services_grid_v2`)
+  au lieu d'une liste écrite en dur
+
+**Nouveaux réglages Settings** (créés automatiquement par `fix_hero_layout_v2.php`) :
+`footer_nav_title`, `footer_services_title`, `footer_contact_title`,
+`footer_newsletter_title`, `footer_newsletter_text`, `footer_newsletter_placeholder`,
+`footer_backtotop_text`.
+
+**Preuves production (Règle #5)** — `HTTP 200`, 9 sections / 0 doublon :
+4 `.stat-intro-card` + 4 `.stat-intro-label` · 6 `.svc-v2-card` + 6 `.svc-v2-body` ·
+6 `.proc-timeline-head` (num + icône) · `.cta-band` avec dégradé bleu et 2 boutons ·
+footer `["Liens utiles","Services","Contact","Newsletter"]` + champ newsletter ·
+0 occurrence de « Ingénierie Logicielle », « Applications Cloud », « SEO & Stratégie »,
+« Paris, France ».
+
 ### Reste à faire — page d'accueil
 - **[USER]** Uploader les 6 photos réelles de l'équipe et les 3 avatars clients
   (témoignages) via `/admin/pages` → Médiathèque — actuellement icônes de substitution
