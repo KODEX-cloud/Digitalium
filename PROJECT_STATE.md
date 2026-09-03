@@ -430,6 +430,69 @@ Le thème est appliqué ; la **structure** de certaines sections diffère encore
 
 ---
 
+## 2026-09-03 — TYPOGRAPHIE, ESPACEMENTS ET FORMES DE CARTES (commit 9c499e4)
+
+Retour : « pas bon — applique les mêmes styles d'écritures, d'espacements, les
+tailles et formes des cartes ».
+
+### Méthode : mesure, pas estimation
+
+Analyse pixel du visuel de référence via GD : détection des bornes de la maquette
+navigateur (x=240..3131, largeur 2891 px pour un viewport 1440) → **échelle
+2.008 px image = 1 px CSS**. Puis profil de lignes (luminance < 140) pour relever
+hauteurs de glyphes et interlignes.
+
+### Écarts relevés et corrigés
+
+| Élément | Modèle | Site avant | Après |
+|---|---|---|---|
+| H1 | ~69 px | 67 px | 4.3 rem |
+| H2 | ~48 px | 45 px | 3 rem |
+| Titres de carte | 20 px | 17 px | 1.25 rem |
+| Interligne du corps | ~1.40 | **1.78** | 1.55 |
+| Interlettrage titres | — | -0.032 | -0.02 |
+| Police du corps | une seule famille | Inter (titres en Jakarta) | Plus Jakarta Sans partout |
+| Hauteur des boutons | 57 px | **46 px** | padding 17/34, 1.05 rem |
+| Chapô du hero | 20 px, interligne 1.45 | 16.8 px, interligne **1.85** | 1.25 rem / 1.45 |
+| Badge | 14 px, casse normale, sans point | 10.7 px, MAJUSCULES, point pulsant | 0.875 rem, casse normale, fond menthe |
+| Rayon des boutons | ~14 px | 12 px | 14 px |
+| Rayon des pilules | rectangle arrondi ~9 px | **100 px** (pilule) | 9 px |
+
+`.hero-description` portait aussi une couleur en dur `#94a3b8` → `var(--text-muted)`.
+
+### Formes de cartes — services_grid_v2 reconstruit
+
+| | Avant | Après (modèle) |
+|---|---|---|
+| Disposition | horizontale (icône 52px à gauche) | **verticale** |
+| Pastille d'icône | carré arrondi 14 px, fond translucide | **cercle** 56 px plein primaire, icône blanche |
+| Titre / description | 0.98 / 0.82 rem | 1.25 / 0.95 rem |
+| Hauteur mini | — | 268 px |
+| Mise en avant | aucune | **une carte en aplat vert**, texte blanc, bouton blanc |
+
+La mise en avant est pilotée par le bloc CMS `svc_featured` et le libellé du bouton
+par `card_link_text` — aucun choix codé en dur (Règle #2).
+
+### Application
+
+`database/apply_typography_v3.php`, ajouté au pipeline, verrouillé par
+`storage/typography_v3.lock` : posé une seule fois, jamais réécrit ensuite.
+
+### Preuve de production (Règle #5)
+
+```
+HTTP 200 · 9 sections · 0 doublon
+--font-size-h1 clamp(2rem, 5vw, 4.3rem)   --font-size-h3 1.25rem
+--line-height-body 1.55   --letter-spacing-heading -0.02em
+--radius-btn 14px   --radius-pill 9px   --radius-lg 20px
+--font-main 'Plus Jakarta Sans'
+bouton : padding 17px 34px · 1.05rem
+badge  : 0.875rem · text-transform none
+cartes : 6 · pastille border-radius 50% fond var(--primary) · 1 carte mise en avant
+```
+
+---
+
 ## FICHIERS INTOUCHABLES SANS ANALYSE
 
 - `app/Services/Router.php`
