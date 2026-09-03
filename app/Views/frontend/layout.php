@@ -38,22 +38,22 @@
     $_thBdgFg = htmlspecialchars($settings['theme_badge_text']        ?? '#004d3f', ENT_QUOTES);
     $_thFtBg  = htmlspecialchars($settings['theme_footer_bg']         ?? '#1d6363', ENT_QUOTES);
     $_thSfDk  = htmlspecialchars($settings['theme_surface_dark']      ?? '#12202c', ENT_QUOTES);
-    $_thRP   = (int)($settings['theme_radius_pill']            ?? 100);
+    $_thRP   = (int)($settings['theme_radius_pill']            ?? 9);
     $_thRC   = (int)($settings['theme_radius_card']            ?? 20);
-    $_thRBtn = (int)($settings['theme_radius_btn']             ?? 100);
+    $_thRBtn = (int)($settings['theme_radius_btn']             ?? 14);
     $_thRMd  = (int)($settings['theme_radius_md']              ?? 12);
     $_thRSm  = (int)($settings['theme_radius_sm']              ?? 8);
     $_thSS   = (int)($settings['theme_space_section']          ?? 92);
     $_thSSSm = max(48, $_thSS - 32);
     $_thSSXs = max(32, $_thSS - 50);
-    $_thFH1  = (float)($settings['theme_font_h1']              ?? 4.2);
-    $_thFH2  = (float)($settings['theme_font_h2']              ?? 2.8);
-    $_thFH3  = (float)($settings['theme_font_h3']              ?? 1.08);
+    $_thFH1  = (float)($settings['theme_font_h1']              ?? 4.3);
+    $_thFH2  = (float)($settings['theme_font_h2']              ?? 3);
+    $_thFH3  = (float)($settings['theme_font_h3']              ?? 1.25);
     $_thFB   = (float)($settings['theme_font_body']            ?? 1);
     $_thWH   = (int)($settings['theme_font_weight_heading']    ?? 800);
     $_thWB   = (int)($settings['theme_font_weight_body']       ?? 400);
-    $_thLH   = (float)($settings['theme_line_height_body']     ?? 1.78);
-    $_thLS   = (float)($settings['theme_letter_spacing_heading']?? -0.032);
+    $_thLH   = (float)($settings['theme_line_height_body']     ?? 1.55);
+    $_thLS   = (float)($settings['theme_letter_spacing_heading']?? -0.02);
     ?>
     <style id="cms-theme">
     :root {
