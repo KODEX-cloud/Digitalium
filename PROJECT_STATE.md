@@ -307,6 +307,56 @@ footer `["Liens utiles","Services","Contact","Newsletter"]` + champ newsletter �
 
 ---
 
+## 2026-09-03 — CALIBRAGE VISUEL HOMEPAGE (commit 9a19d9e)
+
+Retour utilisateur : « la page d'accueil est toujours délabreuse ». Audit sur la
+production : **aucune casse technique** (6/6 images et 2/2 feuilles CSS en HTTP 200).
+Le problème était un calibrage d'espacement et de grilles.
+
+### Bugs corrigés
+
+| Ref | Défaut | Cause | Correctif |
+|---|---|---|---|
+| BUG-CAL-01 | Sections flottant dans le vide | `theme_space_section = 130` → 260px entre sections | → `92` (60 / 42 dérivés) |
+| BUG-CAL-02 | Vide massif sous le hero | `min-height: 65vh` + `padding 140/80` + centrage | `min-height: 0`, `padding 116/84` |
+| BUG-CAL-03 | Titre stats cassé en 4 lignes, cartes illisibles | `1fr 2.6fr` (~300px) et `repeat(4,1fr)` (~175px/carte) | `1fr 1.55fr` et cartes en 2×2 |
+| BUG-CAL-04 | Équipe en 4+2, rangée orpheline | `.team-grid: repeat(auto-fill,minmax(240px,1fr))` | `repeat(3,1fr)`, `max-width: 940px` |
+| BUG-CAL-05 | Bandeau logos minuscule (9 items) | `font-size: 0.82rem`, `padding: 0 20px` | `0.95rem`, `padding: 4px 26px` |
+
+### Point d'architecture — piège de la double couche
+
+`--space-section` n'est **pas** piloté par `index.css` : il est administrable via
+`settings.theme_space_section` et injecté en ligne dans `<style id="cms-theme">`
+(`app/Views/frontend/layout.php:40`), ce qui écrase la feuille de style. Modifier
+`index.css` seul n'aurait eu aucun effet en production. Quatre points ont donc été
+alignés : seed `master_migration.php:266`, fallback `layout.php:40`, panneau
+`/admin/theme`, variables `index.css:66-68`.
+
+La valeur `130` étant déjà en base, la correction est appliquée par
+`database/fix_hero_layout_v2.php` avec **garde d'idempotence** : elle ne s'applique
+que si la valeur est encore celle d'origine, jamais sur une valeur choisie par
+l'admin. L'espacement reste pilotable depuis `/admin/theme` (Règle #2 préservée).
+
+### Preuve de production (Règle #5)
+
+```
+HTTP 200 · 9 sections · 0 doublon
+--space-section    : 92px / 60px / 42px      (était 130 / 80 / 54)
+hero               : padding 116px 0 84px 0 · min-height 0
+.stats-intro-grid  : 1fr 1.55fr
+.stats-intro-cards : repeat(2, 1fr) — 4 libellés intacts
+.team-grid         : repeat(3,1fr) max-width 940px — 6 membres
+```
+
+### Dette de sécurité découverte (non corrigée — à valider)
+
+| Ref | Description | Priorité |
+|---|---|---|
+| SEC-01 | `master_migration.php:294-312` force le hash admin à **chaque** déploiement : tout mot de passe changé depuis l'admin est écrasé au push suivant. Devrait être *insert-if-missing*. | Haute |
+| SEC-02 | Mot de passe admin en clair dans le dépôt Git (`master_migration.php:296`, commentaire). | Haute |
+
+---
+
 ## FICHIERS INTOUCHABLES SANS ANALYSE
 
 - `app/Services/Router.php`
