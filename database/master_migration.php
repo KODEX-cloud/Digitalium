@@ -263,7 +263,7 @@ try {
         'theme_radius_btn'             => '100',
         'theme_radius_md'              => '12',
         'theme_radius_sm'              => '8',
-        'theme_space_section'          => '130',
+        'theme_space_section'          => '92',
         'theme_font_h1'                => '4.2',
         'theme_font_h2'                => '2.8',
         'theme_font_h3'                => '1.08',

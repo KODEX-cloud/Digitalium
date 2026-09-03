@@ -72,7 +72,7 @@
 <style>
 .stats-intro-grid {
     display: grid;
-    grid-template-columns: 1fr 2.6fr;
+    grid-template-columns: 1fr 1.55fr;
     gap: 48px;
     align-items: center;
 }
@@ -96,7 +96,7 @@
 
 .stats-intro-cards {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 18px;
 }
 
@@ -144,7 +144,7 @@
 
 @media (max-width: 1100px) {
     .stats-intro-grid { grid-template-columns: 1fr; gap: 40px; }
-    .stats-intro-cards { grid-template-columns: repeat(4, 1fr); }
+    .stats-intro-cards { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 820px) {
     .stats-intro-cards { grid-template-columns: repeat(2, 1fr); }

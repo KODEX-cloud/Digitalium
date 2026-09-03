@@ -62,8 +62,8 @@ if (!empty($page['hero_title'])):
     }
 
     // Map Layout Heights and Paddings
-    $heroMinHeight = '65vh';
-    $heroPadding = '140px 0 80px 0';
+    $heroMinHeight = '0';
+    $heroPadding = '116px 0 84px 0';
     if ($heroLayoutMode === 'grand') {
         $heroMinHeight = '80vh';
         $heroPadding = '180px 0 120px 0';

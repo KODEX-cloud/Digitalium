@@ -288,7 +288,7 @@ function thv(array $s, string $key, string $default): string {
 
                 <div class="tb-section">
                     <div class="tb-section-title"><i data-lucide="maximize-2" style="width:14px;height:14px;"></i> Espacement des sections (px)</div>
-                    <?php $ssVal = thv($s, 'theme_space_section', '130'); ?>
+                    <?php $ssVal = thv($s, 'theme_space_section', '92'); ?>
                     <div class="tb-field" style="max-width:500px;">
                         <label class="tb-label">Padding vertical des sections</label>
                         <div class="tb-range-wrap">

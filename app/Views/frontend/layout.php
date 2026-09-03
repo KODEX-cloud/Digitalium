@@ -37,9 +37,9 @@
     $_thRBtn = (int)($settings['theme_radius_btn']             ?? 100);
     $_thRMd  = (int)($settings['theme_radius_md']              ?? 12);
     $_thRSm  = (int)($settings['theme_radius_sm']              ?? 8);
-    $_thSS   = (int)($settings['theme_space_section']          ?? 130);
-    $_thSSSm = max(60, $_thSS - 50);
-    $_thSSXs = max(40, $_thSS - 76);
+    $_thSS   = (int)($settings['theme_space_section']          ?? 92);
+    $_thSSSm = max(48, $_thSS - 32);
+    $_thSSXs = max(32, $_thSS - 50);
     $_thFH1  = (float)($settings['theme_font_h1']              ?? 4.2);
     $_thFH2  = (float)($settings['theme_font_h2']              ?? 2.8);
     $_thFH3  = (float)($settings['theme_font_h3']              ?? 1.08);

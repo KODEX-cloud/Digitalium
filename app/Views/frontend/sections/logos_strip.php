@@ -45,12 +45,12 @@
 
 .logos-strip-title {
     text-align: center;
-    font-size: 0.72rem;
+    font-size: 0.78rem;
     font-weight: 700;
     letter-spacing: 0.18em;
     text-transform: uppercase;
     color: var(--text-muted);
-    margin-bottom: 32px;
+    margin-bottom: 26px;
 }
 
 .logos-strip-row {
@@ -59,19 +59,19 @@
     justify-content: center;
     align-items: center;
     gap: 0;
-    row-gap: 14px;
+    row-gap: 18px;
 }
 
 .logos-strip-item {
     display: inline-flex;
     align-items: center;
     gap: 7px;
-    padding: 0 20px;
+    padding: 4px 26px;
     color: var(--text-muted);
-    font-size: 0.82rem;
+    font-size: 0.95rem;
     font-weight: 600;
     letter-spacing: 0.01em;
-    opacity: 0.8;
+    opacity: 0.92;
     transition: var(--transition-fast);
     text-decoration: none;
     border-left: 1px solid var(--border);

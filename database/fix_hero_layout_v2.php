@@ -286,6 +286,17 @@ try {
         echo "footer_copyright déjà personnalisé — non modifié.\n";
     }
 
+
+    // ─── Rythme vertical — 130px produisait 260px de vide entre chaque section ──
+    // Idempotent : on ne corrige QUE la valeur d'origine, jamais une valeur
+    // que l'admin aurait lui-même choisie depuis /admin/theme.
+    if (Setting::getVal('theme_space_section', '130') === '130') {
+        Setting::setVal('theme_space_section', '92');
+        echo "theme_space_section : 130 -> 92 (rythme vertical resserré).\n";
+    } else {
+        echo "theme_space_section déjà personnalisé — non modifié.\n";
+    }
+
     \App\Services\Cache::clear();
     echo "=== TERMINÉ ===\n";
 } catch (\Throwable $e) {
