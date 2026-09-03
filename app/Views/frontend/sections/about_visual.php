@@ -16,7 +16,7 @@
                     <img src="<?= htmlspecialchars(url($single['image'])) ?>" alt="<?= htmlspecialchars($single['title'] ?? '') ?>" loading="lazy">
                 <?php else: ?>
                     <div class="about-visual-placeholder">
-                        <i data-lucide="image" style="width:48px;height:48px;color:rgba(37,99,235,0.3);"></i>
+                        <i data-lucide="image" style="width:48px;height:48px;color:color-mix(in srgb, var(--primary) 30%, transparent);"></i>
                     </div>
                 <?php endif; ?>
 
@@ -114,7 +114,7 @@
     color: #fff;
     border-radius: var(--radius-md);
     padding: 16px 22px;
-    box-shadow: 0 14px 30px rgba(37,99,235,0.32);
+    box-shadow: 0 14px 30px color-mix(in srgb, var(--primary) 32%, transparent);
     display: flex;
     flex-direction: column;
     line-height: 1.15;
@@ -141,7 +141,7 @@
     width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
     background: linear-gradient(135deg, var(--primary), var(--secondary));
     display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 4px 12px rgba(37,99,235,0.28);
+    box-shadow: 0 4px 12px color-mix(in srgb, var(--primary) 28%, transparent);
 }
 
 .about-visual-check-item span {

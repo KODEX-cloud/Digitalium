@@ -71,7 +71,7 @@
     bottom: -100px; left: -100px;
     width: 500px; height: 500px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(8,145,178,0.06) 0%, transparent 70%);
+    background: radial-gradient(circle, color-mix(in srgb, var(--secondary) 6%, transparent) 0%, transparent 70%);
     pointer-events: none; z-index: 0;
 }
 

@@ -30,7 +30,7 @@
                                 <?php if (!empty($testi['client_avatar'])): ?>
                                     <img src="<?= htmlspecialchars(url($testi['client_avatar'])) ?>" alt="<?= htmlspecialchars($testi['client_name'] ?? 'Client') ?>" loading="lazy">
                                 <?php else: ?>
-                                    <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #1e1b4b 0%, #311042 100%); display:flex; align-items:center; justify-content:center;">
+                                    <div style="width: 100%; height: 100%; background: linear-gradient(135deg, var(--surface-dark) 0%, #311042 100%); display:flex; align-items:center; justify-content:center;">
                                         <i data-lucide="user" style="width: 20px; height: 20px; color: var(--primary);"></i>
                                     </div>
                                 <?php endif; ?>

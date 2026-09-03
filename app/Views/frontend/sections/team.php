@@ -123,7 +123,7 @@ $teamAccents = ['var(--primary)', 'var(--secondary)', 'var(--accent)', 'var(--pr
 
 .team-card:hover .team-avatar-ring {
     transform: scale(1.05);
-    box-shadow: 0 8px 28px rgba(37,99,235,0.28);
+    box-shadow: 0 8px 28px color-mix(in srgb, var(--primary) 28%, transparent);
 }
 
 .team-avatar-img {
@@ -137,7 +137,7 @@ $teamAccents = ['var(--primary)', 'var(--secondary)', 'var(--accent)', 'var(--pr
 .team-avatar-placeholder {
     width: 100%; height: 100%;
     border-radius: 50%;
-    background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%);
+    background: linear-gradient(135deg, var(--surface-dark) 0%, var(--surface-dark) 100%);
     border: 3px solid var(--bg-card);
     display: flex; align-items: center; justify-content: center;
 }
@@ -183,8 +183,8 @@ $teamAccents = ['var(--primary)', 'var(--secondary)', 'var(--accent)', 'var(--pr
 .team-social-link {
     width: 34px; height: 34px;
     border-radius: 50%;
-    background: rgba(37,99,235,0.06);
-    border: 1.5px solid rgba(37,99,235,0.15);
+    background: color-mix(in srgb, var(--primary) 6%, transparent);
+    border: 1.5px solid color-mix(in srgb, var(--primary) 15%, transparent);
     color: var(--text-muted);
     display: flex; align-items: center; justify-content: center;
     transition: var(--transition-fast);
@@ -195,6 +195,6 @@ $teamAccents = ['var(--primary)', 'var(--secondary)', 'var(--accent)', 'var(--pr
     border-color: var(--primary);
     color: #fff;
     transform: translateY(-3px);
-    box-shadow: 0 6px 16px rgba(37,99,235,0.28);
+    box-shadow: 0 6px 16px color-mix(in srgb, var(--primary) 28%, transparent);
 }
 </style>

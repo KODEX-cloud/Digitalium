@@ -321,6 +321,13 @@ jobs:
                 echo "  ⚠ Set Brand Theme v2 warning (non-bloquant)"
               fi
             fi
+            if [ -f "database/apply_theme_v3.php" ]; then
+              if $PHP database/apply_theme_v3.php 2>&1; then
+                echo "  ✓ Apply Theme v3 OK (no-op si déjà appliqué — voir storage/theme_v3.lock)"
+              else
+                echo "  ⚠ Apply Theme v3 warning (non-bloquant)"
+              fi
+            fi
             if [ -f "database/fix_hero_layout_v2.php" ]; then
               if $PHP database/fix_hero_layout_v2.php 2>&1; then
                 echo "  ✓ Fix Hero Layout v2 OK"

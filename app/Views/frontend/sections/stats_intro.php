@@ -111,7 +111,7 @@
 .stat-intro-icon {
     width: 42px; height: 42px;
     border-radius: var(--radius-md);
-    background: rgba(37,99,235,0.08);
+    background: color-mix(in srgb, var(--primary) 8%, transparent);
     color: var(--primary);
     display: flex; align-items: center; justify-content: center;
     margin-bottom: 14px;

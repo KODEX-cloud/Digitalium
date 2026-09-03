@@ -38,7 +38,7 @@ require APP_PATH . '/Views/frontend/partials/hero.php';
             <a href="<?= url('/blog/' . $featured['slug']) ?>" style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 0; background: var(--bg-surface); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; text-decoration: none; transition: box-shadow 0.3s; box-shadow: 0 4px 20px rgba(0,0,0,0.03);">
                 <div style="padding: 40px 44px; display: flex; flex-direction: column; justify-content: center;">
                     <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
-                        <span style="background: rgba(37,99,235,0.12); color: var(--primary); padding: 4px 14px; border-radius: 50px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em;">À la une</span>
+                        <span style="background: color-mix(in srgb, var(--primary) 12%, transparent); color: var(--primary); padding: 4px 14px; border-radius: 50px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em;">À la une</span>
                         <?php if ($featured['category']): ?>
                         <span style="color: var(--text-muted); font-size: 0.78rem;"><?= htmlspecialchars($featured['category']) ?></span>
                         <?php endif; ?>
@@ -56,7 +56,7 @@ require APP_PATH . '/Views/frontend/partials/hero.php';
                 <?php if ($featured['featured_image']): ?>
                 <div style="background: url('<?= htmlspecialchars(url($featured['featured_image'])) ?>') center/cover no-repeat; min-height: 280px;"></div>
                 <?php else: ?>
-                <div style="background: linear-gradient(135deg, #1e1b4b 0%, #0b0f19 100%); min-height: 280px; display: flex; align-items: center; justify-content: center;">
+                <div style="background: linear-gradient(135deg, var(--surface-dark) 0%, #0b0f19 100%); min-height: 280px; display: flex; align-items: center; justify-content: center;">
                     <i data-lucide="file-text" style="width: 64px; height: 64px; color: rgba(255,255,255,0.15);"></i>
                 </div>
                 <?php endif; ?>
@@ -75,7 +75,7 @@ require APP_PATH . '/Views/frontend/partials/hero.php';
                     <?php if ($p['featured_image']): ?>
                     <div style="height: 200px; background: url('<?= htmlspecialchars(url($p['featured_image'])) ?>') center/cover no-repeat; flex-shrink: 0;"></div>
                     <?php else: ?>
-                    <div style="height: 140px; background: linear-gradient(135deg, rgba(37,99,235,0.1) 0%, rgba(8,145,178,0.08) 100%); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    <div style="height: 140px; background: linear-gradient(135deg, color-mix(in srgb, var(--primary) 10%, transparent) 0%, color-mix(in srgb, var(--secondary) 8%, transparent) 100%); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
                         <i data-lucide="file-text" style="width: 36px; height: 36px; color: var(--primary); opacity: 0.4;"></i>
                     </div>
                     <?php endif; ?>

@@ -315,7 +315,7 @@ async function handleMainContactSubmit(event) {
 
 <style>
 .social-btn:hover {
-    border-color: rgba(37, 99, 235, 0.45) !important;
+    border-color: color-mix(in srgb, var(--primary) 45%, transparent) !important;
     color: var(--accent) !important;
     background: var(--primary-glow) !important;
 }

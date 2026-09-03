@@ -42,7 +42,7 @@
             <span>&bull;</span>
             <span style="display:inline-flex;gap:6px;flex-wrap:wrap;">
                 <?php foreach ($postTags as $t): ?>
-                <span style="background:rgba(37,99,235,0.1);border:1px solid rgba(37,99,235,0.2);color:var(--primary);padding:1px 9px;border-radius:50px;font-size:0.7rem;font-weight:700;"><?= htmlspecialchars($t['name']) ?></span>
+                <span style="background:color-mix(in srgb, var(--primary) 10%, transparent);border:1px solid color-mix(in srgb, var(--primary) 20%, transparent);color:var(--primary);padding:1px 9px;border-radius:50px;font-size:0.7rem;font-weight:700;"><?= htmlspecialchars($t['name']) ?></span>
                 <?php endforeach; ?>
             </span>
             <?php endif; ?>
@@ -77,7 +77,7 @@
         <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
             <span style="font-size:0.78rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.1em;">Tags:</span>
             <?php foreach ($postTags as $t): ?>
-            <span style="background:rgba(37,99,235,0.07);border:1px solid rgba(37,99,235,0.18);color:var(--primary);padding:4px 12px;border-radius:50px;font-size:0.75rem;font-weight:700;">
+            <span style="background:color-mix(in srgb, var(--primary) 7%, transparent);border:1px solid color-mix(in srgb, var(--primary) 18%, transparent);color:var(--primary);padding:4px 12px;border-radius:50px;font-size:0.75rem;font-weight:700;">
                 <?= htmlspecialchars($t['name']) ?>
             </span>
             <?php endforeach; ?>
@@ -98,7 +98,7 @@
             <?php foreach ($comments as $c): ?>
             <div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:14px;padding:20px;">
                 <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">
-                    <div style="width:36px;height:36px;border-radius:50%;background:rgba(37,99,235,0.15);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--primary);font-size:0.9rem;">
+                    <div style="width:36px;height:36px;border-radius:50%;background:color-mix(in srgb, var(--primary) 15%, transparent);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--primary);font-size:0.9rem;">
                         <?= strtoupper(mb_substr($c['author_name'], 0, 1)) ?>
                     </div>
                     <div>
@@ -200,9 +200,9 @@ document.getElementById('commentForm')?.addEventListener('submit', async functio
 .blog-content a { color: var(--primary); text-decoration: underline; }
 .blog-content ul, .blog-content ol { margin: 1rem 0 1.4rem 2rem; }
 .blog-content li { margin-bottom: 0.4rem; }
-.blog-content blockquote { border-left: 4px solid var(--primary); padding: 12px 24px; margin: 1.5rem 0; background: rgba(37,99,235,0.05); border-radius: 0 8px 8px 0; font-style: italic; color: var(--text-muted); }
+.blog-content blockquote { border-left: 4px solid var(--primary); padding: 12px 24px; margin: 1.5rem 0; background: color-mix(in srgb, var(--primary) 5%, transparent); border-radius: 0 8px 8px 0; font-style: italic; color: var(--text-muted); }
 .blog-content img { max-width: 100%; border-radius: 12px; margin: 1rem 0; }
-.blog-content code { background: rgba(37,99,235,0.08); padding: 2px 8px; border-radius: 4px; font-size: 0.88em; font-family: monospace; }
-.blog-content pre { background: #0f172a; color: #e2e8f0; padding: 20px 24px; border-radius: 12px; overflow-x: auto; margin: 1.5rem 0; }
+.blog-content code { background: color-mix(in srgb, var(--primary) 8%, transparent); padding: 2px 8px; border-radius: 4px; font-size: 0.88em; font-family: monospace; }
+.blog-content pre { background: var(--surface-dark); color: #e2e8f0; padding: 20px 24px; border-radius: 12px; overflow-x: auto; margin: 1.5rem 0; }
 .blog-content pre code { background: none; padding: 0; font-size: 0.9rem; }
 </style>

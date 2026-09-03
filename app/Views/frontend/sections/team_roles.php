@@ -99,7 +99,7 @@
     width: 60px; height: 60px;
     border-radius: 50%;
     border: 2px solid rgba(13,148,136,0.2);
-    background: linear-gradient(135deg, rgba(13,148,136,0.08), rgba(8,145,178,0.04));
+    background: linear-gradient(135deg, rgba(13,148,136,0.08), color-mix(in srgb, var(--secondary) 4%, transparent));
     color: var(--primary);
     display: flex; align-items: center; justify-content: center;
     margin: 0 auto 1.2rem auto;

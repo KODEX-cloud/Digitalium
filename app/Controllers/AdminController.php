@@ -226,6 +226,13 @@ class AdminController extends Controller {
             'theme_hero_min_height',
             'theme_hero_overlay_opacity',
             'theme_hero_overlay_color',
+            // Jetons de design v3 (modèle fintech vert profond)
+            'theme_btn_primary_bg',
+            'theme_btn_primary_text',
+            'theme_badge_bg',
+            'theme_badge_text',
+            'theme_footer_bg',
+            'theme_surface_dark',
         ];
 
         foreach ($keys as $key) {

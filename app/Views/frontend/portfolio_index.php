@@ -38,8 +38,8 @@ $settings = $settings ?? [];
 }
 .project-card:hover {
     transform: translateY(-6px);
-    box-shadow: 0 24px 48px -12px rgba(37,99,235,0.12);
-    border-color: rgba(37,99,235,0.25);
+    box-shadow: 0 24px 48px -12px color-mix(in srgb, var(--primary) 12%, transparent);
+    border-color: color-mix(in srgb, var(--primary) 25%, transparent);
 }
 .project-image {
     width: 100%; aspect-ratio: 16/9; object-fit: cover;
@@ -47,7 +47,7 @@ $settings = $settings ?? [];
 }
 .project-image-placeholder {
     width: 100%; aspect-ratio: 16/9;
-    background: linear-gradient(135deg, rgba(37,99,235,0.08) 0%, rgba(8,145,178,0.05) 100%);
+    background: linear-gradient(135deg, color-mix(in srgb, var(--primary) 8%, transparent) 0%, color-mix(in srgb, var(--secondary) 5%, transparent) 100%);
     display: flex; align-items: center; justify-content: center;
 }
 .project-body { padding: 24px; flex: 1; display: flex; flex-direction: column; }
@@ -62,8 +62,8 @@ $settings = $settings ?? [];
     display: flex; align-items: center; justify-content: space-between;
 }
 .tech-tag {
-    display: inline-flex; padding: 3px 10px; background: rgba(37,99,235,0.06);
-    border: 1px solid rgba(37,99,235,0.15); border-radius: 4px;
+    display: inline-flex; padding: 3px 10px; background: color-mix(in srgb, var(--primary) 6%, transparent);
+    border: 1px solid color-mix(in srgb, var(--primary) 15%, transparent); border-radius: 4px;
     font-size: 0.7rem; font-weight: 600; color: var(--primary);
     margin-right: 4px; margin-bottom: 4px;
 }
@@ -71,7 +71,7 @@ $settings = $settings ?? [];
 
 <section class="portfolio-hero">
     <div class="container">
-        <div class="hero-tag reveal" style="display: inline-flex; align-items: center; gap: 8px; background: rgba(37,99,235,0.1); border: 1px solid rgba(37,99,235,0.25); padding: 0.35rem 1rem; border-radius: 50px; font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 24px;">
+        <div class="hero-tag reveal" style="display: inline-flex; align-items: center; gap: 8px; background: color-mix(in srgb, var(--primary) 10%, transparent); border: 1px solid color-mix(in srgb, var(--primary) 25%, transparent); padding: 0.35rem 1rem; border-radius: 50px; font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 24px;">
             <div style="width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulse 2s ease-in-out infinite;"></div>
             Portfolio
         </div>

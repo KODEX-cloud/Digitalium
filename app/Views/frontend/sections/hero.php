@@ -1,7 +1,7 @@
 <section class="hero-section" id="hero-<?= $sectionId ?>">
 
     <!-- Gradient de fond -->
-    <div style="position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 50% -10%,rgba(37,99,235,0.14) 0%,transparent 65%);pointer-events:none;z-index:0;"></div>
+    <div style="position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 50% -10%,color-mix(in srgb, var(--primary) 14%, transparent) 0%,transparent 65%);pointer-events:none;z-index:0;"></div>
 
     <div class="container" style="position:relative;z-index:2;">
         <div class="hero-layout">
@@ -80,7 +80,7 @@
                             <img src="<?= htmlspecialchars(url('/assets/images/hero_3d.png')) ?>" alt="Digitalium Hero" loading="eager">
                         <?php endif; ?>
                     </div>
-                    <div style="display:flex;align-items:center;gap:10px;padding:12px 16px;background:rgba(37,99,235,0.08);border:1px solid rgba(37,99,235,0.2);border-radius:12px;width:100%;margin-top:4px;">
+                    <div style="display:flex;align-items:center;gap:10px;padding:12px 16px;background:color-mix(in srgb, var(--primary) 8%, transparent);border:1px solid color-mix(in srgb, var(--primary) 20%, transparent);border-radius:12px;width:100%;margin-top:4px;">
                         <div style="width:8px;height:8px;border-radius:50%;background:var(--success);box-shadow:0 0 8px var(--success);flex-shrink:0;"></div>
                         <span style="font-size:0.72rem;color:var(--text-sub);font-weight:500;letter-spacing:0.05em;">
                             <?= htmlspecialchars($settings['site_name'] ?? 'Digitalium Group') ?> — Systèmes actifs

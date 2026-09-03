@@ -20,10 +20,10 @@
                 ?>
                     <<?= $tag ?> <?= $attr ?> class="proc-card reveal" style="transition-delay:<?= $i * 0.08 ?>s;">
                         <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
-                            <span style="font-size:0.65rem;font-weight:800;font-family:var(--font-heading);color:rgba(37,99,235,0.4);letter-spacing:0.15em;">
+                            <span style="font-size:0.65rem;font-weight:800;font-family:var(--font-heading);color:color-mix(in srgb, var(--primary) 40%, transparent);letter-spacing:0.15em;">
                                 <?= htmlspecialchars($pNum) ?>
                             </span>
-                            <div style="width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:rgba(37,99,235,0.1);border:1px solid rgba(37,99,235,0.2);color:var(--primary);overflow:hidden;padding:10px;flex-shrink:0;">
+                            <div style="width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:color-mix(in srgb, var(--primary) 10%, transparent);border:1px solid color-mix(in srgb, var(--primary) 20%, transparent);color:var(--primary);overflow:hidden;padding:10px;flex-shrink:0;">
                                 <?= \App\Helpers\IconHelper::render($pIcon, ['image' => $pImage, 'size' => '20px']) ?>
                             </div>
                         </div>

@@ -17,7 +17,7 @@
                             <?php if (!empty($post['post_image'])): ?>
                                 <img src="<?= htmlspecialchars(url($post['post_image'])) ?>" alt="<?= htmlspecialchars($post['post_title'] ?? 'Article') ?>" loading="lazy">
                             <?php else: ?>
-                                <div style="width:100%;height:100%;background:linear-gradient(135deg,rgba(13,148,136,0.08) 0%,rgba(8,145,178,0.05) 100%);display:flex;align-items:center;justify-content:center;">
+                                <div style="width:100%;height:100%;background:linear-gradient(135deg,rgba(13,148,136,0.08) 0%,color-mix(in srgb, var(--secondary) 5%, transparent) 100%);display:flex;align-items:center;justify-content:center;">
                                     <i data-lucide="book-open" style="width:40px;height:40px;color:rgba(13,148,136,0.3);"></i>
                                 </div>
                             <?php endif; ?>

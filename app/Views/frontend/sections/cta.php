@@ -49,7 +49,7 @@
     position: relative;
     overflow: hidden;
     padding: 46px 0;
-    background: linear-gradient(110deg, var(--primary) 0%, #1e5fd4 45%, #1746a8 100%);
+    background: linear-gradient(110deg, var(--primary) 0%, color-mix(in srgb, var(--primary) 82%, #000) 45%, color-mix(in srgb, var(--primary) 66%, #000) 100%);
 }
 /* Motif réseau discret sur la droite, comme le visuel de référence */
 .cta-sec::after {
@@ -119,7 +119,7 @@
     border: 1px solid #ffffff;
     box-shadow: 0 8px 20px -6px rgba(0,0,0,0.28);
 }
-.cta-band-btn-primary:hover { transform: translateY(-2px); background: #f1f5f9; }
+.cta-band-btn-primary:hover { transform: translateY(-2px); background: var(--bg-alt); }
 
 .cta-band-btn-ghost {
     background: rgba(255,255,255,0.10);

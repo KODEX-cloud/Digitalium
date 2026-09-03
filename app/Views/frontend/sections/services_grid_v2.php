@@ -12,9 +12,9 @@
  * Design System v4.1 — variables CSS uniquement
  */
 $svcAccents = [
-    ['var(--primary)',   'rgba(37,99,235,0.10)'],
-    ['var(--secondary)', 'rgba(8,145,178,0.10)'],
-    ['var(--accent)',    'rgba(245,158,11,0.12)'],
+    ['var(--primary)',   'color-mix(in srgb, var(--primary) 10%, transparent)'],
+    ['var(--secondary)', 'color-mix(in srgb, var(--secondary) 10%, transparent)'],
+    ['var(--accent)',    'color-mix(in srgb, var(--accent) 12%, transparent)'],
 ];
 ?>
 
@@ -92,7 +92,7 @@ $svcAccents = [
 .svc-v2-card:hover {
     transform: translateY(-4px);
     box-shadow: var(--shadow-card-hover);
-    border-color: rgba(37,99,235,0.2);
+    border-color: color-mix(in srgb, var(--primary) 20%, transparent);
 }
 
 .svc-v2-icon {

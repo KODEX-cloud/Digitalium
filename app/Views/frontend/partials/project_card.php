@@ -18,7 +18,7 @@ if (isset($project)):
     $catColorClass = '';
     switch (strtolower($category)) {
         case 'politique':
-            $catColor = 'background: rgba(8, 145, 178, 0.09); border: 1px solid rgba(8, 145, 178, 0.35); color: #1d4ed8;';
+            $catColor = 'background: color-mix(in srgb, var(--secondary) 9%, transparent); border: 1px solid color-mix(in srgb, var(--secondary) 35%, transparent); color: var(--primary);';
             break;
         case 'institutionnel':
             $catColor = 'background: rgba(132, 204, 22, 0.09); border: 1px solid rgba(132, 204, 22, 0.35); color: #65a30d;';
@@ -34,10 +34,10 @@ if (isset($project)):
             $catColor = 'background: rgba(6, 182, 212, 0.09); border: 1px solid rgba(6, 182, 212, 0.35); color: #0891b2;';
             break;
         case 'e-commerce':
-            $catColor = 'background: rgba(59, 130, 246, 0.09); border: 1px solid rgba(59, 130, 246, 0.35); color: #2563eb;';
+            $catColor = 'background: rgba(59, 130, 246, 0.09); border: 1px solid rgba(59, 130, 246, 0.35); color: var(--primary);';
             break;
         default:
-            $catColor = 'background: rgba(37, 99, 235, 0.09); border: 1px solid rgba(37, 99, 235, 0.35); color: #2563eb;';
+            $catColor = 'background: color-mix(in srgb, var(--primary) 9%, transparent); border: 1px solid color-mix(in srgb, var(--primary) 35%, transparent); color: var(--primary);';
             break;
     }
 ?>
@@ -49,7 +49,7 @@ if (isset($project)):
     </span>
 
     <!-- Visual Mockup Area -->
-    <div class="project-visual-container" style="position: relative; width: 100%; aspect-ratio: 1.5; border-radius: 16px; overflow: visible; background: #0f172a; border: 1px solid rgba(255, 255, 255, 0.4); box-shadow: 0 8px 24px -8px rgba(30, 58, 138, 0.1);">
+    <div class="project-visual-container" style="position: relative; width: 100%; aspect-ratio: 1.5; border-radius: 16px; overflow: visible; background: var(--surface-dark); border: 1px solid rgba(255, 255, 255, 0.4); box-shadow: 0 8px 24px -8px rgba(30, 58, 138, 0.1);">
         
         <!-- Laptop screen mockup image -->
         <img src="<?= $mainImage ?>" alt="<?= $title ?>" style="width: 100%; height: 100%; object-fit: cover; border-radius: 14px; display: block;" loading="lazy">
@@ -72,7 +72,7 @@ if (isset($project)):
         <!-- Context & Impact Pills (Exact replicated layout) -->
         <div style="display: flex; gap: 8px; flex-wrap: wrap;">
             <span style="font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; padding: 4px 10px; border-radius: 6px; background: rgba(226, 109, 54, 0.09); border: 1.5px solid rgba(226, 109, 54, 0.25); color: var(--accent); font-family: var(--font-heading);">Contexte</span>
-            <span style="font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; padding: 4px 10px; border-radius: 6px; background: rgba(8, 145, 178, 0.09); border: 1.5px solid rgba(8, 145, 178, 0.25); color: var(--secondary); font-family: var(--font-heading);">Impact</span>
+            <span style="font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; padding: 4px 10px; border-radius: 6px; background: color-mix(in srgb, var(--secondary) 9%, transparent); border: 1.5px solid color-mix(in srgb, var(--secondary) 25%, transparent); color: var(--secondary); font-family: var(--font-heading);">Impact</span>
         </div>
 
         <!-- Description Paragraphs -->
@@ -114,7 +114,7 @@ if (isset($project)):
 .project-card:hover {
     transform: translateY(-8px);
     box-shadow: 0 25px 50px -15px rgba(30, 58, 138, 0.15) !important;
-    border-color: rgba(37, 99, 235, 0.25) !important;
+    border-color: color-mix(in srgb, var(--primary) 25%, transparent) !important;
 }
 .project-card:hover .project-client-logo-wrapper {
     transform: scale(1.1) rotate(-3deg);

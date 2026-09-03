@@ -41,7 +41,7 @@
 
 <style>
 .tcard:hover {
-    border-color: rgba(37, 99, 235, 0.4) !important;
+    border-color: color-mix(in srgb, var(--primary) 40%, transparent) !important;
     transform: translateY(-3px);
 }
 </style>

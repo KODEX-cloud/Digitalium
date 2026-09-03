@@ -25,7 +25,7 @@
 
 <style>
 .strip-card:hover {
-    border-color: rgba(37, 99, 235, 0.45) !important;
+    border-color: color-mix(in srgb, var(--primary) 45%, transparent) !important;
     transform: translateY(-3px);
     background: var(--bg-surface-alt) !important;
 }

@@ -177,7 +177,7 @@ $valAccents = ['var(--primary)', 'var(--secondary)', 'var(--accent)', 'var(--pri
 
 /* Fallback visual */
 .about-fallback-visual {
-    background: linear-gradient(135deg, rgba(13,148,136,0.06) 0%, rgba(8,145,178,0.03) 100%);
+    background: linear-gradient(135deg, rgba(13,148,136,0.06) 0%, color-mix(in srgb, var(--secondary) 3%, transparent) 100%);
     border: 1px solid rgba(13,148,136,0.12);
     border-radius: var(--radius-lg);
     padding: 60px 40px;

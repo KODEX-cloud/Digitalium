@@ -95,8 +95,8 @@ $tcId = 'testi-carousel-' . $sectionId;
 
 .testi-carousel-avatar {
     width: 44px; height: 44px; border-radius: 50%;
-    background: rgba(37,99,235,0.1);
-    border: 2px solid rgba(37,99,235,0.2);
+    background: color-mix(in srgb, var(--primary) 10%, transparent);
+    border: 2px solid color-mix(in srgb, var(--primary) 20%, transparent);
     display: flex; align-items: center; justify-content: center;
     overflow: hidden; flex-shrink: 0;
 }

@@ -21,17 +21,23 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <?php
     // ─── CMS Theme Builder — Inject design tokens from settings ──────────────
-    $_thP    = htmlspecialchars($settings['theme_primary']                ?? '#2563eb', ENT_QUOTES);
+    $_thP    = htmlspecialchars($settings['theme_primary']                ?? 'var(--primary)', ENT_QUOTES);
     $_thS    = htmlspecialchars($settings['theme_secondary']              ?? '#0891b2', ENT_QUOTES);
     $_thAc   = htmlspecialchars($settings['theme_accent']                 ?? '#f59e0b', ENT_QUOTES);
-    $_thTM   = htmlspecialchars($settings['theme_text_main']              ?? '#0f172a', ENT_QUOTES);
+    $_thTM   = htmlspecialchars($settings['theme_text_main']              ?? 'var(--surface-dark)', ENT_QUOTES);
     $_thTS   = htmlspecialchars($settings['theme_text_sub']               ?? '#334155', ENT_QUOTES);
     $_thTMu  = htmlspecialchars($settings['theme_text_muted']             ?? '#64748b', ENT_QUOTES);
     $_thBB   = htmlspecialchars($settings['theme_bg_base']                ?? '#ffffff', ENT_QUOTES);
-    $_thBA   = htmlspecialchars($settings['theme_bg_alt']                 ?? '#f8fafc', ENT_QUOTES);
+    $_thBA   = htmlspecialchars($settings['theme_bg_alt']                 ?? 'var(--bg-base)', ENT_QUOTES);
     $_thBC   = htmlspecialchars($settings['theme_bg_card']                ?? '#ffffff', ENT_QUOTES);
     $_thShC  = htmlspecialchars($settings['theme_shadow_card']            ?? '0 1px 3px rgba(0,0,0,0.04), 0 8px 32px rgba(0,0,0,0.06)', ENT_QUOTES);
-    $_thShB  = htmlspecialchars($settings['theme_shadow_btn']             ?? '0 4px 18px rgba(37,99,235,0.28)', ENT_QUOTES);
+    $_thShB  = htmlspecialchars($settings['theme_shadow_btn']             ?? '0 4px 18px color-mix(in srgb, var(--primary) 28%, transparent)', ENT_QUOTES);
+    $_thBtnBg = htmlspecialchars($settings['theme_btn_primary_bg']    ?? '#272727', ENT_QUOTES);
+    $_thBtnFg = htmlspecialchars($settings['theme_btn_primary_text']  ?? '#ffffff', ENT_QUOTES);
+    $_thBdgBg = htmlspecialchars($settings['theme_badge_bg']          ?? '#e0f1df', ENT_QUOTES);
+    $_thBdgFg = htmlspecialchars($settings['theme_badge_text']        ?? '#004d3f', ENT_QUOTES);
+    $_thFtBg  = htmlspecialchars($settings['theme_footer_bg']         ?? '#1d6363', ENT_QUOTES);
+    $_thSfDk  = htmlspecialchars($settings['theme_surface_dark']      ?? '#12202c', ENT_QUOTES);
     $_thRP   = (int)($settings['theme_radius_pill']            ?? 100);
     $_thRC   = (int)($settings['theme_radius_card']            ?? 20);
     $_thRBtn = (int)($settings['theme_radius_btn']             ?? 100);
@@ -61,6 +67,12 @@
         --bg-base:                  <?= $_thBB ?>;
         --bg-alt:                   <?= $_thBA ?>;
         --bg-card:                  <?= $_thBC ?>;
+        --btn-primary-bg:           <?= $_thBtnBg ?>;
+        --btn-primary-text:         <?= $_thBtnFg ?>;
+        --badge-bg:                 <?= $_thBdgBg ?>;
+        --badge-text:               <?= $_thBdgFg ?>;
+        --footer-bg:                <?= $_thFtBg ?>;
+        --surface-dark:             <?= $_thSfDk ?>;
         --radius-pill:              <?= $_thRP ?>px;
         --radius-lg:                <?= $_thRC ?>px;
         --radius-md:                <?= $_thRMd ?>px;
@@ -231,7 +243,7 @@
         /* Navigation links — light theme */
         #siteHeader .nav-link { color: #374151 !important; }
         #siteHeader .nav-link:hover { color: #111827 !important; background: rgba(0,0,0,0.04) !important; }
-        #siteHeader .nav-link.active { color: #2563eb !important; background: rgba(37,99,235,0.08) !important; }
+        #siteHeader .nav-link.active { color: var(--primary) !important; background: color-mix(in srgb, var(--primary) 8%, transparent) !important; }
         #siteHeader .menu-toggle { color: #111827 !important; }
 
         /* Responsive Breakpoint styling overrides */

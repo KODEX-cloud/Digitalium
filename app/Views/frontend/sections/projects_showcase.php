@@ -34,7 +34,7 @@ $projAccents = ['var(--primary)', 'var(--secondary)', 'var(--accent)'];
                                 <img src="<?= htmlspecialchars(url($proj['proj_image'])) ?>" alt="<?= htmlspecialchars($proj['proj_title'] ?? '') ?>" loading="lazy">
                             <?php else: ?>
                                 <div class="project-showcase-media-fallback">
-                                    <i data-lucide="layout-dashboard" style="width:36px;height:36px;color:rgba(37,99,235,0.3);"></i>
+                                    <i data-lucide="layout-dashboard" style="width:36px;height:36px;color:color-mix(in srgb, var(--primary) 30%, transparent);"></i>
                                 </div>
                             <?php endif; ?>
                             <?php if (!empty($proj['proj_category'])): ?>
@@ -89,7 +89,7 @@ $projAccents = ['var(--primary)', 'var(--secondary)', 'var(--accent)'];
 .project-showcase-media-fallback {
     width: 100%; height: 100%;
     display: flex; align-items: center; justify-content: center;
-    background: linear-gradient(135deg, rgba(37,99,235,0.08), rgba(8,145,178,0.05));
+    background: linear-gradient(135deg, color-mix(in srgb, var(--primary) 8%, transparent), color-mix(in srgb, var(--secondary) 5%, transparent));
 }
 
 .project-showcase-tag {
