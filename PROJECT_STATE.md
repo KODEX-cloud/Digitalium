@@ -357,6 +357,79 @@ hero               : padding 116px 0 84px 0 · min-height 0
 
 ---
 
+## 2026-09-03 — THÈME V3 « FINTECH VERT PROFOND » (commit b5b40af)
+
+Nouveau modèle de référence fourni par la direction. Consigne : appliquer
+intégralement le thème et le design, ne conserver que les informations.
+
+### Palette (extraite pixel par pixel du visuel, via GD)
+
+| Rôle | Valeur | Usage dans le modèle |
+|---|---|---|
+| Primaire | `#1D6363` | aplats, panneaux, footer — **jamais** sur un bouton |
+| Secondaire | `#346A6D` | pastilles d'icônes |
+| Accent | `#004D3F` | texte des badges |
+| Texte principal | `#272727` | charbon, pas noir pur |
+| Texte secondaire | `#4D4F63` | ardoise |
+| Fond de page | `#FBFBFB` | blanc cassé |
+| Fond doux | `#E8F3E9` | menthe |
+| CTA | `#272727` | charbon — trait distinctif du modèle |
+
+Rayons : rectangles arrondis (`btn 12`, `pill 8`, `card 22`), pas de pilules.
+
+### 7 jetons de design introduits (tous administrables)
+
+`--btn-primary-bg`, `--btn-primary-text`, `--badge-bg`, `--badge-text`,
+`--footer-bg`, `--surface-dark` — déclarés dans `layout.php`, inscrits dans la
+liste blanche de `AdminController::saveTheme()` et seedés dans `master_migration.php`.
+
+### Violations de la Règle #2 corrigées
+
+Trois éléments rendaient tout changement de thème impossible :
+
+| Élément | Avant | Après |
+|---|---|---|
+| `.btn-primary` | `background: var(--primary)` | `var(--btn-primary-bg)` |
+| `.section-badge` | `rgba(37,99,235,0.08)` **en dur** | `var(--badge-bg)` / `var(--badge-text)` |
+| `.site-footer` | `background: #0f172a` **en dur** | `var(--footer-bg)` |
+
+### CSS rendu agnostique de la couleur
+
+89 occurrences de `rgba(37,99,235,…)` / `rgba(8,145,178,…)` / `rgba(245,158,11,…)`
+converties en `color-mix(in srgb, var(--primary) N%, transparent)` dans `index.css`
+et 40 vues frontend (blog, portfolio, 404, partials inclus).
+**Résiduel de bleu/indigo dans tout le frontend : 0.**
+
+### Application en production
+
+`database/apply_theme_v3.php` (ajouté au pipeline avant `fix_hero_layout_v2.php`),
+protégé par `storage/theme_v3.lock` : palette posée **une seule fois**, jamais
+réécrite ensuite — les ajustements faits depuis `/admin/theme` sont préservés.
+
+### Preuve de production (Règle #5)
+
+```
+HTTP 200 · 91KB · 9 sections · 0 doublon
+--primary #1d6363   --secondary #346a6d   --accent #004d3f
+--text-main #272727 --text-muted #4d4f63
+--bg-base #fbfbfb   --bg-alt #e8f3e9
+--btn-primary-bg #272727   --badge-bg #e0f1df   --badge-text #004d3f
+--footer-bg #1d6363        --surface-dark #12202c
+--radius-btn 12px   --radius-pill 8px   --radius-lg 22px
+CSS servi : 0 rgba(37,99,235) · 46 color-mix
+.btn-primary -> var(--btn-primary-bg)   .site-footer -> var(--footer-bg)
+```
+
+### Reste à faire — alignement structurel sur le modèle
+
+Le thème est appliqué ; la **structure** de certaines sections diffère encore :
+- bandeau logos : le modèle utilise de grands sigles gris clair, pas du texte fin
+- cartes services : une carte mise en avant en aplat vert profond
+- hero : bloc de preuve sociale (avatars + grand chiffre + citation) sous les CTA
+- section FAQ en accordéon (absente du site)
+
+---
+
 ## FICHIERS INTOUCHABLES SANS ANALYSE
 
 - `app/Services/Router.php`
