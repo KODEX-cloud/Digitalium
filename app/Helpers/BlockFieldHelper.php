@@ -47,6 +47,10 @@ class BlockFieldHelper {
             '3' => '3 colonnes',
             '4' => '4 colonnes',
         ],
+        'show_filters' => [
+            '1' => 'Afficher la barre de filtres',
+            '0' => 'Masquer la barre de filtres',
+        ],
     ];
 
     /**
@@ -98,6 +102,14 @@ class BlockFieldHelper {
         'sec_needs'      => ['Besoins couverts', "Séparés par une barre verticale. Exemple : Gestion | Reporting | Sécurité."],
         'sec_link'       => ['Lien', "Chemin de destination."],
         'sec_link_text'  => ['Libellé du lien', "Exemple : Explorer."],
+
+        // ── Réalisations (grille filtrable) ──
+        'filter_all'     => ['Libellé du filtre « tout »', "Exemple : Tous."],
+        'cta_text'       => ['Libellé du bouton d\'une carte', "Laisser vide pour ne pas afficher de bouton sur les cartes."],
+        'show_filters'   => ['Barre de filtres', "Les filtres n'apparaissent que si au moins deux catégories sont réellement utilisées."],
+        'empty_text'     => ['Message quand aucune réalisation', "Affiché tant qu'aucune réalisation publiée ne correspond. Laisser vide pour n'afficher aucun message."],
+        'cat_value'      => ['Catégorie — valeur exacte', "Doit correspondre au mot saisi dans le champ Catégorie d'une réalisation."],
+        'cat_label'      => ['Catégorie — libellé affiché', "Facultatif : par défaut, la valeur exacte est affichée."],
 
         // ── Expertises ──
         'cap_icon'       => ['Icône', "Nom d'icône Lucide."],

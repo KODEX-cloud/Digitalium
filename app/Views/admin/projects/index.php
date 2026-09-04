@@ -23,6 +23,7 @@
                     <th style="width: 80px;">Aperçu</th>
                     <th>Titre du Projet</th>
                     <th>Catégorie</th>
+                    <th>Statut</th>
                     <th>Ordre</th>
                     <th>Vedette (Featured)</th>
                     <th style="text-align: right;">Actions</th>
@@ -40,6 +41,14 @@
                         <td>
                             <span class="badge" style="background-color: rgba(8, 145, 178, 0.08); color: var(--secondary); border: 1px solid rgba(8, 145, 178, 0.2);">
                                 <?= htmlspecialchars($proj['category']) ?>
+                            </span>
+                        </td>
+                        <td>
+                            <?php $isPub = ($proj['status'] ?? '') === 'published' || ($proj['status'] ?? null) === null; ?>
+                            <span class="badge" style="<?= $isPub
+                                ? 'background-color: rgba(21,128,61,0.08); color:#15803d; border:1px solid rgba(21,128,61,0.22);'
+                                : 'background-color: rgba(180,83,9,0.08); color:#b45309; border:1px solid rgba(180,83,9,0.22);' ?>">
+                                <?= $isPub ? 'Publié' : 'Brouillon' ?>
                             </span>
                         </td>
                         <td style="font-family: monospace; font-weight: 600;"><?= $proj['sort_order'] ?></td>

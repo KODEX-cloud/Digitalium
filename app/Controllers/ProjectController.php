@@ -50,6 +50,34 @@ class ProjectController extends Controller {
     }
 
     /**
+     * Rassemble les champs du formulaire d'une réalisation.
+     *
+     * Une seule méthode pour la création ET la modification : les deux
+     * actions écrivaient auparavant la même liste, et un champ ajouté d'un
+     * seul côté aurait été perdu à l'enregistrement.
+     */
+    private function collectPostData(): array {
+        $text = [
+            'title', 'slug', 'category', 'sector', 'client', 'year', 'project_date',
+            'description', 'logo', 'main_image', 'gallery', 'context', 'objectives',
+            'solution', 'technologies', 'features', 'impact',
+            'testimonial_quote', 'testimonial_author', 'testimonial_role',
+            'external_link', 'meta_title', 'meta_description',
+        ];
+
+        $data = [];
+        foreach ($text as $field) {
+            $data[$field] = trim((string)($_POST[$field] ?? ''));
+        }
+
+        $data['status']      = ($_POST['status'] ?? '') === 'published' ? 'published' : 'draft';
+        $data['sort_order']  = (int)($_POST['sort_order'] ?? 0);
+        $data['is_featured'] = isset($_POST['is_featured']) ? 1 : 0;
+
+        return $data;
+    }
+
+    /**
      * Handle project creation submission.
      */
     public function createSubmit(): void {
@@ -68,23 +96,7 @@ class ProjectController extends Controller {
             $this->redirect('/admin/projects/create', 'error', reset($errors));
         }
 
-        $data = [
-            'title'        => trim($_POST['title']),
-            'slug'         => trim($_POST['slug'] ?? ''),
-            'category'     => trim($_POST['category']),
-            'client'       => trim($_POST['client'] ?? ''),
-            'project_date' => trim($_POST['project_date'] ?? ''),
-            'description'  => trim($_POST['description'] ?? ''),
-            'logo'         => trim($_POST['logo'] ?? ''),
-            'main_image'   => trim($_POST['main_image']),
-            'gallery'      => trim($_POST['gallery'] ?? ''),
-            'context'      => trim($_POST['context'] ?? ''),
-            'impact'       => trim($_POST['impact'] ?? ''),
-            'technologies' => trim($_POST['technologies'] ?? ''),
-            'external_link'=> trim($_POST['external_link'] ?? ''),
-            'sort_order'   => (int)($_POST['sort_order'] ?? 0),
-            'is_featured'  => isset($_POST['is_featured']) ? 1 : 0
-        ];
+        $data = $this->collectPostData();
 
         try {
             Project::add($data);
@@ -145,23 +157,7 @@ class ProjectController extends Controller {
             $this->redirect("/admin/projects/edit/{$id}", 'error', reset($errors));
         }
 
-        $data = [
-            'title'        => trim($_POST['title']),
-            'slug'         => trim($_POST['slug'] ?? ''),
-            'category'     => trim($_POST['category']),
-            'client'       => trim($_POST['client'] ?? ''),
-            'project_date' => trim($_POST['project_date'] ?? ''),
-            'description'  => trim($_POST['description'] ?? ''),
-            'logo'         => trim($_POST['logo'] ?? ''),
-            'main_image'   => trim($_POST['main_image']),
-            'gallery'      => trim($_POST['gallery'] ?? ''),
-            'context'      => trim($_POST['context'] ?? ''),
-            'impact'       => trim($_POST['impact'] ?? ''),
-            'technologies' => trim($_POST['technologies'] ?? ''),
-            'external_link'=> trim($_POST['external_link'] ?? ''),
-            'sort_order'   => (int)($_POST['sort_order'] ?? 0),
-            'is_featured'  => isset($_POST['is_featured']) ? 1 : 0
-        ];
+        $data = $this->collectPostData();
 
         try {
             Project::updateProject($id, $data);
@@ -176,9 +172,6 @@ class ProjectController extends Controller {
      * Frontend: list all projects.
      */
     public function publicIndex(): void {
-        $category   = trim($_GET['categorie'] ?? '');
-        $projects   = Project::getPublic($category);
-        $categories = Project::getCategories();
         $settings   = \App\Models\Setting::getAll();
         $menuPages  = array_filter(\App\Models\Page::all('sort_order ASC'), fn($p) => $p['status'] === 'published');
 
@@ -188,14 +181,33 @@ class ProjectController extends Controller {
             'slug' => 'realisations', 'hero_status' => 0,
         ];
 
+        /**
+         * La page est pilotée par le CMS comme n'importe quelle autre : on
+         * charge ses sections actives et leurs blocs. Le contenu éditorial
+         * (hero, expertises, CTA) devient ainsi administrable, et les
+         * réalisations restent servies par le module Réalisations.
+         */
+        $sections      = [];
+        $sectionBlocks = [];
+        if (!empty($portfolioPage['id'])) {
+            $sections = \App\Models\Section::getActiveByPage((int)$portfolioPage['id']) ?: [];
+            foreach ($sections as $sec) {
+                try {
+                    $sectionBlocks[$sec['id']] = \App\Models\Block::getStructuredContent($sec['id']);
+                } catch (\Throwable $e) {
+                    // Une section illisible ne doit pas emporter toute la page.
+                    $sectionBlocks[$sec['id']] = ['single' => [], 'groups' => []];
+                }
+            }
+        }
+
         $this->render('frontend/portfolio_index', [
-            'page'        => $portfolioPage,
-            'projects'    => $projects,
-            'categories'  => $categories,
-            'activeCategory' => $category,
-            'settings'    => $settings,
-            'menuPages'   => $menuPages,
-            'currentSlug' => 'realisations',
+            'page'          => $portfolioPage,
+            'sections'      => $sections,
+            'sectionBlocks' => $sectionBlocks,
+            'settings'      => $settings,
+            'menuPages'     => $menuPages,
+            'currentSlug'   => 'realisations',
         ], 'frontend/layout');
     }
 
@@ -203,8 +215,12 @@ class ProjectController extends Controller {
      * Frontend: single project detail.
      */
     public function publicShow(array $params): void {
-        $slug    = trim($params['slug'] ?? '');
-        $project = Project::findBySlug($slug);
+        $slug = trim($params['slug'] ?? '');
+        // Un brouillon reste visible pour un administrateur connecté, afin de
+        // relire une étude de cas avant de la publier.
+        $project = \App\Services\Auth::check()
+            ? Project::findBySlug($slug)
+            : Project::findPublishedBySlug($slug);
 
         if (!$project) {
             http_response_code(404);
@@ -226,8 +242,11 @@ class ProjectController extends Controller {
         $this->render('frontend/portfolio_show', [
             'page'        => [
                 'title'            => $project['title'],
-                'meta_title'       => $project['title'] . ' — Digitalium Group',
-                'meta_description' => $project['description'] ?? $project['context'] ?? '',
+                // Le SEO saisi sur la réalisation prime ; sinon on retombe sur
+                // le titre et la description courte, jamais sur du texte inventé.
+                'meta_title'       => trim((string)($project['meta_title'] ?? '')) ?: $project['title'] . ' — Digitalium Group',
+                'meta_description' => trim((string)($project['meta_description'] ?? ''))
+                                      ?: trim((string)($project['description'] ?? $project['context'] ?? '')),
                 'slug'             => 'realisations/' . $project['slug'],
                 'hero_status'      => 0,
             ],

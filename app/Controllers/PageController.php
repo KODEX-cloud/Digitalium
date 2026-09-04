@@ -541,6 +541,11 @@ class PageController extends Controller {
                  'card_title', 'card_meta', 'card_progress', 'card_avatar', 'card_top', 'card_left'],
                 3,
             ],
+            'projects_cms' => [
+                ['tag', 'title', 'subtitle', 'filter_all', 'cta_text', 'show_filters', 'empty_text'],
+                ['cat_value', 'cat_label'],
+                3,
+            ],
             'sectors_grid' => [
                 ['tag', 'title', 'subtitle'],
                 ['sec_num', 'sec_icon', 'sec_image', 'sec_title', 'sec_desc', 'sec_needs', 'sec_link', 'sec_link_text'],

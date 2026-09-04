@@ -363,6 +363,13 @@ jobs:
                 echo "  ⚠ Build Sectors Page warning (non-bloquant)"
               fi
             fi
+            if [ -f "database/build_realisations_page.php" ]; then
+              if $PHP database/build_realisations_page.php 2>&1; then
+                echo "  OK Build Realisations Page"
+              else
+                echo "  ATTENTION Build Realisations Page (non-bloquant)"
+              fi
+            fi
             if [ -f "database/build_footer_v5.php" ]; then
               if $PHP database/build_footer_v5.php 2>&1; then
                 echo "  ✓ Build Footer v5 OK"

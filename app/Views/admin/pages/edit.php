@@ -1441,6 +1441,7 @@ if (empty($selectedLogo)) {
                         <optgroup label="Modèles actuels (design système v2)">
                             <option value="hero_media_cards">Hero — visuel + cartes flottantes</option>
                             <option value="sectors_grid">Secteurs — grille numérotée</option>
+                            <option value="projects_cms">Réalisations — grille filtrable (module Réalisations)</option>
                             <option value="services_grid_v2">Services — cartes verticales</option>
                             <option value="capabilities_grid">Expertises — grille compacte</option>
                             <option value="problems_solutions">Problèmes → Solutions</option>
