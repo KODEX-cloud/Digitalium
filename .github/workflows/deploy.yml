@@ -335,6 +335,13 @@ jobs:
                 echo "  ⚠ Apply Typography v3 warning (non-bloquant)"
               fi
             fi
+            if [ -f "database/build_hero_v4.php" ]; then
+              if $PHP database/build_hero_v4.php 2>&1; then
+                echo "  ✓ Build Hero v4 OK (no-op si déjà construit — voir storage/hero_v4.lock)"
+              else
+                echo "  ⚠ Build Hero v4 warning (non-bloquant)"
+              fi
+            fi
             if [ -f "database/fix_hero_layout_v2.php" ]; then
               if $PHP database/fix_hero_layout_v2.php 2>&1; then
                 echo "  ✓ Fix Hero Layout v2 OK"
