@@ -610,27 +610,9 @@ class PageController extends Controller {
      * l'éditeur générique propose le bon champ (média, lien, texte long…).
      */
     private static function guessBlockType(string $key): string {
-        // Les clés se terminant par _text sont des LIBELLÉS courts
-        // (cta1_text, sec_link_text, more_text…) : champ simple, pas un lien.
-        if (str_ends_with($key, '_text')) { return 'text'; }
-
-        // Réglages de mise en page dérivés d'une image (image_ratio,
-        // image_max_width, image_alt…) : ce sont des valeurs saisies, pas des
-        // fichiers. Sans cette exception, l'admin afficherait un sélecteur de
-        // média pour un champ où l'on attend « 1300 / 400 ».
-        foreach (['_ratio', '_max_width', '_width', '_height', '_alt', '_position'] as $suffix) {
-            if (str_contains($key, $suffix)) { return 'text'; }
-        }
-
-        if (str_contains($key, 'image') || str_contains($key, 'avatar')) { return 'image'; }
-        if (str_contains($key, 'url') || str_contains($key, 'link')) { return 'link'; }
-
-        $longFields = ['text', 'subtitle', 'description', 'ps_problem', 'ps_solution'];
-        if (in_array($key, $longFields, true)) { return 'textarea'; }
-        foreach (['desc', 'quote', 'points', 'needs', 'detail'] as $needle) {
-            if (str_contains($key, $needle)) { return 'textarea'; }
-        }
-        return 'text';
+        // Delegue a BlockFieldHelper : une seule regle pour l'editeur,
+        // le controleur et les scripts de seed.
+        return \App\Helpers\BlockFieldHelper::type($key);
     }
 
     /**

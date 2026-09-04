@@ -1,0 +1,185 @@
+<?php
+namespace App\Helpers;
+
+/**
+ * Métadonnées des champs de blocs — source de vérité UNIQUE.
+ *
+ * Avant ce helper, trois endroits déduisaient le type d'un champ chacun de leur
+ * côté (la vue d'édition, le contrôleur, le script de seed) avec des règles
+ * divergentes. Conséquence concrète : `image_ratio` et `image_max_width`
+ * s'affichaient comme des sélecteurs de média dans l'admin, où l'on ne pouvait
+ * donc pas saisir « 1300 / 400 ». Tout passe désormais par ici.
+ *
+ * Trois informations par clé :
+ *   type()    — comment afficher le champ (text, textarea, image, link, select)
+ *   label()   — un intitulé lisible, pas la clé technique
+ *   help()    — une phrase expliquant à quoi sert le champ
+ *   choices() — la liste des valeurs autorisées quand elles sont fermées
+ */
+class BlockFieldHelper {
+
+    /**
+     * Champs à choix fermé : rendus en liste déroulante, jamais en texte libre.
+     * Format : clé => [valeur => libellé affiché].
+     */
+    private const CHOICES = [
+        /* `layout` n'a pas les mêmes valeurs selon la section : proposer les
+           cinq indistinctement afficherait des options sans effet. La liste
+           est donc indexée par type de section. */
+        'layout' => [
+            'hero_media_cards' => [
+                'split'   => 'Texte à gauche, visuel à droite',
+                'banner'  => 'Texte en haut, visuel large dessous',
+                'overlay' => 'Texte par-dessus le visuel',
+            ],
+            'problems_solutions' => [
+                'stack' => 'Lecture verticale (constat puis réponse)',
+                'row'   => 'Lecture horizontale (côte à côte)',
+            ],
+        ],
+        'decor' => [
+            '1' => 'Afficher les décors',
+            '0' => 'Masquer les décors',
+        ],
+        'columns' => [
+            '1' => '1 colonne',
+            '2' => '2 colonnes',
+            '3' => '3 colonnes',
+            '4' => '4 colonnes',
+        ],
+    ];
+
+    /**
+     * Intitulés et aides. Les clés absentes retombent sur un intitulé dérivé du
+     * nom technique — jamais d'erreur, seulement moins d'explication.
+     */
+    private const FIELDS = [
+        // ── Communs à la plupart des sections ──
+        'tag'            => ['Pastille de section', "Petit texte en majuscules affiché au-dessus du titre. Laisser vide pour le masquer."],
+        'title'          => ['Titre', "Titre principal de la section."],
+        'subtitle'       => ['Sous-titre', "Phrase d'introduction sous le titre."],
+        'text'           => ['Chapô', "Paragraphe d'introduction."],
+
+        // ── Hero ──
+        'badge'          => ['Pastille du hero', "Petit texte en majuscules au-dessus du titre."],
+        'title_accent'   => ['Suite du titre (accent)', "Affichée sous le titre, en graisse légère et en couleur d'accent."],
+        'cta1_text'      => ['Bouton principal — libellé', "Laisser vide pour masquer le bouton."],
+        'cta1_url'       => ['Bouton principal — lien', "Chemin interne (/contact) ou ancre (#secteurs)."],
+        'cta1_icon'      => ['Bouton principal — icône', "Nom d'icône Lucide, par exemple arrow-down ou send."],
+        'cta2_text'      => ['Bouton secondaire — libellé', "Laisser vide pour masquer le bouton."],
+        'cta2_url'       => ['Bouton secondaire — lien', "Chemin interne ou ancre."],
+        'cta2_icon'      => ['Bouton secondaire — icône', "Nom d'icône Lucide."],
+        'image'          => ['Visuel', "Choisi dans la Bibliothèque Média."],
+        'image_alt'      => ['Texte alternatif du visuel', "Décrit l'image pour l'accessibilité et le référencement."],
+        'decor'          => ['Décors du fond', "Cercle, courbe et trame de points derrière le hero."],
+        'layout'         => ['Disposition', "Change la mise en page de la section sans toucher au contenu."],
+        'image_max_width'=> ['Largeur maximale du visuel', "En pixels, sans unité. Exemple : 1300."],
+        'image_ratio'    => ['Proportions du visuel', "Format « largeur / hauteur ». Exemple : 1300 / 400."],
+        'image_ratio_mobile' => ['Proportions sur mobile', "Sous 760px. Un format très allongé donnerait une bande trop fine. Exemple : 16 / 9."],
+        'image_radius'   => ['Arrondi des angles du visuel', "En pixels, sans unité. 0 pour des angles droits."],
+        'overlay_opacity'=> ['Intensité du voile', "De 0 à 100. Plus la valeur est haute, plus la photo est assombrie et le texte lisible."],
+        'overlay_min_height' => ['Hauteur minimale du visuel', "En pixels, sans unité. Exemple : 420."],
+
+        // ── Problèmes / solutions ──
+        'problem_label'  => ['Intitulé de la colonne « constat »', "Exemple : Situation."],
+        'solution_label' => ['Intitulé de la colonne « réponse »', "Exemple : Réponse."],
+        'columns'        => ['Nombre de colonnes', "Répartition des éléments. Passe automatiquement en une colonne sur mobile."],
+        'ps_icon'        => ['Icône de la réponse', "Nom d'icône Lucide."],
+        'ps_problem'     => ['Constat', "La situation rencontrée, formulée du point de vue du client."],
+        'ps_solution'    => ['Réponse', "L'intitulé de la réponse apportée."],
+        'ps_detail'      => ['Détail de la réponse', "Une ou deux phrases d'explication."],
+
+        // ── Secteurs ──
+        'sec_num'        => ['Numéro', "Affiché en filigrane sur la carte. Exemple : 01."],
+        'sec_icon'       => ['Icône', "Nom d'icône Lucide. Ignorée si une image est choisie."],
+        'sec_image'      => ['Image', "Remplace l'icône si elle est renseignée."],
+        'sec_title'      => ['Nom du secteur', "Vider ce champ masque la carte."],
+        'sec_desc'       => ['Description', "Deux à trois lignes."],
+        'sec_needs'      => ['Besoins couverts', "Séparés par une barre verticale. Exemple : Gestion | Reporting | Sécurité."],
+        'sec_link'       => ['Lien', "Chemin de destination."],
+        'sec_link_text'  => ['Libellé du lien', "Exemple : Explorer."],
+
+        // ── Expertises ──
+        'cap_icon'       => ['Icône', "Nom d'icône Lucide."],
+        'cap_title'      => ['Intitulé', "Vider ce champ masque la carte."],
+        'cap_desc'       => ['Description', "Une à deux lignes."],
+
+        // ── Étapes ──
+        'proc_num'       => ['Numéro d\'étape', "Exemple : 01."],
+        'proc_icon'      => ['Icône', "Nom d'icône Lucide."],
+        'proc_title'     => ['Titre de l\'étape', ""],
+        'proc_desc'      => ['Description de l\'étape', ""],
+
+        // ── Cartes flottantes du hero ──
+        'card_icon'      => ['Icône', "Nom d'icône Lucide."],
+        'card_label'     => ['Sur-titre', "Affiché en majuscules."],
+        'card_badge'     => ['Pastille', "Petit libellé, par exemple « Actif »."],
+        'card_value'     => ['Valeur', "Grand chiffre mis en avant."],
+        'card_unit'      => ['Unité', "Affichée après la valeur."],
+        'card_title'     => ['Titre', ""],
+        'card_meta'      => ['Ligne secondaire', ""],
+        'card_progress'  => ['Barre de progression', "De 0 à 100. Laisser vide pour ne pas l'afficher."],
+        'card_avatar'    => ['Vignette ronde', ""],
+        'card_top'       => ['Position verticale', "En pourcentage de la hauteur du visuel."],
+        'card_left'      => ['Position horizontale', "En pourcentage de la largeur du visuel."],
+    ];
+
+    /** Préfixes retirés pour dériver un intitulé lisible d'une clé inconnue. */
+    private const PREFIXES = ['card_', 'item_', 'member_', 'client_', 'faq_', 'post_', 'sec_', 'cap_', 'proc_', 'ps_', 'svc_'];
+
+    /**
+     * Type de champ à afficher. Ordre des règles significatif : les réglages
+     * dérivés d'une image (image_ratio, image_radius…) sont des valeurs
+     * saisies, et doivent être testés AVANT la règle « image ».
+     */
+    public static function type(string $key, string $sectionType = ''): string {
+        if (self::choices($key, $sectionType)) { return 'select'; }
+
+        // Libellés courts : cta1_text, sec_link_text, more_text…
+        if (str_ends_with($key, '_text')) { return 'text'; }
+
+        foreach (['_ratio', '_max_width', '_width', '_height', '_alt', '_position', '_radius', '_opacity'] as $suffix) {
+            if (str_contains($key, $suffix)) { return 'text'; }
+        }
+
+        if (str_contains($key, 'image') || str_contains($key, 'avatar') || str_contains($key, 'logo')) { return 'image'; }
+        if (str_contains($key, 'url') || str_contains($key, 'link')) { return 'link'; }
+
+        $long = ['text', 'subtitle', 'content', 'description', 'contact_address', 'ps_problem', 'ps_solution'];
+        if (in_array($key, $long, true)) { return 'textarea'; }
+        foreach (['desc', 'quote', 'points', 'needs', 'detail', 'answer', 'summary'] as $needle) {
+            if (str_contains($key, $needle)) { return 'textarea'; }
+        }
+        return 'text';
+    }
+
+    /** Intitulé lisible ; à défaut, dérivé du nom technique. */
+    public static function label(string $key): string {
+        if (isset(self::FIELDS[$key])) { return self::FIELDS[$key][0]; }
+        $clean = str_replace(self::PREFIXES, '', $key);
+        return ucfirst(str_replace('_', ' ', $clean));
+    }
+
+    /** Phrase d'aide, ou chaîne vide s'il n'y en a pas. */
+    public static function help(string $key): string {
+        return self::FIELDS[$key][1] ?? '';
+    }
+
+    /**
+     * Valeurs autorisées pour un champ fermé, sinon tableau vide.
+     *
+     * Une entrée peut être soit une liste simple valeur => libellé, soit une
+     * liste indexée par type de section. Dans ce second cas, un type inconnu
+     * ne renvoie rien : le champ reste en saisie libre plutôt que d'exposer
+     * des options qui n'auraient aucun effet.
+     */
+    public static function choices(string $key, string $sectionType = ''): array {
+        $entry = self::CHOICES[$key] ?? null;
+        if ($entry === null) { return []; }
+        $first = reset($entry);
+        if (is_array($first)) {
+            return $entry[$sectionType] ?? [];
+        }
+        return $entry;
+    }
+}

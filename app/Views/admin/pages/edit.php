@@ -4,15 +4,126 @@
 <style>
     .builder-container {
         display: grid;
-        grid-template-columns: 280px 1fr;
+        /* Troisième colonne : l'inspecteur. L'espace à droite de l'éditeur
+           restait inutilisé sur les grands écrans. */
+        grid-template-columns: 280px minmax(0, 1fr) 300px;
         gap: 28px;
         align-items: start;
     }
 
+    @media (max-width: 1400px) {
+        .builder-container { grid-template-columns: 260px minmax(0, 1fr); }
+        /* Sous 1400px l'inspecteur passe sous l'éditeur plutôt que de comprimer
+           les champs de saisie, qui restent le cœur du travail. */
+        .editor-inspector {
+            grid-column: 1 / -1;
+            position: static;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+        }
+    }
     @media (max-width: 1024px) {
         .builder-container {
             grid-template-columns: 1fr;
         }
+    }
+
+    /* ── Aide sous les intitulés de champs ── */
+    .field-help {
+        font-size: 0.74rem;
+        line-height: 1.45;
+        color: var(--text-muted);
+        margin: -2px 0 7px;
+    }
+
+    /* ── Inspecteur ── */
+    .editor-inspector {
+        position: sticky;
+        top: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+    .inspector-card {
+        background-color: var(--bg-surface);
+        border: 1px solid var(--border-highlight);
+        border-radius: 16px;
+        padding: 16px 18px;
+        box-shadow: 0 10px 24px -14px rgba(30, 58, 138, 0.18);
+    }
+    .inspector-panel { display: none; }
+    .inspector-panel.active { display: block; }
+    @media (max-width: 1400px) {
+        /* Hors colonne latérale, seule la section active reste pertinente. */
+        .inspector-panel { display: none; }
+        .inspector-panel.active { display: block; }
+    }
+
+    .inspector-title {
+        display: flex; align-items: center; gap: 7px;
+        margin: 0 0 12px;
+        font-family: var(--font-headings);
+        font-size: 0.78rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--text-muted);
+    }
+    .inspector-title i { width: 15px; height: 15px; color: var(--primary); }
+
+    .inspector-facts { list-style: none; margin: 0 0 14px; padding: 0; }
+    .inspector-facts li {
+        display: flex; align-items: baseline; justify-content: space-between; gap: 10px;
+        padding: 6px 0;
+        border-bottom: 1px dashed var(--border);
+        font-size: 0.8rem;
+    }
+    .inspector-facts li:last-child { border-bottom: none; }
+    .inspector-facts span { color: var(--text-muted); flex-shrink: 0; }
+    .inspector-facts b { text-align: right; font-weight: 600; }
+    .inspector-facts b.ok   { color: #15803d; }
+    .inspector-facts b.warn { color: #b45309; }
+    .inspector-facts code {
+        font-size: 0.74rem;
+        background: rgba(0,0,0,0.05);
+        padding: 1px 6px;
+        border-radius: 5px;
+        word-break: break-all;
+        text-align: right;
+    }
+
+    .inspector-actions { display: flex; flex-direction: column; gap: 7px; }
+    .inspector-btn {
+        display: flex; align-items: center; gap: 8px;
+        width: 100%;
+        padding: 8px 11px;
+        border: 1px solid var(--border);
+        border-radius: 9px;
+        background: rgba(255,255,255,0.5);
+        color: var(--text-main);
+        font-size: 0.8rem;
+        font-weight: 600;
+        font-family: inherit;
+        text-decoration: none;
+        cursor: pointer;
+        transition: all 0.18s ease;
+        text-align: left;
+    }
+    .inspector-btn:hover {
+        border-color: var(--primary);
+        color: var(--primary);
+        transform: translateX(2px);
+    }
+    .inspector-btn i { width: 15px; height: 15px; flex-shrink: 0; }
+
+    .inspector-note {
+        margin: 12px 0 0;
+        font-size: 0.73rem;
+        line-height: 1.5;
+        color: var(--text-muted);
+        border-top: 1px dashed var(--border);
+        padding-top: 10px;
     }
 
     .settings-panel {
@@ -1060,25 +1171,55 @@ if (empty($selectedLogo)) {
 
                         <form id="form-<?= $sec['id'] ?>" onsubmit="event.preventDefault()">
                             
-                            <?php foreach ($blocks['single'] as $blockKey => $blockValue): 
-                                $label = ucfirst(str_replace('_', ' ', $blockKey));
-                                $fieldType = 'text';
-                                if (in_array($blockKey, ['subtitle', 'content', 'description', 'contact_address'])) {
-                                    $fieldType = 'textarea';
+                            <?php
+                            /* Un réglage jamais initialisé n'existe pas en base et n'apparaissait
+                               donc nulle part dans l'éditeur : la fonctionnalité était inaccessible.
+                               On complète avec les clés que le type de section sait gérer, en
+                               valeur vide — un champ vide n'affiche rien sur le site. */
+                            $singleFields = $blocks['single'];
+                            foreach ((\App\Controllers\PageController::sectionSkeletons()[$sec['type']][0] ?? []) as $supportedKey) {
+                                if (!array_key_exists($supportedKey, $singleFields)) {
+                                    $singleFields[$supportedKey] = '';
                                 }
+                            }
+                            ?>
+                            <?php foreach ($singleFields as $blockKey => $blockValue):
+                                // Types, intitulés et aides viennent tous de BlockFieldHelper :
+                                // c'est la seule source de vérité. La vue avait sa propre copie
+                                // des règles, qui rendait « image_ratio » comme un sélecteur de
+                                // média — on ne pouvait donc pas y saisir « 1300 / 400 ».
+                                $label      = \App\Helpers\BlockFieldHelper::label($blockKey);
+                                $help       = \App\Helpers\BlockFieldHelper::help($blockKey);
+                                $choices    = \App\Helpers\BlockFieldHelper::choices($blockKey, $sec['type']);
+                                $fieldType  = \App\Helpers\BlockFieldHelper::type($blockKey, $sec['type']);
                                 if ($blockKey === 'title' && $sec['type'] === 'hero') {
                                     $fieldType = 'wysiwyg';
                                 }
-                                if (str_contains($blockKey, 'image') || str_contains($blockKey, 'logo') || str_contains($blockKey, 'avatar')) {
-                                    $fieldType = 'image';
-                                }
-                                if (str_contains($blockKey, 'url') || str_contains($blockKey, 'link')) {
-                                    $fieldType = 'link';
-                                }
                             ?>
                                 <div class="admin-form-group">
-                                    <label><?= $label ?></label>
-                                    
+                                    <label><?= htmlspecialchars($label) ?></label>
+                                    <?php if ($help !== ''): ?>
+                                        <p class="field-help"><?= htmlspecialchars($help) ?></p>
+                                    <?php endif; ?>
+
+                                    <?php if ($fieldType === 'select'): ?>
+                                        <select name="blocks[<?= $blockKey ?>][value]" class="admin-input">
+                                            <?php
+                                            // Une valeur enregistrée hors liste reste proposée :
+                                            // sauvegarder ne doit jamais l'écraser en silence.
+                                            if ($blockValue !== '' && !array_key_exists($blockValue, $choices)) {
+                                                $choices = [$blockValue => $blockValue . ' (valeur actuelle)'] + $choices;
+                                            }
+                                            foreach ($choices as $optValue => $optLabel): ?>
+                                                <option value="<?= htmlspecialchars((string)$optValue) ?>" <?= (string)$blockValue === (string)$optValue ? 'selected' : '' ?>>
+                                                    <?= htmlspecialchars($optLabel) ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                        <input type="hidden" name="blocks[<?= $blockKey ?>][type]" value="text">
+
+                                    <?php else: ?>
+
                                     <?php if ($fieldType === 'wysiwyg'): ?>
                                         <div id="quill-editor-<?= $sec['id'] ?>-<?= $blockKey ?>" style="height: 180px; margin-bottom: 12px; background-color: var(--bg-base); border-color: var(--border);"></div>
                                         <input type="hidden" name="blocks[<?= $blockKey ?>][value]" id="quill-input-<?= $sec['id'] ?>-<?= $blockKey ?>" value="<?= htmlspecialchars($blockValue) ?>">
@@ -1115,6 +1256,7 @@ if (empty($selectedLogo)) {
                                         <input type="text" name="blocks[<?= $blockKey ?>][value]" class="admin-input" value="<?= htmlspecialchars($blockValue) ?>">
                                         <input type="hidden" name="blocks[<?= $blockKey ?>][type]" value="<?= $fieldType ?>">
                                     <?php endif; ?>
+                                    <?php endif; ?>
                                 </div>
                             <?php endforeach; ?>
 
@@ -1143,27 +1285,24 @@ if (empty($selectedLogo)) {
                                                 <div style="display: grid; grid-template-columns: 1fr; gap: 12px;">
                                                     <?php foreach ($groupFields as $key => $val): 
                                                         if ($key === '_group_id' || $key === '_sort_order') continue;
-                                                        $fieldLabel = ucfirst(str_replace(['card_', 'item_', 'member_', 'client_', 'faq_', 'post_'], '', $key));
-                                                        $type = 'text';
-                                                        if (in_array($key, ['card_description', 'client_quote', 'faq_answer', 'post_summary'])) {
-                                                            $type = 'textarea';
-                                                        }
-                                                        if (str_contains($key, 'image') || str_contains($key, 'avatar')) {
-                                                            $type = 'image';
-                                                        }
-                                                        if (str_contains($key, 'url') || str_contains($key, 'link')) {
-                                                            $type = 'link';
-                                                        }
+                                                        // Même source de vérité que les champs simples. L'ancienne
+                                                        // règle marquait « sec_link_text » comme un lien (le mot
+                                                        // « link » y figure) alors que c'est un libellé de bouton.
+                                                        $fieldLabel = \App\Helpers\BlockFieldHelper::label($key);
+                                                        $fieldHelp  = \App\Helpers\BlockFieldHelper::help($key);
+                                                        $type       = \App\Helpers\BlockFieldHelper::type($key, $sec['type']);
                                                         if (str_contains($key, 'rating')) {
                                                             $type = 'number';
                                                         }
                                                     ?>
                                                         <div class="admin-form-group" style="margin-bottom: 0;">
-                                                            <label style="font-size: 0.8rem; margin-bottom: 4px;"><?= $fieldLabel ?></label>
-                                                            <?php if (str_contains($key, 'icon') || str_contains($key, 'avatar')): ?>
+                                                            <label style="font-size: 0.8rem; margin-bottom: 4px;"><?= htmlspecialchars($fieldLabel) ?></label>
+                                                            <?php if ($fieldHelp !== ''): ?>
+                                                                <p class="field-help"><?= htmlspecialchars($fieldHelp) ?></p>
+                                                            <?php elseif (str_contains($key, 'icon') || str_contains($key, 'avatar')): ?>
                                                                 <small style="font-size: 0.72rem; color: var(--text-muted); display: block; margin-bottom: 4px;">Saisir un nom Lucide (ex: <code>cpu</code>), FontAwesome (ex: <code>fa-solid fa-code</code>), code SVG, ou un chemin d'image.</small>
                                                             <?php endif; ?>
-                                                            
+
                                                             <?php if ($type === 'textarea'): ?>
                                                                 <textarea name="blocks[<?= $key ?>_<?= $uniqueGroupId ?>][value]" class="admin-textarea" rows="3"><?= htmlspecialchars($val) ?></textarea>
                                                                 <input type="hidden" name="blocks[<?= $key ?>_<?= $uniqueGroupId ?>][type]" value="textarea">
@@ -1194,6 +1333,82 @@ if (empty($selectedLogo)) {
             <?php endforeach; ?>
         <?php endif; ?>
     </div>
+
+    <?php
+    /* Colonne « inspecteur » — occupe l'espace resté vide à droite de l'éditeur.
+       Elle ne duplique aucun champ : elle rassemble ce qui manquait, à savoir
+       l'état de la page, l'état de la section en cours et les actions rapides. */
+    $pageUrl = ($page['slug'] ?? '') === 'home' ? '/' : '/' . ($page['slug'] ?? '');
+    ?>
+    <aside class="editor-inspector">
+
+        <div class="inspector-card">
+            <h4 class="inspector-title"><i data-lucide="file-text"></i><span>Cette page</span></h4>
+            <ul class="inspector-facts">
+                <li><span>Adresse</span><code><?= htmlspecialchars($pageUrl) ?></code></li>
+                <li><span>Statut</span>
+                    <b class="<?= ($page['status'] ?? '') === 'published' ? 'ok' : 'warn' ?>">
+                        <?= ($page['status'] ?? '') === 'published' ? 'Publiée' : 'Brouillon' ?>
+                    </b>
+                </li>
+                <li><span>Dans le menu</span>
+                    <b class="<?= (int)($page['in_navigation'] ?? 0) === 1 ? 'ok' : 'warn' ?>">
+                        <?= (int)($page['in_navigation'] ?? 0) === 1 ? 'Oui' : 'Non' ?>
+                    </b>
+                </li>
+                <li><span>Sections</span>
+                    <b><?= count($sections) ?> dont <?= count(array_filter($sections, fn($s) => ($s['status'] ?? 'active') === 'active')) ?> visible(s)</b>
+                </li>
+            </ul>
+            <div class="inspector-actions">
+                <a class="inspector-btn" href="<?= htmlspecialchars(url($pageUrl)) ?>" target="_blank" rel="noopener">
+                    <i data-lucide="external-link"></i><span>Voir la page</span>
+                </a>
+                <a class="inspector-btn" href="<?= htmlspecialchars(url('/admin/media')) ?>" target="_blank" rel="noopener">
+                    <i data-lucide="image"></i><span>Bibliothèque Média</span>
+                </a>
+                <a class="inspector-btn" href="<?= htmlspecialchars(url('/admin/menus')) ?>" target="_blank" rel="noopener">
+                    <i data-lucide="menu"></i><span>Navigation</span>
+                </a>
+            </div>
+        </div>
+
+        <?php foreach ($sections as $index => $sec):
+            $secBlocks = $sectionBlocks[$sec['id']] ?? ['single' => [], 'groups' => []];
+            $secActive = ($sec['status'] ?? 'active') === 'active';
+            $nbEmpty   = count(array_filter($secBlocks['single'] ?? [], fn($v) => trim((string)$v) === ''));
+        ?>
+            <div class="inspector-panel inspector-card <?= $index === 0 ? 'active' : '' ?>" id="inspector-<?= $sec['id'] ?>">
+                <h4 class="inspector-title"><i data-lucide="layout"></i><span>Section en cours</span></h4>
+                <ul class="inspector-facts">
+                    <li><span>Nom</span><b><?= htmlspecialchars($sec['name']) ?></b></li>
+                    <li><span>Type</span><code><?= htmlspecialchars($sec['type']) ?></code></li>
+                    <li><span>Position</span><b><?= (int)$sec['sort_order'] ?></b></li>
+                    <li><span>Visible</span>
+                        <b class="<?= $secActive ? 'ok' : 'warn' ?>"><?= $secActive ? 'Oui' : 'Masquée' ?></b>
+                    </li>
+                    <li><span>Champs</span><b><?= count($secBlocks['single'] ?? []) ?> réglage(s), <?= count($secBlocks['groups'] ?? []) ?> élément(s)</b></li>
+                    <?php if ($nbEmpty > 0): ?>
+                        <li><span>À compléter</span><b class="warn"><?= $nbEmpty ?> champ(s) vide(s)</b></li>
+                    <?php endif; ?>
+                </ul>
+                <div class="inspector-actions">
+                    <button type="button" class="inspector-btn" onclick="saveSectionContent(<?= $sec['id'] ?>)">
+                        <i data-lucide="save"></i><span>Sauvegarder cette section</span>
+                    </button>
+                    <button type="button" class="inspector-btn" onclick="toggleSection(<?= $sec['id'] ?>, event)">
+                        <i data-lucide="<?= $secActive ? 'eye-off' : 'eye' ?>"></i>
+                        <span><?= $secActive ? 'Masquer la section' : 'Afficher la section' ?></span>
+                    </button>
+                </div>
+                <p class="inspector-note">
+                    Un champ vide n'affiche rien sur le site : c'est ainsi qu'on masque
+                    un élément sans le supprimer.
+                </p>
+            </div>
+        <?php endforeach; ?>
+
+    </aside>
 </div>
 
 <div class="media-modal" id="addSectionModal">
@@ -1271,6 +1486,12 @@ if (empty($selectedLogo)) {
         document.querySelectorAll('.section-form-panel').forEach(panel => {
             panel.classList.remove('active');
         });
+
+        // L'inspecteur suit la section sélectionnée.
+        document.querySelectorAll('.inspector-panel').forEach(p => p.classList.remove('active'));
+        const activeInspector = document.getElementById('inspector-' + sectionId);
+        if (activeInspector) { activeInspector.classList.add('active'); }
+
         const activePanel = document.getElementById('panel-' + sectionId);
         if (activePanel) {
             activePanel.classList.add('active');
