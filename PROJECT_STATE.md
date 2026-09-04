@@ -3,6 +3,55 @@
 
 ---
 
+### 2026-09-04 (suite 6) — Page RÉALISATIONS / ÉTUDES DE CAS (/realisations)
+
+**Analyse préalable.** Le module Réalisations existait déjà : routes `/realisations` et
+`/realisations/{slug}`, modèle `Project`, CRUD admin, vues frontend. Rien n'a été recréé —
+l'existant est étendu (Règle #1). `context` portait déjà le problème et `impact` les résultats :
+les dupliquer aurait créé deux colonnes pour une même donnée.
+
+**Base de données — 11 colonnes ajoutées à `projects`**
+`status`, `sector`, `year`, `objectives`, `solution`, `features`, `testimonial_quote`,
+`testimonial_author`, `testimonial_role`, `meta_title`, `meta_description`.
+Les lignes antérieures sans statut passent à `published` : les traiter en brouillon aurait fait
+disparaître du contenu déjà en ligne.
+
+**Page /realisations — pilotée par le CMS.** `ProjectController@publicIndex` charge désormais les
+sections de la page CMS « realisations » comme n'importe quelle autre page. Hero, expertises et CTA
+deviennent administrables. Un repli est prévu si la page n'a pas encore de sections : la grille
+s'affiche quand même, la page ne peut jamais être vide.
+
+**Nouvelle section `projects_cms`** — grille filtrable. Les projets viennent **exclusivement** de la
+table `projects`. Filtres administrables et ordonnables ; une catégorie déclarée qu'aucun projet
+n'utilise n'est pas affichée. Sans catégorie déclarée, les filtres sont déduits des catégories
+réellement présentes. Filtrage côté client, toutes les cartes étant déjà rendues.
+
+**Page /realisations/{slug}** — les 11 blocs demandés, **tous conditionnels** : un champ vide
+n'affiche ni rubrique, ni titre, ni texte de repli. Les titres de rubriques viennent de 19 réglages
+globaux, donc administrables sans saisie par projet. Un brouillon reste consultable par un
+administrateur connecté.
+
+**Admin**
+- Formulaire factorisé dans `_form.php`, partagé création/modification — un champ ajouté d'un seul côté n'était éditable que d'un côté
+- `collectPostData()` unique côté contrôleur, pour la même raison
+- Colonne Statut dans la liste des réalisations
+- La modale de sélection de média était dupliquée dans les vues alors que `admin/layout` la fournit : supprimée
+- `projects_cms` ajoutée au sélecteur de types et aux squelettes ; 6 champs documentés dans `BlockFieldHelper`
+
+**Preuves (Règle #5)**
+- 5 scénarios de rendu (table vide, 2 projets, filtres masqués, étude de cas complète, fiche entièrement vide) : balises équilibrées, aucune erreur
+- **17 assertions** : message d'attente quand la table est vide, aucune carte ni filtre, catégorie non utilisée exclue, technologies limitées à 4 sur la carte, bloc méta masqué si client/secteur/année vides, 7 rubriques sur une étude complète, aucune rubrique/témoignage/CTA sur une fiche vide → **17/17 OK**
+- Éditeur de pages : 14/14 assertions toujours OK · `php -l` : 12/12 OK
+- Commit `65d13e2` → run **completed / success**
+- Production `/realisations` → **HTTP 200**, 4 sections dans l'ordre `hero-mc-overlay | projects-cms | caps-section | cta-sec`, H1 conforme au brief, **6 expertises**, CTA final présent, message d'attente affiché, **0 carte** (table vide)
+- Navigation : `/` `/about` `/service` `/secteurs` `/realisations` `/blog` `/contact`
+- Non-régression : `/`, `/secteurs`, `/service` → 200 · `/admin/projects` → 302 vers login
+
+**⚠ La table `projects` est VIDE.** La page affiche son message d'attente jusqu'à saisie de vraies
+réalisations. Aucun projet, client, chiffre, résultat ni témoignage n'a été inventé.
+
+---
+
 ### 2026-09-04 (suite 5) — BUG-ADM-02 : trois `<div>` non refermés faisaient se chevaucher l'éditeur
 
 **Symptôme.** Dans `/admin/pages/edit/{id}`, la liste des sections, le formulaire de blocs et la
