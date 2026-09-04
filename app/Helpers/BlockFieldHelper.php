@@ -51,6 +51,10 @@ class BlockFieldHelper {
             '1' => 'Afficher la barre de filtres',
             '0' => 'Masquer la barre de filtres',
         ],
+        'show_form' => [
+            '1' => 'Afficher le formulaire de contact',
+            '0' => 'Masquer le formulaire (garder coordonnées et boutons)',
+        ],
     ];
 
     /**
@@ -151,6 +155,7 @@ class BlockFieldHelper {
         'more_url'       => ['Bouton sous la grille — lien', "Par défaut /realisations."],
 
         // ── Expertises ──
+        'show_form'      => ['Formulaire de contact', "À masquer quand la page porte déjà un formulaire de demande : deux formulaires côte à côte brouillent le parcours."],
         'cap_icon'       => ['Icône', "Nom d'icône Lucide."],
         'cap_title'      => ['Intitulé', "Vider ce champ masque la carte."],
         'cap_desc'       => ['Description', "Une à deux lignes."],

@@ -1,8 +1,20 @@
+<?php
+/**
+ * Section : contact_details — coordonnées, horaires et formulaire de contact.
+ *
+ * `show_form` ('1' par défaut) permet de masquer la colonne formulaire. Sur une
+ * page qui porte déjà un formulaire de demande, en afficher un second juste en
+ * dessous brouille le parcours plutôt qu'il ne l'ouvre. Le défaut reste '1' :
+ * aucune page existante ne change de rendu.
+ */
+$afficherFormulaire = (($single['show_form'] ?? '1') !== '0');
+?>
 <section class="section-padding" id="contact-details-sec" style="padding-top: 3rem;">
     <div class="container">
 
         <div class="main-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 40px; max-width: 1100px; margin: 0 auto;">
 
+            <?php if ($afficherFormulaire): ?>
             <!-- LEFT COLUMN: Contact Form Card -->
             <div class="form-card reveal" style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: 16px; padding: 2.5rem; transition: var(--transition);">
                 <h2 class="card-title" style="font-size: 1.3rem; font-weight: 700; color: var(--text-main); margin-bottom: 0.4rem; font-family: var(--font-heading);"><?= htmlspecialchars($single['title'] ?? 'Envoyez-nous votre demande') ?></h2>
@@ -93,6 +105,8 @@
                 </form>
             </div>
 
+            <?php endif; ?>
+
             <!-- RIGHT COLUMN: Coordonnées, Horaires & Map Card -->
             <div class="info-col" style="display: flex; flex-direction: column; gap: 20px;">
 
@@ -138,6 +152,28 @@
                     </div>
                 </div>
 
+
+                <?php if (!$afficherFormulaire): ?>
+                    <?php /* Le formulaire est masqué : les deux actions directes
+                            qu'il portait (email, WhatsApp) remontent ici, sinon
+                            la section n'offrirait plus aucun moyen d'agir. */ ?>
+                    <div class="info-card reveal" style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; display: flex; flex-direction: column; gap: 12px;">
+                        <?php if (!empty($settings['contact_email'])): ?>
+                            <a href="mailto:<?= htmlspecialchars($settings['contact_email'], ENT_QUOTES) ?>"
+                               style="width: 100%; padding: 0.9rem; background: var(--primary); color: #fff; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; border-radius: 7px; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; transition: var(--transition);">
+                                <i data-lucide="mail" style="width: 16px; height: 16px;"></i>
+                                <span><?= htmlspecialchars($single['cta_label'] ?? 'Envoyer un email') ?></span>
+                            </a>
+                        <?php endif; ?>
+                        <?php if (!empty($settings['site_whatsapp'])): ?>
+                            <a href="https://wa.me/<?= preg_replace('/[^0-9]/', '', $settings['site_whatsapp']) ?>" target="_blank" rel="noopener"
+                               style="width: 100%; padding: 0.85rem; background: transparent; color: #25d366; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; border: 1.5px solid #25d366; border-radius: 7px; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; transition: var(--transition);">
+                                <i data-lucide="phone-call" style="width: 16px; height: 16px;"></i>
+                                <span><?= htmlspecialchars($single['whatsapp_btn_label'] ?? 'Écrire sur WhatsApp') ?></span>
+                            </a>
+                        <?php endif; ?>
+                    </div>
+                <?php endif; ?>
                 <!-- Horaires Card -->
                 <?php if (!empty($single['hours_desc'])): ?>
                 <div class="info-card reveal" style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: 16px; padding: 2rem;">

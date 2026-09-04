@@ -564,6 +564,13 @@ class PageController extends Controller {
                 ['ps_icon', 'ps_problem', 'ps_solution', 'ps_detail'],
                 3,
             ],
+            'contact_details' => [
+                ['title', 'subtitle', 'show_form', 'coordonnees_title',
+                 'cta_label', 'whatsapp_btn_label', 'hours_title', 'hours_desc',
+                 'map_office_label', 'social_section_title', 'social_section_subtitle'],
+                [],
+                0,
+            ],
             'lead_form' => [
                 ['tag', 'title', 'subtitle',
                  'step1_title', 'step2_title', 'step3_title', 'step4_title',

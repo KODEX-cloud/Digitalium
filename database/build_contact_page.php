@@ -289,6 +289,7 @@ try {
     $seed($id, [
         'title'              => 'Nous joindre directement',
         'subtitle'           => "Si vous préférez parler avant d'écrire, ces canaux sont ouverts.",
+        'show_form'          => '0',   // la page porte déjà le formulaire de demande
         'coordonnees_title'  => 'Coordonnées',
         'cta_label'          => 'Envoyer un email',
         'whatsapp_btn_label' => 'Écrire sur WhatsApp',
@@ -382,22 +383,47 @@ try {
     ]);
 
     /**
-     * L'ancienne section de contact (formulaire simple) fait doublon avec le
-     * nouveau formulaire. Elle est éteinte UNE SEULE FOIS, pas supprimée : son
-     * contenu reste là et un clic en admin la rallume. Le drapeau évite de la
-     * ré-éteindre si vous choisissez de la remettre.
+     * Sections héritées de l'ancienne page — extinction UNIQUE.
+     *
+     * La page /contact existait déjà avec ses propres sections. Le réconciliateur
+     * apparie sur le couple (type, nom) — ce qui permet deux grilles sur
+     * /solutions, mais a produit ici des DOUBLONS : deux `contact_details` (donc
+     * deux formulaires portant le même id="mainContactForm", ce qui est du HTML
+     * invalide) et deux `cta`, dont l'ancien affichait « Rejoignez 100+ clients
+     * satisfaits » — un chiffre que le cahier des charges interdit.
+     *
+     * Les sections héritées sont ÉTEINTES, pas supprimées : leur contenu reste
+     * en base et un clic en admin les rallume. Le drapeau évite de les
+     * ré-éteindre si vous choisissez d'en remettre une.
      */
-    if (!Setting::getVal('contact_legacy_form_off_v1')) {
-        $eteintes = 0;
+    if (!Setting::getVal('contact_legacy_sections_off_v1')) {
+        // Nom des sections que ce script gère : tout le reste, dans ces types,
+        // vient de l'ancienne page.
+        $miennes = [
+            'contact_details' => 'Contact direct',
+            'cta'             => 'CTA final — Contact',
+            'lead_form'       => 'Formulaire de demande',
+        ];
+        // Types entièrement remplacés par la nouvelle structure.
+        $remplaces = ['contact', 'services_strip'];
+
+        $eteintes = [];
         foreach (Section::getByPage($pageId) as $s) {
-            if (($s['type'] ?? '') === 'contact' && ($s['status'] ?? '') === 'active') {
-                Database::query("UPDATE sections SET status = 'inactive' WHERE id = :id",
-                    ['id' => (int)$s['id']]);
-                $eteintes++;
-            }
+            $type = (string)($s['type'] ?? '');
+            $nom  = (string)($s['name'] ?? '');
+            if (($s['status'] ?? '') !== 'active') { continue; }
+
+            $aEteindre = in_array($type, $remplaces, true)
+                || (isset($miennes[$type]) && $nom !== $miennes[$type]);
+            if (!$aEteindre) { continue; }
+
+            Database::query("UPDATE sections SET status = 'inactive' WHERE id = :id",
+                ['id' => (int)$s['id']]);
+            $eteintes[] = "#{$s['id']} [$type] " . ($nom !== '' ? $nom : '(sans nom)');
         }
-        Setting::setVal('contact_legacy_form_off_v1', '1');
-        echo "\n  ancien formulaire simple : $eteintes section(s) désactivée(s) — réactivables en admin.\n";
+        Setting::setVal('contact_legacy_sections_off_v1', '1');
+        echo "\n  sections héritées éteintes : " . ($eteintes ? implode(', ', $eteintes) : 'aucune') . "\n";
+        echo "  (contenu conservé — réactivables depuis /admin/pages)\n";
     }
 
     \App\Services\Cache::clear();
