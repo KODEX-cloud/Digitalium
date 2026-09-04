@@ -52,7 +52,39 @@ class HomeController extends Controller {
     /**
      * Internal render logic — separated so the public method can wrap it cleanly.
      */
-    private function doRenderPage(string $slug): void {
+    /**
+     * Rend une page rattachée à un parent : /solutions/software-platforms.
+     *
+     * Le couple (parent, enfant) est résolu en base plutôt que déduit du nom :
+     * une page n'est accessible sous un parent que si elle y est réellement
+     * rattachée. Une URL imbriquée qui ne correspond à rien renvoie 404, ce qui
+     * vaut mieux que de servir silencieusement autre chose.
+     */
+    public function renderChild(array $params): void {
+        $parent = trim($params['parent'] ?? '');
+        $child  = trim($params['child'] ?? '');
+
+        try {
+            $page = Page::findChild($parent, $child);
+            if (!$page) {
+                $this->render404();
+                return;
+            }
+            $this->doRenderPage($page['slug'], true);
+        } catch (\Throwable $e) {
+            $logPath = ROOT_PATH . '/storage/logs/errors.log';
+            @file_put_contents($logPath, date('Y-m-d H:i:s')
+                . " [CONTROLLER] HomeController::renderChild {$parent}/{$child} — "
+                . get_class($e) . ': ' . $e->getMessage()
+                . ' in ' . $e->getFile() . ':' . $e->getLine() . "\n", FILE_APPEND | LOCK_EX);
+
+            if (ENVIRONMENT === 'development') { throw $e; }
+            http_response_code(500);
+            echo 'Une erreur est survenue.';
+        }
+    }
+
+    private function doRenderPage(string $slug, bool $viaParent = false): void {
         $cacheKey   = 'page_' . $slug;
         $cachedData = \App\Services\Cache::get($cacheKey, 3600);
 
@@ -91,6 +123,17 @@ class HomeController extends Controller {
                 'settings' => $settings,
                 'menuPages' => $activeMenuPages,
             ]);
+        }
+
+        // Une page rattachée à un parent n'a qu'une seule URL : l'imbriquée.
+        // Sans cette redirection, /software-platforms et
+        // /solutions/software-platforms serviraient le même contenu — le doublon
+        // d'URL relevé en DT-05. Le test se fait ici, après le cache, donc sans
+        // requête supplémentaire.
+        $parentSlug = trim((string)($page['parent_slug'] ?? ''));
+        if ($parentSlug !== '' && !$viaParent) {
+            header('Location: ' . url('/' . $parentSlug . '/' . $page['slug']), true, 301);
+            return;
         }
 
         if (($page['status'] ?? '') === 'draft' && !Auth::check()) {
@@ -205,10 +248,20 @@ class HomeController extends Controller {
 
         foreach ($publishedPages as $p) {
             $slug = $p['slug'];
-            $loc = "https://digitaliumgroup.com" . ($slug === 'home' ? '' : '/' . htmlspecialchars($slug));
+
+            // Une page rattachée à un parent n'est servie qu'à son URL imbriquée :
+            // l'URL courte y redirige en 301. Déclarer la courte reviendrait à
+            // remplir le sitemap de redirections.
+            $parent = trim((string)($p['parent_slug'] ?? ''));
+            $path = $slug === 'home'
+                ? ''
+                : '/' . ($parent !== '' ? $parent . '/' : '') . $slug;
+
+            $loc = "https://digitaliumgroup.com" . $path;
             $lastmod = date('Y-m-d', strtotime($p['updated_at'] ?? $p['created_at']));
             $changefreq = ($slug === 'home') ? 'daily' : 'weekly';
-            $priority = ($slug === 'home') ? '1.0' : '0.8';
+            // Une sous-page compte un peu moins que la page qui la porte.
+            $priority = ($slug === 'home') ? '1.0' : ($parent !== '' ? '0.6' : '0.8');
 
             echo '  <url>' . "\n";
             echo '    <loc>' . htmlspecialchars($loc) . '</loc>' . "\n";

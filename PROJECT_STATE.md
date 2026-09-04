@@ -1,5 +1,62 @@
 # PROJECT_STATE — Digitalium Group CMS
-> Dernière mise à jour : 2026-09-04 — /secteurs au hero plein cadre + dette de sécurité soldée
+> Dernière mise à jour : 2026-09-04 — Page Solutions (/solutions) + 5 sous-pages + architecture parent/enfant
+
+---
+
+### 2026-09-04 (suite 12) — Page Solutions (/solutions) + 5 sous-pages + architecture parent/enfant
+
+**Réutilisation avant création.** Sur les 8 sections du brief, 7 sont montées avec des types
+existants : `hero_media_cards`, `sectors_grid` (deux fois), `process_strip`, `capabilities_grid`,
+`projects_cms`, `cta`. Un seul type a été créé, `needs_router`, faute d'équivalent compact pour la
+section « Je veux… ». Trois types existants ont été étendus de façon additive.
+
+**Nouveau type `needs_router`** — `app/Views/frontend/sections/needs_router.php`.
+Liste de lignes cliquables plutôt qu'une grille de cartes : trois grilles d'affilée sur une même
+page donnent le même rythme de lecture trois fois. `single` : tag, title, subtitle, intro_label.
+`groups` : need_icon, need_text, need_solution, need_link. Un besoin sans texte est ignoré (c'est
+le moyen de le masquer sans le supprimer) ; sans lien, la ligne s'affiche sans être cliquable.
+
+**Extensions additives (aucune régression sur les pages existantes)**
+- `projects_cms` : `limit` (aperçu de N réalisations), `more_text` / `more_url` (bouton sous la
+  grille, masqué automatiquement quand la table est vide — un bouton vers une page vide tromperait).
+- `sectors_grid` : `more_text` / `more_url`.
+- `process_strip` : `subtitle`, qui manquait — le paragraphe du brief n'avait nulle part où aller.
+
+**Architecture parent/enfant — /solutions/{famille}**
+- `pages.parent_slug` VARCHAR(150) NULL + index. Le rattachement est une DONNÉE, pas une convention
+  de nommage : `Page::findChild()` exige le couple exact (parent, enfant).
+- Route `$router->get('/{parent}/{child}', 'HomeController@renderChild')`, déclarée après
+  `/blog/{slug}` et `/realisations/{slug}` et avant le catch-all `/{slug}`.
+- **Une page enfant n'a qu'une seule URL.** `doRenderPage()` redirige en 301 tout accès à l'URL
+  courte vers l'URL imbriquée. Le test se fait après le cache : aucune requête supplémentaire.
+  C'est la leçon DT-05 appliquée dès la conception plutôt que constatée après coup.
+- `sitemap.xml` déclare l'URL imbriquée (priorité 0.6) et non la courte, qui n'aurait produit qu'une
+  liste de redirections.
+
+**SEC-05 (découverte pendant les tests) — `url()` acceptait `javascript:`.**
+`config/config.php` laissait passer tel quel tout `javascript:`, ce qui transformait chaque champ
+« lien » du CMS en vecteur de script : il suffisait de saisir `javascript:alert(1)` dans un bouton.
+Zéro usage légitime dans tout l'arbre (grep). `javascript:`, `data:` et `vbscript:` sont désormais
+neutralisés en ancre morte (`#`). Vérifié sur 15 cas, dont les formes évasives (casse mélangée,
+espaces avant les deux-points).
+
+**Contenu** — tout provient du brief, rien n'est inventé. La section Réalisations lit le module
+existant ; la table `projects` étant vide, elle est créée **inactive** (activable depuis l'admin dès
+qu'une réalisation est publiée) plutôt que d'afficher un bloc creux.
+
+**Script** `database/build_solutions_page.php`, ajouté au pipeline (non bloquant). Le
+réconciliateur apparie sur le couple **(type, nom)** et non sur le seul type : la page porte deux
+`sectors_grid`, un appariement par type les aurait confondues. Position réalignée à chaque
+déploiement ; statut posé à la création seulement, pour que l'activation/désactivation en admin ne
+soit pas annulée au déploiement suivant.
+
+**Accent** `#0868B0` (bleu clair du logo), posé une seule fois via `pages.accent_color` — modifiable
+en admin, et non réécrit ensuite.
+
+**Preuves** — 3 harnais : sections 38/38 (contenu complet, minimal, vide, hostile ; équilibre des
+balises ; échappement), routage 16/16 (dont non-régression de `/blog/{slug}` et
+`/realisations/{slug}`, et ordre de déclaration), éditeur d'admin 27/27 (141 `<div>` équilibrés).
+`url()` 15/15. `php -l` sur 12 fichiers : 0 erreur.
 
 ---
 

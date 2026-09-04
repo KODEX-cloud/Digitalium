@@ -6,7 +6,9 @@
  * liste de besoins, lien « Explorer ».
  *
  * Blocs attendus — TOUT est administrable (Règle #2) :
- *   single : tag, title, subtitle
+ *   single : tag, title, subtitle,
+ *            more_text  libellé d'un bouton sous la grille (vide = pas de bouton)
+ *            more_url   sa destination
  *   groups : sec_num, sec_icon, sec_image, sec_title, sec_desc,
  *            sec_needs (séparés par « | »), sec_link, sec_link_text
  *
@@ -84,10 +86,30 @@ $sectors = $groups ?? [];
             <?php endforeach; ?>
         </div>
 
+        <?php if (!empty($single['more_text'])): ?>
+            <div class="sec-more reveal">
+                <a class="sec-more-btn" href="<?= htmlspecialchars(url($single['more_url'] ?? '/secteurs')) ?>">
+                    <?= htmlspecialchars($single['more_text']) ?>
+                    <i data-lucide="arrow-right" style="width:16px;height:16px;"></i>
+                </a>
+            </div>
+        <?php endif; ?>
+
     </div>
 </section>
 
 <style>
+.sec-more { display: flex; justify-content: center; margin-top: 40px; }
+.sec-more-btn {
+    display: inline-flex; align-items: center; gap: 9px;
+    padding: 14px 30px; border-radius: 999px;
+    background: var(--primary); color: #ffffff;
+    font-size: 0.92rem; font-weight: 650; text-decoration: none;
+    transition: var(--transition);
+}
+.sec-more-btn:hover { transform: translateY(-2px); gap: 13px; box-shadow: var(--shadow-btn); }
+
+
 .sectors-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);

@@ -119,6 +119,18 @@ class BlockFieldHelper {
         'cat_value'      => ['Catégorie — valeur exacte', "Doit correspondre au mot saisi dans le champ Catégorie d'une réalisation."],
         'cat_label'      => ['Catégorie — libellé affiché', "Facultatif : par défaut, la valeur exacte est affichée."],
 
+        // ── Aiguillage « Je veux… » ──
+        'intro_label'    => ['Sur-titre de la liste', "Petit texte en majuscules au-dessus des besoins. Exemple : Je veux."],
+        'need_icon'      => ['Icône', "Nom d'icône Lucide."],
+        'need_text'      => ['Le besoin', "Formulé du point de vue du client. Vider ce champ masque la ligne."],
+        'need_solution'  => ['La réponse', "La famille de solutions concernée. Affichée en petit sous le besoin."],
+        'need_link'      => ['Destination', "Chemin interne, par exemple /solutions/ia-automatisation."],
+
+        // ── Aperçu de réalisations ──
+        'limit'          => ['Nombre de réalisations affichées', "Laisser vide pour toutes les afficher. Exemple : 3 pour un aperçu."],
+        'more_text'      => ['Bouton sous la grille — libellé', "Laisser vide pour masquer le bouton."],
+        'more_url'       => ['Bouton sous la grille — lien', "Par défaut /realisations."],
+
         // ── Expertises ──
         'cap_icon'       => ['Icône', "Nom d'icône Lucide."],
         'cap_title'      => ['Intitulé', "Vider ce champ masque la carte."],
@@ -145,7 +157,7 @@ class BlockFieldHelper {
     ];
 
     /** Préfixes retirés pour dériver un intitulé lisible d'une clé inconnue. */
-    private const PREFIXES = ['card_', 'item_', 'member_', 'client_', 'faq_', 'post_', 'sec_', 'cap_', 'proc_', 'ps_', 'svc_'];
+    private const PREFIXES = ['card_', 'item_', 'member_', 'client_', 'faq_', 'post_', 'sec_', 'cap_', 'proc_', 'ps_', 'svc_', 'need_'];
 
     /**
      * Type de champ à afficher. Ordre des règles significatif : les réglages

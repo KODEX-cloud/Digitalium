@@ -15,6 +15,34 @@ class Page extends Model {
     }
 
     /**
+     * Retrouve une page rattachée à un parent, par exemple
+     * /solutions/software-platforms.
+     *
+     * Le rattachement est une donnée (`pages.parent_slug`), pas une convention
+     * de nommage : une page enfant garde un slug court et lisible, et le couple
+     * parent + slug identifie l'URL. Voir HomeController::doRenderPage, qui
+     * redirige en 301 toute tentative d'accès à l'URL non imbriquée — une page
+     * enfant n'a qu'une seule adresse, jamais deux (leçon DT-05).
+     */
+    public static function findChild(string $parentSlug, string $childSlug): ?array {
+        if ($parentSlug === '' || $childSlug === '') { return null; }
+        $sql = "SELECT * FROM " . static::$table . "
+                WHERE slug = :child AND parent_slug = :parent LIMIT 1";
+        return Database::fetch($sql, ['child' => $childSlug, 'parent' => $parentSlug]);
+    }
+
+    /** Pages rattachées à un parent, dans l'ordre d'affichage. */
+    public static function childrenOf(string $parentSlug): array {
+        if ($parentSlug === '') { return []; }
+        return Database::fetchAll(
+            "SELECT * FROM " . static::$table . "
+             WHERE parent_slug = :parent AND status = 'published'
+             ORDER BY sort_order ASC, id ASC",
+            ['parent' => $parentSlug]
+        ) ?: [];
+    }
+
+    /**
      * Create a new page.
      */
     public static function createPage(string $title, string $slug, string $metaTitle = '', string $metaDescription = '', string $status = 'draft'): string {

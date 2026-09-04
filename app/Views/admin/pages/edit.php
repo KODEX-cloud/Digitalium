@@ -1462,6 +1462,7 @@ if (empty($selectedLogo)) {
                             <option value="projects_cms">Réalisations — grille filtrable (module Réalisations)</option>
                             <option value="services_grid_v2">Services — cartes verticales</option>
                             <option value="capabilities_grid">Expertises — grille compacte</option>
+                            <option value="needs_router">Besoins — aiguillage « Je veux… »</option>
                             <option value="problems_solutions">Problèmes → Solutions</option>
                             <option value="process_timeline">Processus — frise détaillée</option>
                             <option value="process_strip">Processus — bandeau compact</option>

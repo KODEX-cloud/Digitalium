@@ -14,6 +14,11 @@
  *            empty_text      message affiché quand aucune réalisation ne sort
  *            cta_text        libellé du bouton d'une carte
  *            show_filters    '0' pour masquer la barre de filtres
+ *            limit           n'afficher que les N premières réalisations
+ *                            (vide = toutes). Sert aux pages qui montrent un
+ *                            aperçu plutôt que le catalogue entier.
+ *            more_text       libellé du bouton « voir tout » sous la grille
+ *            more_url        sa destination (par défaut /realisations)
  *   groups : cat_value  valeur exacte de la catégorie enregistrée sur le projet
  *            cat_label  libellé affiché à la place (facultatif)
  *
@@ -24,6 +29,12 @@
 use App\Models\Project;
 
 $allProjects = Project::getPublic();
+
+/* Aperçu limité : la page Solutions ne montre que trois réalisations, la page
+   Réalisations les montre toutes. La coupe se fait ici, donc les filtres et le
+   compteur portent bien sur ce qui est réellement affiché. */
+$limit = (int)trim((string)($single['limit'] ?? ''));
+if ($limit > 0) { $allProjects = array_slice($allProjects, 0, $limit); }
 
 /* Catégories : celles déclarées en admin d'abord (ordre maîtrisé), sinon
    celles réellement présentes en base. Une catégorie déclarée mais qu'aucun
@@ -47,6 +58,7 @@ foreach (array_keys($usedCats) as $leftover) {
 
 $showFilters = (($single['show_filters'] ?? '1') !== '0') && count($filters) > 1;
 $ctaText     = trim((string)($single['cta_text'] ?? ''));
+$moreText    = trim((string)($single['more_text'] ?? ''));
 ?>
 
 <section class="section-padding projects-cms" id="projets" style="background:var(--bg-base);">
@@ -153,10 +165,32 @@ $ctaText     = trim((string)($single['cta_text'] ?? ''));
             <?php endif; ?>
         <?php endif; ?>
 
+            <?php if ($moreText !== '' && $allProjects): ?>
+                <div class="pj-more">
+                    <a class="pj-more-btn" href="<?= htmlspecialchars(url($single['more_url'] ?? '/realisations')) ?>">
+                        <?= htmlspecialchars($moreText) ?>
+                        <i data-lucide="arrow-right" style="width:16px;height:16px;"></i>
+                    </a>
+                </div>
+            <?php endif; ?>
+
     </div>
 </section>
 
 <style>
+.pj-more { display: flex; justify-content: center; margin-top: 38px; }
+.pj-more-btn {
+    display: inline-flex; align-items: center; gap: 9px;
+    padding: 14px 30px;
+    border-radius: 999px;
+    background: var(--primary);
+    color: #ffffff;
+    font-size: 0.92rem; font-weight: 650;
+    text-decoration: none;
+    transition: var(--transition);
+}
+.pj-more-btn:hover { transform: translateY(-2px); gap: 13px; box-shadow: var(--shadow-btn); }
+
 .pj-filters {
     display: flex; flex-wrap: wrap; justify-content: center;
     gap: 10px;

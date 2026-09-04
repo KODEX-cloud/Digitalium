@@ -4,6 +4,9 @@
         <div style="text-align: center; max-width: 600px; margin: 0 auto 3rem auto;" class="reveal">
             <span class="section-tag" style="display: inline-flex; align-items: center; gap: 8px; font-size: 0.68rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--primary); margin-bottom: 1rem;"><?= htmlspecialchars($single['tag'] ?? 'Processus') ?></span>
             <h2 class="section-title" style="color: var(--text-main); font-family: var(--font-heading);"><?= htmlspecialchars($single['title'] ?? 'Notre processus en 4 étapes') ?></h2>
+            <?php if (!empty($single['subtitle'])): ?>
+                <p class="section-subtitle" style="margin-top: 1rem;"><?= htmlspecialchars($single['subtitle']) ?></p>
+            <?php endif; ?>
         </div>
 
         <div class="process-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; max-width: 1100px; margin: 3rem auto 0 auto;">

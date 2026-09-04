@@ -549,18 +549,24 @@ class PageController extends Controller {
             ],
             'projects_cms' => [
                 ['tag', 'title', 'subtitle', 'filter_all', 'cta_text', 'show_filters',
+                 'limit', 'more_text', 'more_url',
                  'empty_text', 'empty_cta_text', 'empty_cta_url'],
                 ['cat_value', 'cat_label'],
                 3,
             ],
             'sectors_grid' => [
-                ['tag', 'title', 'subtitle'],
+                ['tag', 'title', 'subtitle', 'more_text', 'more_url'],
                 ['sec_num', 'sec_icon', 'sec_image', 'sec_title', 'sec_desc', 'sec_needs', 'sec_link', 'sec_link_text'],
                 3,
             ],
             'problems_solutions' => [
                 ['tag', 'title', 'subtitle', 'problem_label', 'solution_label', 'layout', 'columns'],
                 ['ps_icon', 'ps_problem', 'ps_solution', 'ps_detail'],
+                3,
+            ],
+            'needs_router' => [
+                ['tag', 'title', 'subtitle', 'intro_label'],
+                ['need_icon', 'need_text', 'need_solution', 'need_link'],
                 3,
             ],
             'capabilities_grid' => [
@@ -579,7 +585,7 @@ class PageController extends Controller {
                 3,
             ],
             'process_strip' => [
-                ['tag', 'title'],
+                ['tag', 'title', 'subtitle'],
                 ['proc_num', 'proc_icon', 'proc_title', 'proc_desc', 'proc_link'],
                 3,
             ],

@@ -72,8 +72,17 @@ if (!function_exists('url')) {
         if (empty($path)) {
             return '';
         }
+        // Un schéma exécutable dans un href transforme n'importe quel champ
+        // « lien » du CMS en vecteur de script : il suffit de saisir
+        // javascript:… dans un bouton pour que le clic exécute du code. Aucun
+        // lien du site n'en a besoin — vérifié par grep sur tout l'arbre, zéro
+        // occurrence. Ils deviennent une ancre morte plutôt qu'un lien actif.
+        if (preg_match('/^\s*(javascript|data|vbscript)\s*:/i', $path)) {
+            return '#';
+        }
+
         // Skip external protocols, phone/mail schemes, or fragments
-        if (preg_match('/^(https?:\/\/|mailto:|tel:|#|javascript:)/i', $path)) {
+        if (preg_match('/^(https?:\/\/|mailto:|tel:|#)/i', $path)) {
             return $path;
         }
         static $basePath = null;

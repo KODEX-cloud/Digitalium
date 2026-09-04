@@ -145,6 +145,13 @@ $router->post('/admin/api/system/recovery-run',      'RecoveryController@run');
 $router->get('/admin/api/system/recovery-diagnostic','RecoveryController@diagnostic');
 $router->post('/admin/api/system/recovery-maintenance','RecoveryController@maintenance');
 
+// --- Pages rattachées à un parent : /solutions/software-platforms ---
+// Deux segments, donc à déclarer APRÈS /blog/{slug} et /realisations/{slug}
+// (premier arrivé, premier servi) et AVANT le catch-all à un segment.
+// Toute nouvelle route à deux segments doit passer au-dessus de celle-ci.
+// Une URL imbriquée sans page correspondante renvoie 404.
+$router->get('/{parent}/{child}', 'HomeController@renderChild');
+
 // --- Dynamic Slug Route (Frontend Pages) ---
 // This must be placed last as it captures generic parameters.
 $router->get('/{slug}', 'HomeController@renderPage');
