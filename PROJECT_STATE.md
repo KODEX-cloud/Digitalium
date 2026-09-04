@@ -1,5 +1,79 @@
 # PROJECT_STATE — Digitalium Group CMS
-> Dernière mise à jour : 2026-08-31 — Homepage v2 — Refonte fidèle au visuel, 100% CMS
+> Dernière mise à jour : 2026-09-04 — Page Secteurs d'activité (/secteurs) + éditeur Pages CMS enrichi
+
+---
+
+## 2026-09-04 — PAGE « SECTEURS D'ACTIVITÉ » (/secteurs) + ÉDITEUR PAGES CMS ENRICHI
+
+Nouvelle page publique construite avec le système de design de l'accueil et de /service.
+**Zéro contenu dans les gabarits** : tout passe par `pages` → `sections` → `blocks` et reste
+éditable depuis `/admin/pages` (Règle #2).
+
+### Route
+| Route | Contrôleur | Note |
+|---|---|---|
+| `GET /secteurs` | `HomeController@renderPage` (catch-all `/{slug}`) | aucune route ajoutée — la page passe par le catch-all existant |
+| `POST /admin/pages/sections/toggle` | `PageController@toggleSection` | **nouvelle** — masquer/afficher une section sans la supprimer |
+
+### Nouveaux types de section
+- `sectors_grid` — cartes secteurs numérotées : `sec_num`, `sec_icon`, `sec_image`, `sec_title`, `sec_desc`, `sec_needs` (séparés par `|`), `sec_link`, `sec_link_text`
+- `problems_solutions` — paires constat → réponse : `ps_icon`, `ps_problem`, `ps_solution`, `ps_detail` (+ `problem_label`/`solution_label` en single)
+- `capabilities_grid` — expertises transversales : `cap_icon`, `cap_title`, `cap_desc`
+
+Fichiers : `app/Views/frontend/sections/{sectors_grid,problems_solutions,capabilities_grid}.php`.
+Les trois sont responsive (desktop / tablette / mobile) et n'utilisent que les variables de thème
+(`--primary`, `--border`, `--bg-card`…) — aucune couleur en dur.
+
+### Composition de la page (8 sections, ordre `sort_order` -1 → 6)
+| # | Type | Rôle |
+|---|---|---|
+| -1 | `hero_media_cards` | hero visuel + cartes flottantes (même gabarit que l'accueil) |
+| 0 | `process_strip` | Notre approche — 4 étapes |
+| 1 | `sectors_grid` | 8 secteurs |
+| 2 | `problems_solutions` | 4 paires problème → solution |
+| 3 | `capabilities_grid` | 6 expertises |
+| 4 | `process_timeline` | Notre méthode — 6 étapes |
+| 5 | `projects_showcase` | Réalisations — **copiées** depuis l'accueil, jamais inventées |
+| 6 | `cta` | CTA final |
+
+### Migration `database/build_sectors_page.php` — RÉCONCILIATEUR
+Suit la leçon de **BUG-HERO-01** : jamais de lock-file one-shot.
+- Existence, `status` et `sort_order` des 8 sections sont **réalignés à chaque déploiement**
+- Le **contenu n'est semé que si la section est vide** → aucune modification admin n'est écrasée
+- Insérée dans `.github/workflows/deploy.yml` (étape « Build Sectors Page », non bloquante)
+
+### Navigation — piège identifié et traité
+`app/Views/frontend/layout.php:330` lit **d'abord** le menu `primary` de la table `menus` et ne
+retombe sur les pages `in_navigation = 1` **que si ce menu est vide**. Poser `in_navigation = 1`
+ne suffit donc pas. La migration fait les deux :
+1. `pages.in_navigation = 1`, `status = 'published'`, `sort_order = service + 1`
+2. si un menu `primary` non vide existe → insertion idempotente d'un `menu_items` pointant la page,
+   au `sort_order` de l'entrée Services (l'ordre secondaire `id ASC` la place juste après, **sans
+   renuméroter** les entrées rangées à la main en admin)
+
+### Éditeur Pages CMS — enrichissements
+- `app/Views/admin/pages/edit.php` : sélecteur de type regroupé en deux `<optgroup>` — 14 types modernes / 9 legacy
+- `PageController::sectionSkeletons()` : squelettes de blocs **vides** pour les 13 types modernes → une section créée en admin arrive avec ses champs prêts à remplir, jamais avec du faux contenu
+- `PageController::guessBlockType()` : déduit le type de champ (`text`/`textarea`/`image`/`link`) depuis le nom de la clé
+- `PageController::toggleSection()` + pastille « Masquée » + bouton œil : **masquer/afficher** une section sans la supprimer (Règle #4)
+
+### Autres
+- `app/Views/frontend/sections/portfolio.php` : suppression des textes de repli codés en dur (`'Nos Réalisations Digitales'`, `'Découvrez mes projets…'`, badge « Réalisations ») — désormais conditionnels sur les blocs
+- `.gitignore` : ajout de `storage/*.lock`
+
+### Preuves (Règle #5)
+- Rendu isolé des 3 nouveaux gabarits × 3 scénarios (complet / minimal / vide) : **9/9 sans erreur**, balises équilibrées
+- `php -l` sur les 10 fichiers touchés : **10/10 OK**
+- Commit `a1034fe` → run GitHub Actions `33870521250` : **completed / success**
+- `GET https://digitaliumgroup.com/secteurs` → **HTTP 200**, 98 615 octets
+- Ordre des `<section>` en production : `hero-mc | process-strip | sectors-section | ps-section | caps-section | proc-timeline | projects-showcase-section | cta-sec` — **8 sections, aucun doublon**
+- Comptes : 4 cartes hero · 4 étapes approche · **8** cartes secteurs · **4** paires problème→solution · **6** expertises · **6** étapes méthode · **3** réalisations réelles
+- Navigation : `/secteurs` présent entre `/service` et `/blog`, classe `active` sur la page
+- Non-régression : `/` → 200, 10 sections inchangées · `/service` → 200, 5 sections inchangées
+
+### Points ouverts remontés à l'utilisateur
+- **Conflit de palette** : le logo Digitalium est bleu (`#003060` 16,4 %, `#0868B0`, `#00B0D0`) alors que `--primary` vaut `#1D6363` (vert, hérité de la référence fintech). Le brief /secteurs impose « uniquement les couleurs du logo », mais repeindre `--primary` modifierait **toute** la vitrine, accueil compris — que le même brief interdit de toucher. **Décision utilisateur requise.**
+- La table `projects` est **vide** : la section Réalisations de /secteurs reprend par copie les 3 projets réels déjà saisis dans `projects_showcase` de l'accueil. Aucun client, chiffre ou témoignage n'a été inventé.
 
 ---
 
