@@ -44,6 +44,9 @@ $cardLinkText = trim($single['card_link_text'] ?? '');
                             </div>
                         <?php endif; ?>
 
+                        <?php if (!empty($svc['svc_tag'])): ?>
+                            <span class="svc-v2-tag"><?= htmlspecialchars($svc['svc_tag']) ?></span>
+                        <?php endif; ?>
                         <?php if (!empty($svc['svc_title'])): ?>
                             <h3 class="svc-v2-title"><?= htmlspecialchars($svc['svc_title']) ?></h3>
                         <?php endif; ?>
@@ -107,6 +110,21 @@ $cardLinkText = trim($single['card_link_text'] ?? '');
     flex-shrink: 0;
     margin-bottom: 26px;
 }
+
+/* Catégorie du service (svc_tag) — masquée si le bloc n'est pas renseigné. */
+.svc-v2-tag {
+    display: inline-block;
+    margin-bottom: 10px;
+    padding: 4px 12px;
+    border-radius: 999px;
+    background: var(--badge-bg);
+    color: var(--badge-text);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+.svc-v2-card.is-featured .svc-v2-tag { background: rgba(255,255,255,0.18); color: #ffffff; }
 
 .svc-v2-title {
     font-size: 1.25rem;
