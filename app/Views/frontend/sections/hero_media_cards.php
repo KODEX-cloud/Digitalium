@@ -174,11 +174,18 @@ $bannerVars = $isWide
         </div>
 
         <div class="hero-mc-visual">
-            <?php if (!empty($single['image'])): ?>
+            <?php
+            /* En mode overlay le texte est blanc : le fond coloré doit exister
+               MÊME sans image, sinon on obtient du blanc sur blanc tant qu'aucun
+               visuel n'a été choisi en admin. Le cadre est donc toujours rendu ;
+               seule la balise <img> est conditionnelle. */
+            if ($isOverlay || !empty($single['image'])): ?>
                 <div class="hero-mc-media">
-                    <img src="<?= htmlspecialchars(url($single['image'])) ?>"
-                         alt="<?= htmlspecialchars($single['image_alt'] ?? ($single['title'] ?? '')) ?>"
-                         class="hero-mc-img">
+                    <?php if (!empty($single['image'])): ?>
+                        <img src="<?= htmlspecialchars(url($single['image'])) ?>"
+                             alt="<?= htmlspecialchars($single['image_alt'] ?? ($single['title'] ?? '')) ?>"
+                             class="hero-mc-img">
+                    <?php endif; ?>
                 </div>
             <?php endif; ?>
 
@@ -556,6 +563,9 @@ $bannerVars = $isWide
     inset: 0;
     height: 100%;
     min-height: 0;
+    /* Fond de sécurité : garantit un contraste suffisant pour le texte blanc
+       tant qu'aucun visuel n'est choisi, et pendant le chargement de l'image. */
+    background: var(--primary);
 }
 .hero-mc-overlay .hero-mc-img { height: 100%; min-height: 0; object-position: center 40%; }
 
