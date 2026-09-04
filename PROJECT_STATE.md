@@ -3,6 +3,42 @@
 
 ---
 
+### 2026-09-04 (suite) — Hero : mise en page « bandeau » administrable
+
+Demande : retirer les cartes flottantes de /secteurs et afficher un visuel 1300 × 400
+responsive et administrable.
+
+`hero_media_cards` étant **partagé par l'accueil, /service et /secteurs**, la mise en page
+est devenue un réglage CMS plutôt qu'une modification de structure — l'accueil n'est pas touché.
+
+**Nouveaux blocs single de `hero_media_cards`**
+| Bloc | Rôle | Défaut |
+|---|---|---|
+| `layout` | `split` (texte à gauche / visuel à droite) ou `banner` (texte en haut, bandeau large dessous) | `split` |
+| `image_max_width` | largeur maximale du bandeau, en px | `1300` |
+| `image_ratio` | proportions, ex. `1300 / 400` (`x` et `:` acceptés) | `1300 / 400` |
+| `image_ratio_mobile` | proportions sous 760px | `16 / 9` |
+
+- Proportions validées par regex : une saisie erronée retombe sur le défaut et **ne peut pas injecter de CSS**.
+- Le bandeau déborde du conteneur (1240px) pour atteindre 1300px, borné par `min(largeur, 100vw - 48px)` ; `.hero-mc` étant en `overflow: hidden`, aucun défilement horizontal n'est possible.
+- En mode bandeau, une carte flottante cesse de flotter et se range sous le visuel.
+- `guessBlockType` : les clés de réglage dérivées d'une image (`_ratio`, `_max_width`, `_alt`, `_width`, `_height`, `_position`) sont désormais des champs **texte**, plus des sélecteurs de média.
+
+**Page /secteurs** — hero en mode bandeau 1300 × 400 ; les 4 cartes flottantes sont retirées
+**une seule fois** via le drapeau `settings.sectors_hero_cards_removed` (visible et réarmable,
+contrairement à un fichier de verrou — leçon BUG-HERO-01). Les clés de mise en page ne sont
+posées **que si elles manquent** : une valeur changée en admin n'est jamais écrasée.
+
+**Preuves (Règle #5)**
+- Rendu isolé du hero sur 7 scénarios (split, banner, ratio invalide, `1600x500`, sans image, vide) : **7/7 sans erreur**
+- Sans clé `layout`, le rendu reste en `split` et n'émet aucune variable CSS
+- `php -l` sur les 3 fichiers touchés : **3/3 OK**
+- Commit `a02b444` → run `33871…` : **completed / success**
+- `/secteurs` → `<section class="hero-mc hero-mc-banner" style="--hero-banner-ratio:1300 / 400;--hero-banner-ratio-sm:16 / 9;--hero-banner-w:1300px;">`, **0 carte flottante**, image présente
+- Non-régression : `/` et `/service` → `hero-mc-split`, **4 cartes chacune**, inchangés
+
+---
+
 ## 2026-09-04 — PAGE « SECTEURS D'ACTIVITÉ » (/secteurs) + ÉDITEUR PAGES CMS ENRICHI
 
 Nouvelle page publique construite avec le système de design de l'accueil et de /service.
