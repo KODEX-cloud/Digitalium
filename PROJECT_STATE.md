@@ -3,6 +3,35 @@
 
 ---
 
+### 2026-09-04 (suite 7) — Couleur d'accent PAR PAGE + test du bleu logo sur /realisations
+
+Demande : essayer le bleu du logo sur la page Réalisations uniquement.
+
+Plutôt que de figer des couleurs dans les gabarits de cette page — ce qui aurait créé un second
+système de couleurs à maintenir et cassé l'administrabilité du thème —, **une page peut désormais
+porter sa propre couleur d'accent**.
+
+- Nouvelle colonne `pages.accent_color`.
+- Champ **vide** : la page suit le thème global, aucune règle n'est émise.
+- Champ **rempli** : `--primary` est surchargé pour cette page seulement, **en-tête et pied de page compris** — un header resté sur l'ancienne teinte aurait faussé la comparaison.
+- **Réversible** : vider le champ rend la page au thème global.
+- **Administrable** : sélecteur de couleur + saisie manuelle + bouton Vider dans Admin > Pages.
+
+**Validation stricte aux deux extrémités** : la vue n'émet la règle que si la valeur correspond à
+`#RGB` ou `#RRGGBB`, et le contrôleur enregistre une chaîne vide pour toute saisie non conforme.
+Une valeur ne peut donc ni s'échapper de la déclaration CSS, ni fermer la balise `<style>`.
+
+La migration pose `#003060` sur /realisations **une seule fois**, sous le drapeau
+`realisations_accent_test_v1` : vider le champ en admin le désactive définitivement.
+
+**Preuves (Règle #5)**
+- **12 valeurs** testées (`#003060`, `#abc`, vide, espaces, « red », sans dièse, trop court, trop long, `#003060; } body{display:none`, `</style><script>`, null) : aucune ne produit plus d'une déclaration, ni accolade, ni balise
+- Éditeur de pages : 14/14 assertions toujours OK · `php -l` : 4/4 OK
+- Commit `21ff6d3` → run **completed / success**
+- Production : `/realisations` → `<style id="page-accent">:root { --primary: #003060; --primary-dark: #003060; }</style>` · `/`, `/secteurs`, `/service` → **aucun accent**, thème global intact
+
+---
+
 ### 2026-09-04 (suite 6) — Page RÉALISATIONS / ÉTUDES DE CAS (/realisations)
 
 **Analyse préalable.** Le module Réalisations existait déjà : routes `/realisations` et
