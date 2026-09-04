@@ -17,3 +17,4 @@ conversations_viewer.html
 *.tmp
 .DS_Store
 Thumbs.db
+storage/*.lock

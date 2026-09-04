@@ -13,9 +13,16 @@ foreach ($projectsList as $proj) {
     <div class="container">
         
         <div class="section-header">
-            <span class="section-badge">Réalisations</span>
-            <h2 class="section-title"><?= htmlspecialchars($single['title'] ?? 'Nos Réalisations Digitales') ?></h2>
-            <p class="section-subtitle"><?= htmlspecialchars($single['subtitle'] ?? 'Découvrez mes projets de transformation digitale pour des clients variés.') ?></p>
+            <?php // Règle #2 — le badge et les textes viennent des blocs, plus du code. ?>
+            <?php if (!empty($single['tag'])): ?>
+                <span class="section-badge"><?= htmlspecialchars($single['tag']) ?></span>
+            <?php endif; ?>
+            <?php if (!empty($single['title'])): ?>
+                <h2 class="section-title"><?= htmlspecialchars($single['title']) ?></h2>
+            <?php endif; ?>
+            <?php if (!empty($single['subtitle'])): ?>
+                <p class="section-subtitle"><?= htmlspecialchars($single['subtitle']) ?></p>
+            <?php endif; ?>
         </div>
 
         <?php if (count($categories) > 1): ?>

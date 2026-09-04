@@ -1005,16 +1005,25 @@ if (empty($selectedLogo)) {
                          ondragend="dragEnd(event)" 
                          onclick="switchSection(<?= $sec['id'] ?>)">
                         
+                        <?php $secActive = ($sec['status'] ?? 'active') === 'active'; ?>
                         <div class="section-meta-left">
                             <i data-lucide="grip-vertical" class="section-icon" style="cursor: grab; width: 16px; height: 16px;"></i>
-                            <span class="section-name-text" id="nav-text-<?= $sec['id'] ?>"><?= htmlspecialchars($sec['name']) ?></span>
+                            <span class="section-name-text" id="nav-text-<?= $sec['id'] ?>" style="<?= $secActive ? '' : 'opacity:0.45;text-decoration:line-through;' ?>"><?= htmlspecialchars($sec['name']) ?></span>
+                            <?php if (!$secActive): ?>
+                                <span id="nav-off-<?= $sec['id'] ?>" style="font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);border:1px solid var(--border);border-radius:100px;padding:1px 7px;margin-left:6px;">Masquée</span>
+                            <?php endif; ?>
                         </div>
-                        
+
                         <div class="section-actions">
-                            <button class="action-btn-small" onclick="renameSection(<?= $sec['id'] ?>, event)">
+                            <button class="action-btn-small" onclick="toggleSection(<?= $sec['id'] ?>, event)"
+                                    id="toggle-sec-<?= $sec['id'] ?>"
+                                    title="<?= $secActive ? 'Masquer cette section du site (contenu conservé)' : 'Afficher cette section sur le site' ?>">
+                                <i data-lucide="<?= $secActive ? 'eye' : 'eye-off' ?>" style="width: 14px; height: 14px;"></i>
+                            </button>
+                            <button class="action-btn-small" onclick="renameSection(<?= $sec['id'] ?>, event)" title="Renommer">
                                 <i data-lucide="edit-2" style="width: 14px; height: 14px;"></i>
                             </button>
-                            <button class="action-btn-small delete-sec" onclick="deleteSection(<?= $sec['id'] ?>, event)">
+                            <button class="action-btn-small delete-sec" onclick="deleteSection(<?= $sec['id'] ?>, event)" title="Supprimer définitivement">
                                 <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i>
                             </button>
                         </div>
@@ -1208,14 +1217,33 @@ if (empty($selectedLogo)) {
                 <div class="admin-form-group">
                     <label for="new_sec_type">Modèle visuel / Type</label>
                     <select id="new_sec_type" class="admin-select" required>
-                        <option value="hero">Hero Banner</option>
-                        <option value="services">Services</option>
-                        <option value="portfolio">Portfolio</option>
-                        <option value="team">Team</option>
-                        <option value="testimonials">Témoignages</option>
-                        <option value="faq">FAQ</option>
-                        <option value="blog">Blog</option>
-                        <option value="contact">Contact</option>
+                        <optgroup label="Modèles actuels (design système v2)">
+                            <option value="hero_media_cards">Hero — visuel + cartes flottantes</option>
+                            <option value="sectors_grid">Secteurs — grille numérotée</option>
+                            <option value="services_grid_v2">Services — cartes verticales</option>
+                            <option value="capabilities_grid">Expertises — grille compacte</option>
+                            <option value="problems_solutions">Problèmes → Solutions</option>
+                            <option value="process_timeline">Processus — frise détaillée</option>
+                            <option value="process_strip">Processus — bandeau compact</option>
+                            <option value="stats_intro">Intro + chiffres clés</option>
+                            <option value="about_visual">À propos — visuel + checklist</option>
+                            <option value="projects_showcase">Réalisations — vitrine</option>
+                            <option value="testimonials_carousel">Témoignages — carrousel</option>
+                            <option value="logos_strip">Bandeau de logos clients</option>
+                            <option value="team">Équipe</option>
+                            <option value="cta">Bandeau CTA</option>
+                        </optgroup>
+                        <optgroup label="Modèles hérités">
+                            <option value="hero">Hero Banner (ancien)</option>
+                            <option value="services">Services (ancien)</option>
+                            <option value="services_grid">Services — grille (ancien)</option>
+                            <option value="portfolio">Portfolio (lit la table Réalisations)</option>
+                            <option value="testimonials">Témoignages (ancien)</option>
+                            <option value="testimonials_grid">Témoignages — grille</option>
+                            <option value="faq">FAQ</option>
+                            <option value="blog">Blog</option>
+                            <option value="contact">Contact</option>
+                        </optgroup>
                     </select>
                 </div>
 
@@ -1362,9 +1390,37 @@ if (empty($selectedLogo)) {
         }
     }
 
+    /**
+     * Active / désactive une section sans toucher à son contenu.
+     * Une section masquée disparaît du site public mais garde tous ses blocs :
+     * c'est l'alternative sûre à la suppression.
+     */
+    function toggleSection(sectionId, e) {
+        e.stopPropagation();
+
+        const formData = new FormData();
+        formData.append('section_id', sectionId);
+        formData.append('csrf_token', '<?= htmlspecialchars($csrf_token) ?>');
+
+        fetch(BASE_URL + '/admin/pages/sections/toggle', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showNotification(data.message, 'success');
+                setTimeout(() => window.location.reload(), 500);
+            } else {
+                showNotification(data.error || 'Erreur inattendue.', 'error');
+            }
+        })
+        .catch(() => showNotification('Erreur réseau.', 'error'));
+    }
+
     function deleteSection(sectionId, e) {
         e.stopPropagation();
-        if (!confirm('Supprimer définitivement cette section ?')) {
+        if (!confirm('Supprimer définitivement cette section ?\n\nPour la retirer du site en conservant son contenu, utilisez plutôt le bouton « œil » (masquer).')) {
             return;
         }
 

@@ -356,6 +356,13 @@ jobs:
                 echo "  ⚠ Fix Hero Badge v4 warning (non-bloquant)"
               fi
             fi
+            if [ -f "database/build_sectors_page.php" ]; then
+              if $PHP database/build_sectors_page.php 2>&1; then
+                echo "  ✓ Build Sectors Page OK"
+              else
+                echo "  ⚠ Build Sectors Page warning (non-bloquant)"
+              fi
+            fi
             if [ -f "database/build_footer_v5.php" ]; then
               if $PHP database/build_footer_v5.php 2>&1; then
                 echo "  ✓ Build Footer v5 OK"

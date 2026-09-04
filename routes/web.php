@@ -56,6 +56,7 @@ $router->post('/admin/pages/delete/{id}', 'PageController@deletePage');
 $router->post('/admin/pages/sections/add', 'PageController@addSection');
 $router->post('/admin/pages/sections/sort', 'PageController@sortSections');
 $router->post('/admin/pages/sections/delete', 'PageController@deleteSection');
+$router->post('/admin/pages/sections/toggle', 'PageController@toggleSection');
 $router->post('/admin/pages/blocks/update', 'PageController@updateBlocks');
 $router->post('/admin/pages/blocks/group-add', 'PageController@addGroup');
 $router->post('/admin/pages/blocks/group-delete', 'PageController@deleteGroup');

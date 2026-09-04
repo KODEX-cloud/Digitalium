@@ -319,6 +319,45 @@ class PageController extends Controller {
     }
 
     /**
+     * AJAX API: activer / désactiver une section sans la supprimer.
+     *
+     * Une section inactive n'est plus rendue sur le site (Section::getActiveByPage
+     * filtre sur status = 'active') mais conserve tout son contenu : c'est le
+     * moyen sûr de retirer un bloc d'une page, par opposition à la suppression
+     * qui détruit les blocs (Règle #4).
+     */
+    public function toggleSection(): void {
+        $this->middlewareAuth();
+        $this->validateCsrf();
+
+        $sectionId = (int)($_POST['section_id'] ?? 0);
+        if ($sectionId <= 0) {
+            $this->json(['error' => 'Section invalide.'], 400);
+        }
+
+        $section = \App\Services\Database::fetch(
+            "SELECT id, status FROM sections WHERE id = :id",
+            ['id' => $sectionId]
+        );
+        if (!$section) {
+            $this->json(['error' => 'Section introuvable.'], 404);
+        }
+
+        $next = (($section['status'] ?? 'active') === 'active') ? 'inactive' : 'active';
+        \App\Services\Database::query(
+            "UPDATE sections SET status = :s WHERE id = :id",
+            ['s' => $next, 'id' => $sectionId]
+        );
+        \App\Services\Cache::clear();
+
+        $this->json([
+            'success' => true,
+            'status'  => $next,
+            'message' => $next === 'active' ? 'Section activée.' : 'Section désactivée (contenu conservé).'
+        ]);
+    }
+
+    /**
      * AJAX API: Update section blocks.
      */
     public function updateBlocks(): void {
@@ -460,7 +499,128 @@ class PageController extends Controller {
                 Block::setVal($sectionId, 'contact_address', 'textarea', 'Paris, France');
                 Block::setVal($sectionId, 'cta_label', 'text', 'Envoyer');
                 break;
+
+            // ── Modèles du design système v2 ────────────────────────────────
+            // Chaque type crée ses clés VIDES : l'éditeur de blocs étant
+            // générique, l'administrateur voit immédiatement tous les champs
+            // disponibles et les remplit lui-même. Aucun texte de démonstration
+            // n'est injecté en base (Règle #2 : pas de contenu écrit par le code).
+            default:
+                $skeletons = self::sectionSkeletons();
+                if (!isset($skeletons[$type])) {
+                    break;
+                }
+                [$singles, $groupKeys, $groupCount] = $skeletons[$type];
+                foreach ($singles as $i => $key) {
+                    Block::setVal($sectionId, $key, self::guessBlockType($key), '', null, $i);
+                }
+                for ($g = 1; $g <= $groupCount; $g++) {
+                    foreach ($groupKeys as $i => $key) {
+                        Block::setVal($sectionId, $key, self::guessBlockType($key), '', $g, $g - 1);
+                    }
+                }
+                break;
         }
+    }
+
+    /**
+     * Champs attendus par chaque modèle du design système v2.
+     * Format : type => [clés uniques, clés répétables, nombre de groupes créés].
+     *
+     * Source de vérité pour l'éditeur : ajouter une section pré-crée ces champs,
+     * que l'administrateur retrouve vides et renseigne depuis /admin/pages.
+     */
+    public static function sectionSkeletons(): array {
+        return [
+            'hero_media_cards' => [
+                ['badge', 'title', 'title_accent', 'text', 'cta1_text', 'cta1_url', 'cta1_icon',
+                 'cta2_text', 'cta2_url', 'cta2_icon', 'image', 'image_alt', 'decor'],
+                ['card_icon', 'card_label', 'card_badge', 'card_value', 'card_unit',
+                 'card_title', 'card_meta', 'card_progress', 'card_avatar', 'card_top', 'card_left'],
+                3,
+            ],
+            'sectors_grid' => [
+                ['tag', 'title', 'subtitle'],
+                ['sec_num', 'sec_icon', 'sec_image', 'sec_title', 'sec_desc', 'sec_needs', 'sec_link', 'sec_link_text'],
+                3,
+            ],
+            'problems_solutions' => [
+                ['tag', 'title', 'subtitle', 'problem_label', 'solution_label'],
+                ['ps_icon', 'ps_problem', 'ps_solution', 'ps_detail'],
+                3,
+            ],
+            'capabilities_grid' => [
+                ['tag', 'title', 'subtitle'],
+                ['cap_icon', 'cap_title', 'cap_desc'],
+                3,
+            ],
+            'services_grid_v2' => [
+                ['tag', 'title', 'subtitle', 'card_link_text'],
+                ['svc_icon', 'svc_tag', 'svc_title', 'svc_points', 'svc_link', 'svc_featured'],
+                3,
+            ],
+            'process_timeline' => [
+                ['tag', 'title'],
+                ['proc_num', 'proc_icon', 'proc_title', 'proc_desc'],
+                3,
+            ],
+            'process_strip' => [
+                ['tag', 'title'],
+                ['proc_num', 'proc_icon', 'proc_title', 'proc_desc', 'proc_link'],
+                3,
+            ],
+            'stats_intro' => [
+                ['badge', 'title', 'description', 'link_text', 'link_url'],
+                ['stat_icon', 'stat_value', 'stat_label', 'stat_desc'],
+                4,
+            ],
+            'about_visual' => [
+                ['image', 'badge_years', 'badge_label', 'tag', 'title', 'description',
+                 'check_1', 'check_2', 'check_3', 'check_4', 'check_5'],
+                [],
+                0,
+            ],
+            'projects_showcase' => [
+                ['tag', 'title', 'subtitle', 'result_label', 'more_text', 'more_url'],
+                ['proj_image', 'proj_category', 'proj_title', 'proj_desc', 'proj_result', 'proj_link'],
+                3,
+            ],
+            'testimonials_carousel' => [
+                ['tag', 'title', 'subtitle'],
+                ['client_quote', 'client_name', 'client_role', 'client_avatar'],
+                3,
+            ],
+            'logos_strip' => [
+                ['title'],
+                ['logo_name', 'logo_icon', 'logo_image', 'logo_link'],
+                4,
+            ],
+            'cta' => [
+                ['eyebrow', 'title', 'subtitle', 'cta_text', 'cta_url', 'cta2_text', 'cta2_url'],
+                [],
+                0,
+            ],
+        ];
+    }
+
+    /**
+     * Déduit le type d'éditeur à afficher pour une clé de bloc, afin que
+     * l'éditeur générique propose le bon champ (média, lien, texte long…).
+     */
+    private static function guessBlockType(string $key): string {
+        // Les clés se terminant par _text sont des LIBELLÉS courts
+        // (cta1_text, sec_link_text, more_text…) : champ simple, pas un lien.
+        if (str_ends_with($key, '_text')) { return 'text'; }
+
+        if (str_contains($key, 'image') || str_contains($key, 'avatar')) { return 'image'; }
+        if (str_contains($key, 'url') || str_contains($key, 'link')) { return 'link'; }
+
+        $longFields = ['text', 'subtitle', 'description', 'ps_problem', 'ps_solution'];
+        if (in_array($key, $longFields, true)) { return 'textarea'; }
+        foreach (['desc', 'quote', 'points', 'needs', 'detail'] as $needle) {
+            if (str_contains($key, $needle)) { return 'textarea'; }
+        }
+        return 'text';
     }
 
     /**
