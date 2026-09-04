@@ -577,6 +577,75 @@ est absent, donc jamais réécrit une fois personnalisé.
 
 ---
 
+## 2026-09-04 — INCIDENT BUG-HERO-01 : page d'accueil sans hero (commit 6a5865e)
+
+### Symptôme
+
+Après le déploiement du hero v4, la page d'accueil s'est retrouvée **sans aucun
+hero** : l'ancien désactivé (`hero_status = 0`), le nouveau absent du rendu.
+Production : 9 sections au lieu de 10, `hero_media_cards` non rendue.
+
+### Cause racine
+
+`database/build_home_v2.php:91-96` désactive toute section dont le type n'est pas
+listé dans `$targetTypes` :
+
+```php
+foreach ($existingSections as $sec) {
+    if (!in_array($sec['type'], $targetTypes, true)) {
+        Database::query("UPDATE sections SET status = 'inactive' WHERE id = :id", ...);
+    }
+}
+```
+
+`hero_media_cards` n'y figurait pas → passée en `inactive` au déploiement suivant
+sa création. `build_hero_v4.php` étant un **one-shot verrouillé**, il sortait dès
+la première ligne et ne la réactivait jamais.
+
+### Fausses pistes écartées en chemin
+
+| Hypothèse | Vérification | Verdict |
+|---|---|---|
+| Garde `hero_variant !== 'hero_corporate'` (fix_hero_layout_v2.php:49) | script autonome sans garde déployé — badge toujours absent | **fausse** |
+| Passe de déduplication (fix_hero_layout_v2.php:250) | n'agit qu'à partir de 2 sections actives de même type | **fausse** |
+| Échec du déploiement | API GitHub Actions : 3 runs `completed/success` | **fausse** |
+
+Le diagnostic n'a abouti qu'en comptant les sections réellement rendues plutôt
+qu'en cherchant le seul badge manquant.
+
+### Correctifs
+
+1. `hero_media_cards` ajouté à `$targetTypes` (`build_home_v2.php`) — plus jamais
+   désactivé, quel que soit l'état de `storage/homepage_v2.lock`.
+2. `build_hero_v4.php` devient **réconciliateur** : à chaque déploiement il
+   réaligne existence, statut actif et position de la section. Auto-réparateur.
+3. Position fixée à `sort_order = -1`, en amont des sections 0..N réordonnées par
+   `build_home_v2` — supprime l'égalité de tri avec `logos_strip`.
+
+Le contenu reste protégé : blocs semés uniquement si la section est vide,
+`pages.hero_status` touché uniquement au premier passage (verrou `hero_v4.lock`).
+
+### Leçon d'architecture
+
+Tout nouveau type de section destiné à la page d'accueil **doit** être déclaré
+dans `$targetTypes` de `build_home_v2.php`, sinon il est désactivé au déploiement
+suivant. À vérifier systématiquement (voir Règle #8).
+
+### Preuve de production (Règle #5)
+
+```
+HTTP 200 · 100KB
+sections : 10 · 1re = hero_media_cards · 0 doublon
+ancien hero .premium-hero : 0 occurrence
+badge  : "Transformation digitale"
+titre  : "Digitaliser. / Automatiser."  accent : "Faire avancer votre entreprise."
+CTA    : "Découvrir nos services" | "Demander un audit"
+image  : présente        décors : présents
+cartes : 4 — Clients accompagnés | Taux de satisfaction | Premier échange | Vos données
+```
+
+---
+
 ## FICHIERS INTOUCHABLES SANS ANALYSE
 
 - `app/Services/Router.php`
