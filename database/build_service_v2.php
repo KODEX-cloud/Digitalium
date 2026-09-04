@@ -138,6 +138,23 @@ try {
             echo "  services_grid_v2.card_link_text -> 'Découvrir'\n";
         }
         $groups = $content['groups'] ?? [];
+
+        // L'ancien gabarit `services_grid` liait chaque carte via
+        // `$svc['svc_link'] ?? '/contact'` : la destination était CODÉE EN DUR et
+        // aucune carte n'avait de bloc `svc_link`. On migre ce repli vers le CMS
+        // (Règle #2) — sans quoi ni la flèche ni le bouton de la carte mise en
+        // avant ne s'affichent, et le lien devient éditable en admin.
+        $linked = 0;
+        foreach ($groups as $g) {
+            if (empty($g['svc_link'])) {
+                Block::setVal($secId, 'svc_link', 'link', '/contact', (int)$g['_group_id'], (int)($g['_sort_order'] ?? 0));
+                $linked++;
+            }
+        }
+        if ($linked > 0) {
+            echo "  services_grid_v2 : $linked lien(s) svc_link -> '/contact' (repli codé en dur migré vers le CMS).\n";
+        }
+
         $already = false;
         foreach ($groups as $g) {
             if (!empty($g['svc_featured']) && $g['svc_featured'] !== '0') { $already = true; break; }
