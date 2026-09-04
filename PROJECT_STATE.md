@@ -1,5 +1,25 @@
 # PROJECT_STATE — Digitalium Group CMS
-> Dernière mise à jour : 2026-09-04 — Dette de sécurité soldée (SEC-01..04, DT-04)
+> Dernière mise à jour : 2026-09-04 — /secteurs au hero plein cadre + dette de sécurité soldée
+
+---
+
+### 2026-09-04 (suite 11) — /secteurs passe au hero plein cadre
+
+Décision de l'utilisateur après le rendu de /realisations : appliquer le même format de hero à
+Secteurs d'activités. Les deux pages partagent déjà le gabarit `hero_media_cards` en mode
+`overlay`, elles héritaient donc du badge en pavé, du titre en capitales et du dégradé sombre ;
+seul le cadrage différait. `/secteurs` était borné à 1300px sur 420px de haut, ce qui, à côté du
+hero bord à bord des Réalisations, donnait l'impression de deux gabarits différents.
+
+- `database/build_sectors_page.php` : `image_max_width` → `full`, `overlay_min_height` → `560`,
+  dans le seed **et** dans les défauts posés a posteriori, pour qu'une installation neuve obtienne
+  directement le bon format.
+- Bascule de l'installation déjà en ligne par drapeau `sectors_hero_full_v1`, sur le modèle de
+  `realisations_hero_full_v1` : elle ne s'applique **que si les valeurs sont restées `1300` et
+  `420`**, c'est-à-dire celles que ce script avait écrites. Un réglage fait depuis l'admin n'est
+  pas écrasé, et le script le dit dans sa sortie.
+- Aucune modification du gabarit : le mode plein cadre existait déjà (`.hero-ov-full`), c'est un
+  changement de contenu CMS, pas de code de rendu.
 
 ---
 

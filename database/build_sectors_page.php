@@ -225,11 +225,11 @@ try {
         'decor'            => '1',
         // Texte centré par-dessus le visuel, voile teinté, aucune carte flottante.
         'layout'             => 'overlay',
-        'image_max_width'    => '1300',
+        'image_max_width'    => 'full',
         'image_ratio'        => '1300 / 400',
         'image_ratio_mobile' => '16 / 9',
         'overlay_opacity'    => '62',
-        'overlay_min_height' => '420',
+        'overlay_min_height' => '560',
         'image_radius'       => '0',
     ]);
 
@@ -248,11 +248,11 @@ try {
 
     $heroDefaults = [
         'layout'             => ['text', 'overlay'],
-        'image_max_width'    => ['text', '1300'],
+        'image_max_width'    => ['text', 'full'],
         'image_ratio'        => ['text', '1300 / 400'],
         'image_ratio_mobile' => ['text', '16 / 9'],
         'overlay_opacity'    => ['text', '62'],
-        'overlay_min_height' => ['text', '420'],
+        'overlay_min_height' => ['text', '560'],
         // Posé explicitement pour que le réglage soit visible en admin plutôt
         // que de rester implicite dans le défaut du gabarit.
         'image_radius'       => ['text', '0'],
@@ -281,6 +281,30 @@ try {
             echo "    hero : mise en page bandeau → overlay.\n";
         }
         Setting::setVal('sectors_hero_overlay_v1', '1');
+    }
+
+    /**
+     * Alignement sur le format retenu pour /realisations : visuel bord à bord
+     * sur toute la largeur de l'écran, et hauteur portée à 560px. Le format
+     * borné à 1300px donnait, à côté du hero pleine largeur des Réalisations,
+     * l'impression de deux gabarits différents pour un même site.
+     *
+     * Bascule UNIQUE, et seulement si les valeurs sont restées celles que ce
+     * script avait écrites : un réglage fait en admin n'est pas écrasé.
+     */
+    if (!Setting::getVal('sectors_hero_full_v1')) {
+        $heroNow = Block::getStructuredContent($id)['single'] ?? [];
+        $changed = [];
+        if (($heroNow['image_max_width'] ?? '') === '1300') {
+            Block::setVal($id, 'image_max_width', 'text', 'full');
+            $changed[] = 'largeur → full';
+        }
+        if (($heroNow['overlay_min_height'] ?? '') === '420') {
+            Block::setVal($id, 'overlay_min_height', 'text', '560');
+            $changed[] = 'hauteur → 560';
+        }
+        Setting::setVal('sectors_hero_full_v1', '1');
+        echo "    hero plein cadre : " . ($changed ? implode(', ', $changed) : 'réglages déjà personnalisés, rien touché') . ".\n";
     }
 
     if (!Setting::getVal('sectors_hero_cards_removed')) {
