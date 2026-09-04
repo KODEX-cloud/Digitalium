@@ -3,6 +3,44 @@
 
 ---
 
+### 2026-09-04 (suite 2) — Hero « overlay » + disposition des cartes problème/solution
+
+**Hero — correction d'une mauvaise lecture de la demande.** La référence fournie montre le texte
+centré **par-dessus** l'image, voilée pour rester lisible. Le mode `banner` livré juste avant
+plaçait le texte au-dessus et l'image dessous : ce n'était pas cela.
+
+Nouveau `layout = overlay` sur `hero_media_cards` :
+| Bloc | Rôle | Défaut |
+|---|---|---|
+| `layout` | `split` · `banner` · `overlay` | `split` |
+| `overlay_opacity` | intensité du voile, 0 à 100 | `62` |
+| `overlay_min_height` | hauteur minimale du visuel, en px | `420` |
+
+- Texte et visuel occupent la **même cellule de grille** : aucun décalage possible, quelle que soit la longueur du titre.
+- Voile en dégradé à la couleur de marque ; l'opacité est portée par `opacity` plutôt que par un `calc()` imbriqué dans `color-mix`, dont le support est plus incertain.
+- Hauteur réelle = le plus grand des deux, proportions du visuel ou hauteur du texte → le titre ne peut jamais déborder du cadre.
+- Sur fond photo, le bouton principal passe en **blanc plein** (à la couleur de marque il se serait fondu dans le voile) et le secondaire en contour clair.
+- En mode overlay, cartes flottantes et décors ne sont pas rendus : ils n'ont plus de panneau sur lequel se poser.
+- `layout` est validé contre une **liste blanche** : une valeur inconnue retombe sur `split` et ne peut rien injecter dans l'attribut `class`.
+
+/secteurs : bascule **unique** `banner` → `overlay` via `settings.sectors_hero_overlay_v1`, et
+seulement si la valeur est restée celle écrite par le script — un choix fait en admin est respecté.
+
+**Cartes problème/solution — disposition corrigée**
+- `align-items: stretch` : les deux côtés occupent toute la hauteur, le constat ne flotte plus au milieu d'un vide
+- le constat reçoit sa **propre surface teintée** avec filet latéral : la moitié gauche se lisait comme un blanc, elle se lit maintenant comme un des deux termes
+- colonnes rebalancées `0.95fr / 44px / 1.3fr`, titre de réponse porté à 1.12rem
+- palier intermédiaire à 1000px avant le passage en colonne unique à 860px
+
+**Preuves (Règle #5)**
+- Hero : **12 scénarios** (split, banner, overlay, opacité 0 / 999 / texte, hauteur invalide, sans image, `layout` hostile, ratio invalide, vide) → 12/12 sans erreur, balises équilibrées, opacité bornée 0-1, **aucune injection**
+- `problems_solutions` : 3/3 sans erreur · `php -l` : 4/4 OK
+- Commit `af7947b` → run **completed / success**
+- `/secteurs` → `hero-mc-overlay`, `--hero-overlay-a:0.62`, **0 carte**, **0 décor**, 4 `ps-row` avec panneau constat
+- Non-régression : `/` → `hero-mc-split`, **4 cartes**, inchangé
+
+---
+
 ### 2026-09-04 (suite) — Hero : mise en page « bandeau » administrable
 
 Demande : retirer les cartes flottantes de /secteurs et afficher un visuel 1300 × 400
