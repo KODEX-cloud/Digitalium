@@ -3,6 +3,45 @@
 
 ---
 
+### 2026-09-04 (suite 3) — Hero aligné à gauche, angles droits, et lecture verticale des paires
+
+**Bug corrigé — bouton principal invisible.** `.hero-mc-btn-primary` porte `color: #ffffff !important`
+dans la règle de base ; en mode overlay le bouton passe en blanc plein, le libellé était donc
+**blanc sur blanc**. Corrigé avec la même priorité, sur le bouton principal et le secondaire.
+
+**Hero — trois changements**
+- Le texte ne s'étale plus sur toute l'image : il est **aligné à gauche**, borné à 600px, pour dégager la moitié droite de la photo.
+- Le voile devient un **dégradé horizontal** — dense à gauche sous le texte, transparent à droite. Un voile plein masquait la photo. Sous 760px, où le texte occupe toute la largeur, il redevient vertical.
+- **Angles droits** sur le visuel : `border-radius` passe à `0` par défaut et devient administrable via le bloc `image_radius` (px). S'applique aux trois mises en page — donc aussi à l'accueil et à /service.
+
+**Section `problems_solutions` — lecture verticale**
+| Bloc | Rôle | Défaut |
+|---|---|---|
+| `layout` | `stack` (constat au-dessus, flèche descendante, réponse dessous) ou `row` (côte à côte) | `stack` |
+| `columns` | nombre de colonnes de la grille, 1 à 4 | `2` |
+
+Une paire unique occupe toujours la largeur, sans grille. Sous 860px la grille passe en colonne
+unique quel que soit le réglage.
+
+**Incident de déploiement — DEP-01**
+Le run du commit `8955cb7` a échoué à l'étape « SSH — Deploy Enterprise ». Diagnostic **par preuve
+et non par supposition** : les pages en ligne ne contenaient pas `--hero-media-radius` et leur
+dégradé était resté en `180deg` → le `git pull` n'avait pas eu lieu, la production était intacte sur
+le commit précédent. Le job « PHP Syntax Validation » étant passé et l'échec se situant avant le
+pull, la cause n'était pas le code. Même étape, même symptôme que l'échec transitoire du footer
+(commit `bb47e27`). Relance par le commit `66b837f` → **success**.
+*Note : les logs d'étape GitHub Actions renvoient 403 sans authentification ; le diagnostic doit
+passer par l'observation de la production, jamais par une supposition.*
+
+**Preuves (Règle #5)**
+- `problems_solutions` : **10 scénarios** (stack, row, sans réglage, 3 colonnes, colonnes 0 / 99 / texte, `layout` hostile, paire unique, vide) → 10/10 sans erreur, valeurs bornées, aucune injection
+- Hero : **12 scénarios** → 12/12 ; variable d'arrondi émise dans les trois modes, saisie hostile (`9"><b>`) neutralisée en `0px`
+- `php -l` : 4/4 OK · Commit `66b837f` → run **completed / success**
+- `/secteurs` → `hero-mc-overlay` avec `--hero-media-radius:0px`, `<div class="ps-list ps-list-stack" style="--ps-cols:2;">`, **4** `ps-row`, **0** carte flottante
+- `/` et `/service` → `hero-mc-split` avec `--hero-media-radius:0px`, **4 cartes** chacune
+
+---
+
 ### 2026-09-04 (suite 2) — Hero « overlay » + disposition des cartes problème/solution
 
 **Hero — correction d'une mauvaise lecture de la demande.** La référence fournie montre le texte
