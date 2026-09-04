@@ -293,6 +293,27 @@
         <?php endforeach; ?>
     }</style>
     <?php endif; ?>
+    <?php
+    /**
+     * Couleur d'accent PAR PAGE.
+     *
+     * Champ vide : la page suit le thème global, rien n'est émis. Champ rempli :
+     * la couleur ne s'applique qu'à cette page — en-tête et pied de page
+     * compris, sinon un header resté sur l'ancienne teinte fausserait la
+     * comparaison. Aucune couleur n'est figée dans les gabarits : tout reste
+     * piloté par `--primary`, donc réversible en vidant le champ.
+     *
+     * Format validé : #RGB ou #RRGGBB uniquement. Une saisie non conforme est
+     * ignorée et ne peut donc rien injecter dans la feuille de style.
+     */
+    $pageAccent = trim((string)($page['accent_color'] ?? ''));
+    if ($pageAccent !== '' && preg_match('/^#([0-9a-f]{3}|[0-9a-f]{6})$/i', $pageAccent)):
+    ?>
+    <style id="page-accent">:root {
+        --primary: <?= htmlspecialchars($pageAccent, ENT_QUOTES) ?>;
+        --primary-dark: <?= htmlspecialchars($pageAccent, ENT_QUOTES) ?>;
+    }</style>
+    <?php endif; ?>
 </head>
 <body>
 

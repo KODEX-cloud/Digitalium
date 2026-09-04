@@ -78,6 +78,19 @@ try {
     $nbProjects = (int)($pdo->query("SELECT COUNT(*) AS n FROM `projects`")->fetch()['n'] ?? 0);
     echo "Réalisations enregistrées : $nbProjects\n";
 
+    // ── 1 bis. Couleur d'accent par page ────────────────────────────────────
+    // Fonctionnalité générale du CMS : une page peut porter sa propre couleur
+    // d'accent. Champ vide = thème global. Permet d'essayer une teinte sur une
+    // seule page sans repeindre tout le site ni figer de couleur dans le code.
+    $pageCols = [];
+    foreach ($pdo->query("SHOW COLUMNS FROM `pages`") as $col) { $pageCols[$col['Field']] = true; }
+    if (!isset($pageCols['accent_color'])) {
+        $pdo->exec("ALTER TABLE `pages` ADD COLUMN `accent_color` VARCHAR(20) NULL");
+        echo "Colonne `accent_color` ajoutée à `pages`.\n";
+    } else {
+        echo "Colonne `accent_color` déjà présente.\n";
+    }
+
     // ── 2. Page CMS ─────────────────────────────────────────────────────────
     $page = Page::findBySlug('realisations');
     if (!$page) {
@@ -331,6 +344,25 @@ try {
     }
     echo "\nLibellés d'étude de cas : " . count($addedLabels) . " ajouté(s), "
        . (count($caseLabels) - count($addedLabels)) . " déjà présent(s).\n";
+
+    /**
+     * Test de palette demandé : bleu du logo sur CETTE page uniquement.
+     * Posé UNE SEULE FOIS. Vider le champ en admin le désactive définitivement,
+     * la reprise ne le réécrira pas — sinon le réglage serait inannulable.
+     */
+    $accentFlag = Database::fetch("SELECT id FROM settings WHERE setting_key = 'realisations_accent_test_v1' LIMIT 1");
+    if (!$accentFlag) {
+        Database::query(
+            "UPDATE pages SET accent_color = :c WHERE id = :id",
+            ['c' => '#003060', 'id' => $pageId]
+        );
+        Database::query(
+            "INSERT INTO settings (setting_key, setting_value) VALUES ('realisations_accent_test_v1', '1')"
+        );
+        echo "Accent de page posé : #003060 (bleu du logo), sur /realisations uniquement.\n";
+    } else {
+        echo "Accent de page : déjà appliqué une fois, valeur laissée telle quelle.\n";
+    }
 
     \App\Services\Cache::clear();
     echo "\nCache vidé. TERMINÉ.\n";

@@ -167,6 +167,11 @@ class PageController extends Controller {
             'status' => $_POST['status'] === 'published' ? 'published' : 'draft',
             'sort_order' => (int)($_POST['sort_order'] ?? 0),
             'in_navigation' => (int)($_POST['in_navigation'] ?? 1),
+            // Couleur d'accent propre à la page. Validée ici : une valeur non
+            // conforme est enregistrée vide plutôt que d'atteindre la vue.
+            'accent_color' => preg_match('/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/', trim($_POST['accent_color'] ?? ''))
+                ? trim($_POST['accent_color'])
+                : '',
             'hero_title' => trim($_POST['hero_title'] ?? ''),
             'hero_subtitle' => trim($_POST['hero_subtitle'] ?? ''),
             'hero_image' => trim($_POST['hero_image'] ?? ''),

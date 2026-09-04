@@ -471,6 +471,24 @@ if (empty($selectedLogo)) {
                         <option value="0" <?= (int)($page['in_navigation'] ?? 1) === 0 ? 'selected' : '' ?>>Non</option>
                     </select>
                 </div>
+
+                <div class="admin-form-group">
+                    <label for="page_accent_color">Couleur d'accent de la page</label>
+                    <div style="display:flex; gap:8px; align-items:center;">
+                        <input type="color" id="page_accent_picker" class="admin-input" style="width:52px; padding:2px; height:42px; cursor:pointer;"
+                               value="<?= htmlspecialchars(preg_match('/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/', (string)($page['accent_color'] ?? '')) ? $page['accent_color'] : '#1d6363') ?>"
+                               oninput="document.getElementById('page_accent_color').value = this.value;">
+                        <input type="text" id="page_accent_color" name="accent_color" class="admin-input"
+                               value="<?= htmlspecialchars((string)($page['accent_color'] ?? '')) ?>" placeholder="#003060">
+                        <button type="button" class="btn-secondary" style="padding:8px 12px; font-size:0.78rem;"
+                                onclick="document.getElementById('page_accent_color').value = '';">Vider</button>
+                    </div>
+                    <p class="field-help">
+                        Laisser vide pour suivre le thème global du site. Une couleur ici ne
+                        s'applique qu'à cette page — en-tête et pied de page compris — et n'affecte
+                        aucune autre page. Format <code>#RRGGBB</code>.
+                    </p>
+                </div>
             </div>
 
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;">
