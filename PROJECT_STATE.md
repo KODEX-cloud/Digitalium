@@ -1245,6 +1245,8 @@ et GitHub ignore un push sans fichier modifié.
 | Ref | Description | Priorité |
 |---|---|---|
 | DT-04 | ✅ CORRIGÉ 2026-09-04 (suite 10) — retirés de lindex ; git reset --hard nécrase plus les journaux de production. `storage/logs/*.log` sont dans `.gitignore` mais **restent suivis par git** (ajoutés avant la règle). La production écrit dedans en continu : cause classique d'échec de `git pull` au déploiement. Le retrait de l'index doit être fait avec précaution, il supprimerait ces fichiers côté serveur au pull suivant. | Moyenne |
+| SEC-04 | ⏸ REPORTÉ à la demande de l'utilisateur (2026-09-04). `database/change_admin_prod.php` : formulaire web changeant le mot de passe admin sans authentification ni CSRF. Verrouillé derrière `ADMIN_PASSWORD_RESET=1`, donc inerte, mais **la suppression pure reste recommandée** — `RISK_ANALYSIS.md` le classe CRITIQUE. Aucune référence dans `app/` ni `routes/`. | Moyenne |
+| DT-05 | ⏸ REPORTÉ à la demande de l'utilisateur (2026-09-04). Les URLs en `/public/...` répondent 200 et sont un doublon de chaque page. `url()` (`config/config.php`) déduit le chemin de base de `SCRIPT_NAME` : une fois le visiteur arrivé sur `/public/secteurs`, **toute la navigation garde le préfixe** et il ne revient jamais aux URLs propres. La balise `canonical` pointe correctement vers l'URL sans préfixe, donc pas de dégât SEO. Correctif : redirection 301 `^public/(.*)` dans le `.htaccess`. | Faible |
 
 ### Preuve de production (Règle #5)
 
