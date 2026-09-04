@@ -298,25 +298,6 @@ try {
     }
 
 
-    // ─── Hero v4 : badge de la pastille ────────────────────────────────────
-    // Le champ hero_badge de la page était vide, la pastille du modèle ne
-    // s'affichait donc pas. On ne pose la valeur que si le bloc est absent :
-    // une fois renseignée en admin, elle n'est plus jamais touchée.
-    $heroSection = null;
-    foreach (Section::getByPage((int)$page['id']) as $s) {
-        if (($s['type'] ?? '') === 'hero_media_cards') { $heroSection = $s; break; }
-    }
-    if ($heroSection) {
-        $heroSecId = (int)$heroSection['id'];
-        $heroContent = Block::getStructuredContent($heroSecId);
-        if (empty($heroContent['single']['badge'])) {
-            Block::setVal($heroSecId, 'badge', 'text', 'Transformation digitale');
-            echo "hero_media_cards.badge : absent -> 'Transformation digitale'.\n";
-        } else {
-            echo "hero_media_cards.badge déjà renseigné — non modifié.\n";
-        }
-    }
-
     \App\Services\Cache::clear();
     echo "=== TERMINÉ ===\n";
 } catch (\Throwable $e) {
