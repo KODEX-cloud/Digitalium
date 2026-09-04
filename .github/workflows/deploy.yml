@@ -377,6 +377,13 @@ jobs:
                 echo "  ATTENTION Build Solutions Page (non-bloquant)"
               fi
             fi
+            if [ -f "database/build_contact_page.php" ]; then
+              if $PHP database/build_contact_page.php 2>&1; then
+                echo "  OK Build Contact Page"
+              else
+                echo "  ATTENTION Build Contact Page (non-bloquant)"
+              fi
+            fi
             if [ -f "database/seed_demo_content.php" ]; then
               if $PHP database/seed_demo_content.php 2>&1; then
                 echo "  OK Seed Demo Content"

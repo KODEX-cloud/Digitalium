@@ -1,5 +1,72 @@
 # PROJECT_STATE — Digitalium Group CMS
-> Dernière mise à jour : 2026-09-04 — ⚠ contenu de démonstration inventé en ligne (voir suite 13)
+> Dernière mise à jour : 2026-09-04 — Page Contact + pipeline commercial (leads, statuts, historique)
+
+---
+
+### 2026-09-04 (suite 14) — Page Contact et pipeline commercial
+
+La page Contact devient l'entrée du pipeline : visiteur → besoin → lead → qualification.
+Sur les sept sections du cahier des charges, six réutilisent des types existants
+(`hero_media_cards`, `contact_details`, `sectors_grid`, `process_strip`, `faq`, `cta`).
+Un seul type créé : `lead_form`.
+
+**Formulaire `lead_form`** — quatre étapes, mais **POST classique en `multipart/form-data`**, pas
+d'appel JSON. Le pas-à-pas est purement visuel : sans JavaScript, les quatre blocs s'affichent à la
+suite et l'envoi fonctionne à l'identique. Un formulaire commercial qui exige JavaScript perd les
+prospects dont le navigateur ou le réseau ne suit pas — c'est le pire endroit du site où prendre ce
+risque. Les commandes « Retour » et « Continuer » ne sont révélées que par le script : sans lui,
+elles ne mèneraient nulle part. Erreurs et valeurs saisies transitent par la session : un envoi
+refusé ne fait jamais reperdre au visiteur ce qu'il a tapé.
+
+Les quatre listes (besoins, secteurs, urgences, budgets) sont administrables : une ligne de groupe
+alimente la liste correspondant à la clé qu'elle porte (`besoin_label`, `secteur_label`,
+`urgence_label`, `budget_label`).
+
+**Schéma** — `contact_messages` passe de boîte de réception à pipeline : 10 colonnes ajoutées
+(entreprise, secteur, pays, besoin, objectif, urgence, budget, pièce jointe ×2, source), `statut`
+converti d'ENUM en VARCHAR(30) avec traduction des anciennes valeurs (`lu` → à qualifier,
+`archivé` → archivé), et table `message_events` pour l'historique. Les demandes déjà en base sont
+conservées et restent lisibles ; l'ancien formulaire simple et sa route POST /contact fonctionnent
+toujours — seule sa SECTION est désactivée, réactivable d'un clic.
+
+**Défenses de l'envoi public**, dans l'ordre où elles se déclenchent :
+1. pot de miel `website` — on répond « envoyé » sans rien enregistrer, signaler le rejet
+   apprendrait au robot à contourner le piège ;
+2. plafond par IP — réglage `lead_rate_limit` (5/heure par défaut), compté sur la table elle-même,
+   sans cache ni table supplémentaire ;
+3. validation serveur indépendante du navigateur ;
+4. pièce jointe : taille, extension **et** type réel du contenu.
+
+**SEC-06 (trouvée en testant) — le contrôle de type était silencieusement désactivable.**
+Le code testait `function_exists('finfo_open')` et, si l'extension `fileinfo` manquait, sautait tout
+le contrôle : un `.php` renommé `.pdf` était accepté. Constaté sur le poste de développement, où
+`fileinfo` n'est pas chargé. Ajout d'un repli par **signature de fichier** (%PDF, \x89PNG, \xFF\xD8\xFF,
+RIFF/WEBP, OLE2, PK\x03\x04) et, pour le texte, refus de tout ce qui contient une balise PHP
+ouvrante. Le contrôle ne dépend plus d'une extension optionnelle.
+
+Ce défaut n'était pas exploitable en l'état — les pièces jointes vivent dans `storage/uploads/leads`
+(hors racine web, bloqué par le .htaccess), sous un nom tiré au sort, et ne se téléchargent que par
+une route authentifiée avec `Content-Disposition: attachment` et `X-Content-Type-Options: nosniff`.
+Il restait un contrôle réputé bon qui ne s'exécutait jamais.
+
+**Administration** — `MessageController` étendu sans déplacer aucune de ses cinq méthodes
+historiques : filtres par statut / secteur / type de besoin, recherche, changement de statut, notes
+internes, historique, téléchargement des pièces jointes, export CSV respectant les filtres affichés.
+Quatre compteurs de pipeline en tête du tableau de bord, chacun menant à la liste déjà filtrée.
+
+**Piège de routage évité** — `/admin/messages/export` a d'abord été déclarée APRÈS
+`/admin/messages/{id}`, qui l'aurait captée avec `id = "export"`. Corrigé et vérifié.
+
+**Preuves** — 3 harnais. Routage **19/19** (dont non-régression de POST /contact, `/blog/{slug}`,
+`/realisations/{slug}` et de l'ordre de déclaration). Gabarits et écrans d'administration **54/54**
+(formulaire complet, sans JavaScript, envoi refusé, envoi réussi, contenu hostile, listes vides,
+demande de l'ancien formulaire). Script de construction et pièces jointes **44/44**, dont 13 cas de
+fichiers réels : `.php` déguisé en `.pdf`, double extension, PDF renommé en `.png`, `.svg`, `.html`,
+sans extension, 5 Mo pile. `php -l` sur 13 fichiers : 0 erreur.
+
+Quatre échecs initiaux du harnais étaient des erreurs d'assertion de ma part, pas des bugs — dont
+deux fois le même piège déjà rencontré : un conteneur `lead-chips` compté comme une pastille
+`lead-chip`, et un attribut `required` compté dans le JavaScript du gabarit.
 
 ---
 

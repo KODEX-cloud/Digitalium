@@ -564,6 +564,15 @@ class PageController extends Controller {
                 ['ps_icon', 'ps_problem', 'ps_solution', 'ps_detail'],
                 3,
             ],
+            'lead_form' => [
+                ['tag', 'title', 'subtitle',
+                 'step1_title', 'step2_title', 'step3_title', 'step4_title',
+                 'submit_text', 'back_text', 'next_text',
+                 'success_title', 'success_text', 'error_title',
+                 'privacy_note', 'file_note'],
+                ['besoin_label', 'besoin_icon', 'secteur_label', 'urgence_label', 'budget_label'],
+                3,
+            ],
             'needs_router' => [
                 ['tag', 'title', 'subtitle', 'intro_label'],
                 ['need_icon', 'need_text', 'need_solution', 'need_link'],

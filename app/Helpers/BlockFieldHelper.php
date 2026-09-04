@@ -119,6 +119,25 @@ class BlockFieldHelper {
         'cat_value'      => ['Catégorie — valeur exacte', "Doit correspondre au mot saisi dans le champ Catégorie d'une réalisation."],
         'cat_label'      => ['Catégorie — libellé affiché', "Facultatif : par défaut, la valeur exacte est affichée."],
 
+        // ── Formulaire de demande (lead_form) ──
+        'step1_title'    => ['Étape 1 — titre', "Exemple : Votre besoin."],
+        'step2_title'    => ['Étape 2 — titre', "Exemple : Votre organisation."],
+        'step3_title'    => ['Étape 3 — titre', "Exemple : Le projet."],
+        'step4_title'    => ['Étape 4 — titre', "Exemple : Validation."],
+        'submit_text'    => ['Bouton d\'envoi', "Exemple : Envoyer ma demande."],
+        'back_text'      => ['Bouton « précédent »', "Exemple : Retour."],
+        'next_text'      => ['Bouton « suivant »', "Exemple : Continuer."],
+        'success_title'  => ['Confirmation — titre', "Affiché après un envoi réussi."],
+        'success_text'   => ['Confirmation — message', "Ce que le visiteur lit une fois sa demande envoyée."],
+        'error_title'    => ['Erreur — titre', "Affiché en tête de la liste des champs à corriger."],
+        'privacy_note'   => ['Mention sur les données', "Affichée avant le bouton d'envoi."],
+        'file_note'      => ['Aide sous le champ fichier', "Exemple : PDF, Word ou image, 5 Mo maximum."],
+        'besoin_label'   => ['Choix de besoin', "Une ligne = un bouton à l'étape 1. Vider ce champ retire le choix."],
+        'besoin_icon'    => ['Choix de besoin — icône', "Nom d'icône Lucide. Facultatif."],
+        'secteur_label'  => ['Secteur proposé', "Une ligne = une entrée de la liste « Secteur d'activité »."],
+        'urgence_label'  => ['Niveau d\'urgence proposé', "Une ligne = une entrée de la liste « Urgence »."],
+        'budget_label'   => ['Fourchette de budget proposée', "Une ligne = une entrée de la liste « Budget »."],
+
         // ── Aiguillage « Je veux… » ──
         'intro_label'    => ['Sur-titre de la liste', "Petit texte en majuscules au-dessus des besoins. Exemple : Je veux."],
         'need_icon'      => ['Icône', "Nom d'icône Lucide."],
@@ -170,7 +189,9 @@ class BlockFieldHelper {
         // Libellés courts : cta1_text, sec_link_text, more_text…
         // `slide_text` est un paragraphe, pas un libellé de bouton : il échappe
         // à la règle générale sur les clés en « _text ».
-        if ($key === 'slide_text') { return 'textarea'; }
+        // Paragraphes malgré leur suffixe « _text » : ce sont des messages
+        // adressés au visiteur, pas des libellés de bouton.
+        if (in_array($key, ['slide_text', 'success_text'], true)) { return 'textarea'; }
         if (str_ends_with($key, '_text')) { return 'text'; }
 
         foreach (['_ratio', '_max_width', '_width', '_height', '_alt', '_position', '_radius', '_opacity'] as $suffix) {
@@ -180,7 +201,8 @@ class BlockFieldHelper {
         if (str_contains($key, 'image') || str_contains($key, 'avatar') || str_contains($key, 'logo')) { return 'image'; }
         if (str_contains($key, 'url') || str_contains($key, 'link')) { return 'link'; }
 
-        $long = ['text', 'subtitle', 'content', 'description', 'contact_address', 'ps_problem', 'ps_solution'];
+        $long = ['text', 'subtitle', 'content', 'description', 'contact_address',
+                 'ps_problem', 'ps_solution', 'privacy_note'];
         if (in_array($key, $long, true)) { return 'textarea'; }
         foreach (['desc', 'quote', 'points', 'needs', 'detail', 'answer', 'summary'] as $needle) {
             if (str_contains($key, $needle)) { return 'textarea'; }

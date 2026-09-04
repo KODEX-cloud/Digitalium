@@ -31,7 +31,15 @@ class AdminController extends Controller {
         $projectCount = 0;
         try { $projectCount = Project::count(); } catch (\Throwable $e) {}
 
+        // Compteurs du pipeline commercial. `statistiques()` ne lève jamais :
+        // un tableau de bord ne doit pas tomber parce qu une table manque.
+        $leads = \App\Models\Message::statistiques();
+
         $stats = [
+            'leads_nouveaux' => $leads['nouveaux'],
+            'leads_en_cours' => $leads['en_cours'],
+            'leads_semaine'  => $leads['semaine'],
+            'leads_gagnes'   => $leads['gagnes'],
             'pages_count'    => Page::count(),
             'sections_count' => Section::count(),
             'media_count'    => Media::count(),

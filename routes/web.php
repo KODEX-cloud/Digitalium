@@ -8,6 +8,10 @@
 $router->get('/', 'HomeController@index');
 $router->get('/sitemap.xml', 'HomeController@sitemap');
 $router->post('/contact', 'HomeController@contactSubmit');
+// Demande de projet en plusieurs étapes (section `lead_form`). Distincte de
+// la route ci-dessus, qui répond en JSON au formulaire de contact simple :
+// les deux doivent continuer de fonctionner.
+$router->post('/contact/demande', 'HomeController@leadSubmit');
 
 // --- Public Blog ---
 $router->get('/blog', 'BlogController@frontendIndex');
@@ -63,9 +67,16 @@ $router->post('/admin/pages/blocks/group-delete', 'PageController@deleteGroup');
 
 // --- Admin Messages (Contact inbox) ---
 $router->get('/admin/messages', 'MessageController@index');
+// Routes spécifiques AVANT /admin/messages/{id} : le routeur applique le
+// premier motif qui correspond, et « export » serait sinon capté comme un
+// identifiant de demande (Règle #8 — route 404 inattendue).
+$router->get('/admin/messages/export', 'MessageController@export');
+$router->get('/admin/messages/{id}/piece-jointe', 'MessageController@download');
 $router->get('/admin/messages/{id}', 'MessageController@show');
 $router->post('/admin/messages/mark-read/{id}', 'MessageController@markRead');
 $router->post('/admin/messages/archive/{id}', 'MessageController@archive');
+$router->post('/admin/messages/statut/{id}', 'MessageController@changeStatus');
+$router->post('/admin/messages/note/{id}', 'MessageController@addNote');
 $router->post('/admin/messages/delete/{id}', 'MessageController@delete');
 
 // --- Admin Menus ---

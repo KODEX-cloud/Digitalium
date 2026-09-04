@@ -128,6 +128,42 @@
     }
 </style>
 
+<?php
+/* Pipeline commercial en tête de tableau de bord : ce sont les chiffres qui
+   demandent une action aujourd'hui, avant l'inventaire du contenu. Chaque
+   carte mène à la liste déjà filtrée. */
+?>
+<div class="stats-grid">
+    <a class="stat-card" href="<?= url('/admin/messages?statut=nouveau') ?>" style="text-decoration:none;">
+        <div class="stat-icon"><i data-lucide="inbox" style="width: 28px; height: 28px;"></i></div>
+        <div class="stat-details">
+            <span class="stat-number"><?= (int)($stats['leads_nouveaux'] ?? 0) ?></span>
+            <span class="stat-label">Nouveaux leads</span>
+        </div>
+    </a>
+    <a class="stat-card" href="<?= url('/admin/messages?statut=en_discussion') ?>" style="text-decoration:none;">
+        <div class="stat-icon"><i data-lucide="activity" style="width: 28px; height: 28px;"></i></div>
+        <div class="stat-details">
+            <span class="stat-number"><?= (int)($stats['leads_en_cours'] ?? 0) ?></span>
+            <span class="stat-label">Leads en cours</span>
+        </div>
+    </a>
+    <a class="stat-card" href="<?= url('/admin/messages') ?>" style="text-decoration:none;">
+        <div class="stat-icon"><i data-lucide="calendar" style="width: 28px; height: 28px;"></i></div>
+        <div class="stat-details">
+            <span class="stat-number"><?= (int)($stats['leads_semaine'] ?? 0) ?></span>
+            <span class="stat-label">Demandes cette semaine</span>
+        </div>
+    </a>
+    <a class="stat-card" href="<?= url('/admin/messages?statut=gagne') ?>" style="text-decoration:none;">
+        <div class="stat-icon"><i data-lucide="trophy" style="width: 28px; height: 28px;"></i></div>
+        <div class="stat-details">
+            <span class="stat-number"><?= (int)($stats['leads_gagnes'] ?? 0) ?></span>
+            <span class="stat-label">Projets gagnés</span>
+        </div>
+    </a>
+</div>
+
 <div class="stats-grid">
     <div class="stat-card">
         <div class="stat-icon">
