@@ -224,6 +224,76 @@
                         <input type="text" id="footer_legal_url" name="footer_legal_url" class="admin-input" value="<?= htmlspecialchars($settings['footer_legal_url'] ?? '/mentions-legales') ?>">
                     </div>
                 </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    <div class="admin-form-group">
+                        <label for="footer_sitemap_text">Texte du lien Plan du site</label>
+                        <input type="text" id="footer_sitemap_text" name="footer_sitemap_text" class="admin-input" value="<?= htmlspecialchars($settings['footer_sitemap_text'] ?? '') ?>" placeholder="Ex: Plan du site">
+                    </div>
+                    <div class="admin-form-group">
+                        <label for="footer_sitemap_url">URL du Plan du site</label>
+                        <input type="text" id="footer_sitemap_url" name="footer_sitemap_url" class="admin-input" value="<?= htmlspecialchars($settings['footer_sitemap_url'] ?? '/sitemap.xml') ?>">
+                    </div>
+                </div>
+
+                <div class="admin-form-group">
+                    <label for="footer_backtotop_text">Texte du lien « Remonter »</label>
+                    <input type="text" id="footer_backtotop_text" name="footer_backtotop_text" class="admin-input" value="<?= htmlspecialchars($settings['footer_backtotop_text'] ?? '') ?>" placeholder="Ex: Remonter">
+                </div>
+
+                <h3 style="margin: 28px 0 16px; font-size: 1rem; font-weight: 700;">Titres des colonnes du footer</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;">
+                    <div class="admin-form-group">
+                        <label for="footer_nav_title">Colonne Navigation</label>
+                        <input type="text" id="footer_nav_title" name="footer_nav_title" class="admin-input" value="<?= htmlspecialchars($settings['footer_nav_title'] ?? '') ?>" placeholder="Ex: Liens utiles">
+                    </div>
+                    <div class="admin-form-group">
+                        <label for="footer_services_title">Colonne Services</label>
+                        <input type="text" id="footer_services_title" name="footer_services_title" class="admin-input" value="<?= htmlspecialchars($settings['footer_services_title'] ?? '') ?>" placeholder="Ex: Services">
+                    </div>
+                    <div class="admin-form-group">
+                        <label for="footer_contact_title">Colonne Contact</label>
+                        <input type="text" id="footer_contact_title" name="footer_contact_title" class="admin-input" value="<?= htmlspecialchars($settings['footer_contact_title'] ?? '') ?>" placeholder="Ex: Contact">
+                    </div>
+                </div>
+
+                <h3 style="margin: 28px 0 16px; font-size: 1rem; font-weight: 700;">Panneau Newsletter du footer</h3>
+                <div class="admin-form-group">
+                    <label for="footer_newsletter_title">Titre du panneau</label>
+                    <input type="text" id="footer_newsletter_title" name="footer_newsletter_title" class="admin-input" value="<?= htmlspecialchars($settings['footer_newsletter_title'] ?? '') ?>">
+                </div>
+                <div class="admin-form-group">
+                    <label for="footer_newsletter_text">Texte d'accroche</label>
+                    <input type="text" id="footer_newsletter_text" name="footer_newsletter_text" class="admin-input" value="<?= htmlspecialchars($settings['footer_newsletter_text'] ?? '') ?>">
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    <div class="admin-form-group">
+                        <label for="footer_newsletter_placeholder">Texte indicatif du champ email</label>
+                        <input type="text" id="footer_newsletter_placeholder" name="footer_newsletter_placeholder" class="admin-input" value="<?= htmlspecialchars($settings['footer_newsletter_placeholder'] ?? '') ?>" placeholder="Ex: Votre email">
+                    </div>
+                    <div class="admin-form-group">
+                        <label for="footer_newsletter_button">Libellé du bouton</label>
+                        <input type="text" id="footer_newsletter_button" name="footer_newsletter_button" class="admin-input" value="<?= htmlspecialchars($settings['footer_newsletter_button'] ?? '') ?>" placeholder="Ex: S'inscrire">
+                    </div>
+                </div>
+                <div class="admin-form-group">
+                    <label for="footer_newsletter_note">Mention sous le formulaire</label>
+                    <input type="text" id="footer_newsletter_note" name="footer_newsletter_note" class="admin-input" value="<?= htmlspecialchars($settings['footer_newsletter_note'] ?? '') ?>" placeholder="Ex: Vous pouvez vous désabonner à tout moment. Consultez notre">
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    <div class="admin-form-group">
+                        <label for="footer_newsletter_privacy_text">Texte du lien confidentialité</label>
+                        <input type="text" id="footer_newsletter_privacy_text" name="footer_newsletter_privacy_text" class="admin-input" value="<?= htmlspecialchars($settings['footer_newsletter_privacy_text'] ?? '') ?>" placeholder="Ex: politique de confidentialité">
+                    </div>
+                    <div class="admin-form-group">
+                        <label for="footer_newsletter_privacy_url">URL du lien confidentialité</label>
+                        <input type="text" id="footer_newsletter_privacy_url" name="footer_newsletter_privacy_url" class="admin-input" value="<?= htmlspecialchars($settings['footer_newsletter_privacy_url'] ?? '') ?>" placeholder="Ex: /mentions-legales">
+                    </div>
+                </div>
+                <div class="admin-form-group">
+                    <label for="footer_newsletter_image">Illustration du panneau (chemin Médiathèque)</label>
+                    <input type="text" id="footer_newsletter_image" name="footer_newsletter_image" class="admin-input" value="<?= htmlspecialchars($settings['footer_newsletter_image'] ?? '') ?>" placeholder="Ex: /assets/uploads/newsletter.png">
+                </div>
             </div>
 
             <!-- Coordinates Details -->

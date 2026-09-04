@@ -36,7 +36,7 @@
     $_thBtnFg = htmlspecialchars($settings['theme_btn_primary_text']  ?? '#ffffff', ENT_QUOTES);
     $_thBdgBg = htmlspecialchars($settings['theme_badge_bg']          ?? '#e0f1df', ENT_QUOTES);
     $_thBdgFg = htmlspecialchars($settings['theme_badge_text']        ?? '#004d3f', ENT_QUOTES);
-    $_thFtBg  = htmlspecialchars($settings['theme_footer_bg']         ?? '#1d6363', ENT_QUOTES);
+    $_thFtBg  = htmlspecialchars($settings['theme_footer_bg']         ?? '#ffffff', ENT_QUOTES);
     $_thSfDk  = htmlspecialchars($settings['theme_surface_dark']      ?? '#12202c', ENT_QUOTES);
     $_thRP   = (int)($settings['theme_radius_pill']            ?? 9);
     $_thRC   = (int)($settings['theme_radius_card']            ?? 20);
@@ -408,71 +408,99 @@
     </main>
 
     <footer class="site-footer">
+
+        <?php if (!empty($settings['footer_newsletter_title']) || !empty($settings['footer_newsletter_text'])): ?>
+        <div class="container">
+            <div class="footer-promo">
+                <?php if (!empty($settings['footer_newsletter_image'])): ?>
+                    <div class="footer-promo-visual">
+                        <img src="<?= htmlspecialchars(url($settings['footer_newsletter_image'])) ?>"
+                             alt="<?= htmlspecialchars($settings['footer_newsletter_title'] ?? '') ?>" loading="lazy">
+                    </div>
+                <?php endif; ?>
+
+                <div class="footer-promo-body">
+                    <?php if (!empty($settings['footer_newsletter_title'])): ?>
+                        <h2 class="footer-promo-title"><?= htmlspecialchars($settings['footer_newsletter_title']) ?></h2>
+                    <?php endif; ?>
+                    <?php if (!empty($settings['footer_newsletter_text'])): ?>
+                        <p class="footer-promo-text"><?= htmlspecialchars($settings['footer_newsletter_text']) ?></p>
+                    <?php endif; ?>
+
+                    <form class="footer-promo-form" method="POST" action="<?= url('/contact') ?>">
+                        <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token ?? '') ?>">
+                        <input type="hidden" name="subject" value="<?= htmlspecialchars($settings['footer_newsletter_title'] ?? '') ?>">
+                        <input type="hidden" name="message" value="<?= htmlspecialchars($settings['footer_newsletter_text'] ?? '') ?>">
+                        <input type="hidden" name="name" value="Newsletter">
+                        <input type="text" name="website" value="" style="display:none" tabindex="-1" autocomplete="off">
+                        <span class="footer-promo-icon"><i data-lucide="mail" style="width:19px;height:19px;"></i></span>
+                        <input type="email" name="email" class="footer-promo-input" required
+                               placeholder="<?= htmlspecialchars($settings['footer_newsletter_placeholder'] ?? '') ?>">
+                        <?php if (!empty($settings['footer_newsletter_button'])): ?>
+                            <button type="submit" class="footer-promo-btn"><?= htmlspecialchars($settings['footer_newsletter_button']) ?></button>
+                        <?php endif; ?>
+                    </form>
+
+                    <?php if (!empty($settings['footer_newsletter_note']) || !empty($settings['footer_newsletter_privacy_text'])): ?>
+                        <p class="footer-promo-note">
+                            <?php if (!empty($settings['footer_newsletter_note'])): ?>
+                                <?= htmlspecialchars($settings['footer_newsletter_note']) ?>
+                            <?php endif; ?>
+                            <?php if (!empty($settings['footer_newsletter_privacy_text'])): ?>
+                                <a href="<?= htmlspecialchars(url($settings['footer_newsletter_privacy_url'] ?? '/mentions-legales')) ?>">
+                                    <?= htmlspecialchars($settings['footer_newsletter_privacy_text']) ?>
+                                </a>
+                            <?php endif; ?>
+                        </p>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+        <?php endif; ?>
+
         <div class="container footer-layout">
-            
+
             <div class="footer-brand">
-                <a href="<?= url('/') ?>" class="logo-wrap" style="margin-bottom:10px;">
+                <a href="<?= url('/') ?>" class="logo-wrap">
                     <?php if (!empty($settings['site_logo'])): ?>
-                        <img src="<?= htmlspecialchars(url($settings['site_logo'])) ?>" alt="<?= htmlspecialchars($settings['site_name'] ?? 'Digitalium Group') ?>" style="height: 38px; width: auto; object-fit: contain;">
+                        <img src="<?= htmlspecialchars(url($settings['site_logo'])) ?>" alt="<?= htmlspecialchars($settings['site_name'] ?? '') ?>" style="height: 40px; width: auto; object-fit: contain;">
                     <?php endif; ?>
                     <?php if (!empty($settings['site_logo_text'])): ?>
                         <div class="logo-text-col" style="margin-left: 6px;">
-                            <strong style="font-size:1.15rem; color: var(--primary); font-family: var(--font-heading);"><?= htmlspecialchars($settings['site_logo_text']) ?></strong>
-                            <span style="font-size:0.6rem; color: #8aa0be; text-transform: uppercase; letter-spacing: .2em; font-weight: 500;"><?= htmlspecialchars($settings['site_logo_subtext'] ?? 'Group') ?></span>
+                            <strong style="font-size:1.2rem; color: var(--text-main); font-family: var(--font-heading);"><?= htmlspecialchars($settings['site_logo_text']) ?></strong>
+                            <?php if (!empty($settings['site_logo_subtext'])): ?>
+                                <span style="font-size:0.6rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: .2em; font-weight: 600;"><?= htmlspecialchars($settings['site_logo_subtext']) ?></span>
+                            <?php endif; ?>
                         </div>
                     <?php elseif (empty($settings['site_logo']) && !empty($settings['site_name'])): ?>
-                        <div class="logo-d-mark"></div>
-                        <div class="logo-ring-mark"></div>
                         <div class="logo-text-col">
-                            <strong style="font-size:1.15rem;"><?= htmlspecialchars($settings['site_name']) ?></strong>
-                            <?php if (!empty($settings['site_logo_subtext'])): ?>
-                                <span style="font-size:0.6rem;"><?= htmlspecialchars($settings['site_logo_subtext']) ?></span>
-                            <?php endif; ?>
+                            <strong style="font-size:1.2rem;"><?= htmlspecialchars($settings['site_name']) ?></strong>
                         </div>
                     <?php endif; ?>
                 </a>
-                <p class="footer-description">
-                    <?= htmlspecialchars(!empty($settings['footer_slogan']) ? $settings['footer_slogan'] : (!empty($settings['footer_pitch']) ? $settings['footer_pitch'] : 'Nous concevons des produits technologiques haut de gamme et des solutions digitales.')) ?>
-                </p>
-                <?php if (!empty($settings['footer_cta_text'])): ?>
-                    <div style="margin-top: 15px; margin-bottom: 20px;">
-                        <a href="<?= htmlspecialchars(url($settings['footer_cta_link'] ?? '/contact')) ?>" class="btn-primary" style="padding: 8px 18px; font-size: 0.82rem; height: auto; text-decoration: none;">
-                            <span><?= htmlspecialchars($settings['footer_cta_text']) ?></span>
-                            <i data-lucide="arrow-right" style="width: 14px; height: 14px; display: inline-block; vertical-align: middle;"></i>
-                        </a>
-                    </div>
+
+                <?php if (!empty($settings['footer_slogan'])): ?>
+                    <p class="footer-description"><?= htmlspecialchars($settings['footer_slogan']) ?></p>
                 <?php endif; ?>
+
                 <div class="footer-socials">
-                    <?php if (!empty($settings['social_facebook'])): ?>
-                        <a href="<?= htmlspecialchars($settings['social_facebook']) ?>" target="_blank" class="footer-social-link" title="Facebook">
-                            <i data-lucide="facebook" style="width: 18px; height: 18px;"></i>
+                    <?php
+                    // Réseaux sociaux : uniquement ceux renseignés dans les réglages (Règle #2).
+                    $socialLinks = [
+                        'social_facebook'  => ['facebook',  'Facebook'],
+                        'social_twitter'   => ['twitter',   'Twitter / X'],
+                        'social_instagram' => ['instagram', 'Instagram'],
+                        'social_linkedin'  => ['linkedin',  'LinkedIn'],
+                        'social_youtube'   => ['youtube',   'YouTube'],
+                        'social_github'    => ['github',    'GitHub'],
+                    ];
+                    foreach ($socialLinks as $key => [$icon, $label]):
+                        if (empty($settings[$key])) { continue; }
+                    ?>
+                        <a href="<?= htmlspecialchars($settings[$key]) ?>" target="_blank" rel="noopener" class="footer-social-link" title="<?= htmlspecialchars($label) ?>">
+                            <i data-lucide="<?= $icon ?>" style="width: 21px; height: 21px;"></i>
                         </a>
-                    <?php endif; ?>
-                    <?php if (!empty($settings['social_linkedin'])): ?>
-                        <a href="<?= htmlspecialchars($settings['social_linkedin']) ?>" target="_blank" class="footer-social-link" title="LinkedIn">
-                            <i data-lucide="linkedin" style="width: 18px; height: 18px;"></i>
-                        </a>
-                    <?php endif; ?>
-                    <?php if (!empty($settings['social_twitter'])): ?>
-                        <a href="<?= htmlspecialchars($settings['social_twitter']) ?>" target="_blank" class="footer-social-link" title="Twitter / X">
-                            <i data-lucide="twitter" style="width: 18px; height: 18px;"></i>
-                        </a>
-                    <?php endif; ?>
-                    <?php if (!empty($settings['social_instagram'])): ?>
-                        <a href="<?= htmlspecialchars($settings['social_instagram']) ?>" target="_blank" class="footer-social-link" title="Instagram">
-                            <i data-lucide="instagram" style="width: 18px; height: 18px;"></i>
-                        </a>
-                    <?php endif; ?>
-                    <?php if (!empty($settings['social_youtube'])): ?>
-                        <a href="<?= htmlspecialchars($settings['social_youtube']) ?>" target="_blank" class="footer-social-link" title="YouTube">
-                            <i data-lucide="youtube" style="width: 18px; height: 18px;"></i>
-                        </a>
-                    <?php endif; ?>
-                    <?php if (!empty($settings['social_github'])): ?>
-                        <a href="<?= htmlspecialchars($settings['social_github']) ?>" target="_blank" class="footer-social-link" title="GitHub">
-                            <i data-lucide="github" style="width: 18px; height: 18px;"></i>
-                        </a>
-                    <?php endif; ?>
+                    <?php endforeach; ?>
                 </div>
             </div>
 
@@ -489,11 +517,7 @@
                         $menuSlug = $menuPage['slug'];
                         $menuUrl = url($menuSlug === 'home' ? '/' : '/' . htmlspecialchars($menuSlug));
                     ?>
-                        <li>
-                            <a href="<?= $menuUrl ?>" class="footer-link">
-                                <?= htmlspecialchars($menuPage['title']) ?>
-                            </a>
-                        </li>
+                        <li><a href="<?= $menuUrl ?>" class="footer-link"><?= htmlspecialchars($menuPage['title']) ?></a></li>
                     <?php endforeach; ?>
                 </ul>
             </div>
@@ -515,11 +539,10 @@
                         $servicesBlocks = \App\Models\Block::getStructuredContent($servicesSec['id']);
                         $servicesList = $servicesBlocks['groups'] ?? [];
                     }
-                    $footerServices = array_slice($servicesList, 0, 6);
-                    foreach ($footerServices as $svc):
-                        $svcTitle = $svc['svc_title'] ?? $svc['title'] ?? '';
-                        $svcLink  = $svc['svc_link']  ?? $svc['link']  ?? '';
-                        if ($svcTitle === '') continue;
+                    foreach (array_slice($servicesList, 0, 6) as $svc):
+                        $svcTitle = $svc['svc_title'] ?? '';
+                        $svcLink  = $svc['svc_link']  ?? '';
+                        if ($svcTitle === '') { continue; }
                     ?>
                         <li>
                             <?php if ($svcLink !== ''): ?>
@@ -536,84 +559,55 @@
                 <?php if (!empty($settings['footer_contact_title'])): ?>
                     <h4 class="footer-col-title"><?= htmlspecialchars($settings['footer_contact_title']) ?></h4>
                 <?php endif; ?>
-                <ul class="footer-links" style="color: var(--text-muted); font-size: 0.95rem; display: flex; flex-direction: column; gap: 10px;">
-                    <?php if (!empty($settings['contact_address'])): ?>
-                        <li style="display: flex; gap: 8px; align-items: flex-start;">
-                            <i data-lucide="map-pin" style="width: 16px; height: 16px; color: var(--primary); flex-shrink: 0; margin-top: 3px;"></i>
-                            <span><?= htmlspecialchars($settings['contact_address']) ?></span>
-                        </li>
-                    <?php endif; ?>
-                    <?php if (!empty($settings['contact_phone'])): ?>
-                        <li style="display: flex; gap: 8px; align-items: center;">
-                            <i data-lucide="phone" style="width: 16px; height: 16px; color: var(--primary); flex-shrink: 0;"></i>
-                            <span style="font-family: monospace;">
-                                <a href="tel:<?= htmlspecialchars($settings['contact_phone']) ?>">
-                                    <?= htmlspecialchars($settings['contact_phone']) ?>
-                                </a>
-                            </span>
-                        </li>
-                    <?php endif; ?>
-                    <?php if (!empty($settings['contact_email'])): ?>
-                        <li style="display: flex; gap: 8px; align-items: center;">
-                            <i data-lucide="mail" style="width: 16px; height: 16px; color: var(--primary); flex-shrink: 0;"></i>
-                            <span>
-                                <a href="mailto:<?= htmlspecialchars($settings['contact_email']) ?>">
-                                    <?= htmlspecialchars($settings['contact_email']) ?>
-                                </a>
-                            </span>
-                        </li>
-                    <?php endif; ?>
-                    <?php if (!empty($settings['site_whatsapp'])): ?>
-                        <li style="display: flex; gap: 8px; align-items: center;">
-                            <i data-lucide="message-square" style="width: 16px; height: 16px; color: var(--success); flex-shrink: 0;"></i>
-                            <span style="font-family: monospace; font-weight: 700;">
-                                <a href="https://wa.me/<?= preg_replace('/[^0-9]/', '', $settings['site_whatsapp']) ?>" target="_blank" style="color: #16a34a;">
-                                    WhatsApp : <?= htmlspecialchars($settings['site_whatsapp']) ?>
-                                </a>
-                            </span>
-                        </li>
-                    <?php endif; ?>
-                </ul>
+
+                <?php if (!empty($settings['contact_phone'])): ?>
+                    <div class="footer-contact-item">
+                        <span class="footer-contact-icon"><i data-lucide="phone" style="width:17px;height:17px;"></i></span>
+                        <a href="tel:<?= htmlspecialchars(preg_replace('/[^0-9+]/', '', $settings['contact_phone'])) ?>"><?= htmlspecialchars($settings['contact_phone']) ?></a>
+                    </div>
+                <?php endif; ?>
+
+                <?php if (!empty($settings['contact_email'])): ?>
+                    <div class="footer-contact-item">
+                        <span class="footer-contact-icon"><i data-lucide="mail" style="width:17px;height:17px;"></i></span>
+                        <a href="mailto:<?= htmlspecialchars($settings['contact_email']) ?>"><?= htmlspecialchars($settings['contact_email']) ?></a>
+                    </div>
+                <?php endif; ?>
+
+                <?php if (!empty($settings['site_whatsapp'])): ?>
+                    <div class="footer-contact-item">
+                        <span class="footer-contact-icon"><i data-lucide="message-square" style="width:17px;height:17px;"></i></span>
+                        <a href="https://wa.me/<?= preg_replace('/[^0-9]/', '', $settings['site_whatsapp']) ?>" target="_blank" rel="noopener"><?= htmlspecialchars($settings['site_whatsapp']) ?></a>
+                    </div>
+                <?php endif; ?>
+
+                <?php if (!empty($settings['contact_address'])): ?>
+                    <div class="footer-contact-item">
+                        <span class="footer-contact-icon"><i data-lucide="map-pin" style="width:17px;height:17px;"></i></span>
+                        <span><?= htmlspecialchars($settings['contact_address']) ?></span>
+                    </div>
+                <?php endif; ?>
             </div>
 
-            <?php if (!empty($settings['footer_newsletter_title']) || !empty($settings['footer_newsletter_text'])): ?>
-            <div class="footer-newsletter">
-                <?php if (!empty($settings['footer_newsletter_title'])): ?>
-                    <h4 class="footer-col-title"><?= htmlspecialchars($settings['footer_newsletter_title']) ?></h4>
-                <?php endif; ?>
-                <?php if (!empty($settings['footer_newsletter_text'])): ?>
-                    <p class="footer-newsletter-text"><?= htmlspecialchars($settings['footer_newsletter_text']) ?></p>
-                <?php endif; ?>
-                <form class="footer-newsletter-form" method="POST" action="<?= url('/contact') ?>">
-                    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token ?? '') ?>">
-                    <input type="hidden" name="subject" value="<?= htmlspecialchars($settings['footer_newsletter_title'] ?? '') ?>">
-                    <input type="hidden" name="message" value="<?= htmlspecialchars($settings['footer_newsletter_text'] ?? '') ?>">
-                    <input type="hidden" name="name" value="Newsletter">
-                    <input type="text" name="website" value="" style="display:none" tabindex="-1" autocomplete="off">
-                    <input type="email" name="email" class="footer-newsletter-input"
-                           placeholder="<?= htmlspecialchars($settings['footer_newsletter_placeholder'] ?? '') ?>" required>
-                    <button type="submit" class="footer-newsletter-btn" aria-label="<?= htmlspecialchars($settings['footer_newsletter_title'] ?? '') ?>">
-                        <i data-lucide="send" style="width:16px;height:16px;"></i>
-                    </button>
-                </form>
-            </div>
-            <?php endif; ?>
         </div>
 
         <div class="container footer-bottom">
-            <span><?= htmlspecialchars(!empty($settings['footer_copyright']) ? $settings['footer_copyright'] : '© ' . date('Y') . ' Digitalium Group. Tous droits réservés.') ?></span>
-            <div style="display: flex; gap: 20px; align-items: center;">
+            <?php if (!empty($settings['footer_copyright'])): ?>
+                <span><?= htmlspecialchars($settings['footer_copyright']) ?></span>
+            <?php endif; ?>
+            <div class="footer-bottom-links">
                 <?php if (!empty($settings['footer_legal_text'])): ?>
-                    <a href="<?= htmlspecialchars(url($settings['footer_legal_url'] ?? '/mentions-legales')) ?>" style="color: var(--text-muted); font-size: 0.88rem; font-weight: 500;">
-                        <?= htmlspecialchars($settings['footer_legal_text']) ?>
-                    </a>
+                    <a href="<?= htmlspecialchars(url($settings['footer_legal_url'] ?? '/mentions-legales')) ?>"><?= htmlspecialchars($settings['footer_legal_text']) ?></a>
                 <?php endif; ?>
-                <a href="#siteHeader" style="display: flex; align-items: center; gap: 6px; color: var(--text-muted); font-weight: 500;" title="<?= htmlspecialchars($settings['footer_backtotop_text'] ?? '') ?>">
-                    <?php if (!empty($settings['footer_backtotop_text'])): ?>
-                        <span><?= htmlspecialchars($settings['footer_backtotop_text']) ?></span>
-                    <?php endif; ?>
-                    <i data-lucide="arrow-up-circle" style="width: 18px; height: 18px; color: var(--primary);"></i>
-                </a>
+                <?php if (!empty($settings['footer_privacy_text'])): ?>
+                    <a href="<?= htmlspecialchars(url($settings['footer_privacy_url'] ?? '/mentions-legales')) ?>"><?= htmlspecialchars($settings['footer_privacy_text']) ?></a>
+                <?php endif; ?>
+                <?php if (!empty($settings['footer_sitemap_text'])): ?>
+                    <a href="<?= htmlspecialchars(url($settings['footer_sitemap_url'] ?? '/sitemap.xml')) ?>"><?= htmlspecialchars($settings['footer_sitemap_text']) ?></a>
+                <?php endif; ?>
+                <?php if (!empty($settings['footer_backtotop_text'])): ?>
+                    <a href="#siteHeader"><?= htmlspecialchars($settings['footer_backtotop_text']) ?></a>
+                <?php endif; ?>
             </div>
         </div>
     </footer>

@@ -162,13 +162,33 @@ class AdminController extends Controller {
             'footer_cta_link',
             'footer_legal_text',
             'footer_legal_url',
+            // Footer v5 — titres de colonnes et panneau newsletter
+            'footer_nav_title',
+            'footer_services_title',
+            'footer_contact_title',
+            'footer_newsletter_title',
+            'footer_newsletter_text',
+            'footer_newsletter_placeholder',
+            'footer_newsletter_button',
+            'footer_newsletter_note',
+            'footer_newsletter_privacy_text',
+            'footer_newsletter_privacy_url',
+            'footer_newsletter_image',
+            'footer_sitemap_text',
+            'footer_sitemap_url',
+            'footer_backtotop_text',
             'header_cta_text',
             'header_cta_link'
         ];
 
+        // Ne traiter que les clés réellement postées : la boucle écrivait
+        // auparavant une chaîne vide pour toute clé absente du formulaire, ce qui
+        // effaçait silencieusement les réglages n'ayant pas encore de champ dédié.
         foreach ($keys as $key) {
-            $value = trim($_POST[$key] ?? '');
-            \App\Models\Setting::setVal($key, $value);
+            if (!array_key_exists($key, $_POST)) {
+                continue;
+            }
+            \App\Models\Setting::setVal($key, trim((string)$_POST[$key]));
         }
 
         \App\Services\Cache::clear();

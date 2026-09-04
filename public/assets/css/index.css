@@ -588,64 +588,146 @@ input:focus, textarea:focus, select:focus {
 /* ============================================================
    16. FOOTER
    ============================================================ */
+/* Footer clair — proportions relevées sur le modèle de référence
+   (échelle 2.222 px image = 1 px CSS). Fond blanc, texte sombre, panneau
+   newsletter coloré en débordement au-dessus du corps du footer. */
 .site-footer {
     background: var(--footer-bg);
-    border-top: 1px solid rgba(255,255,255,0.08);
-    padding: 96px 0 44px; position: relative; z-index: 1;
+    border-top: 1px solid var(--border);
+    padding-top: 64px;
+    position: relative;
+    z-index: 1;
+    color: var(--text-main);
 }
-.footer-layout { display: grid; grid-template-columns: 1.6fr 1fr 1.15fr 1.25fr 1.3fr; gap: 40px; margin-bottom: 56px; }
-@media (max-width: 1100px) { .footer-layout { grid-template-columns: 1.6fr 1fr 1.15fr 1.25fr; } .footer-newsletter { grid-column: 1 / -1; } }
-@media (max-width: 780px)  { .footer-layout { grid-template-columns: 1fr 1fr; gap: 32px; } }
-@media (max-width: 520px)  { .footer-layout { grid-template-columns: 1fr; } }
 
-/* Footer — colonne Newsletter (contenu piloté par Settings) */
-.footer-newsletter-text { font-size: 0.86rem; color: #94a3b8; line-height: 1.7; margin-bottom: 16px; }
-.footer-newsletter-form { display: flex; gap: 8px; align-items: stretch; max-width: 320px; }
-.footer-newsletter-input {
-    flex: 1; min-width: 0;
-    padding: 10px 14px;
-    border-radius: var(--radius-sm);
-    border: 1px solid rgba(255,255,255,0.14);
-    background: rgba(255,255,255,0.06);
-    color: #e2e8f0;
-    font-family: inherit;
-    font-size: 0.85rem;
-    transition: var(--transition-fast);
-}
-.footer-newsletter-input::placeholder { color: #64748b; }
-.footer-newsletter-input:focus { outline: none; border-color: var(--primary); background: rgba(255,255,255,0.1); }
-.footer-newsletter-btn {
-    flex-shrink: 0;
-    width: 42px;
-    border: none;
-    border-radius: var(--radius-sm);
+/* ── Panneau newsletter ──
+   Le modèle le fait déborder sur le haut du footer. Ici la page se termine par
+   la bande CTA, elle-même en aplat de couleur primaire : le débordement
+   superposerait deux aplats colorés. Le panneau est donc posé en tête du footer
+   blanc, ce qui conserve la lecture du modèle sans collision. */
+.footer-promo {
+    position: relative;
+    margin-bottom: 58px;
+    display: grid;
+    grid-template-columns: 0.8fr 1.2fr;
+    gap: 40px;
+    align-items: center;
+    padding: 44px 52px;
+    border-radius: 28px;
     background: var(--primary);
-    color: #fff;
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
+    color: #ffffff;
+    box-shadow: 0 18px 50px color-mix(in srgb, var(--primary) 26%, transparent);
+}
+.footer-promo-visual { display: flex; align-items: center; justify-content: center; }
+.footer-promo-visual img { max-width: 100%; max-height: 250px; object-fit: contain; }
+.footer-promo-title {
+    font-size: clamp(1.5rem, 2.6vw, 2rem);
+    line-height: 1.25;
+    font-weight: 800;
+    color: #ffffff;
+    margin: 0 0 14px;
+    font-family: var(--font-heading);
+    letter-spacing: -0.015em;
+}
+.footer-promo-text { font-size: 1rem; line-height: 1.55; color: rgba(255,255,255,0.88); margin: 0 0 24px; }
+
+/* Champ et bouton dans une même pilule, comme le modèle. */
+.footer-promo-form {
+    display: flex; align-items: center; gap: 10px;
+    padding: 7px 7px 7px 20px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.17);
+    max-width: 520px;
+}
+.footer-promo-icon { display: flex; flex-shrink: 0; color: rgba(255,255,255,0.85); }
+.footer-promo-input {
+    flex: 1; min-width: 0;
+    background: transparent; border: none;
+    color: #ffffff; font-size: 1rem; font-family: var(--font-main);
+    padding: 12px 0;
+}
+.footer-promo-input::placeholder { color: rgba(255,255,255,0.75); }
+.footer-promo-input:focus { outline: none; }
+.footer-promo-btn {
+    flex-shrink: 0;
+    padding: 13px 28px;
+    border: none; border-radius: 999px;
+    background: #ffffff; color: var(--primary);
+    font-size: 0.98rem; font-weight: 700;
+    cursor: pointer; font-family: var(--font-main);
     transition: var(--transition-fast);
 }
-.footer-newsletter-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
-.footer-col-title { font-size: 0.77rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.18em; color: #64748b; margin-bottom: 20px; font-family: var(--font-heading); }
-.footer-link { display: block; font-size: 0.9rem; color: #94a3b8; margin-bottom: 12px; transition: var(--transition-fast); }
-.footer-link:hover { color: var(--primary); transform: translateX(4px); }
-.footer-desc { font-size: 0.9rem; color: #64748b; line-height: 1.78; margin-bottom: 28px; }
-.footer-social { display: flex; gap: 10px; }
-.footer-social a { width: 38px; height: 38px; border-radius: var(--radius-sm); background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: center; color: #64748b; transition: var(--transition-fast); }
-.footer-social a:hover { background: color-mix(in srgb, var(--primary) 15%, transparent); border-color: color-mix(in srgb, var(--primary) 30%, transparent); color: var(--primary); }
-.footer-logo-box { margin-bottom: 24px; }
-.footer-bottom { padding-top: 28px; border-top: 1px solid rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
-.footer-copy { font-size: 0.82rem; color: #475569; }
-.footer-legal { display: flex; gap: 24px; }
-.footer-legal a { font-size: 0.82rem; color: #475569; }
-.footer-legal a:hover { color: var(--primary); }
-.footer-newsletter { margin-top: 24px; }
-.footer-newsletter-form { display: flex; gap: 10px; max-width: 340px; }
-.footer-newsletter-form input { flex: 1; padding: 11px 16px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: var(--radius-sm); color: #f1f5f9; font-size: 0.88rem; font-family: var(--font-main); }
-.footer-newsletter-form input::placeholder { color: #475569; }
-.footer-newsletter-form input:focus { outline: none; border-color: var(--primary); }
-.footer-newsletter-form button { padding: 11px 18px; background: var(--primary); color: white; border: none; border-radius: var(--radius-sm); font-size: 0.85rem; font-weight: 600; cursor: pointer; font-family: var(--font-main); transition: var(--transition-fast); }
-.footer-newsletter-form button:hover { filter: brightness(1.08); }
+.footer-promo-btn:hover { transform: translateY(-1px); }
+.footer-promo-note { font-size: 0.88rem; line-height: 1.6; color: rgba(255,255,255,0.8); margin: 16px 0 0; }
+.footer-promo-note a { color: #ffffff; text-decoration: underline; }
+
+/* ── Corps du footer ── */
+.footer-layout {
+    display: grid;
+    grid-template-columns: 1.7fr 1fr 1.25fr 1.35fr;
+    gap: 48px;
+    padding-bottom: 56px;
+}
+.footer-description {
+    font-size: 0.98rem;
+    color: var(--text-muted);
+    line-height: 1.65;
+    margin: 18px 0 26px;
+    max-width: 330px;
+}
+.footer-col-title {
+    font-size: 1.22rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 26px;
+    font-family: var(--font-heading);
+    letter-spacing: -0.01em;
+}
+.footer-links { list-style: none; margin: 0; padding: 0; }
+.footer-link { display: block; font-size: 1rem; color: var(--text-main); margin-bottom: 18px; transition: var(--transition-fast); }
+.footer-link:hover { color: var(--primary); }
+
+/* Contact : pastille d'icône pleine, comme le modèle. */
+.footer-contact-item { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; font-size: 1rem; color: var(--text-main); }
+.footer-contact-icon {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 38px; height: 38px; flex-shrink: 0;
+    border-radius: var(--radius-md);
+    background: var(--primary); color: #ffffff;
+}
+.footer-contact-item a { color: var(--text-main); }
+.footer-contact-item a:hover { color: var(--primary); }
+
+/* Réseaux sociaux : glyphes simples, sans cadre. */
+.footer-socials { display: flex; gap: 20px; align-items: center; }
+.footer-social-link { color: var(--text-main); display: inline-flex; transition: var(--transition-fast); }
+.footer-social-link:hover { color: var(--primary); }
+
+/* ── Barre du bas ── */
+.footer-bottom {
+    padding: 26px 0 34px;
+    border-top: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 18px;
+    font-size: 0.98rem; color: var(--text-muted);
+}
+.footer-bottom-links { display: flex; gap: 30px; align-items: center; flex-wrap: wrap; }
+.footer-bottom-links a { color: var(--text-muted); font-size: 0.98rem; }
+.footer-bottom-links a:hover { color: var(--primary); }
+
+@media (max-width: 1000px) {
+    .footer-promo { grid-template-columns: 1fr; padding: 34px 30px; text-align: center; }
+    .footer-promo-visual { order: -1; }
+    .footer-promo-form { margin: 0 auto; }
+    .footer-layout { grid-template-columns: 1fr 1fr; gap: 36px; }
+    .footer-description { max-width: none; }
+}
+@media (max-width: 600px) {
+    .footer-promo-form { flex-direction: column; border-radius: var(--radius-lg); padding: 14px; gap: 12px; }
+    .footer-promo-input { text-align: center; }
+    .footer-promo-btn { width: 100%; }
+    .footer-bottom { flex-direction: column; text-align: center; }
+}
 
 /* ============================================================
    17. SCROLL REVEAL

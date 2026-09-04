@@ -281,7 +281,7 @@ try {
         'theme_btn_primary_text'       => '#ffffff',
         'theme_badge_bg'               => '#e0f1df',
         'theme_badge_text'             => '#004d3f',
-        'theme_footer_bg'              => '#1d6363',
+        'theme_footer_bg'              => '#ffffff',
         'theme_surface_dark'           => '#12202c',
     ];
     $seeded = 0;
