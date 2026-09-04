@@ -96,15 +96,29 @@ try {
         echo "  ATTENTION newsletter_subscribers : " . $e->getMessage() . "\n";
     }
 
-    /** Pose un paramètre UNIQUEMENT s'il n'existe pas encore. */
+    /**
+     * Pose un paramètre UNIQUEMENT s'il n'existe pas encore.
+     *
+     * Les colonnes de `settings` s'appellent `setting_key` / `setting_value` —
+     * PAS `key` / `value`. Une première version de ce script utilisait les
+     * seconds : l'exception remontait au try extérieur et tuait la construction
+     * de la page AVANT sa création. D'où la garde ci-dessous : un réglage qui
+     * ne peut être posé est signalé, il n'emporte plus le reste.
+     */
     $reglageDefaut = function (string $cle, string $valeur): void {
-        $existe = Database::fetch("SELECT id FROM settings WHERE `key` = :k LIMIT 1", ['k' => $cle]);
-        if ($existe) { return; }
-        Database::query(
-            "INSERT INTO settings (`key`, `value`) VALUES (:k, :v)",
-            ['k' => $cle, 'v' => $valeur]
-        );
-        echo "  Réglage $cle initialisé.\n";
+        try {
+            $existe = Database::fetch(
+                "SELECT id FROM settings WHERE setting_key = :k LIMIT 1", ['k' => $cle]
+            );
+            if ($existe) { return; }
+            Database::query(
+                "INSERT INTO settings (setting_key, setting_value) VALUES (:k, :v)",
+                ['k' => $cle, 'v' => $valeur]
+            );
+            echo "  Réglage $cle initialisé.\n";
+        } catch (\Throwable $e) {
+            echo "  ATTENTION réglage $cle non posé : " . $e->getMessage() . "\n";
+        }
     };
 
     $reglageDefaut('newsletter_rate_limit', '5');
@@ -142,21 +156,26 @@ try {
         return strtolower(trim($texte, '-')) ?: 'categorie';
     };
 
+    // Isolé : des filtres incomplets valent mieux qu'une page absente.
     $creees = 0;
-    foreach ($categories as [$nom, $desc]) {
-        $slug = $slugifier($nom);
-        $existe = Database::fetch(
-            "SELECT id FROM blog_categories WHERE slug = :s OR name = :n LIMIT 1",
-            ['s' => $slug, 'n' => $nom]
-        );
-        if ($existe) { continue; }
-        Database::query(
-            "INSERT INTO blog_categories (name, slug, description) VALUES (:n, :s, :d)",
-            ['n' => $nom, 's' => $slug, 'd' => $desc]
-        );
-        $creees++;
+    try {
+        foreach ($categories as [$nom, $desc]) {
+            $slug = $slugifier($nom);
+            $existe = Database::fetch(
+                "SELECT id FROM blog_categories WHERE slug = :s OR name = :n LIMIT 1",
+                ['s' => $slug, 'n' => $nom]
+            );
+            if ($existe) { continue; }
+            Database::query(
+                "INSERT INTO blog_categories (name, slug, description) VALUES (:n, :s, :d)",
+                ['n' => $nom, 's' => $slug, 'd' => $desc]
+            );
+            $creees++;
+        }
+        echo "  Catégories : $creees créée(s), " . (count($categories) - $creees) . " déjà présente(s).\n";
+    } catch (\Throwable $e) {
+        echo "  ATTENTION catégories : " . $e->getMessage() . "\n";
     }
-    echo "  Catégories : $creees créée(s), " . (count($categories) - $creees) . " déjà présente(s).\n";
 
     // ══════════════════════════════════════════════════════════════════════
     //  3. PAGE
@@ -208,8 +227,15 @@ try {
     }
 
     // ── Navigation : reprendre l'entrée « Blog » plutôt que la doubler ──────
+    //
+    // Tout ce bloc est isolé. Une entrée de menu mal placée se corrige en deux
+    // clics dans l'administration ; une page absente, non. Rien ici ne doit
+    // pouvoir empêcher la création des sections qui suivent — c'est précisément
+    // ce qui s'est produit au premier déploiement, où une erreur sur `settings`
+    // a emporté la construction entière.
+    try {
     $drapeau = 'insights_nav_migrated_v1';
-    $dejaFait = Database::fetch("SELECT id FROM settings WHERE `key` = :k LIMIT 1", ['k' => $drapeau]);
+    $dejaFait = Database::fetch("SELECT id FROM settings WHERE setting_key = :k LIMIT 1", ['k' => $drapeau]);
 
     $menu = Database::fetch("SELECT id FROM menus WHERE location = 'primary' LIMIT 1");
     if (!$menu) {
@@ -261,8 +287,19 @@ try {
         echo "Ancienne page 'blog' : retirée de la navigation (son adresse redirige vers /insights).\n";
     }
 
+    // Le drapeau est ce qui rend la migration de navigation « à faire une fois ».
+    // S'il ne peut être posé, on le dit : sans lui, le passage suivant
+    // repointerait à nouveau l'entrée de menu.
     if (!$dejaFait) {
-        Database::query("INSERT INTO settings (`key`, `value`) VALUES (:k, '1')", ['k' => $drapeau]);
+        Database::query(
+            "INSERT INTO settings (setting_key, setting_value) VALUES (:k, '1')",
+            ['k' => $drapeau]
+        );
+    }
+
+    } catch (\Throwable $e) {
+        echo "ATTENTION navigation non migrée : " . $e->getMessage() . "\n";
+        echo "  -> la page existe ; l'entrée de menu est à vérifier dans /admin/menus.\n";
     }
 
     // ══════════════════════════════════════════════════════════════════════

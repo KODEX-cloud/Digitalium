@@ -117,14 +117,46 @@ page **Tags** (renommer, supprimer, voir l'usage réel) ; page **Newsletter** (f
 désabonner/réabonner, export CSV respectant les filtres) ; appel à l'action de bas d'article et
 plafond anti-spam dans **Configuration du site**.
 
-**Preuves — 362 assertions, 6 bancs d'essai, 0 en échec**
+**Incident au premier déploiement — /insights en 404, et ce qu'il a appris.**
+Le déploiement `1e1f51f` a réussi, les redirections `/blog` → `/insights` fonctionnaient, mais
+`/insights` répondait **404** : la page n'existait pas. Cause : le script écrivait dans
+`settings (` + "`key`, `value`" + `)` alors que les colonnes de cette table s'appellent
+**`setting_key` / `setting_value`**. L'exception remontait au `try` extérieur et tuait la
+construction **avant** la création de la page.
+
+Deux corrections, pas une :
+1. les bons noms de colonnes ;
+2. **l'isolation des étapes non essentielles** — réglages, catégories et bloc de navigation ont
+   chacun leur `try/catch`. Une entrée de menu mal placée se corrige en deux clics ; une page
+   absente, non. Rien de secondaire ne doit plus pouvoir emporter l'essentiel.
+
+Le banc à blanc n'avait pas pu le voir : ses bouchons acceptaient n'importe quel nom de colonne.
+Deux gardes ajoutées pour que cette classe d'erreur ne repasse plus :
+- le bouchon `settings` connaît désormais les vrais noms et **lève** sinon ;
+- un banc de **conformité au schéma** lit `database/database.sql` + `master_migration.php` et
+  confronte chaque `INSERT` du code aux colonnes qui existent réellement.
+
+**Défauts PRÉEXISTANTS relevés par ce nouveau banc — hors périmètre, non corrigés ici.**
+`app/Controllers/RecoveryController.php` — le **Recovery Center**, chemin de restauration
+d'urgence :
+- ligne 489 et 491 : lit et écrit `settings` par `` `key` `` / `` `value` `` — la phase
+  « Settings Sync » ne peut donc pas fonctionner ;
+- ligne 462 : `INSERT IGNORE INTO menus (name, location, is_active)` — la table `menus` n'a pas de
+  colonne `is_active`, et sa colonne `slug` est `NOT NULL UNIQUE` sans valeur fournie ; la phase
+  « Menu Rebuild » ne peut donc pas fonctionner non plus.
+
+À traiter dans un travail dédié, avec son propre audit (Règle #3) : c'est l'outil sur lequel on
+compte quand tout le reste est cassé.
+
+**Preuves — 390 assertions, 7 bancs d'essai, 0 en échec**
 
 | Banc | Portée | Résultat |
 |---|---|---|
 | Routage | ordre de déclaration, 2 segments, non-régression des autres pages, cibles existantes | **35/35** |
 | Gabarits de sections | contenu complet, blocs vides, base vide, contenu hostile, filtres, pagination | **107/107** |
 | Page article | sommaire, partage, JSON-LD, CTA, article minimal, contenu hostile | **66/66** |
-| Script de migration | 8 scénarios : site vierge, idempotence, menu existant, choix admin respecté, ALTER refusé | **86/86** |
+| Script de migration | 9 scénarios : site vierge, idempotence, menu existant, choix admin respecté, ALTER refusé, **settings inaccessible** | **92/92** |
+| Conformité au schéma | chaque INSERT confronté aux colonnes réelles ; isolation des étapes | **22/22** |
 | Canonique et Open Graph | accueil, contact, solutions, sous-page, article — non-régression comprise | **16/16** |
 | Écrans d'administration | fiche article, tags, abonnés, états vides | **52/52** |
 
