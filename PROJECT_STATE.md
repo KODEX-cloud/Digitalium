@@ -1,5 +1,44 @@
 # PROJECT_STATE — Digitalium Group CMS
-> Dernière mise à jour : 2026-09-04 — Page Solutions (/solutions) + 5 sous-pages + architecture parent/enfant
+> Dernière mise à jour : 2026-09-04 — ⚠ contenu de démonstration inventé en ligne (voir suite 13)
+
+---
+
+### 2026-09-04 (suite 13) — ⚠ Contenu de démonstration inventé, à remplacer
+
+**Décision de l'utilisateur, 2026-09-04** : autorisation explicite d'inventer clients et contenus
+pour combler les emplacements vides, avec correction ultérieure depuis l'admin. Cette entrée existe
+pour que personne ne redécouvre par surprise que ces références sont fausses.
+
+**Ce qui est inventé** — six réalisations dans la table `projects`, avec noms de clients, contextes,
+solutions, fonctionnalités et résultats. Aucune n'existe. Elles sont **publiées** et visibles sur
+`/realisations`, sur `/solutions` et dans le sitemap.
+
+**Mesures de traçabilité prises**
+- Le champ `client` de chaque ligne commence par **« Démo — »** : impossible de les confondre avec
+  une référence réelle, en base comme en admin.
+- **Aucun témoignage** n'a été fabriqué. Une citation signée du nom d'une personne qui n'existe pas
+  est l'élément le plus exposé, et le gabarit d'étude de cas n'affiche ce bloc que s'il est rempli :
+  son absence ne laisse aucun vide visible. À ajouter seulement sur demande explicite.
+- Les résultats sont formulés en ordres de grandeur (« délai divisé par deux ») plutôt qu'en
+  pourcentages précis, qui se vérifient et s'opposent.
+
+**Suppression** — `/admin/projects`, supprimer les six lignes « Démo — … ». Rien d'autre à défaire :
+visuels et activation de section sont du réglage, pas du contenu inventé.
+
+**Ce qui n'est PAS inventé** — les visuels. Aucune image n'a été créée : le script réutilise les six
+fichiers déjà présents dans la Bibliothèque Média, dont trois (`proj-finance`, `proj-health`,
+`proj-logistics`) avaient manifestement été téléversés pour cet usage. Les six pages Solutions
+reçoivent un visuel de hero, uniquement là où le champ était vide.
+
+**Script** `database/seed_demo_content.php`, ajouté au pipeline après `build_solutions_page.php`.
+Trois garde-fous : drapeau `demo_content_seeded_v1` en base (visible et réarmable depuis l'admin),
+semis annulé si la table `projects` contient déjà quoi que ce soit, visuels posés uniquement sur les
+champs vides. La section Réalisations de `/solutions`, créée inactive faute de contenu, est activée.
+
+**Preuves** — banc d'exécution à blanc, 4 scénarios, **20/20** : site vierge, second passage,
+réalisation réelle déjà saisie (aucune démo ajoutée, la vraie intacte), visuel déjà choisi en admin
+(conservé). Le banc a par ailleurs attrapé un appel à `mb_substr()`, extension non garantie sur
+l'hébergeur — remplacé par une troncature UTF-8 sans dépendance.
 
 ---
 

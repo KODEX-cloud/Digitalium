@@ -377,6 +377,13 @@ jobs:
                 echo "  ATTENTION Build Solutions Page (non-bloquant)"
               fi
             fi
+            if [ -f "database/seed_demo_content.php" ]; then
+              if $PHP database/seed_demo_content.php 2>&1; then
+                echo "  OK Seed Demo Content"
+              else
+                echo "  ATTENTION Seed Demo Content (non-bloquant)"
+              fi
+            fi
             if [ -f "database/build_footer_v5.php" ]; then
               if $PHP database/build_footer_v5.php 2>&1; then
                 echo "  ✓ Build Footer v5 OK"
