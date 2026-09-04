@@ -719,6 +719,87 @@ process  : 4 étapes        témoignages : 3 (fonctions reportées)
 
 ---
 
+## 2026-09-04 — FOOTER V5 CLAIR (commits bb47e27, 6172ecb)
+
+Modèle de référence fourni pour le footer. Le footer passe d'un aplat vert foncé
+à un **fond blanc** avec texte sombre, plus un panneau newsletter en aplat de
+couleur primaire posé en tête.
+
+### Mesures relevées (échelle 2.222 px image = 1 px CSS)
+
+| Élément | Modèle | Avant |
+|---|---|---|
+| Fond | `#FFFFFF` | `#1D6363` |
+| Titres de colonne | `#000F1E`, ~20 px gras | 0.77 rem MAJUSCULES gris |
+| Liens | `#00101E`, ~16 px, interligne 28 px | 0.9 rem gris |
+| Paragraphe | `#656A6E` | — |
+| Panneau | aplat de marque, rayon 28 px, champ + bouton en pilule | colonne étroite |
+| Contact | pastille d'icône pleine 38 px | icône nue |
+
+### Écart assumé
+
+Dans le modèle, le panneau newsletter **déborde** sur le haut du footer. Ici la
+page se termine par la bande `cta`, elle-même en aplat de couleur primaire : le
+débordement superposerait deux aplats colorés. Le panneau est donc posé en tête
+du footer blanc — même lecture, sans collision.
+
+### Deux correctifs d'administration (Règle #2)
+
+| Ref | Problème | Correctif |
+|---|---|---|
+| BUG-SET-01 | `AdminController::settingsSubmit` écrivait `''` pour toute clé de la liste blanche absente du POST. Ajouter une clé sans champ correspondant effaçait sa valeur au premier enregistrement. | La boucle ignore les clés non postées (`array_key_exists`). |
+| BUG-SET-02 | `footer_nav_title`, `footer_services_title`, `footer_contact_title` et les `footer_newsletter_*` existaient en base mais n'étaient ni dans la liste blanche ni dans le formulaire : **invisibles depuis /admin/settings**, donc non administrables. | Liste blanche complétée (16 clés) et champs ajoutés au panneau Réglages. |
+
+### Incident de déploiement
+
+Le premier déploiement (bb47e27) a **échoué à l'étape « SSH — Deploy Enterprise »**
+alors que la validation de syntaxe PHP était passée ; le rollback automatique a
+restauré la production. Diagnostic mené sans accès aux journaux (403 sans
+authentification) :
+
+1. Bloc YAML du pipeline : structurellement identique aux étapes existantes ✓
+2. Équilibre des balises de `layout.php` : 23 `<div>` / 23 `</div>` ✓
+3. **Rendu du footer testé en isolation**, dépendances simulées, trois scénarios
+   (réglages complets / minimaux / vides) : aucune erreur, 6538 / 2984 / 1625
+   octets rendus ✓
+
+Le code était donc hors de cause. La relance (6172ecb) a réussi sans aucune
+modification fonctionnelle : **l'échec était transitoire côté SSH**.
+
+Note : un commit vide ne relance rien — le workflow filtre par `paths-ignore`,
+et GitHub ignore un push sans fichier modifié.
+
+### Dette découverte (non corrigée)
+
+| Ref | Description | Priorité |
+|---|---|---|
+| DT-04 | `storage/logs/*.log` sont dans `.gitignore` mais **restent suivis par git** (ajoutés avant la règle). La production écrit dedans en continu : cause classique d'échec de `git pull` au déploiement. Le retrait de l'index doit être fait avec précaution, il supprimerait ces fichiers côté serveur au pull suivant. | Moyenne |
+
+### Preuve de production (Règle #5)
+
+```
+HTTP 200 · 100KB
+--footer-bg : #ffffff            (était #1d6363)
+panneau .footer-promo : présent
+  titre "Newsletter" · champ "Votre email" · bouton "S'inscrire"
+  mention + lien politique de confidentialité
+colonnes : Liens utiles | Services | Contact · 11 liens
+contact  : 4 entrées, 4 pastilles d'icône · 3 réseaux sociaux
+barre du bas : © 2026 Digitalium Group… | Mentions Légales | Plan du site | Remonter
+anciennes classes .footer-newsletter- : 0
+```
+
+### Reste à faire
+
+- **[USER]** Illustration du panneau newsletter : champ `footer_newsletter_image`
+  vide, le panneau s'affiche donc en une seule colonne. À renseigner dans
+  /admin/settings après upload en Médiathèque.
+- **[USER]** Le titre du panneau vaut « Newsletter » (valeur préexistante, non
+  écrasée par le script). Court pour un panneau de cette taille — à retravailler
+  depuis /admin/settings.
+
+---
+
 ## FICHIERS INTOUCHABLES SANS ANALYSE
 
 - `app/Services/Router.php`
