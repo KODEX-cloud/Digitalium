@@ -3,6 +3,29 @@
 
 ---
 
+### 2026-09-04 (suite 8) — BUG-HERO-02 : texte blanc sur fond blanc sans visuel
+
+**Symptôme.** Sur `/realisations`, le titre, le chapô et le bouton secondaire étaient invisibles.
+Seul le bouton principal, blanc plein, se voyait.
+
+**Cause.** En mode `overlay` le texte est blanc, mais le cadre du visuel n'était rendu **que si** un
+bloc `image` était renseigné. Sans image : pas de cadre, donc pas de voile coloré, donc du blanc sur
+le fond clair de la page. Le défaut vient du gabarit, pas de la saisie — **un gabarit ne doit pas
+dépendre de la présence d'un média pour rester lisible**.
+
+**Correctif**
+- En mode overlay, le cadre du visuel est **toujours** rendu ; seule la balise `<img>` reste conditionnelle.
+- `.hero-mc-overlay .hero-mc-media` reçoit un fond `var(--primary)` : le contraste est garanti sans image, et aussi **pendant le chargement** de l'image.
+- Les modes `split` et `banner` sont inchangés : leur texte n'est pas blanc, le cadre n'y est rendu que s'il y a une image.
+
+**Preuves (Règle #5)**
+- 5 cas (overlay sans/avec image, split sans/avec image, banner sans image) : le cadre est présent exactement quand il doit l'être, balises équilibrées
+- Harness hero complet : **12/12** scénarios toujours OK · `php -l` : OK
+- Commit `3f8f4f7` → run **completed / success**
+- Production : `/realisations` → `hero-mc-overlay`, cadre=1, img=0, fond de sécurité présent · `/secteurs` → cadre=1, img=1 · `/` → `hero-mc-split`, inchangé
+
+---
+
 ### 2026-09-04 (suite 7) — Couleur d'accent PAR PAGE + test du bleu logo sur /realisations
 
 Demande : essayer le bleu du logo sur la page Réalisations uniquement.
