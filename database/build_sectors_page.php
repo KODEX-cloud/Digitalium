@@ -35,6 +35,7 @@ spl_autoload_register(function ($class) {
 use App\Models\Page;
 use App\Models\Section;
 use App\Models\Block;
+use App\Models\Setting;
 use App\Services\Database;
 
 echo "=== BUILD SECTORS PAGE (/secteurs) ===\n";
@@ -202,20 +203,55 @@ try {
         'cta2_text'    => 'Parler de mon projet',
         'cta2_url'     => '/contact',
         'cta2_icon'    => 'message-square',
-        'image'        => '/assets/uploads/hero-pro-dashboard-1893001.jpg',
-        'image_alt'    => "La technologie adaptée aux réalités de votre métier",
-        'decor'        => '1',
-    ], [
-        // Chiffres décrivant LA PAGE elle-même — aucune affirmation commerciale.
-        ['card_icon' => 'layout-grid', 'card_label' => 'Secteurs couverts', 'card_value' => '8',
-         'card_top' => '4',  'card_left' => '46'],
-        ['card_icon' => 'cpu', 'card_label' => 'Expertises transversales', 'card_value' => '6',
-         'card_top' => '32', 'card_left' => '30'],
-        ['card_icon' => 'route', 'card_label' => 'Notre méthode', 'card_value' => '6', 'card_unit' => 'étapes',
-         'card_top' => '58', 'card_left' => '18'],
-        ['card_icon' => 'shield-check', 'card_title' => 'Adapté à vos contraintes',
-         'card_meta' => "Comprendre avant de concevoir.", 'card_top' => '82', 'card_left' => '6'],
+        'image'            => '/assets/uploads/hero-pro-dashboard-1893001.jpg',
+        'image_alt'        => "La technologie adaptée aux réalités de votre métier",
+        'decor'            => '1',
+        // Bandeau large plutôt que visuel latéral, et aucune carte flottante.
+        'layout'           => 'banner',
+        'image_max_width'  => '1300',
+        'image_ratio'      => '1300 / 400',
+        'image_ratio_mobile' => '16 / 9',
     ]);
+
+    /**
+     * Reprise du hero déjà en ligne — la section n'est plus vide, donc $seed
+     * ne s'applique plus. Deux opérations ciblées, toutes deux idempotentes :
+     *
+     *  a) poser les clés de mise en page SI ELLES MANQUENT. Jamais d'écrasement :
+     *     une valeur changée en admin est conservée.
+     *  b) retirer UNE SEULE FOIS les cartes flottantes semées par la version
+     *     précédente. Le drapeau vit dans `settings` : il reste visible et
+     *     réarmable, contrairement à un fichier de verrou (leçon BUG-HERO-01).
+     */
+    $heroContent = Block::getStructuredContent($id);
+    $heroSingle  = $heroContent['single'] ?? [];
+
+    $heroDefaults = [
+        'layout'             => ['text', 'banner'],
+        'image_max_width'    => ['text', '1300'],
+        'image_ratio'        => ['text', '1300 / 400'],
+        'image_ratio_mobile' => ['text', '16 / 9'],
+    ];
+    $added = [];
+    foreach ($heroDefaults as $key => [$type, $value]) {
+        if (!array_key_exists($key, $heroSingle)) {
+            Block::setVal($id, $key, $type, $value);
+            $added[] = $key;
+        }
+    }
+    if ($added) {
+        echo "    mise en page bandeau : " . implode(', ', $added) . " ajouté(s).\n";
+    }
+
+    if (!Setting::getVal('sectors_hero_cards_removed')) {
+        $removed = 0;
+        foreach ($heroContent['groups'] ?? [] as $group) {
+            $gid = (int)($group['_group_id'] ?? 0);
+            if ($gid > 0 && Block::deleteGroup($id, $gid)) { $removed++; }
+        }
+        Setting::setVal('sectors_hero_cards_removed', '1');
+        echo "    cartes flottantes du hero retirées : $removed groupe(s).\n";
+    }
 
     // ── 3. NOTRE APPROCHE ───────────────────────────────────────────────────
     echo "[2/8] Notre approche\n";

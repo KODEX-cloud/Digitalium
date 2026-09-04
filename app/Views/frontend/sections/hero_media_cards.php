@@ -19,6 +19,12 @@
  *     image, image_alt                  visuel de droite
  *     decor            '0' pour masquer les décors
  *
+ *     layout           'split' (défaut — texte à gauche, visuel à droite)
+ *                      ou 'banner' (texte en haut, visuel en bandeau large dessous)
+ *     image_max_width  largeur maximale du bandeau en px — défaut 1300
+ *     image_ratio      proportions du bandeau, ex. « 1300 / 400 » — défaut 1300 / 400
+ *     image_ratio_mobile  proportions sous 760px — défaut 16 / 9
+ *
  *   groups (cartes flottantes, répétables) :
  *     card_icon        nom d'icône Lucide
  *     card_label       sur-titre (majuscules)
@@ -42,9 +48,38 @@ $heroLine = static function (string $raw): string {
 
 $showDecor = !isset($single['decor']) || $single['decor'] !== '0';
 $cards     = $groups ?? [];
+
+/* Mise en page — 'split' reste le comportement historique (accueil, /service). */
+$isBanner = ($single['layout'] ?? 'split') === 'banner';
+
+/**
+ * Proportions du bandeau, saisies en admin sous la forme « 1300 / 400 »
+ * (« x » et « : » acceptés). Toute valeur non conforme retombe sur le défaut :
+ * une saisie erronée ne peut pas casser la mise en page.
+ */
+$heroRatio = static function (?string $raw, string $fallback): string {
+    $raw = trim((string)$raw);
+    if ($raw === '' || !preg_match('#^(\d{1,5})\s*[/x:]\s*(\d{1,5})$#i', $raw, $m)) {
+        return $fallback;
+    }
+    if ((int)$m[1] < 1 || (int)$m[2] < 1) { return $fallback; }
+    return $m[1] . ' / ' . $m[2];
+};
+
+$bannerRatio   = $heroRatio($single['image_ratio']        ?? null, '1300 / 400');
+$bannerRatioSm = $heroRatio($single['image_ratio_mobile'] ?? null, '16 / 9');
+$bannerWidth   = preg_match('#^\d{2,5}$#', trim((string)($single['image_max_width'] ?? '')))
+    ? trim((string)$single['image_max_width']) . 'px'
+    : '1300px';
+
+$bannerVars = $isBanner
+    ? ' style="--hero-banner-ratio:' . htmlspecialchars($bannerRatio, ENT_QUOTES, 'UTF-8')
+      . ';--hero-banner-ratio-sm:' . htmlspecialchars($bannerRatioSm, ENT_QUOTES, 'UTF-8')
+      . ';--hero-banner-w:' . htmlspecialchars($bannerWidth, ENT_QUOTES, 'UTF-8') . ';"'
+    : '';
 ?>
 
-<section class="hero-mc" id="hero-media-cards">
+<section class="hero-mc <?= $isBanner ? 'hero-mc-banner' : 'hero-mc-split' ?>" id="hero-media-cards"<?= $bannerVars ?>>
 
     <?php if ($showDecor): ?>
         <div class="hero-mc-decor" aria-hidden="true">
@@ -401,6 +436,56 @@ $cards     = $groups ?? [];
 .hero-mc-card-bar > span { display: block; height: 100%; border-radius: 999px; background: var(--primary); }
 
 .hero-mc-card-avatar { width: 34px; height: 34px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
+
+/* ── Mise en page « bandeau » ──────────────────────────────────────────────
+   Texte en haut, visuel large dessous. Le bandeau déborde volontairement du
+   conteneur (1240px) pour atteindre la largeur demandée, sans jamais provoquer
+   de défilement horizontal : `.hero-mc` est en `overflow: hidden`.
+   Les sélecteurs sont préfixés par `.hero-mc-banner` : le mode « split » de
+   l'accueil et de /service n'est pas touché.                                */
+.hero-mc-banner .hero-mc-grid {
+    grid-template-columns: 1fr;
+    gap: 44px;
+    min-height: 0;
+}
+.hero-mc-banner .hero-mc-lead { max-width: 720px; }
+
+.hero-mc-banner .hero-mc-visual {
+    min-height: 0;
+    /* Centrage indépendant de la largeur du conteneur ; la marge de 48px tient
+       compte de la barre de défilement pour ne pas rogner les bords. */
+    width: min(var(--hero-banner-w, 1300px), calc(100vw - 48px));
+    margin-left: 50%;
+    transform: translateX(-50%);
+}
+
+.hero-mc-banner .hero-mc-media {
+    height: auto;
+    min-height: 0;
+    aspect-ratio: var(--hero-banner-ratio, 1300 / 400);
+}
+.hero-mc-banner .hero-mc-img {
+    height: 100%;
+    min-height: 0;
+    object-position: center 42%;
+}
+
+/* Une carte ne peut pas flotter sur un bandeau de 400px : elle se range dessous. */
+.hero-mc-banner .hero-mc-card {
+    position: static;
+    animation: none;
+    max-width: none;
+    margin-top: 14px;
+}
+.hero-mc-banner .hero-mc-curve,
+.hero-mc-banner .hero-mc-dots { display: none; }
+.hero-mc-banner .hero-mc-circle { width: 480px; height: 480px; top: -8%; right: -4%; }
+
+/* Sous 760px, un rapport 3.25:1 donnerait une bande trop fine : on l'ouvre. */
+@media (max-width: 760px) {
+    .hero-mc-banner .hero-mc-media { aspect-ratio: var(--hero-banner-ratio-sm, 16 / 9); }
+    .hero-mc-banner .hero-mc-visual { width: calc(100vw - 32px); }
+}
 
 /* ── Adaptatif ── */
 @media (max-width: 1180px) {
