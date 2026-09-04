@@ -297,25 +297,61 @@ try {
     $done[] = "settings: theme_* — $seeded nouvelles clés seedées (" . count($themeDefaults) . " total)";
 } catch (\PDOException $e) { $errors[] = "theme settings seed: " . $e->getMessage(); }
 
-// ─── 13. Admin account — upsert (toujours force le hash à jour) ─────────────
+// ─── 13. Compte admin — création seule, jamais de réinitialisation ──────────
+//
+// SEC-01 / SEC-02 (corrigés). Ce bloc écrasait auparavant le mot de passe du
+// compte admin à CHAQUE déploiement, à partir d'un hash figé dans le dépôt dont
+// le mot de passe en clair était écrit en commentaire juste au-dessus. Deux
+// conséquences : toute personne ayant accès au dépôt connaissait le mot de passe
+// de production, et un changement de mot de passe était annulé au déploiement
+// suivant — il n'existait donc aucun moyen d'en sortir.
+//
+// Désormais : le compte n'est créé que s'il est absent, et son mot de passe
+// n'est plus jamais touché. Voie de secours explicite en cas d'oubli : poser
+// ADMIN_PASSWORD et ADMIN_PASSWORD_RESET=1 dans le .env de production, relancer,
+// puis les retirer.
 try {
-    // Hash généré en local PHP 8.3 — password = Digitalium2026!
-    $hash = '$argon2id$v=19$m=65536,t=4,p=1$dmNDZTBvRjNiNzFMc2dGQw$lVToUfCLuxyE9GRJmSP9+5jstxx729qn3W/xgW5L1g4';
+    // Le .env est lu par config/config.php, qui laisse $envData dans la portée
+    // de ce script. Repli sur getenv() pour une variable posée côté SSH.
+    $envData = (isset($envData) && is_array($envData)) ? $envData : [];
+    $envGet = static function (string $key) use ($envData): string {
+        $raw = $envData[$key] ?? getenv($key);
+        return trim((string)($raw === false ? '' : $raw));
+    };
+
+    // argon2id n'est pas garanti sur tous les hébergeurs ; password_verify()
+    // sait relire les deux formats, on prend donc le meilleur disponible.
+    $algo = in_array('argon2id', password_algos(), true) ? PASSWORD_ARGON2ID : PASSWORD_DEFAULT;
+
+    $envPassword = $envGet('ADMIN_PASSWORD');
+    $forceReset  = $envGet('ADMIN_PASSWORD_RESET') === '1';
 
     $existing = $pdo->prepare("SELECT id FROM users WHERE username = 'admin'");
     $existing->execute();
     $row = $existing->fetch(\PDO::FETCH_ASSOC);
 
     if (!$row) {
+        // Aucun compte : on en crée un. Mot de passe repris du .env, sinon
+        // engendré au hasard et affiché UNE seule fois, ici même.
+        $generated = $envPassword === '';
+        $password  = $generated ? bin2hex(random_bytes(9)) : $envPassword;
         $pdo->prepare("INSERT INTO users (username, password, email, created_at, updated_at) VALUES ('admin', ?, 'admin@digitaliumgroup.com', NOW(), NOW())")
-            ->execute([$hash]);
-        $done[] = "users: admin créé — mot de passe = Digitalium2026!";
+            ->execute([password_hash($password, $algo)]);
+        $done[] = $generated
+            ? "users: compte admin créé — mot de passe engendré : {$password} — noté nulle part ailleurs, à changer"
+            : "users: compte admin créé — mot de passe repris de ADMIN_PASSWORD (.env)";
+    } elseif ($forceReset) {
+        if ($envPassword === '') {
+            $errors[] = "users: ADMIN_PASSWORD_RESET=1 mais ADMIN_PASSWORD est vide — mot de passe inchangé";
+        } else {
+            $pdo->prepare("UPDATE users SET password = ?, updated_at = NOW() WHERE username = 'admin'")
+                ->execute([password_hash($envPassword, $algo)]);
+            $done[] = "users: mot de passe admin réinitialisé depuis .env — retirer maintenant ADMIN_PASSWORD et ADMIN_PASSWORD_RESET du .env";
+        }
     } else {
-        $pdo->prepare("UPDATE users SET password = ?, updated_at = NOW() WHERE username = 'admin'")
-            ->execute([$hash]);
-        $done[] = "users: mot de passe admin réinitialisé → Digitalium2026!";
+        $done[] = "users: compte admin présent — mot de passe conservé (non réinitialisé)";
     }
-} catch (\PDOException $e) { $errors[] = "users admin upsert: " . $e->getMessage(); }
+} catch (\Throwable $e) { $errors[] = "users admin: " . $e->getMessage(); }
 
 // ─── Output ─────────────────────────────────────────────────────────────────
 $isCli = PHP_SAPI === 'cli';

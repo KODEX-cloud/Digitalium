@@ -1,5 +1,53 @@
 # PROJECT_STATE — Digitalium Group CMS
-> Dernière mise à jour : 2026-09-04 — Page Secteurs d'activité (/secteurs) + éditeur Pages CMS enrichi
+> Dernière mise à jour : 2026-09-04 — Dette de sécurité soldée (SEC-01..04, DT-04)
+
+---
+
+### 2026-09-04 (suite 10) — Dette de sécurité soldée : SEC-01, SEC-02, DT-04 + SEC-03/SEC-04 découvertes
+
+**SEC-01 / SEC-02 — compte admin (`database/master_migration.php`, section 13).**
+Le bloc réécrivait le mot de passe admin à **chaque** déploiement à partir d'un hash figé dans le
+dépôt, dont le mot de passe en clair était en commentaire juste au-dessus. Toute personne ayant
+accès au dépôt connaissait donc le mot de passe de production, et un changement de mot de passe
+était annulé au push suivant — il n'existait aucun moyen d'en sortir.
+- Le compte n'est plus créé que s'il est **absent** ; son mot de passe n'est ensuite **jamais** touché.
+- Première installation : `ADMIN_PASSWORD` du `.env`, sinon mot de passe **engendré au hasard** et affiché une seule fois dans le rapport de migration.
+- Voie de secours : `ADMIN_PASSWORD` + `ADMIN_PASSWORD_RESET=1` dans le `.env`, puis retrait des deux lignes.
+- Hash : `argon2id` si l'hébergeur le fournit, sinon repli `PASSWORD_DEFAULT` — l'ancien code supposait argon2id disponible.
+- Le hash et le mot de passe en clair ont disparu du dépôt (`grep` sur tout l'arbre : 0 occurrence).
+- **Preuve** : harnais `7/7` — compte existant sans `.env` (0 écriture), compte absent sans `.env` (mot de passe engendré), compte absent avec `.env`, réinitialisation demandée, `RESET=1` sans mot de passe (refus + erreur), `RESET=0` avec mot de passe présent (aucun effet), valeurs entourées d'espaces. Chaque valeur écrite est vérifiée hachée et relue par `password_verify()`.
+
+**DT-04 — logs suivis par git.** Plus grave que de l'hygiène : le déploiement fait
+`git reset --hard origin/main` (`.github/workflows/deploy.yml:257`), donc `app.log`, `contacts.log`
+et `security.log` de **production étaient écrasés par ceux de la machine de développement à chaque
+déploiement**. Retirés de l'index (`git rm --cached`). `reset --hard` ne touche pas aux fichiers non
+suivis : la production conserve désormais ses journaux. Aucun `.gitkeep` nécessaire, `BootCheck`
+recrée `storage/logs` lui-même (`app/Services/BootCheck.php:132`, non critique).
+
+**SEC-03 (nouvelle) — le dossier `bin/` était servi par Apache.** Le `.htaccess` bloquait
+`app|config|database|routes|storage|vendor` mais **pas `bin`**. Constaté en production :
+`/bin/read_logs.php` → **HTTP 200**, divulguant le chemin absolu du serveur
+(`/home/u839163661/domains/...`) et prêt à afficher les journaux applicatifs ;
+`/bin/deploy.php` → HTTP 500, c'est-à-dire **exécuté** jusqu'au plantage.
+- `bin` et `.github` ajoutés à la règle de blocage du `.htaccess`.
+- Défense en profondeur : garde `php_sapi_name() !== 'cli'` → 403 ajoutée aux **7** scripts de `bin/` (seul `recover-production.php` l'avait). Un `.htaccess` perdu ne suffit plus à les rendre exécutables.
+- Vérifié : aucun code de `app/` ou `routes/` n'inclut ces scripts ; le workflow ne les appelle qu'en CLI par SSH.
+
+**SEC-04 (nouvelle) — `database/change_admin_prod.php`.** Formulaire web qui remplace le mot de
+passe admin **sans authentification ni jeton CSRF**. `RISK_ANALYSIS.md` le classait CRITIQUE et
+« à supprimer immédiatement » ; il n'était hors d'atteinte que grâce à une seule ligne du
+`.htaccess` (403 confirmé en production). Verrouillé derrière le même interrupteur
+`ADMIN_PASSWORD_RESET=1` que la migration : inerte par défaut, ouvrable à la demande.
+**Suppression pure recommandée** — non effectuée, elle demande votre accord.
+
+**Documentation** : `.env.example` décrit `ADMIN_PASSWORD` et `ADMIN_PASSWORD_RESET`.
+
+**Non-régression** : `php -l` sur les 9 fichiers touchés — 0 erreur. `/admin/login` répond 200.
+`database/`, `config/`, `.env` et `storage/logs/` restent en 403 en production.
+
+**⚠ Action requise de votre côté** : le mot de passe `admin` de production est resté celui qui a
+circulé dans le dépôt Git. Il doit être changé — voir la procédure `ADMIN_PASSWORD_RESET` du
+`.env.example`.
 
 ---
 
@@ -755,8 +803,8 @@ hero               : padding 116px 0 84px 0 · min-height 0
 
 | Ref | Description | Priorité |
 |---|---|---|
-| SEC-01 | `master_migration.php:294-312` force le hash admin à **chaque** déploiement : tout mot de passe changé depuis l'admin est écrasé au push suivant. Devrait être *insert-if-missing*. | Haute |
-| SEC-02 | Mot de passe admin en clair dans le dépôt Git (`master_migration.php:296`, commentaire). | Haute |
+| SEC-01 | ✅ CORRIGÉ 2026-09-04 (suite 10) — création seule, plus aucune réinitialisation. `master_migration.php:294-312` force le hash admin à **chaque** déploiement : tout mot de passe changé depuis l'admin est écrasé au push suivant. Devrait être *insert-if-missing*. | Haute |
+| SEC-02 | ✅ CORRIGÉ 2026-09-04 (suite 10) — hash et mot de passe retirés du dépôt ; à changer côté production. Mot de passe admin en clair dans le dépôt Git (`master_migration.php:296`, commentaire). | Haute |
 
 ---
 
@@ -1176,7 +1224,7 @@ et GitHub ignore un push sans fichier modifié.
 
 | Ref | Description | Priorité |
 |---|---|---|
-| DT-04 | `storage/logs/*.log` sont dans `.gitignore` mais **restent suivis par git** (ajoutés avant la règle). La production écrit dedans en continu : cause classique d'échec de `git pull` au déploiement. Le retrait de l'index doit être fait avec précaution, il supprimerait ces fichiers côté serveur au pull suivant. | Moyenne |
+| DT-04 | ✅ CORRIGÉ 2026-09-04 (suite 10) — retirés de lindex ; git reset --hard nécrase plus les journaux de production. `storage/logs/*.log` sont dans `.gitignore` mais **restent suivis par git** (ajoutés avant la règle). La production écrit dedans en continu : cause classique d'échec de `git pull` au déploiement. Le retrait de l'index doit être fait avec précaution, il supprimerait ces fichiers côté serveur au pull suivant. | Moyenne |
 
 ### Preuve de production (Règle #5)
 

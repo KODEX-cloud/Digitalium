@@ -5,8 +5,11 @@
     # Prevent directory browsing and MultiViews conflicts (commented out for host compatibility)
     # Options -Indexes -MultiViews
 
-    # Block direct access to critical app directories
-    RewriteRule ^(app|config|database|routes|storage|vendor)($|/) - [F,L]
+    # Block direct access to critical app directories.
+    # `bin` manquait à cette liste : /bin/read_logs.php répondait en HTTP 200 et
+    # divulguait le chemin absolu du serveur, /bin/deploy.php s'exécutait jusqu'à
+    # planter. Ajouté ici, plus une garde CLI dans chaque script de bin/.
+    RewriteRule ^(app|bin|config|database|routes|storage|vendor|\.github)($|/) - [F,L]
 
     # Rewrite assets and public files transparently if requesting from root but they are in public/
     RewriteCond %{DOCUMENT_ROOT}/public/$1 -f [OR]

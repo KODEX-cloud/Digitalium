@@ -1,5 +1,14 @@
 #!/usr/bin/env php
 <?php
+
+// ─── Sécurité : CLI uniquement ────────────────────────────────────────────────
+// Le dossier bin/ était servi par Apache : /bin/read_logs.php et /bin/deploy.php
+// répondaient en HTTP. Le .htaccess les bloque désormais, mais un .htaccess perdu
+// ou ignoré ne doit pas suffire à rendre ces scripts exécutables depuis le Web.
+if (php_sapi_name() !== 'cli') {
+    http_response_code(403);
+    exit('Access denied — CLI only');
+}
 /**
  * DIGITALIUM DEPLOYMENT PIPELINE — CLI Runner
  *

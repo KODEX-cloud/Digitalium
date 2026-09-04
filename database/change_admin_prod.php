@@ -29,6 +29,22 @@ spl_autoload_register(function ($class) {
 
 use App\Services\Database;
 
+// ─── Verrou explicite ────────────────────────────────────────────────────────
+// Ce formulaire remplace le mot de passe administrateur SANS authentification ni
+// jeton CSRF : RISK_ANALYSIS.md le classe CRITIQUE. Il n'est aujourd'hui hors
+// d'atteinte que grâce à une seule ligne du .htaccess ; un .htaccess perdu le
+// rendrait exploitable par n'importe qui.
+//
+// Il ne s'ouvre donc plus que sur demande explicite : poser ADMIN_PASSWORD_RESET=1
+// dans le .env de production, s'en servir, puis remettre 0. Même interrupteur que
+// celui de la master migration, pour n'avoir qu'une seule chose à retenir.
+$resetArmed = trim((string)(($envData["ADMIN_PASSWORD_RESET"] ?? getenv("ADMIN_PASSWORD_RESET")) ?: "")) === "1";
+if (!$resetArmed) {
+    http_response_code(403);
+    exit("Outil verrouillé. Pour l'ouvrir : poser ADMIN_PASSWORD_RESET=1 dans le .env, puis remettre 0 aussitôt après usage.");
+}
+
+
 $message = '';
 $isSuccess = false;
 
