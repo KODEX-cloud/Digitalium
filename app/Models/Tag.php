@@ -42,6 +42,38 @@ class Tag extends Model {
         }
     }
 
+    /** Tags avec le nombre d'articles PUBLIÉS qui les portent. */
+    public static function getAllWithCount(): array {
+        return Database::fetchAll(
+            "SELECT t.*, COUNT(p.id) AS post_count
+             FROM blog_tags t
+             LEFT JOIN blog_post_tags pt ON pt.tag_id = t.id
+             LEFT JOIN blog_posts p ON p.id = pt.post_id AND p.status = 'published'
+             GROUP BY t.id ORDER BY post_count DESC, t.name ASC"
+        );
+    }
+
+    /**
+     * Renomme un tag sans casser ses rattachements.
+     * Refuse si le nouveau nom entre en collision avec un tag existant : la
+     * fusion de deux tags est une autre opération, qui doit rester explicite.
+     */
+    public static function renommer(int $id, string $nom): bool {
+        $nom = trim($nom);
+        if ($nom === '') { return false; }
+        $slug = self::slugify($nom);
+        $doublon = Database::fetch(
+            "SELECT id FROM blog_tags WHERE slug = :s AND id <> :id LIMIT 1",
+            ['s' => $slug, 'id' => $id]
+        );
+        if ($doublon) { return false; }
+        Database::query(
+            "UPDATE blog_tags SET name = :n, slug = :s WHERE id = :id",
+            ['n' => $nom, 's' => $slug, 'id' => $id]
+        );
+        return true;
+    }
+
     public static function slugify(string $text): string {
         $text = preg_replace('~[^\pL\d]+~u', '-', $text);
         $text = iconv('utf-8', 'us-ascii//TRANSLIT', $text);

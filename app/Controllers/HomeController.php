@@ -528,6 +528,10 @@ class HomeController extends Controller {
         foreach ($publishedPages as $p) {
             $slug = $p['slug'];
 
+            // /blog redirige en 301 vers /insights : déclarer l'ancienne adresse
+            // reviendrait à remplir le sitemap d'une redirection.
+            if ($slug === 'blog') { continue; }
+
             // Une page rattachée à un parent n'est servie qu'à son URL imbriquée :
             // l'URL courte y redirige en 301. Déclarer la courte reviendrait à
             // remplir le sitemap de redirections.
@@ -547,6 +551,30 @@ class HomeController extends Controller {
             echo '    <lastmod>' . $lastmod . '</lastmod>' . "\n";
             echo '    <changefreq>' . $changefreq . '</changefreq>' . "\n";
             echo '    <priority>' . $priority . '</priority>' . "\n";
+            echo '  </url>' . "\n";
+        }
+
+        /**
+         * Articles publiés.
+         *
+         * Sans eux, le sitemap ne déclarait que /blog — c'est-à-dire la liste,
+         * jamais son contenu : les articles n'étaient soumis à l'indexation par
+         * aucun autre moyen que la découverte par lien.
+         *
+         * Une lecture qui échoue renvoie [] en production : le sitemap reste
+         * valide avec les seules pages, plutôt que de casser entièrement.
+         */
+        foreach (\App\Models\Post::toutPublie(500) as $article) {
+            $slug = trim((string)($article['slug'] ?? ''));
+            if ($slug === '') { continue; }
+
+            $date = $article['updated_at'] ?? $article['published_at'] ?? $article['created_at'] ?? 'now';
+
+            echo '  <url>' . "\n";
+            echo '    <loc>' . htmlspecialchars('https://digitaliumgroup.com/insights/' . $slug) . '</loc>' . "\n";
+            echo '    <lastmod>' . date('Y-m-d', strtotime((string)$date)) . '</lastmod>' . "\n";
+            echo '    <changefreq>monthly</changefreq>' . "\n";
+            echo '    <priority>0.7</priority>' . "\n";
             echo '  </url>' . "\n";
         }
 

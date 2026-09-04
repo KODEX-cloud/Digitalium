@@ -28,7 +28,7 @@
     </div>
     <div style="display:flex;gap:10px;align-items:center;">
         <?php if ($post['status'] === 'published'): ?>
-        <a href="<?= url('/blog/' . $post['slug']) ?>" target="_blank" class="btn-secondary" style="padding:10px 16px;border-radius:10px;font-size:0.85rem;font-weight:600;border:1px solid var(--border);color:var(--text-main);text-decoration:none;display:inline-flex;align-items:center;gap:6px;">
+        <a href="<?= url('/insights/' . $post['slug']) ?>" target="_blank" class="btn-secondary" style="padding:10px 16px;border-radius:10px;font-size:0.85rem;font-weight:600;border:1px solid var(--border);color:var(--text-main);text-decoration:none;display:inline-flex;align-items:center;gap:6px;">
             <i data-lucide="eye" style="width:15px;height:15px;"></i> Voir
         </a>
         <?php endif; ?>
@@ -42,6 +42,7 @@
     <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
     <input type="hidden" name="content" id="content-input">
     <input type="hidden" name="featured_image" id="featured-image-input" value="<?= htmlspecialchars($post['featured_image'] ?? '') ?>">
+    <input type="hidden" name="og_image" id="og-image-input" value="<?= htmlspecialchars($post['og_image'] ?? '') ?>">
 
     <div class="blog-editor-grid">
         <!-- Main column -->
@@ -98,11 +99,71 @@
                         Article mis en avant
                     </label>
                 </div>
-                <?php if ($post['published_at']): ?>
-                <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border);font-size:0.78rem;color:var(--text-muted);">
-                    Publié le <?= date('d/m/Y à H:i', strtotime($post['published_at'])) ?>
+                <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border);">
+                    <label class="field-label">Date de publication</label>
+                    <input type="datetime-local" name="published_at" class="field-input"
+                           value="<?= !empty($post['published_at']) ? htmlspecialchars(date('Y-m-d\TH:i', strtotime($post['published_at']))) : '' ?>">
+                    <small style="display:block;margin-top:5px;font-size:0.74rem;color:var(--text-muted);">
+                        Laisser vide : la date est posée automatiquement à la première publication.
+                    </small>
                 </div>
-                <?php endif; ?>
+
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px;">
+                    <div>
+                        <label class="field-label">Ordre</label>
+                        <input type="number" name="sort_order" class="field-input" min="0" max="9999"
+                               value="<?= (int)($post['sort_order'] ?? 0) ?>">
+                        <small style="display:block;margin-top:5px;font-size:0.74rem;color:var(--text-muted);">
+                            Plus grand = plus haut.
+                        </small>
+                    </div>
+                    <div>
+                        <label class="field-label">Durée de lecture</label>
+                        <input type="number" name="reading_time" class="field-input" min="0" max="999"
+                               value="<?= (int)($post['reading_time'] ?? 0) ?>">
+                        <small style="display:block;margin-top:5px;font-size:0.74rem;color:var(--text-muted);">
+                            0 = calculée<?= !empty($readingTime) ? ' (' . (int)$readingTime . ' min)' : '' ?>.
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+            <?php /* Contenus stratégiques : un article ordinaire devient guide,
+                     rapport ou checklist par ce seul champ, et rejoint alors la
+                     section « Contenus stratégiques » de /insights. */ ?>
+            <div class="card" style="background:var(--bg-surface);border:1px solid var(--border);border-radius:16px;padding:20px;">
+                <h3 style="font-size:0.88rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin-bottom:16px;">Contenu stratégique</h3>
+                <div style="margin-bottom:12px;">
+                    <label class="field-label">Type</label>
+                    <select name="resource_type" class="field-input">
+                        <option value="">— Article ordinaire —</option>
+                        <?php foreach (($resourceTypes ?? []) as $cle => $libelle): ?>
+                            <option value="<?= htmlspecialchars($cle, ENT_QUOTES) ?>"
+                                <?= ($post['resource_type'] ?? '') === $cle ? 'selected' : '' ?>>
+                                <?= htmlspecialchars($libelle) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                    <small style="display:block;margin-top:5px;font-size:0.74rem;color:var(--text-muted);">
+                        Un type sort l'article du flux « Derniers articles » pour le placer dans « Contenus stratégiques ».
+                    </small>
+                </div>
+                <div style="margin-bottom:12px;">
+                    <label class="field-label">Fichier à télécharger</label>
+                    <input type="text" name="resource_file" class="field-input"
+                           value="<?= htmlspecialchars($post['resource_file'] ?? '') ?>"
+                           placeholder="/assets/uploads/guide.pdf">
+                    <small style="display:block;margin-top:5px;font-size:0.74rem;color:var(--text-muted);">
+                        Chemin interne ou adresse complète. La Bibliothèque Média n'accepte aujourd'hui que des images :
+                        un document doit être déposé sur le serveur puis son chemin collé ici.
+                    </small>
+                </div>
+                <div>
+                    <label class="field-label">Bouton — libellé</label>
+                    <input type="text" name="resource_cta" class="field-input"
+                           value="<?= htmlspecialchars($post['resource_cta'] ?? '') ?>"
+                           placeholder="Télécharger le guide">
+                </div>
             </div>
 
             <div class="card" style="background:var(--bg-surface);border:1px solid var(--border);border-radius:16px;padding:20px;">
@@ -135,6 +196,32 @@
                 <div style="margin-bottom:12px;">
                     <label class="field-label">Meta description</label>
                     <textarea name="meta_description" class="field-input" rows="3"><?= htmlspecialchars($post['meta_description'] ?? '') ?></textarea>
+                </div>
+                <?php /* Visuel de partage : distinct de la couverture, parce que
+                         les réseaux recadrent en 1200×630 et qu'une couverture
+                         verticale y devient illisible. Vide, la couverture sert. */ ?>
+                <div style="margin-bottom:12px;">
+                    <label class="field-label">Image de partage (Open Graph)</label>
+                    <div class="image-field-wrapper">
+                        <div class="image-field-preview" id="og-image-preview">
+                            <?php if (!empty($post['og_image'])): ?>
+                                <img src="<?= htmlspecialchars(url($post['og_image'])) ?>" style="width:100%;height:100%;object-fit:cover;">
+                            <?php else: ?>
+                                <i data-lucide="share-2" style="width:22px;height:22px;opacity:0.3;"></i>
+                            <?php endif; ?>
+                        </div>
+                        <div style="flex:1;">
+                            <button type="button" class="btn-secondary" onclick="openMediaModal('og-image-input','og-image-preview')" style="width:100%;padding:8px;font-size:0.82rem;border-radius:8px;">
+                                Choisir une image
+                            </button>
+                            <button type="button" onclick="clearImage('og-image-input','og-image-preview')" style="margin-top:6px;width:100%;padding:6px;font-size:0.78rem;border-radius:8px;background:none;border:1px solid var(--border);color:var(--text-muted);cursor:pointer;">
+                                Supprimer
+                            </button>
+                        </div>
+                    </div>
+                    <small style="display:block;margin-top:6px;font-size:0.74rem;color:var(--text-muted);">
+                        Laisser vide pour utiliser l'image de couverture.
+                    </small>
                 </div>
                 <div>
                     <label class="field-label">Tags <small style="font-weight:400;color:var(--text-muted);">(séparés par virgules)</small></label>

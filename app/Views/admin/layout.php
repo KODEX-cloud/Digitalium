@@ -443,7 +443,7 @@
             <li class="menu-item <?= $isActive('#^/admin/blog#') ?>">
                 <a href="<?= url('/admin/blog') ?>" style="position: relative;">
                     <i data-lucide="newspaper"></i>
-                    <span>Blog</span>
+                    <span>Insights</span>
                     <?php
                     try {
                         $pendingComments = \App\Models\Comment::countPending();
@@ -459,6 +459,12 @@
                 <a href="<?= url('/admin/blog/comments') ?>">
                     <i data-lucide="message-circle"></i>
                     <span>Commentaires</span>
+                </a>
+            </li>
+            <li class="menu-item <?= $isActive('#^/admin/newsletter#') ?>">
+                <a href="<?= url('/admin/newsletter') ?>">
+                    <i data-lucide="mail"></i>
+                    <span>Newsletter</span>
                 </a>
             </li>
             <li class="menu-item <?= $isActive('#^/admin/messages#') ?>">

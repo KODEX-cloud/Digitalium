@@ -55,6 +55,14 @@ class BlockFieldHelper {
             '1' => 'Afficher le formulaire de contact',
             '0' => 'Masquer le formulaire (garder coordonnées et boutons)',
         ],
+        'show_search' => [
+            '1' => 'Afficher le champ de recherche',
+            '0' => 'Masquer le champ de recherche',
+        ],
+        'fallback_latest' => [
+            '1' => "Afficher le plus récent si aucun article n'est mis à la une",
+            '0' => "N'afficher qu'un article explicitement mis à la une",
+        ],
     ];
 
     /**
@@ -119,7 +127,7 @@ class BlockFieldHelper {
         'filter_all'     => ['Libellé du filtre « tout »', "Exemple : Tous."],
         'cta_text'       => ['Libellé du bouton d\'une carte', "Laisser vide pour ne pas afficher de bouton sur les cartes."],
         'show_filters'   => ['Barre de filtres', "Les filtres n'apparaissent que si au moins deux catégories sont réellement utilisées."],
-        'empty_text'     => ['Message quand aucune réalisation', "Affiché tant qu'aucune réalisation publiée ne correspond. Laisser vide pour n'afficher aucun message."],
+        'empty_text'     => ['Message quand la liste est vide', "Affiché tant qu'aucun élément publié ne correspond. Laisser vide pour n'afficher aucun message."],
         'cat_value'      => ['Catégorie — valeur exacte', "Doit correspondre au mot saisi dans le champ Catégorie d'une réalisation."],
         'cat_label'      => ['Catégorie — libellé affiché', "Facultatif : par défaut, la valeur exacte est affichée."],
 
@@ -148,6 +156,33 @@ class BlockFieldHelper {
         'need_text'      => ['Le besoin', "Formulé du point de vue du client. Vider ce champ masque la ligne."],
         'need_solution'  => ['La réponse', "La famille de solutions concernée. Affichée en petit sous le besoin."],
         'need_link'      => ['Destination', "Chemin interne, par exemple /solutions/ia-automatisation."],
+
+        // ── Insights — article à la une ──
+        'badge_label'    => ['Pastille sur le visuel', "Petit texte posé sur l'image, par exemple « À la une ». Vider pour le masquer."],
+        'read_suffix'    => ['Unité de durée de lecture', "Affichée après le nombre de minutes. Exemple : min de lecture."],
+        'fallback_latest'=> ['Si aucun article n\'est mis à la une', "La durée de lecture est calculée sur le texte de l'article quand elle n'est pas saisie."],
+
+        // ── Insights — grille d'articles ──
+        'show_search'    => ['Champ de recherche', "La recherche porte sur le titre, l'extrait, la catégorie et les tags."],
+        'search_label'   => ['Intitulé de la recherche', "Affiché au-dessus du champ."],
+        'search_placeholder' => ['Texte indicatif du champ de recherche', "Affiché dans le champ tant qu'il est vide."],
+        'search_button'  => ['Bouton de recherche — libellé', ""],
+        'per_page'       => ['Articles par page', "Entre 1 et 48. Défaut : 9."],
+        'read_label'     => ['Lien de carte — libellé', "Affiché en bas de chaque article. Exemple : Lire."],
+        'count_label'    => ['Compteur de résultats', "{n} est remplacé par le nombre trouvé. Exemple : {n} résultat(s)."],
+        'reset_text'     => ['Lien de réinitialisation', "Ramène à la liste complète après un filtre ou une recherche."],
+
+        // ── Insights — contenus stratégiques ──
+        'read_text'      => ['Bouton par défaut — consultation', "Utilisé quand le contenu n'a pas de fichier téléchargeable."],
+        'download_text'  => ['Bouton par défaut — téléchargement', "Utilisé quand un fichier est rattaché au contenu."],
+        'type_value'     => ['Type — valeur enregistrée', "Doit correspondre exactement au type choisi sur l'article. Exemple : guide."],
+        'type_label'     => ['Type — libellé affiché', "Ce que lit le visiteur. Exemple : Guide pratique."],
+        'type_icon'      => ['Type — icône', "Nom d'icône Lucide."],
+
+        // ── Newsletter ──
+        'placeholder'    => ['Texte indicatif du champ email', "Affiché dans le champ tant qu'il est vide."],
+        'button_text'    => ['Bouton — libellé', ""],
+        'note'           => ['Mention sous le formulaire', "Fréquence d'envoi, désabonnement, usage de l'adresse."],
 
         // ── Aperçu de réalisations ──
         'limit'          => ['Nombre de réalisations affichées', "Laisser vide pour toutes les afficher. Exemple : 3 pour un aperçu."],
@@ -196,7 +231,7 @@ class BlockFieldHelper {
         // à la règle générale sur les clés en « _text ».
         // Paragraphes malgré leur suffixe « _text » : ce sont des messages
         // adressés au visiteur, pas des libellés de bouton.
-        if (in_array($key, ['slide_text', 'success_text'], true)) { return 'textarea'; }
+        if (in_array($key, ['slide_text', 'success_text', 'empty_text'], true)) { return 'textarea'; }
         if (str_ends_with($key, '_text')) { return 'text'; }
 
         foreach (['_ratio', '_max_width', '_width', '_height', '_alt', '_position', '_radius', '_opacity'] as $suffix) {
@@ -207,7 +242,7 @@ class BlockFieldHelper {
         if (str_contains($key, 'url') || str_contains($key, 'link')) { return 'link'; }
 
         $long = ['text', 'subtitle', 'content', 'description', 'contact_address',
-                 'ps_problem', 'ps_solution', 'privacy_note'];
+                 'ps_problem', 'ps_solution', 'privacy_note', 'note'];
         if (in_array($key, $long, true)) { return 'textarea'; }
         foreach (['desc', 'quote', 'points', 'needs', 'detail', 'answer', 'summary'] as $needle) {
             if (str_contains($key, $needle)) { return 'textarea'; }

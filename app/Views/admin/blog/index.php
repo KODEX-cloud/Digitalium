@@ -11,12 +11,18 @@
 
 <div class="page-header" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;">
     <div>
-        <h1 class="page-title">Blog</h1>
-        <p style="color:var(--text-muted);font-size:0.9rem;margin-top:4px;"><?= count($posts) ?> article(s) au total</p>
+        <h1 class="page-title">Insights</h1>
+        <p style="color:var(--text-muted);font-size:0.9rem;margin-top:4px;">
+            <?= count($posts) ?> article(s) au total &middot;
+            <a href="<?= url('/insights') ?>" target="_blank" style="color:var(--primary);text-decoration:none;">voir la page publique</a>
+        </p>
     </div>
     <div style="display:flex;gap:10px;">
         <a href="<?= url('/admin/blog/categories') ?>" class="btn-secondary" style="display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:10px;font-size:0.85rem;font-weight:600;border:1px solid var(--border);color:var(--text-main);text-decoration:none;">
             <i data-lucide="tag" style="width:16px;height:16px;"></i> Catégories
+        </a>
+        <a href="<?= url('/admin/blog/tags') ?>" class="btn-secondary" style="display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:10px;font-size:0.85rem;font-weight:600;border:1px solid var(--border);color:var(--text-main);text-decoration:none;">
+            <i data-lucide="tags" style="width:16px;height:16px;"></i> Tags
         </a>
         <a href="<?= url('/admin/blog/create') ?>" class="btn-primary" style="display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:10px;font-size:0.85rem;font-weight:700;text-decoration:none;">
             <i data-lucide="plus" style="width:16px;height:16px;"></i> Nouvel article
@@ -64,7 +70,7 @@
                 </td>
                 <td>
                     <div style="display:flex;gap:6px;align-items:center;">
-                        <a href="<?= url('/blog/' . $post['slug']) ?>" target="_blank" title="Voir" style="padding:6px;color:var(--text-muted);border-radius:6px;display:flex;" title="Voir sur le site">
+                        <a href="<?= url('/insights/' . $post['slug']) ?>" target="_blank" title="Voir" style="padding:6px;color:var(--text-muted);border-radius:6px;display:flex;" title="Voir sur le site">
                             <i data-lucide="eye" style="width:16px;height:16px;"></i>
                         </a>
                         <a href="<?= url('/admin/blog/edit/' . $post['id']) ?>" title="Modifier" style="padding:6px;color:var(--primary);border-radius:6px;display:flex;">

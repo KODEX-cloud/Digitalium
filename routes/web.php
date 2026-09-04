@@ -13,10 +13,25 @@ $router->post('/contact', 'HomeController@contactSubmit');
 // les deux doivent continuer de fonctionner.
 $router->post('/contact/demande', 'HomeController@leadSubmit');
 
-// --- Public Blog ---
-$router->get('/blog', 'BlogController@frontendIndex');
-$router->get('/blog/{slug}', 'BlogController@frontendPost');
+// --- Public Insights (centre de ressources) ---
+// La LISTE /insights est une page CMS ordinaire : elle passe par le catch-all
+// et se compose de ses sections. Seul le détail d'un article a sa route.
+// Deux segments, donc OBLIGATOIREMENT avant /{parent}/{child}.
+$router->get('/insights/{slug}', 'BlogController@frontendPost');
+
+// Anciennes adresses : redirection 301 définitive vers /insights.
+// Un contenu n'a qu'une seule adresse (leçon DT-05) ; les liens et l'indexation
+// existants ne sont pas perdus pour autant.
+$router->get('/blog', 'BlogController@legacyIndex');
+$router->get('/blog/{slug}', 'BlogController@legacyPost');
+
+// Le formulaire de commentaires poste toujours ici : l'adresse est déjà en
+// production dans le JavaScript des pages servies, la changer casserait les
+// pages encore en cache navigateur.
 $router->post('/blog/comment', 'BlogController@submitComment');
+
+// Inscription à la lettre d'analyses.
+$router->post('/newsletter', 'BlogController@subscribe');
 
 // --- Public Réalisations ---
 $router->get('/realisations', 'ProjectController@publicIndex');
@@ -97,6 +112,18 @@ $router->post('/admin/blog/delete/{id}', 'BlogController@delete');
 $router->get('/admin/blog/categories', 'BlogController@categories');
 $router->post('/admin/blog/categories/create', 'BlogController@createCategory');
 $router->post('/admin/blog/categories/delete/{id}', 'BlogController@deleteCategory');
+
+// --- Admin Blog (Tags) ---
+$router->get('/admin/blog/tags', 'BlogController@tags');
+$router->post('/admin/blog/tags/rename/{id}', 'BlogController@renameTag');
+$router->post('/admin/blog/tags/delete/{id}', 'BlogController@deleteTag');
+
+// --- Admin Newsletter (abonnés) ---
+// /admin/newsletter/export AVANT toute route à paramètre du même préfixe.
+$router->get('/admin/newsletter', 'BlogController@subscribers');
+$router->get('/admin/newsletter/export', 'BlogController@exportSubscribers');
+$router->post('/admin/newsletter/statut/{id}', 'BlogController@subscriberStatus');
+$router->post('/admin/newsletter/delete/{id}', 'BlogController@deleteSubscriber');
 
 // --- Admin Blog Comments Moderation ---
 $router->get('/admin/blog/comments', 'BlogController@commentsIndex');

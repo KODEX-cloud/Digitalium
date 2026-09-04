@@ -636,6 +636,29 @@ class PageController extends Controller {
                 [],
                 0,
             ],
+            // ── Centre de ressources (/insights) ──
+            'insights_featured' => [
+                ['tag', 'title', 'subtitle', 'badge_label', 'cta_text', 'read_suffix', 'fallback_latest'],
+                [],
+                0,
+            ],
+            'insights_grid' => [
+                ['tag', 'title', 'subtitle', 'filter_all', 'show_filters', 'show_search',
+                 'search_label', 'search_placeholder', 'search_button', 'per_page',
+                 'read_label', 'read_suffix', 'count_label', 'reset_text', 'empty_text'],
+                [],
+                0,
+            ],
+            'insights_resources' => [
+                ['tag', 'title', 'subtitle', 'read_text', 'download_text', 'empty_text'],
+                ['type_value', 'type_label', 'type_icon'],
+                3,
+            ],
+            'newsletter' => [
+                ['tag', 'title', 'subtitle', 'placeholder', 'button_text', 'note', 'success_text'],
+                [],
+                0,
+            ],
         ];
     }
 

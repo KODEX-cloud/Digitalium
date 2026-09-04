@@ -35,6 +35,7 @@
     <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
     <input type="hidden" name="content" id="content-input">
     <input type="hidden" name="featured_image" id="featured-image-input">
+    <input type="hidden" name="og_image" id="og-image-input">
 
     <div class="blog-editor-grid">
         <!-- Main column -->
@@ -91,6 +92,56 @@
                         Article mis en avant
                     </label>
                 </div>
+
+                <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border);">
+                    <label class="field-label">Date de publication</label>
+                    <input type="datetime-local" name="published_at" class="field-input">
+                    <small style="display:block;margin-top:5px;font-size:0.74rem;color:var(--text-muted);">
+                        Laisser vide : la date est posée automatiquement à la publication.
+                    </small>
+                </div>
+
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px;">
+                    <div>
+                        <label class="field-label">Ordre</label>
+                        <input type="number" name="sort_order" class="field-input" min="0" max="9999" value="0">
+                    </div>
+                    <div>
+                        <label class="field-label">Durée de lecture</label>
+                        <input type="number" name="reading_time" class="field-input" min="0" max="999" value="0"
+                               placeholder="0">
+                    </div>
+                </div>
+                <small style="display:block;margin-top:5px;font-size:0.74rem;color:var(--text-muted);">
+                    Ordre : plus grand = plus haut. Durée : 0 pour la calculer sur le texte.
+                </small>
+            </div>
+
+            <div class="card" style="background:var(--bg-surface);border:1px solid var(--border);border-radius:16px;padding:20px;">
+                <h3 style="font-size:0.88rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin-bottom:16px;">Contenu stratégique</h3>
+                <div style="margin-bottom:12px;">
+                    <label class="field-label">Type</label>
+                    <select name="resource_type" class="field-input">
+                        <option value="">— Article ordinaire —</option>
+                        <?php foreach (($resourceTypes ?? []) as $cle => $libelle): ?>
+                            <option value="<?= htmlspecialchars($cle, ENT_QUOTES) ?>"><?= htmlspecialchars($libelle) ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                    <small style="display:block;margin-top:5px;font-size:0.74rem;color:var(--text-muted);">
+                        Un type place l'article dans « Contenus stratégiques » plutôt que dans le flux d'articles.
+                    </small>
+                </div>
+                <div style="margin-bottom:12px;">
+                    <label class="field-label">Fichier à télécharger</label>
+                    <input type="text" name="resource_file" class="field-input" placeholder="/assets/uploads/guide.pdf">
+                    <small style="display:block;margin-top:5px;font-size:0.74rem;color:var(--text-muted);">
+                        Chemin interne ou adresse complète. La Bibliothèque Média n'accepte aujourd'hui que des images.
+                    </small>
+                </div>
+                <div>
+                    <label class="field-label">Bouton — libellé</label>
+                    <input type="text" name="resource_cta" class="field-input" placeholder="Télécharger le guide">
+                </div>
             </div>
 
             <div class="card" style="background:var(--bg-surface);border:1px solid var(--border);border-radius:16px;padding:20px;">
@@ -119,6 +170,25 @@
                 <div style="margin-bottom:12px;">
                     <label class="field-label">Meta description</label>
                     <textarea name="meta_description" class="field-input" rows="3" placeholder="Description pour les moteurs de recherche (160 cars max)..."></textarea>
+                </div>
+                <div style="margin-bottom:12px;">
+                    <label class="field-label">Image de partage (Open Graph)</label>
+                    <div class="image-field-wrapper">
+                        <div class="image-field-preview" id="og-image-preview">
+                            <i data-lucide="share-2" style="width:22px;height:22px;opacity:0.3;"></i>
+                        </div>
+                        <div style="flex:1;">
+                            <button type="button" class="btn-secondary" onclick="openMediaModal('og-image-input','og-image-preview')" style="width:100%;padding:8px;font-size:0.82rem;border-radius:8px;">
+                                Choisir une image
+                            </button>
+                            <button type="button" onclick="clearImage('og-image-input','og-image-preview')" style="margin-top:6px;width:100%;padding:6px;font-size:0.78rem;border-radius:8px;background:none;border:1px solid var(--border);color:var(--text-muted);cursor:pointer;">
+                                Supprimer
+                            </button>
+                        </div>
+                    </div>
+                    <small style="display:block;margin-top:6px;font-size:0.74rem;color:var(--text-muted);">
+                        Laisser vide pour utiliser l'image de couverture.
+                    </small>
                 </div>
                 <div>
                     <label class="field-label">Tags</label>

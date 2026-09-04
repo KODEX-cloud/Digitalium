@@ -186,7 +186,13 @@ class AdminController extends Controller {
             'footer_sitemap_url',
             'footer_backtotop_text',
             'header_cta_text',
-            'header_cta_link'
+            'header_cta_link',
+            // Insights — appel à l'action en bas de chaque article
+            'insights_cta_title',
+            'insights_cta_text',
+            'insights_cta_button',
+            'insights_cta_url',
+            'newsletter_rate_limit'
         ];
 
         // Ne traiter que les clés réellement postées : la boucle écrivait

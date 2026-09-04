@@ -3,19 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= htmlspecialchars($page['meta_title'] ?? $page['title']) ?> | <?= htmlspecialchars($settings['site_name'] ?? 'Digitalium Group') ?></title>
-    <meta name="description" content="<?= htmlspecialchars($page['meta_description'] ?? 'Solutions logicielles de pointe et transformation digitale sur-mesure pour votre entreprise.') ?>">
-    <link rel="canonical" href="https://digitaliumgroup.com<?= $currentSlug === 'home' ? '' : '/' . htmlspecialchars($currentSlug) ?>">
+    <?php
+    /**
+     * Adresse canonique de la page courante.
+     *
+     * Auparavant déduite du seul `$currentSlug`, elle était FAUSSE dans deux cas :
+     *   — un article, servi sous /insights/{slug}, déclarait /blog comme canonique,
+     *     si bien que tous les articles se déclaraient être la même page ;
+     *   — une sous-page (/solutions/…) omettait son parent.
+     * Un contrôleur peut désormais imposer le chemin exact via `canonical_path`.
+     */
+    $_canonPath = trim((string)($page['canonical_path'] ?? ''));
+    if ($_canonPath === '') {
+        $_parent    = trim((string)($page['parent_slug'] ?? ''));
+        $_canonPath = ($currentSlug === 'home' || $currentSlug === '')
+            ? ''
+            : '/' . ($_parent !== '' ? $_parent . '/' : '') . $currentSlug;
+    }
+    $_canonUrl = 'https://digitaliumgroup.com' . $_canonPath;
 
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://digitaliumgroup.com<?= $currentSlug === 'home' ? '' : '/' . htmlspecialchars($currentSlug) ?>">
-    <meta property="og:title" content="<?= htmlspecialchars($page['meta_title'] ?? $page['title']) ?> | <?= htmlspecialchars($settings['site_name'] ?? 'Digitalium Group') ?>">
-    <meta property="og:description" content="<?= htmlspecialchars($page['meta_description'] ?? 'Solutions logicielles de pointe et transformation digitale sur-mesure pour votre entreprise.') ?>">
-    <meta property="og:image" content="https://digitaliumgroup.com/assets/images/og-image.jpg">
+    /* Visuel de partage : celui de la page si elle en porte un, sinon celui du site. */
+    $_ogImage = trim((string)($page['og_image'] ?? ''));
+    if ($_ogImage === '') {
+        $_ogImage = '/assets/images/og-image.jpg';
+    }
+    if (!preg_match('#^https?://#i', $_ogImage)) {
+        $_ogImage = 'https://digitaliumgroup.com' . url($_ogImage);
+    }
+
+    $_ogType  = trim((string)($page['og_type'] ?? '')) ?: 'website';
+    $_metaDsc = (string)($page['meta_description'] ?? '')
+        ?: 'Solutions logicielles de pointe et transformation digitale sur-mesure pour votre entreprise.';
+    $_metaTtl = ($page['meta_title'] ?? '') ?: ($page['title'] ?? '');
+    $_siteNom = $settings['site_name'] ?? 'Digitalium Group';
+    ?>
+    <title><?= htmlspecialchars($_metaTtl) ?> | <?= htmlspecialchars($_siteNom) ?></title>
+    <meta name="description" content="<?= htmlspecialchars($_metaDsc) ?>">
+    <link rel="canonical" href="<?= htmlspecialchars($_canonUrl) ?>">
+
+    <meta property="og:type" content="<?= htmlspecialchars($_ogType) ?>">
+    <meta property="og:url" content="<?= htmlspecialchars($_canonUrl) ?>">
+    <meta property="og:title" content="<?= htmlspecialchars($_metaTtl) ?> | <?= htmlspecialchars($_siteNom) ?>">
+    <meta property="og:description" content="<?= htmlspecialchars($_metaDsc) ?>">
+    <meta property="og:image" content="<?= htmlspecialchars($_ogImage) ?>">
 
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:title" content="<?= htmlspecialchars($page['meta_title'] ?? $page['title']) ?> | <?= htmlspecialchars($settings['site_name'] ?? 'Digitalium Group') ?>">
-    <meta property="twitter:description" content="<?= htmlspecialchars($page['meta_description'] ?? 'Solutions logicielles de pointe et transformation digitale sur-mesure pour votre entreprise.') ?>">
+    <meta property="twitter:title" content="<?= htmlspecialchars($_metaTtl) ?> | <?= htmlspecialchars($_siteNom) ?>">
+    <meta property="twitter:description" content="<?= htmlspecialchars($_metaDsc) ?>">
+    <meta property="twitter:image" content="<?= htmlspecialchars($_ogImage) ?>">
 
     <link rel="stylesheet" href="<?= url('/assets/css/index.css') ?>?v=<?= filemtime(ROOT_PATH . '/public/assets/css/index.css') ?>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">

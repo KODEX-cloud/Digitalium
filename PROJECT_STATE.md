@@ -1,5 +1,144 @@
 # PROJECT_STATE — Digitalium Group CMS
-> Dernière mise à jour : 2026-09-04 — Page Contact + pipeline commercial (leads, statuts, historique)
+> Dernière mise à jour : 2026-09-04 — Centre de ressources /insights (blog unifié, newsletter, SEO)
+
+---
+
+### 2026-09-04 (suite 15) — Centre de ressources /insights
+
+Le blog devient le centre de ressources. **Aucun second système n'a été créé** : même table
+`blog_posts`, même éditeur, même médiathèque, même modération de commentaires. Ce qui change est
+l'adresse, la présentation et la profondeur d'administration.
+
+**Une seule adresse par contenu (leçon DT-05, appliquée d'emblée).**
+`/insights` est l'adresse canonique ; `/blog` et `/blog/{slug}` répondent **301** vers elle
+(`BlogController@legacyIndex` / `@legacyPost`). Servir le même article aux deux adresses aurait
+divisé son référencement entre deux URLs concurrentes. Les liens déjà publiés et l'indexation
+existante sont conservés par la redirection. `/blog` est retiré du sitemap : y déclarer une
+redirection n'a pas de sens.
+
+**La liste est une page CMS ordinaire.** `/insights` passe par le catch-all `/{slug}` et se compose
+de ses sections, comme /solutions et /contact. Il n'y a donc pas de second moteur de listing à
+maintenir, et l'administration peut réordonner ou éteindre chaque bloc depuis /admin/pages.
+`app/Views/frontend/blog_index.php` et `BlogController::frontendIndex()` — qui rendaient une page
+au contenu **codé en dur** (« Actualités & Expertise », description figée) et dont les filtres par
+catégorie **ne fonctionnaient pas** (le contrôleur ignorait `?cat=`) — ont été supprimés après
+vérification des dépendances (Règle #4 : aucune référence hors documentation).
+
+**Trois types de sections créés** — `insights_featured`, `insights_grid`, `insights_resources`.
+Attention : `section_renderer.php` ignore tout type contenant `_hero`, d'où le réemploi de
+`hero_media_cards` pour le hero (format 1250 × 500, comme les autres pages refondues).
+
+**`newsletter` réécrite — elle n'avait aucun backend.** Son `onsubmit` affichait « Merci de votre
+abonnement » puis jetait l'adresse. Chaque visiteur inscrit depuis la mise en ligne se croyait
+abonné sans l'être. Le formulaire poste désormais réellement vers `POST /newsletter` : jeton CSRF,
+pot de miel, plafond par IP (`newsletter_rate_limit`, 5/h), enregistrement dans
+`newsletter_subscribers`, consultable dans **/admin/newsletter**. Une adresse déjà inscrite reçoit
+la même confirmation qu'une nouvelle : répondre « vous êtes déjà abonné » révélerait qui figure
+dans la liste.
+
+**Filtres, recherche et pagination sont des liens et un formulaire GET**, pas du JavaScript. Une
+vue filtrée a donc une adresse partageable, se met en favori, revient avec le bouton « précédent »
+et reste lisible par un moteur de recherche — ce qui est précisément l'objectif de la page. Un
+« charger plus » ne crée aucune URL indexable au-delà du premier écran ; la pagination, si.
+
+**Contenus stratégiques sans seconde table.** Un article devient guide, rapport, checklist, livre
+blanc, cas d'usage ou comparatif par la seule colonne `resource_type`, et sort alors du flux
+« Derniers articles » pour rejoindre la section dédiée. Un fichier peut lui être rattaché
+(`resource_file`). **Limite connue** : la Bibliothèque Média n'accepte que des images
+(`MediaManager::$allowedMimeTypes`) — un document se dépose sur le serveur et son chemin se colle
+dans le champ. Étendre l'upload aux PDF touche au pipeline d'envoi de fichiers (Règle #8) et doit
+faire l'objet d'un travail séparé, testé.
+
+**SEO — trois défauts corrigés, dont deux antérieurs à ce travail.**
+
+| Défaut | Effet | Correction |
+|---|---|---|
+| Canonique déduite du seul `$currentSlug` | **tous les articles se déclaraient être `/blog`** | `page.canonical_path` imposé par le contrôleur |
+| Sous-pages sans leur parent dans la canonique | `/ia-automatisation` au lieu de `/solutions/ia-automatisation` | `parent_slug` pris en compte |
+| Sitemap sans les articles | la liste déclarée, jamais son contenu | `Post::toutPublie()` ajouté au sitemap |
+
+S'y ajoutent : Open Graph par article (`og_image`, `og:type=article`), `twitter:image`, et des
+données structurées **Article** en JSON-LD.
+
+**Défaut trouvé en testant, et introduit par ce travail — injection via le JSON-LD.**
+Le bloc de données structurées était encodé avec `JSON_UNESCAPED_SLASHES`. Or, à l'intérieur d'un
+`<script>`, le navigateur cherche la chaîne `</script>` **avant** d'interpréter le JSON : un titre
+d'article contenant cette chaîne refermait la balise, et tout ce qui suivait s'exécutait comme du
+HTML — une injection permanente déclenchée pour chaque visiteur de l'article. Corrigé par
+`JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT` et l'abandon de
+`JSON_UNESCAPED_SLASHES`. Portée réelle : exploitable uniquement par un compte autorisé à écrire un
+titre d'article — mais c'est exactement le privilège qu'un contributeur ne doit pas pouvoir
+transformer en exécution de script chez tous les lecteurs.
+
+**Navigation — l'entrée « Blog » est repointée, pas doublée.** Le script retrouve l'entrée de menu
+existante et la fait pointer sur /insights en conservant sa position, puis retire l'ancienne page
+`blog` de la navigation automatique. Opération **à faire une seule fois**, gardée par le drapeau
+`insights_nav_migrated_v1` : si l'administration renomme ensuite l'entrée ou remet le blog en
+navigation, le déploiement suivant ne défait pas son choix. La page `blog` n'est pas supprimée —
+elle sert encore de repli au contrôleur (Règle #4).
+
+**Routes ajoutées**
+
+```
+GET  /insights/{slug}                    -> BlogController@frontendPost    (2 segments : AVANT /{parent}/{child})
+GET  /blog                               -> BlogController@legacyIndex     (301)
+GET  /blog/{slug}                        -> BlogController@legacyPost      (301)
+POST /newsletter                         -> BlogController@subscribe
+GET  /admin/blog/tags                    -> BlogController@tags
+POST /admin/blog/tags/rename/{id}        -> BlogController@renameTag
+POST /admin/blog/tags/delete/{id}        -> BlogController@deleteTag
+GET  /admin/newsletter                   -> BlogController@subscribers
+GET  /admin/newsletter/export            -> BlogController@exportSubscribers  (AVANT toute route à paramètre)
+POST /admin/newsletter/statut/{id}       -> BlogController@subscriberStatus
+POST /admin/newsletter/delete/{id}       -> BlogController@deleteSubscriber
+```
+
+`GET /insights` n'a **pas** de route : c'est une page CMS servie par le catch-all.
+`POST /blog/comment` est inchangée — l'adresse est déjà dans le JavaScript des pages en cache
+navigateur, la changer casserait les commentaires en cours.
+
+**Schéma**
+
+```
+blog_posts  + reading_time, sort_order, og_image, resource_type, resource_file, resource_cta
+            (chaque ALTER isolé : un échec n'entraîne pas les autres)
+newsletter_subscribers  (email UNIQUE, source, ip_address, status, created_at)
+settings    + newsletter_rate_limit, insights_cta_{title,text,button,url},
+              insights_nav_migrated_v1
+blog_categories : 8 catégories du cahier des charges semées si absentes
+```
+
+`Post` construit ses écritures à partir des colonnes **réellement présentes** : tant que la
+migration n'a pas tourné, l'enregistrement d'un article reste possible et ignore les champs neufs.
+
+**Administration ajoutée** — date de publication éditable, ordre, durée de lecture (0 = calculée
+sur le texte réel), image de partage, type de contenu stratégique + fichier + libellé de bouton ;
+page **Tags** (renommer, supprimer, voir l'usage réel) ; page **Newsletter** (filtres, recherche,
+désabonner/réabonner, export CSV respectant les filtres) ; appel à l'action de bas d'article et
+plafond anti-spam dans **Configuration du site**.
+
+**Preuves — 362 assertions, 6 bancs d'essai, 0 en échec**
+
+| Banc | Portée | Résultat |
+|---|---|---|
+| Routage | ordre de déclaration, 2 segments, non-régression des autres pages, cibles existantes | **35/35** |
+| Gabarits de sections | contenu complet, blocs vides, base vide, contenu hostile, filtres, pagination | **107/107** |
+| Page article | sommaire, partage, JSON-LD, CTA, article minimal, contenu hostile | **66/66** |
+| Script de migration | 8 scénarios : site vierge, idempotence, menu existant, choix admin respecté, ALTER refusé | **86/86** |
+| Canonique et Open Graph | accueil, contact, solutions, sous-page, article — non-régression comprise | **16/16** |
+| Écrans d'administration | fiche article, tags, abonnés, états vides | **52/52** |
+
+`php -l` propre sur les 23 fichiers touchés.
+
+**Reste à faire**
+
+- Vérifier en production que les anciennes adresses `/blog/...` redirigent bien (à faire après
+  déploiement, la redirection dépend du code déployé).
+- Étendre la Bibliothèque Média aux PDF, pour que les contenus téléchargeables se choisissent
+  comme une image (travail séparé, Règle #8).
+- `app/Views/frontend/sections/blog.php` contient encore **trois articles factices codés en dur**
+  en repli — antérieur à ce travail, violation de la Règle #2 à traiter si cette section est encore
+  utilisée quelque part.
 
 ---
 

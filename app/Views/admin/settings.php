@@ -294,6 +294,37 @@
                     <label for="footer_newsletter_image">Illustration du panneau (chemin Médiathèque)</label>
                     <input type="text" id="footer_newsletter_image" name="footer_newsletter_image" class="admin-input" value="<?= htmlspecialchars($settings['footer_newsletter_image'] ?? '') ?>" placeholder="Ex: /assets/uploads/newsletter.png">
                 </div>
+
+                <h3 style="margin: 28px 0 16px; font-size: 1rem; font-weight: 700;">Bas d'article — Insights</h3>
+                <p style="font-size: 0.84rem; color: var(--text-muted); margin: -8px 0 16px;">
+                    Cet appel à l'action apparaît sous chaque article de <a href="<?= url('/insights') ?>" target="_blank">/insights</a>.
+                    Laisser le titre et le bouton vides le retire complètement.
+                </p>
+                <div class="admin-form-group">
+                    <label for="insights_cta_title">Titre</label>
+                    <input type="text" id="insights_cta_title" name="insights_cta_title" class="admin-input" value="<?= htmlspecialchars($settings['insights_cta_title'] ?? '') ?>" placeholder="Ex: Vous avez un projet lié à ce sujet ?">
+                </div>
+                <div class="admin-form-group">
+                    <label for="insights_cta_text">Texte</label>
+                    <textarea id="insights_cta_text" name="insights_cta_text" class="admin-input" rows="2"><?= htmlspecialchars($settings['insights_cta_text'] ?? '') ?></textarea>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    <div class="admin-form-group">
+                        <label for="insights_cta_button">Libellé du bouton</label>
+                        <input type="text" id="insights_cta_button" name="insights_cta_button" class="admin-input" value="<?= htmlspecialchars($settings['insights_cta_button'] ?? '') ?>" placeholder="Ex: Parler à Digitalium">
+                    </div>
+                    <div class="admin-form-group">
+                        <label for="insights_cta_url">Destination du bouton</label>
+                        <input type="text" id="insights_cta_url" name="insights_cta_url" class="admin-input" value="<?= htmlspecialchars($settings['insights_cta_url'] ?? '') ?>" placeholder="Ex: /contact">
+                    </div>
+                </div>
+                <div class="admin-form-group">
+                    <label for="newsletter_rate_limit">Inscriptions newsletter maximum par heure et par visiteur</label>
+                    <input type="number" id="newsletter_rate_limit" name="newsletter_rate_limit" class="admin-input" min="0" max="100" value="<?= htmlspecialchars((string)($settings['newsletter_rate_limit'] ?? '5')) ?>">
+                    <small style="display:block;margin-top:5px;font-size:0.78rem;color:var(--text-muted);">
+                        Limite anti-abus, comptée par adresse IP. 0 pour la désactiver.
+                    </small>
+                </div>
             </div>
 
             <!-- Coordinates Details -->
