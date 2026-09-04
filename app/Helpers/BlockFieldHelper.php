@@ -63,6 +63,14 @@ class BlockFieldHelper {
             '1' => "Afficher le plus récent si aucun article n'est mis à la une",
             '0' => "N'afficher qu'un article explicitement mis à la une",
         ],
+        'featured_only' => [
+            '0' => 'Afficher tous les produits publiés',
+            '1' => 'Afficher uniquement les produits mis en avant',
+        ],
+        'flow_accent' => [
+            '0' => 'Étape ordinaire',
+            '1' => 'Jalon (encadré plein, couleur de marque)',
+        ],
     ];
 
     /**
@@ -125,7 +133,8 @@ class BlockFieldHelper {
 
         // ── Réalisations (grille filtrable) ──
         'filter_all'     => ['Libellé du filtre « tout »', "Exemple : Tous."],
-        'cta_text'       => ['Libellé du bouton d\'une carte', "Laisser vide pour ne pas afficher de bouton sur les cartes."],
+        'cta_text'       => ['Bouton — libellé', "Selon la section : bouton d'une carte, ou bouton unique sous la grille. Laisser vide pour ne pas l'afficher."],
+        'cta_url'        => ['Bouton — lien', "Chemin de destination, par exemple /contact."],
         'show_filters'   => ['Barre de filtres', "Les filtres n'apparaissent que si au moins deux catégories sont réellement utilisées."],
         'empty_text'     => ['Message quand la liste est vide', "Affiché tant qu'aucun élément publié ne correspond. Laisser vide pour n'afficher aucun message."],
         'cat_value'      => ['Catégorie — valeur exacte', "Doit correspondre au mot saisi dans le champ Catégorie d'une réalisation."],
@@ -201,6 +210,24 @@ class BlockFieldHelper {
         'proc_title'     => ['Titre de l\'étape', ""],
         'proc_desc'      => ['Description de l\'étape', ""],
 
+        // ── Principes / valeurs ──
+        'val_icon'       => ['Icône', "Nom d'icône Lucide."],
+        'val_title'      => ['Intitulé du principe', "Vider ce champ masque la carte."],
+        'val_text'       => ['Explication', "Une à trois lignes."],
+
+        // ── Digitalium Labs — grille de produits ──
+        'featured_only'  => ['Produits affichés', "Permet de n'exposer qu'une sélection sur une autre page, sans dupliquer le catalogue."],
+        'tech_label'     => ['Intitulé des technologies', "Affiché au-dessus des étiquettes techniques d'une carte. Exemple : Technologies."],
+        'availability_label' => ['Intitulé de la disponibilité', "Affiché devant la disponibilité saisie sur le produit. Exemple : Disponibilité."],
+        'stage_value'    => ['Étape — valeur enregistrée', "Doit correspondre exactement à l'étape choisie sur le produit : idee, prototype, developpement, beta ou disponible."],
+        'stage_label'    => ['Étape — libellé affiché', "Remplace le libellé par défaut. Une étape non déclarée ici garde le sien."],
+
+        // ── Du service au produit (chaîne verticale) ──
+        'flow_label'     => ['Étape de la chaîne', "Vider ce champ retire l'étape."],
+        'flow_note'      => ['Précision', "Une phrase affichée sous le libellé de l'étape."],
+        'flow_icon'      => ['Icône', "Nom d'icône Lucide."],
+        'flow_accent'    => ['Mise en valeur', "Marque les points de bascule de la chaîne : ce qui y entre, ce qui la transforme, ce qui en sort."],
+
         // ── Cartes flottantes du hero ──
         'card_icon'      => ['Icône', "Nom d'icône Lucide."],
         'card_label'     => ['Sur-titre', "Affiché en majuscules."],
@@ -216,7 +243,7 @@ class BlockFieldHelper {
     ];
 
     /** Préfixes retirés pour dériver un intitulé lisible d'une clé inconnue. */
-    private const PREFIXES = ['card_', 'item_', 'member_', 'client_', 'faq_', 'post_', 'sec_', 'cap_', 'proc_', 'ps_', 'svc_', 'need_'];
+    private const PREFIXES = ['card_', 'item_', 'member_', 'client_', 'faq_', 'post_', 'sec_', 'cap_', 'proc_', 'ps_', 'svc_', 'need_', 'flow_'];
 
     /**
      * Type de champ à afficher. Ordre des règles significatif : les réglages
@@ -242,7 +269,7 @@ class BlockFieldHelper {
         if (str_contains($key, 'url') || str_contains($key, 'link')) { return 'link'; }
 
         $long = ['text', 'subtitle', 'content', 'description', 'contact_address',
-                 'ps_problem', 'ps_solution', 'privacy_note', 'note'];
+                 'ps_problem', 'ps_solution', 'privacy_note', 'note', 'flow_note'];
         if (in_array($key, $long, true)) { return 'textarea'; }
         foreach (['desc', 'quote', 'points', 'needs', 'detail', 'answer', 'summary'] as $needle) {
             if (str_contains($key, $needle)) { return 'textarea'; }

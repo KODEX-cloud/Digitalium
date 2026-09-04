@@ -63,6 +63,16 @@ $router->get('/admin/projects/edit/{id}', 'ProjectController@editForm');
 $router->post('/admin/projects/edit/{id}', 'ProjectController@editSubmit');
 $router->post('/admin/projects/delete/{id}', 'ProjectController@delete');
 
+// --- Admin Digitalium Labs (produits propriétaires) CRUD ---
+// /admin/labs/create est déclarée AVANT toute route à paramètre du même
+// préfixe : le routeur applique la première correspondance.
+$router->get('/admin/labs', 'LabController@index');
+$router->get('/admin/labs/create', 'LabController@createForm');
+$router->post('/admin/labs/create', 'LabController@createSubmit');
+$router->get('/admin/labs/edit/{id}', 'LabController@editForm');
+$router->post('/admin/labs/edit/{id}', 'LabController@editSubmit');
+$router->post('/admin/labs/delete/{id}', 'LabController@delete');
+
 // --- Admin Page Manager & Custom Block Builder ---
 $router->get('/admin/pages', 'PageController@index');
 $router->get('/admin/pages/create', 'PageController@createForm');

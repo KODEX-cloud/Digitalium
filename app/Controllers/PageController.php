@@ -585,8 +585,10 @@ class PageController extends Controller {
                 ['need_icon', 'need_text', 'need_solution', 'need_link'],
                 3,
             ],
+            // `cta_text` / `cta_url` sont facultatifs : vides, aucun bouton
+            // n'est rendu, donc les sections déjà en ligne sont inchangées.
             'capabilities_grid' => [
-                ['tag', 'title', 'subtitle'],
+                ['tag', 'title', 'subtitle', 'cta_text', 'cta_url'],
                 ['cap_icon', 'cap_title', 'cap_desc'],
                 3,
             ],
@@ -658,6 +660,28 @@ class PageController extends Controller {
                 ['tag', 'title', 'subtitle', 'placeholder', 'button_text', 'note', 'success_text'],
                 [],
                 0,
+            ],
+            // ── Digitalium Labs (/labs) ──
+            // Les produits eux-mêmes ne sont pas des blocs : ils viennent du
+            // module /admin/labs, pour rester réutilisables sur d'autres pages.
+            'lab_products' => [
+                ['tag', 'title', 'subtitle', 'show_filters', 'filter_all', 'limit',
+                 'featured_only', 'cta_text', 'tech_label', 'availability_label',
+                 'empty_text', 'more_text', 'more_url'],
+                ['stage_value', 'stage_label'],
+                0,
+            ],
+            'flow_chain' => [
+                ['tag', 'title', 'subtitle'],
+                ['flow_label', 'flow_note', 'flow_icon', 'flow_accent'],
+                3,
+            ],
+            // `values` existait déjà comme gabarit mais n'était creable depuis
+            // aucun écran : sans squelette, une section de ce type restait vide.
+            'values' => [
+                ['tag', 'title'],
+                ['val_icon', 'val_title', 'val_text'],
+                3,
             ],
         ];
     }

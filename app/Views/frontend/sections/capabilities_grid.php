@@ -8,9 +8,14 @@
  *
  * Blocs attendus — TOUT est administrable (Règle #2) :
  *   single : tag, title, subtitle
+ *            cta_text, cta_url   bouton facultatif sous la grille
  *   groups : cap_icon, cap_title, cap_desc
+ *
+ * Le bouton est un ajout PUREMENT additif : sans `cta_text`, rien n'est rendu,
+ * donc les pages qui utilisaient déjà cette section sont inchangées.
  */
 $caps = $groups ?? [];
+$capsCta = trim((string)($single['cta_text'] ?? ''));
 ?>
 
 <section class="section-padding caps-section" style="background:var(--bg-base);">
@@ -46,10 +51,29 @@ $caps = $groups ?? [];
             <?php endforeach; ?>
         </div>
 
+        <?php if ($capsCta !== ''): ?>
+            <div class="caps-cta reveal">
+                <a class="caps-cta-btn" href="<?= htmlspecialchars(url($single['cta_url'] ?? '/contact')) ?>">
+                    <span><?= htmlspecialchars($capsCta) ?></span>
+                    <i data-lucide="arrow-right" style="width:16px;height:16px;"></i>
+                </a>
+            </div>
+        <?php endif; ?>
+
     </div>
 </section>
 
 <style>
+.caps-cta { display: flex; justify-content: center; margin-top: 38px; }
+.caps-cta-btn {
+    display: inline-flex; align-items: center; gap: 9px;
+    padding: 14px 30px; border-radius: 999px;
+    background: var(--primary); color: #ffffff;
+    font-size: 0.92rem; font-weight: 650; text-decoration: none;
+    transition: var(--transition);
+}
+.caps-cta-btn:hover { transform: translateY(-2px); gap: 13px; box-shadow: var(--shadow-btn); }
+
 .caps-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);

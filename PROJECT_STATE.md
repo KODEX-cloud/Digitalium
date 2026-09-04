@@ -1,5 +1,141 @@
 # PROJECT_STATE — Digitalium Group CMS
-> Dernière mise à jour : 2026-09-04 — Centre de ressources /insights (blog unifié, newsletter, SEO)
+> Dernière mise à jour : 2026-09-04 — Digitalium Labs /labs (produits propriétaires administrables)
+
+---
+
+### 2026-09-04 (suite 16) — Digitalium Labs (/labs)
+
+Page corporate du pôle innovation, R&D et produits propriétaires. **Aucun produit n'est écrit dans
+le code** : la grille lit la table `lab_products`, alimentée depuis **/admin/labs**. Tant qu'aucun
+produit réel n'y est saisi, la section affiche le message d'attente saisi en administration — le
+cahier des charges interdit d'inventer un produit, et la page l'assume plutôt que de le masquer.
+
+**Une table dédiée, et non `projects`.** `/realisations` publie *tous* les projets : un produit
+Labs y serait apparu comme du travail livré pour un client, sur une page que le cahier des charges
+interdit de modifier. Un produit porte en outre un cycle de vie qu'une mission terminée n'a pas.
+Les deux modules restent donc séparés, et `projects` n'a pas été touché.
+
+**Deux « statuts » distincts, volontairement.** Le cahier des charges emploie le mot « statut »
+pour le cycle de vie ; or `status` désigne partout ailleurs dans ce projet la publication. D'où :
+
+| Colonne | Sens | Valeurs |
+|---|---|---|
+| `stage` | où en est le produit | `idee`, `prototype`, `developpement`, `beta`, `disponible` |
+| `status` | est-il en ligne | `draft`, `published` |
+
+Un produit peut donc être « Disponible » et rester hors ligne, ou n'être qu'une « Idée » déjà
+annoncée : ce sont deux décisions, prises séparément dans l'admin.
+
+**Pas de fiche produit publique.** Le cahier des charges prévoit un **lien externe** par produit,
+pas une page. Le slug sert d'ancre stable dans la grille (`#produit-{slug}`), pour qu'un produit
+puisse être pointé depuis n'importe quel autre contenu. Les slugs sont uniques : deux produits
+partageant une ancre désigneraient la même carte. `/labs/xxx` n'est capté par aucune route Labs et
+tombe sur `renderChild`, qui répond 404 faute de sous-page — aucune fiche n'est inventée.
+
+**Deux types de sections créés seulement.**
+
+| Section | Type | Pourquoi |
+|---|---|---|
+| Hero | `hero_media_cards` (overlay 1250 × 500) | réemploi ; `section_renderer.php` ignore tout type contenant `_hero` |
+| Pourquoi Labs — cycle en 6 étapes | `process_strip` | réemploi (porte un sous-titre, contrairement à `process_timeline`) |
+| Domaines d'innovation (6) | `capabilities_grid` | réemploi |
+| **Nos produits** | **`lab_products`** | neuf — lit `lab_products`, filtres par étape |
+| **Du service au produit** | **`flow_chain`** | neuf — chaîne verticale : ce qui sort d'une étape entre dans la suivante |
+| Innovation africaine (4 principes) | `values` | réemploi |
+| Partenariats (7 familles) | `capabilities_grid` + bouton | réemploi |
+| CTA final | `cta` | réemploi |
+
+`process` (grille de cartes) et `process_timeline` (frise horizontale numérotée) **n'ont pas été
+modifiés** : ils servent des pages déjà en ligne. `flow_chain` existe parce que ce qui compte ici
+est la *filiation*, pas une méthode en N points.
+
+**Ajout additif à `capabilities_grid`.** Un bouton facultatif sous la grille (`cta_text`,
+`cta_url`), demandé par la section Partenariats. Sans `cta_text`, **rien n'est rendu** : les pages
+qui utilisaient déjà cette section sont inchangées — vérifié au banc d'essai.
+
+**Le filtrage par étape est une amélioration progressive.** Sans JavaScript, toutes les cartes
+restent visibles et la barre de filtres est simplement sans effet. Aucun produit n'est caché
+derrière un script. La barre n'apparaît que si **deux étapes au moins** sont réellement
+représentées : un filtre menant à une grille vide n'a pas d'intérêt.
+
+**La section est réutilisable ailleurs.** `limit` et `featured_only` permettent d'afficher un
+aperçu de produits sur une autre page sans dupliquer le catalogue — c'est ce que demandait
+« les produits doivent être réutilisables sur d'autres pages du site ».
+
+**Routes ajoutées**
+
+```
+GET  /admin/labs                  -> LabController@index
+GET  /admin/labs/create           -> LabController@createForm    (AVANT toute route à paramètre)
+POST /admin/labs/create           -> LabController@createSubmit
+GET  /admin/labs/edit/{id}        -> LabController@editForm
+POST /admin/labs/edit/{id}        -> LabController@editSubmit
+POST /admin/labs/delete/{id}      -> LabController@delete        (POST seul : jamais un simple lien)
+```
+
+`GET /labs` n'a **pas** de route : c'est une page CMS servie par le catch-all `/{slug}`.
+
+**Schéma**
+
+```
+lab_products  (name, slug UNIQUE, tagline, description, sector, stage, logo, main_image,
+               technologies, external_link, availability, sort_order, is_featured, status,
+               meta_title, meta_description, created_at)
+              CREATE TABLE isolé : son échec n'empêche ni la page ni ses sections
+settings      + labs_nav_added_v1   (drapeau : l'entrée de menu n'est posée qu'une fois)
+```
+
+`LabProduct` construit ses écritures à partir des colonnes **réellement présentes** : tant que la
+migration n'a pas tourné, l'enregistrement reste possible et ignore les champs absents.
+
+**Administration** — **Admin > Digitalium Labs** : nom, slug, accroche, description, secteur,
+étape, visibilité, technologies, lien, disponibilité, ordre, mise en avant, SEO, logo et capture
+via la **Bibliothèque Média existante**. Un **formulaire unique** (`admin/labs/_form.php`) sert la
+création et la modification : c'est la leçon des Réalisations, où deux listes de champs séparées
+rendaient un champ neuf éditable d'un seul côté. La page elle-même se règle dans
+**Admin > Pages CMS > Digitalium Labs** (hero, titres, textes, CTA, domaines, ordre et visibilité
+des sections, SEO).
+
+**Deux manques comblés au passage dans l'éditeur de pages** : les sections `values` et celles du
+centre de ressources (`insights_*`, `newsletter`) existaient comme gabarits mais n'étaient
+proposées dans **aucun** écran — impossible d'en ajouter une sans passer par un script. Elles
+figurent désormais dans la liste « Ajouter une section », avec leur squelette de blocs.
+
+**La leçon du 404 d'Insights est appliquée d'emblée.** Le `CREATE TABLE`, la couleur d'accent et
+**tout le bloc de navigation, drapeau compris**, ont chacun leur `try/catch`. Un banc d'essai
+rejoue le scénario exact de l'incident — table `settings` totalement inaccessible — et vérifie que
+la page et ses 8 sections sont créées quand même.
+
+**Vérifications exécutées** (Règle #5)
+
+| Banc | Portée | Résultat |
+|---|---|---|
+| `h_labs_build.php` | 5 scénarios : site vierge, menu existant, second passage, `CREATE TABLE` refusé, `settings` inaccessible | **58 / 58** |
+| `h_labs_views.php` | `lab_products`, `flow_chain`, `capabilities_grid` : catalogue vide, peuplé, contenu hostile, libellés redéfinis, réutilisation | **50 / 50** |
+| `h_labs_admin.php` | création vs modification, couverture des champs du contrôleur, liste, état vide, échappement | **29 / 29** |
+| `h_routes_labs.php` | ordre des routes, absence de doublon, non-régression des pages en ligne | **26 / 26** |
+| `h_schema.php` | `LabProduct::CHAMPS` confrontée au schéma réel, isolation du script | **38 / 38** |
+
+`php -l` sur tous les fichiers touchés : aucune erreur. Le banc de construction a été validé par
+**contrôle négatif** : une position de section volontairement fausse le fait échouer (2 échecs),
+la correction le remet au vert.
+
+**Trois fausses alertes écartées avant de conclure** — une charge utile échappée ressort en texte
+(`&lt;img src=x onerror=…&gt;`) et un slug hostile ressort *dans* une valeur d'attribut
+(`id="produit-x&quot; onload=&quot;…"`) : dans les deux cas la suite `on…=` est présente dans le
+flux de caractères mais n'est pas un attribut. Le détecteur ne regarde donc plus que les **noms**
+d'attributs, valeurs retirées. Troisième cas : les gabarits PHP mettent une valeur seule sur sa
+ligne, `>Publié<` ne peut pas correspondre — les assertions comparent désormais `>\s*texte\s*<`.
+
+**Dette technique inchangée, rappelée**
+- `RecoveryController.php` — `INSERT INTO settings (`key`, `value`)` (lignes 489/491) et
+  `INSERT IGNORE INTO menus (name, location, is_active)` (ligne 462) : les phases *Settings Sync*
+  et *Menu Rebuild* du Recovery Center sont **inopérantes**. Défauts antérieurs, relevés à nouveau
+  par `h_schema.php`, à corriger dans un travail dédié.
+- Bibliothèque Média limitée aux images : un PDF de ressource se dépose encore à la main.
+- `sections/blog.php` contient toujours trois articles de démonstration en repli (Règle #2).
+- CLAUDE.md §7 et §8 restent à mettre à jour (validation CTO) : `newsletter_subscribers`,
+  `lab_products`, routes `/insights` et `/admin/labs`.
 
 ---
 

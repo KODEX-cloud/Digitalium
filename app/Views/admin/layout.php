@@ -440,6 +440,12 @@
                     <span>Réalisations</span>
                 </a>
             </li>
+            <li class="menu-item <?= $isActive('#^/admin/labs#') ?>">
+                <a href="<?= url('/admin/labs') ?>">
+                    <i data-lucide="flask-conical"></i>
+                    <span>Digitalium Labs</span>
+                </a>
+            </li>
             <li class="menu-item <?= $isActive('#^/admin/blog#') ?>">
                 <a href="<?= url('/admin/blog') ?>" style="position: relative;">
                     <i data-lucide="newspaper"></i>

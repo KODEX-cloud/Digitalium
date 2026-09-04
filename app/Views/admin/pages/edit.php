@@ -1473,7 +1473,18 @@ if (empty($selectedLogo)) {
                             <option value="testimonials_carousel">Témoignages — carrousel</option>
                             <option value="logos_strip">Bandeau de logos clients</option>
                             <option value="team">Équipe</option>
+                            <option value="values">Principes / valeurs — cartes</option>
                             <option value="cta">Bandeau CTA</option>
+                        </optgroup>
+                        <optgroup label="Centre de ressources (module Insights)">
+                            <option value="insights_featured">Insights — article à la une</option>
+                            <option value="insights_grid">Insights — grille filtrable + recherche</option>
+                            <option value="insights_resources">Insights — contenus stratégiques</option>
+                            <option value="newsletter">Newsletter — inscription</option>
+                        </optgroup>
+                        <optgroup label="Digitalium Labs (module Produits)">
+                            <option value="lab_products">Labs — grille de produits</option>
+                            <option value="flow_chain">Chaîne verticale d'étapes</option>
                         </optgroup>
                         <optgroup label="Modèles hérités">
                             <option value="hero">Hero Banner (ancien)</option>
