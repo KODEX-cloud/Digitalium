@@ -29,7 +29,14 @@
  *     image_ratio      proportions du bandeau, ex. « 1300 / 400 » — défaut 1300 / 400
  *     image_ratio_mobile  proportions sous 760px — défaut 16 / 9
  *
- *   groups (cartes flottantes, répétables) :
+ *     image_max_width  largeur du visuel en px, ou « full » pour du bord à bord
+ *
+ *   groups en mode 'overlay' — DIAPOSITIVES supplémentaires du carrousel.
+ *   La première diapositive vient toujours des blocs simples ci-dessus ; une
+ *   seule diapositive au total = ni flèches ni pastilles.
+ *     slide_image, slide_alt, slide_badge, slide_title, slide_accent, slide_text
+ *
+ *   groups en mode 'split' — cartes flottantes, répétables :
  *     card_icon        nom d'icône Lucide
  *     card_label       sur-titre (majuscules)
  *     card_badge       petite pastille (ex. « Actif »)
@@ -79,9 +86,45 @@ $heroRatio = static function (?string $raw, string $fallback): string {
 
 $bannerRatio   = $heroRatio($single['image_ratio']        ?? null, '1300 / 400');
 $bannerRatioSm = $heroRatio($single['image_ratio_mobile'] ?? null, '16 / 9');
-$bannerWidth   = preg_match('#^\d{2,5}$#', trim((string)($single['image_max_width'] ?? '')))
-    ? trim((string)$single['image_max_width']) . 'px'
-    : '1300px';
+/* « full » : le visuel occupe toute la largeur de la fenêtre, bord à bord. */
+$rawWidth    = trim((string)($single['image_max_width'] ?? ''));
+$isFullBleed = strtolower($rawWidth) === 'full';
+$bannerWidth = preg_match('#^\d{2,5}$#', $rawWidth) ? $rawWidth . 'px' : '1300px';
+
+/**
+ * Diapositives du hero (mode overlay).
+ *
+ * La première vient toujours des blocs simples ; les groupes `slide_*` en
+ * ajoutent d'autres. Une seule diapositive : ni flèches ni pastilles, le
+ * carrousel n'apparaît que lorsqu'il a une raison d'exister.
+ */
+$slides = [];
+if ($isOverlay) {
+    $slides[] = [
+        'image' => trim((string)($single['image'] ?? '')),
+        'alt'   => trim((string)($single['image_alt'] ?? ($single['title'] ?? ''))),
+        'badge' => trim((string)($single['badge'] ?? '')),
+        'title' => trim((string)($single['title'] ?? '')),
+        'accent'=> trim((string)($single['title_accent'] ?? '')),
+        'text'  => trim((string)($single['text'] ?? '')),
+        'first' => true,
+    ];
+    foreach (($groups ?? []) as $g) {
+        $hasSlide = trim((string)($g['slide_title'] ?? '')) !== ''
+                 || trim((string)($g['slide_image'] ?? '')) !== '';
+        if (!$hasSlide) { continue; }
+        $slides[] = [
+            'image' => trim((string)($g['slide_image'] ?? '')),
+            'alt'   => trim((string)($g['slide_alt']   ?? ($g['slide_title'] ?? ''))),
+            'badge' => trim((string)($g['slide_badge'] ?? '')),
+            'title' => trim((string)($g['slide_title'] ?? '')),
+            'accent'=> trim((string)($g['slide_accent'] ?? '')),
+            'text'  => trim((string)($g['slide_text']  ?? '')),
+            'first' => false,
+        ];
+    }
+}
+$hasCarousel = count($slides) > 1;
 
 /* Voile du mode overlay : borné 0-100, défaut 62. Une saisie hors bornes ne
    peut donc pas rendre le texte illisible ni faire disparaître la photo. */
@@ -131,6 +174,87 @@ $bannerVars = $isWide
         </div>
     <?php endif; ?>
 
+    <?php if ($isOverlay): ?>
+        <?php /* Carrousel plein cadre : une diapositive = un visuel + son texte. */ ?>
+        <div class="hero-ov<?= $isFullBleed ? ' hero-ov-full' : '' ?>">
+            <?php foreach ($slides as $i => $s): ?>
+                <div class="hero-ov-slide<?= $i === 0 ? ' active' : '' ?>" data-slide="<?= $i ?>">
+                    <div class="hero-ov-media">
+                        <?php if ($s['image'] !== ''): ?>
+                            <img src="<?= htmlspecialchars(url($s['image'])) ?>"
+                                 alt="<?= htmlspecialchars($s['alt']) ?>"
+                                 <?= $i === 0 ? 'fetchpriority="high"' : 'loading="lazy"' ?> decoding="async">
+                        <?php endif; ?>
+                    </div>
+
+                    <div class="hero-ov-inner">
+                        <div class="hero-ov-text">
+                            <?php if ($s['badge'] !== ''): ?>
+                                <span class="hero-ov-badge"><?= htmlspecialchars($s['badge']) ?></span>
+                            <?php endif; ?>
+
+                            <?php if ($s['title'] !== '' || $s['accent'] !== ''):
+                                /* Un seul <h1> par page : les diapositives suivantes
+                                   sont des <h2>, visuellement identiques. */
+                                $tag = $i === 0 ? 'h1' : 'h2';
+                            ?>
+                                <<?= $tag ?> class="hero-ov-title">
+                                    <?php if ($s['title'] !== ''): ?><?= $heroLine($s['title']) ?><?php endif; ?>
+                                    <?php if ($s['accent'] !== ''): ?>
+                                        <span class="hero-ov-accent"><?= $heroLine($s['accent']) ?></span>
+                                    <?php endif; ?>
+                                </<?= $tag ?>>
+                            <?php endif; ?>
+
+                            <?php if ($s['text'] !== ''): ?>
+                                <p class="hero-ov-lead"><?= $heroLine($s['text']) ?></p>
+                            <?php endif; ?>
+
+                            <?php if ($s['first'] && (!empty($single['cta1_text']) || !empty($single['cta2_text']))): ?>
+                                <div class="hero-ov-actions">
+                                    <?php if (!empty($single['cta1_text'])): ?>
+                                        <a href="<?= htmlspecialchars(url($single['cta1_url'] ?? '/')) ?>" class="hero-ov-btn hero-ov-btn-primary">
+                                            <span><?= htmlspecialchars($single['cta1_text']) ?></span>
+                                            <?php if (!empty($single['cta1_icon'])): ?>
+                                                <?= \App\Helpers\IconHelper::render($single['cta1_icon'], ['size' => '15px']) ?>
+                                            <?php endif; ?>
+                                        </a>
+                                    <?php endif; ?>
+                                    <?php if (!empty($single['cta2_text'])): ?>
+                                        <a href="<?= htmlspecialchars(url($single['cta2_url'] ?? '/')) ?>" class="hero-ov-btn hero-ov-btn-ghost">
+                                            <?php if (!empty($single['cta2_icon'])): ?>
+                                                <?= \App\Helpers\IconHelper::render($single['cta2_icon'], ['size' => '15px']) ?>
+                                            <?php endif; ?>
+                                            <span><?= htmlspecialchars($single['cta2_text']) ?></span>
+                                        </a>
+                                    <?php endif; ?>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+
+            <?php if ($hasCarousel): ?>
+                <button type="button" class="hero-ov-arrow hero-ov-prev" aria-label="Diapositive précédente">
+                    <i data-lucide="chevron-left" style="width:20px;height:20px;"></i>
+                </button>
+                <button type="button" class="hero-ov-arrow hero-ov-next" aria-label="Diapositive suivante">
+                    <i data-lucide="chevron-right" style="width:20px;height:20px;"></i>
+                </button>
+                <div class="hero-ov-dots" role="tablist">
+                    <?php foreach ($slides as $i => $s): ?>
+                        <button type="button" class="hero-ov-dot<?= $i === 0 ? ' active' : '' ?>"
+                                data-go="<?= $i ?>" aria-label="Diapositive <?= $i + 1 ?>"></button>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
+        </div>
+    <?php endif; ?>
+
+    <?php /* Le mode overlay a son propre balisage ci-dessus : rendre aussi la
+             grille produirait un second <h1> caché dans le document. */ ?>
+    <?php if (!$isOverlay): ?>
     <div class="container hero-mc-grid">
 
         <div class="hero-mc-text">
@@ -246,6 +370,7 @@ $bannerVars = $isWide
         </div>
 
     </div>
+    <?php endif; ?>
 </section>
 
 <style>
@@ -531,7 +656,170 @@ $bannerVars = $isWide
     .hero-mc-banner .hero-mc-visual { width: calc(100vw - 32px); }
 }
 
-/* ── Mise en page « overlay » ──────────────────────────────────────────────
+/* ── Hero plein cadre, façon carrousel ─────────────────────────────────────
+   Visuel bord à bord, dégradé sombre depuis la gauche pour que le texte reste
+   lisible sans masquer la photo, badge en pavé plein, titre en capitales.   */
+.hero-mc-overlay { padding: 0; overflow: hidden; }
+
+.hero-ov {
+    position: relative;
+    width: min(var(--hero-banner-w, 1300px), calc(100vw - 48px));
+    margin-left: 50%;
+    transform: translateX(-50%);
+    min-height: var(--hero-overlay-minh, 460px);
+    overflow: hidden;
+    border-radius: var(--hero-media-radius, 0);
+    background: var(--primary);
+}
+/* Bord à bord : le visuel occupe toute la largeur de la fenêtre. */
+.hero-ov-full { width: 100vw; border-radius: 0; }
+
+.hero-ov-slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.6s ease;
+}
+.hero-ov-slide.active { opacity: 1; visibility: visible; }
+/* La première diapositive porte la hauteur du bloc : sans elle, toutes étant
+   absolues, le conteneur s'effondrerait à zéro. */
+.hero-ov-slide:first-child { position: relative; }
+
+.hero-ov-media { position: absolute; inset: 0; background: var(--primary); }
+.hero-ov-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.hero-ov-media::after {
+    content: "";
+    position: absolute; inset: 0;
+    background: linear-gradient(90deg,
+        rgba(0, 0, 0, 0.82) 0%,
+        rgba(0, 0, 0, 0.66) 34%,
+        rgba(0, 0, 0, 0.28) 64%,
+        rgba(0, 0, 0, 0.06) 100%),
+      linear-gradient(180deg,
+        color-mix(in srgb, var(--primary) 34%, transparent) 0%,
+        color-mix(in srgb, var(--primary) 62%, transparent) 100%);
+}
+
+.hero-ov-inner {
+    position: relative;
+    z-index: 2;
+    max-width: var(--max-width, 1240px);
+    margin: 0 auto;
+    padding: 96px 40px;
+    min-height: var(--hero-overlay-minh, 460px);
+    display: flex;
+    align-items: center;
+}
+.hero-ov-text { max-width: 640px; }
+
+.hero-ov-badge {
+    display: inline-block;
+    margin-bottom: 20px;
+    padding: 9px 18px;
+    background: var(--primary);
+    color: #ffffff;
+    font-family: var(--font-heading);
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.hero-ov-title {
+    margin: 0 0 18px;
+    color: #ffffff;
+    font-family: var(--font-heading);
+    font-size: clamp(2.1rem, 5vw, 3.6rem);
+    line-height: 1.06;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+    text-shadow: 0 2px 18px rgba(0, 0, 0, 0.35);
+}
+.hero-ov-accent { display: block; font-weight: 300; text-transform: none; }
+
+.hero-ov-lead {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.92);
+    font-size: 1.04rem;
+    line-height: 1.7;
+    max-width: 560px;
+    text-shadow: 0 1px 12px rgba(0, 0, 0, 0.35);
+}
+
+.hero-ov-actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 30px; }
+.hero-ov-btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 15px 30px;
+    border-radius: 999px;
+    font-family: var(--font-main);
+    font-size: 1rem;
+    font-weight: 700;
+    text-decoration: none;
+    border: 1.5px solid transparent;
+    transition: var(--transition);
+}
+.hero-ov-btn-primary { background: #ffffff; color: var(--primary) !important; }
+.hero-ov-btn-primary:hover { transform: translateY(-2px); }
+.hero-ov-btn-ghost {
+    background: rgba(255, 255, 255, 0.10);
+    border-color: rgba(255, 255, 255, 0.65);
+    color: #ffffff !important;
+}
+.hero-ov-btn-ghost:hover { background: rgba(255, 255, 255, 0.22); }
+
+.hero-ov-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 3;
+    width: 46px; height: 46px;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: rgba(0, 0, 0, 0.28);
+    border: 1.5px solid rgba(255, 255, 255, 0.6);
+    color: #ffffff;
+    cursor: pointer;
+    transition: var(--transition);
+}
+.hero-ov-arrow:hover { background: var(--primary); border-color: var(--primary); }
+.hero-ov-prev { left: 24px; }
+.hero-ov-next { right: 24px; }
+
+.hero-ov-dots {
+    position: absolute;
+    bottom: 22px; left: 50%;
+    transform: translateX(-50%);
+    z-index: 3;
+    display: flex; gap: 8px;
+}
+.hero-ov-dot {
+    width: 26px; height: 6px;
+    border: none; padding: 0;
+    background: rgba(255, 255, 255, 0.45);
+    cursor: pointer;
+    transition: var(--transition);
+}
+.hero-ov-dot.active { background: var(--primary); }
+
+@media (max-width: 900px) {
+    .hero-ov-inner { padding: 72px 24px; min-height: 400px; }
+    .hero-ov, .hero-ov-full { width: 100vw; border-radius: 0; min-height: 400px; }
+    .hero-ov-arrow { width: 38px; height: 38px; }
+    .hero-ov-prev { left: 10px; }
+    .hero-ov-next { right: 10px; }
+}
+@media (max-width: 560px) {
+    .hero-ov-inner { padding: 60px 18px 68px; min-height: 340px; }
+    .hero-ov, .hero-ov-full { min-height: 340px; }
+    .hero-ov-actions { flex-direction: column; align-items: stretch; }
+    .hero-ov-btn { justify-content: center; }
+    /* Les flèches recouvriraient le texte sur un écran étroit : seules les
+       pastilles restent, et le balayage n'est pas nécessaire au sens. */
+    .hero-ov-arrow { display: none; }
+}
+
+/* ── Mise en page « overlay » (ancien rendu, conservé pour référence) ───────
    Le texte est centré PAR-DESSUS le visuel, voilé pour rester lisible.
    Texte et visuel occupent la même cellule de grille : aucun décalage
    possible entre les deux, quelle que soit la longueur du titre.          */
@@ -686,3 +974,49 @@ $bannerVars = $isWide
     .hero-mc-media, .hero-mc-img { min-height: 300px; height: 300px; }
 }
 </style>
+
+<?php if ($hasCarousel): ?>
+<script>
+(function () {
+    // Carrousel du hero. Chaque section porte son propre identifiant : deux
+    // heros sur une même page ne se pilotent pas mutuellement.
+    var root = document.currentScript.previousElementSibling;
+    while (root && !root.classList.contains('hero-ov')) { root = root.previousElementSibling; }
+    if (!root) { root = document.querySelector('.hero-ov'); }
+    if (!root) { return; }
+
+    var slides = root.querySelectorAll('.hero-ov-slide');
+    var dots   = root.querySelectorAll('.hero-ov-dot');
+    if (slides.length < 2) { return; }
+
+    var index = 0;
+    var timer = null;
+
+    function show(i) {
+        index = (i + slides.length) % slides.length;
+        slides.forEach(function (s, n) { s.classList.toggle('active', n === index); });
+        dots.forEach(function (d, n) { d.classList.toggle('active', n === index); });
+    }
+
+    function start() {
+        stop();
+        // Respecte le réglage système « animations réduites ».
+        if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) { return; }
+        timer = setInterval(function () { show(index + 1); }, 7000);
+    }
+    function stop() { if (timer) { clearInterval(timer); timer = null; } }
+
+    var prev = root.querySelector('.hero-ov-prev');
+    var next = root.querySelector('.hero-ov-next');
+    if (prev) { prev.addEventListener('click', function () { show(index - 1); start(); }); }
+    if (next) { next.addEventListener('click', function () { show(index + 1); start(); }); }
+    dots.forEach(function (d) {
+        d.addEventListener('click', function () { show(parseInt(d.dataset.go, 10) || 0); start(); });
+    });
+
+    root.addEventListener('mouseenter', stop);
+    root.addEventListener('mouseleave', start);
+    start();
+})();
+</script>
+<?php endif; ?>

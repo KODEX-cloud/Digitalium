@@ -246,6 +246,17 @@ try {
     ]);
     echo "    NOTE : le visuel du hero reste à choisir en admin (champ « Visuel »).\n";
 
+    /**
+     * Hero pleine largeur, calé sur la référence fournie. Posé UNE SEULE FOIS :
+     * une valeur modifiée en admin ne doit pas être réécrite au déploiement.
+     */
+    if (!Database::fetch("SELECT id FROM settings WHERE setting_key = 'realisations_hero_full_v1' LIMIT 1")) {
+        Block::setVal($id, 'image_max_width', 'text', 'full');
+        Block::setVal($id, 'overlay_min_height', 'text', '560');
+        Database::query("INSERT INTO settings (setting_key, setting_value) VALUES ('realisations_hero_full_v1', '1')");
+        echo "    Hero passé en pleine largeur (560px de haut).\n";
+    }
+
     // ── PROJETS ─────────────────────────────────────────────────────────────
     echo "[2/4] Réalisations\n";
     $id = $reconcile('projects_cms', 'Réalisations — grille filtrable', 0);
@@ -257,6 +268,8 @@ try {
         'cta_text'     => "Voir l'étude de cas",
         'show_filters' => '1',
         'empty_text'   => "Les études de cas sont en cours de publication. Contactez-nous pour découvrir nos réalisations en détail.",
+        'empty_cta_text' => "Discuter de mon projet",
+        'empty_cta_url'  => '/contact',
     ], [
         // Ordre d'affichage des filtres. Une catégorie qu'aucun projet
         // n'utilise n'est pas affichée : le filtre serait vide.
@@ -268,6 +281,25 @@ try {
         ['cat_value' => 'Cybersécurité',       'cat_label' => 'Cybersécurité'],
         ['cat_value' => 'Autres',              'cat_label' => 'Autres'],
     ]);
+
+    /**
+     * Section déjà en ligne : $seed ne s'applique plus. On pose les réglages
+     * manquants, et UNIQUEMENT ceux-là — une valeur saisie en admin est
+     * conservée telle quelle.
+     */
+    $existingSingles = Block::getStructuredContent($id)['single'] ?? [];
+    $lateDefaults = [
+        'empty_cta_text' => "Discuter de mon projet",
+        'empty_cta_url'  => '/contact',
+    ];
+    $lateAdded = [];
+    foreach ($lateDefaults as $key => $value) {
+        if (!array_key_exists($key, $existingSingles)) {
+            Block::setVal($id, $key, str_contains($key, 'url') ? 'link' : 'text', $value);
+            $lateAdded[] = $key;
+        }
+    }
+    if ($lateAdded) { echo "    réglages ajoutés : " . implode(', ', $lateAdded) . ".\n"; }
 
     // ── EXPERTISES ──────────────────────────────────────────────────────────
     echo "[3/4] Expertises\n";

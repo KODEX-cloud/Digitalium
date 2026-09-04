@@ -79,7 +79,17 @@ $ctaText     = trim((string)($single['cta_text'] ?? ''));
 
         <?php if (empty($allProjects)): ?>
             <?php if (!empty($single['empty_text'])): ?>
-                <p class="pj-empty"><?= htmlspecialchars($single['empty_text']) ?></p>
+                <?php /* Panneau assumé plutôt qu'une phrase perdue dans le vide. */ ?>
+                <div class="pj-empty">
+                    <span class="pj-empty-icon"><i data-lucide="folder-open" style="width:26px;height:26px;"></i></span>
+                    <p><?= htmlspecialchars($single['empty_text']) ?></p>
+                    <?php if (!empty($single['empty_cta_text'])): ?>
+                        <a class="pj-empty-btn" href="<?= htmlspecialchars(url($single['empty_cta_url'] ?? '/contact')) ?>">
+                            <span><?= htmlspecialchars($single['empty_cta_text']) ?></span>
+                            <i data-lucide="arrow-right" style="width:15px;height:15px;"></i>
+                        </a>
+                    <?php endif; ?>
+                </div>
             <?php endif; ?>
         <?php else: ?>
             <div class="pj-grid" id="pjGrid">
@@ -265,13 +275,47 @@ $ctaText     = trim((string)($single['cta_text'] ?? ''));
 }
 .pj-link:hover { gap: 11px; }
 
+/* État vide : un panneau assumé. Une phrase seule au milieu d'une grande
+   surface blanche se lit comme une page cassée, pas comme une information. */
 .pj-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
     text-align: center;
+    max-width: 620px;
+    margin: 0 auto;
+    padding: 44px 32px;
+    background: var(--bg-card);
+    border: 1px dashed color-mix(in srgb, var(--primary) 30%, var(--border));
+    border-radius: var(--radius-lg);
     color: var(--text-muted);
-    padding: 48px 0;
-    margin: 0;
-    font-size: 0.95rem;
+    font-size: 0.97rem;
+    line-height: 1.6;
 }
+.pj-empty p { margin: 0; }
+
+.pj-empty-icon {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 58px; height: 58px;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--primary) 10%, transparent);
+    color: var(--primary);
+}
+
+.pj-empty-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    margin-top: 4px;
+    padding: 13px 26px;
+    border-radius: 999px;
+    background: var(--primary);
+    color: #ffffff;
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: var(--transition);
+}
+.pj-empty-btn:hover { transform: translateY(-2px); gap: 12px; }
 
 @media (max-width: 1050px) { .pj-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 660px)  { .pj-grid { grid-template-columns: minmax(0, 1fr); } }

@@ -77,7 +77,15 @@ class BlockFieldHelper {
         'image_alt'      => ['Texte alternatif du visuel', "Décrit l'image pour l'accessibilité et le référencement."],
         'decor'          => ['Décors du fond', "Cercle, courbe et trame de points derrière le hero."],
         'layout'         => ['Disposition', "Change la mise en page de la section sans toucher au contenu."],
-        'image_max_width'=> ['Largeur maximale du visuel', "En pixels, sans unité. Exemple : 1300."],
+        'image_max_width'=> ['Largeur du visuel', "En pixels sans unité (exemple : 1300), ou le mot « full » pour un visuel bord à bord sur toute la largeur de l'écran."],
+
+        // ── Diapositives du hero en mode overlay ──
+        'slide_image'    => ['Diapositive — visuel', "Choisi dans la Bibliothèque Média."],
+        'slide_alt'      => ['Diapositive — texte alternatif', "Décrit l'image pour l'accessibilité."],
+        'slide_badge'    => ['Diapositive — pastille', "Petit texte en majuscules au-dessus du titre."],
+        'slide_title'    => ['Diapositive — titre', "Vider ce champ ET le visuel supprime la diapositive."],
+        'slide_accent'   => ['Diapositive — suite du titre', "Affichée en graisse légère sous le titre."],
+        'slide_text'     => ['Diapositive — texte', "Paragraphe sous le titre."],
         'image_ratio'    => ['Proportions du visuel', "Format « largeur / hauteur ». Exemple : 1300 / 400."],
         'image_ratio_mobile' => ['Proportions sur mobile', "Sous 760px. Un format très allongé donnerait une bande trop fine. Exemple : 16 / 9."],
         'image_radius'   => ['Arrondi des angles du visuel', "En pixels, sans unité. 0 pour des angles droits."],
@@ -148,6 +156,9 @@ class BlockFieldHelper {
         if (self::choices($key, $sectionType)) { return 'select'; }
 
         // Libellés courts : cta1_text, sec_link_text, more_text…
+        // `slide_text` est un paragraphe, pas un libellé de bouton : il échappe
+        // à la règle générale sur les clés en « _text ».
+        if ($key === 'slide_text') { return 'textarea'; }
         if (str_ends_with($key, '_text')) { return 'text'; }
 
         foreach (['_ratio', '_max_width', '_width', '_height', '_alt', '_position', '_radius', '_opacity'] as $suffix) {
