@@ -3,6 +3,44 @@
 
 ---
 
+### 2026-09-04 (suite 4) — Éditeur Pages CMS : champs administrables + colonne inspecteur
+
+**BUG-ADM-01 — des réglages étaient littéralement inaccessibles.**
+`app/Views/admin/pages/edit.php` possédait sa **propre** déduction du type de champ, distincte de
+celle du contrôleur. La règle `str_contains($key, 'image')` faisait rendre `image_ratio`,
+`image_max_width` et `image_radius` comme des **sélecteurs de média** : impossible d'y saisir
+« 1300 / 400 ». Même cause pour `sec_link_text`, rendu comme un lien parce que le mot « link »
+figure dans la clé.
+
+**Correctif — une seule règle dans tout le projet**
+- Nouveau `app/Helpers/BlockFieldHelper.php` : source de vérité unique pour le **type**, l'**intitulé**, l'**aide** et les **valeurs autorisées** d'un champ.
+- `PageController::guessBlockType()` délègue désormais à ce helper.
+- La vue d'édition le consomme pour les champs simples **et** pour les champs des éléments répétables.
+
+**Champs enfin compréhensibles**
+- Intitulés lisibles au lieu des clés techniques : « Proportions du visuel » et non « Image ratio ».
+- Une phrase d'aide sous chaque champ connu : format attendu, unité, effet d'un champ vide.
+- Champs à choix fermé rendus en **liste déroulante** : `layout`, `decor`, `columns`. Les options de `layout` dépendent du **type de section**, pour ne pas proposer de valeurs sans effet. Une valeur enregistrée hors liste reste proposée : sauvegarder ne l'écrase jamais en silence.
+
+**Réglages jamais initialisés** — une clé absente de la base n'apparaissait nulle part, donc la
+fonctionnalité était inaccessible. L'éditeur complète la liste avec les clés que le type de section
+sait gérer, en valeur vide.
+
+**Colonne inspecteur — exploitation de l'espace vide à droite**
+`.builder-container` passe de `280px 1fr` à `280px 1fr 300px`.
+- *Cette page* : adresse, statut, présence au menu, nombre de sections visibles ; liens rapides vers la page en ligne, la Bibliothèque Média et la Navigation.
+- *Section en cours* : type, position, visibilité, nombre de réglages et d'éléments, alerte sur les champs vides restants ; boutons sauvegarder et masquer/afficher.
+- L'inspecteur suit la section sélectionnée. Sous 1400px il passe **sous** l'éditeur plutôt que de comprimer les champs de saisie.
+
+**Preuves (Règle #5)**
+- Rendu complet de la vue avec dépendances stubées : **14 assertions, 14/14 OK** (ratio en champ texte, image restée un média, liste déroulante avec l'option courante sélectionnée, options inapplicables absentes, inspecteur par section, comptage des sections visibles)
+- Écart de balises `div` **identique avant et après** (3 — préexistant, dû au layout admin qui enveloppe la vue) : aucune balise cassée par la modification
+- **20 cas** de déduction de type vérifiés un à un : 20/20 OK
+- `php -l` : 3/3 OK · Commit `68e14fa` → run **completed / success**
+- Production : `/admin/pages/edit/6` → **302 vers /admin/login** (auth active, aucune erreur 500) · `/`, `/secteurs`, `/service` → 200, aucune erreur PHP
+
+---
+
 ### 2026-09-04 (suite 3) — Hero aligné à gauche, angles droits, et lecture verticale des paires
 
 **Bug corrigé — bouton principal invisible.** `.hero-mc-btn-primary` porte `color: #ffffff !important`
