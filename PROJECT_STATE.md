@@ -646,6 +646,79 @@ cartes : 4 — Clients accompagnés | Taux de satisfaction | Premier échange | 
 
 ---
 
+## 2026-09-04 — PAGE /service RECONSTRUITE (commits c515786, 39eb31f)
+
+Consigne : reconstruire intégralement la page suivante à partir du langage
+visuel de la page d'accueil (hero + contenu).
+
+### Méthode : échange de type, pas réécriture
+
+Les gabarits v2 lisent **exactement les mêmes clés de blocs** que les anciens.
+Changer `sections.type` bascule donc le rendu sans toucher au contenu.
+
+| Avant | Après | Compatibilité |
+|---|---|---|
+| `services_grid` | `services_grid_v2` | clés identiques (+ `svc_tag` ajouté au gabarit) |
+| `process_strip` | `process_timeline` | `proc_num` / `proc_icon` / `proc_title` / `proc_desc` |
+| `testimonials_grid` | `testimonials_carousel` | `client_company` → `client_role` (report explicite) |
+| `cta` | `cta` | inchangé, déjà au nouveau style |
+| — | `hero_media_cards` | nouvelle section en position -1 |
+
+Aucun texte réécrit, aucune section supprimée : les doublons éventuels sont
+désactivés, jamais effacés (Règle #4).
+
+### Deux pertes de contenu évitées
+
+1. **Catégories de services.** `services_grid` affichait `svc_tag`
+   (Web, Informatique, Infrastructure, Vidéo, Contenu, IA) ; `services_grid_v2`
+   ne le rendait pas. Ajout d'un rendu conditionnel `.svc-v2-tag` — la page
+   d'accueil, qui n'a pas de `svc_tag`, est inchangée.
+2. **Liens des cartes.** Aucune carte n'a de bloc `svc_link` : l'ancien gabarit
+   masquait le trou avec un repli **codé en dur** (`services_grid.php:52`,
+   `$svc['svc_link'] ?? '/contact'`, libellés « Découvrir » et « Service Pro »
+   également en dur). Après l'échange, ni flèche ni bouton ne s'affichaient.
+   `svc_link = '/contact'` est désormais posé en base : comportement identique,
+   mais éditable (Règle #2).
+
+### Hero
+
+Titre scindé pour le rendu bicolore : la partie `<span>` prime, à défaut les
+~40 % de mots finaux deviennent l'accent.
+« Des solutions digitales sur mesure pour » + « propulser votre business ».
+
+Les 4 cartes flottantes reprennent des éléments **déjà publiés** sur la page
+(6 domaines, processus en 4 étapes, devis gratuit, support continu) — aucune
+affirmation nouvelle.
+
+### Script réconciliateur (leçon de BUG-HERO-01)
+
+`database/build_service_v2.php` réaligne à chaque déploiement l'existence, le
+statut et la position (`sort_order = -1`) de la section hero. Le contenu n'est
+semé que si la section est vide ; `pages.hero_status` n'est touché qu'au premier
+passage (verrou `storage/service_v2.lock`).
+
+### Preuve de production (Règle #5)
+
+```
+HTTP 200 · 64KB
+sections (5) : hero_media_cards, services_grid_v2, process_timeline,
+               testimonials_carousel, cta      · 0 doublon
+ancien hero .premium-hero : 0    anciens gabarits : 0
+hero   : badge "Nos Prestations Digitales" · titre bicolore · 2 CTA · image · 4 cartes
+services : 6 cartes · 1 mise en avant · bouton blanc 1 · flèches 5
+           catégories Web | Informatique | Infrastructure | Vidéo | Contenu | IA
+process  : 4 étapes        témoignages : 3 (fonctions reportées)
+```
+
+### Reste à faire
+
+- **[USER]** Visuel du hero : `/assets/images/services_3d.png` est une image 3D
+  rectangulaire. Comme sur l'accueil, un PNG détouré donnerait le rendu du modèle.
+- Pages restantes à traiter : `/about` (4 sections), `/contact` (3 sections),
+  `/realisations` et `/blog` (listings dynamiques, nature différente).
+
+---
+
 ## FICHIERS INTOUCHABLES SANS ANALYSE
 
 - `app/Services/Router.php`
