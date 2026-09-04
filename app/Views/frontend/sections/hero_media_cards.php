@@ -19,8 +19,11 @@
  *     image, image_alt                  visuel de droite
  *     decor            '0' pour masquer les décors
  *
- *     layout           'split' (défaut — texte à gauche, visuel à droite)
- *                      ou 'banner' (texte en haut, visuel en bandeau large dessous)
+ *     layout           'split'   (défaut — texte à gauche, visuel à droite)
+ *                      'banner'  (texte en haut, visuel en bandeau large dessous)
+ *                      'overlay' (texte centré PAR-DESSUS le visuel, voile teinté)
+ *     overlay_opacity  intensité du voile en mode overlay, 0 à 100 — défaut 62
+ *     overlay_min_height  hauteur minimale du visuel en px — défaut 420
  *     image_max_width  largeur maximale du bandeau en px — défaut 1300
  *     image_ratio      proportions du bandeau, ex. « 1300 / 400 » — défaut 1300 / 400
  *     image_ratio_mobile  proportions sous 760px — défaut 16 / 9
@@ -49,8 +52,15 @@ $heroLine = static function (string $raw): string {
 $showDecor = !isset($single['decor']) || $single['decor'] !== '0';
 $cards     = $groups ?? [];
 
+
 /* Mise en page — 'split' reste le comportement historique (accueil, /service). */
-$isBanner = ($single['layout'] ?? 'split') === 'banner';
+$layout    = in_array($single['layout'] ?? 'split', ['split', 'banner', 'overlay'], true)
+    ? ($single['layout'] ?? 'split')
+    : 'split';
+$isOverlay = $layout === 'overlay';
+$isBanner  = $layout === 'banner';
+/* Les deux modes larges partagent le calcul de largeur et de proportions. */
+$isWide    = $isBanner || $isOverlay;
 
 /**
  * Proportions du bandeau, saisies en admin sous la forme « 1300 / 400 »
@@ -72,14 +82,33 @@ $bannerWidth   = preg_match('#^\d{2,5}$#', trim((string)($single['image_max_widt
     ? trim((string)$single['image_max_width']) . 'px'
     : '1300px';
 
-$bannerVars = $isBanner
+/* Voile du mode overlay : borné 0-100, défaut 62. Une saisie hors bornes ne
+   peut donc pas rendre le texte illisible ni faire disparaître la photo. */
+$overlayOpacity = is_numeric($single['overlay_opacity'] ?? null)
+    ? max(0, min(100, (int)$single['overlay_opacity']))
+    : 62;
+$overlayMinH = preg_match('#^\d{2,4}$#', trim((string)($single['overlay_min_height'] ?? '')))
+    ? trim((string)$single['overlay_min_height']) . 'px'
+    : '420px';
+
+/* En mode overlay le visuel devient le fond du hero : une carte flottante n'a
+   plus de panneau sur lequel se poser, et passerait sous le texte centré. */
+if ($isOverlay) { $cards = []; }
+$showDecor = $showDecor && !$isOverlay;
+
+$bannerVars = $isWide
     ? ' style="--hero-banner-ratio:' . htmlspecialchars($bannerRatio, ENT_QUOTES, 'UTF-8')
       . ';--hero-banner-ratio-sm:' . htmlspecialchars($bannerRatioSm, ENT_QUOTES, 'UTF-8')
-      . ';--hero-banner-w:' . htmlspecialchars($bannerWidth, ENT_QUOTES, 'UTF-8') . ';"'
+      . ';--hero-banner-w:' . htmlspecialchars($bannerWidth, ENT_QUOTES, 'UTF-8')
+      . ($isOverlay
+          ? ';--hero-overlay-a:' . ($overlayOpacity / 100)
+            . ';--hero-overlay-minh:' . htmlspecialchars($overlayMinH, ENT_QUOTES, 'UTF-8')
+          : '')
+      . ';"'
     : '';
 ?>
 
-<section class="hero-mc <?= $isBanner ? 'hero-mc-banner' : 'hero-mc-split' ?>" id="hero-media-cards"<?= $bannerVars ?>>
+<section class="hero-mc hero-mc-<?= $layout ?>" id="hero-media-cards"<?= $bannerVars ?>>
 
     <?php if ($showDecor): ?>
         <div class="hero-mc-decor" aria-hidden="true">
@@ -485,6 +514,113 @@ $bannerVars = $isBanner
 @media (max-width: 760px) {
     .hero-mc-banner .hero-mc-media { aspect-ratio: var(--hero-banner-ratio-sm, 16 / 9); }
     .hero-mc-banner .hero-mc-visual { width: calc(100vw - 32px); }
+}
+
+/* ── Mise en page « overlay » ──────────────────────────────────────────────
+   Le texte est centré PAR-DESSUS le visuel, voilé pour rester lisible.
+   Texte et visuel occupent la même cellule de grille : aucun décalage
+   possible entre les deux, quelle que soit la longueur du titre.          */
+.hero-mc-overlay { padding: 0; }
+
+.hero-mc-overlay .hero-mc-grid {
+    grid-template-columns: 1fr;
+    grid-template-areas: "stack";
+    gap: 0;
+    min-height: 0;
+    align-items: stretch;
+}
+.hero-mc-overlay .hero-mc-text,
+.hero-mc-overlay .hero-mc-visual { grid-area: stack; }
+
+.hero-mc-overlay .hero-mc-visual {
+    position: relative;
+    z-index: 0;
+    min-height: 0;
+    /* Les proportions restent administrables ; la hauteur réelle est le plus
+       grand des deux — proportions du visuel ou hauteur du texte. */
+    aspect-ratio: var(--hero-banner-ratio, 1300 / 400);
+    width: min(var(--hero-banner-w, 1300px), calc(100vw - 48px));
+    margin-left: 50%;
+    transform: translateX(-50%);
+}
+.hero-mc-overlay .hero-mc-media {
+    position: absolute;
+    inset: 0;
+    height: 100%;
+    min-height: 0;
+}
+.hero-mc-overlay .hero-mc-img { height: 100%; min-height: 0; object-position: center 40%; }
+
+/* Le voile : teinte de marque, opacité administrable. */
+.hero-mc-overlay .hero-mc-media::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--primary) 80%, transparent) 0%,
+        var(--primary) 100%
+    );
+    /* L'opacité porte le réglage : pas de calc() imbriqué dans color-mix,
+       dont le support est plus incertain que celui d'une simple opacité. */
+    opacity: var(--hero-overlay-a, 0.62);
+}
+
+/* La colonne texte porte la hauteur : le visuel, absolu, s'y adapte. Le titre
+   ne peut donc jamais déborder du cadre, même très long ou très traduit. */
+.hero-mc-overlay .hero-mc-text {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 6px;
+    min-height: var(--hero-overlay-minh, 420px);
+    padding: 72px 0;
+}
+
+.hero-mc-overlay .hero-mc-badge {
+    background: rgba(255, 255, 255, 0.16);
+    border-color: rgba(255, 255, 255, 0.34);
+    color: #ffffff;
+}
+.hero-mc-overlay .hero-mc-title { color: #ffffff; }
+.hero-mc-overlay .hero-mc-title-accent { color: rgba(255, 255, 255, 0.88); }
+.hero-mc-overlay .hero-mc-lead {
+    color: rgba(255, 255, 255, 0.92);
+    max-width: 660px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.hero-mc-overlay .hero-mc-actions { justify-content: center; }
+
+/* Sur photo, un bouton à la couleur de marque se fond dans le voile :
+   le bouton principal passe en blanc plein, le secondaire en contour clair. */
+.hero-mc-overlay .hero-mc-btn-primary {
+    background: #ffffff;
+    color: var(--primary);
+    box-shadow: 0 10px 26px -12px rgba(0, 0, 0, 0.55);
+}
+.hero-mc-overlay .hero-mc-btn-primary .hero-mc-btn-icon {
+    background: color-mix(in srgb, var(--primary) 14%, transparent);
+    color: var(--primary);
+}
+.hero-mc-overlay .hero-mc-btn-ghost {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.55);
+    color: #ffffff;
+}
+.hero-mc-overlay .hero-mc-btn-ghost .hero-mc-btn-icon {
+    background: rgba(255, 255, 255, 0.20);
+    color: #ffffff;
+}
+
+@media (max-width: 760px) {
+    .hero-mc-overlay .hero-mc-visual { width: 100vw; }
+    .hero-mc-overlay .hero-mc-media { border-radius: 0; }
+    .hero-mc-overlay .hero-mc-text { padding: 56px 0; min-height: 340px; }
 }
 
 /* ── Adaptatif ── */

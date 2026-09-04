@@ -206,11 +206,13 @@ try {
         'image'            => '/assets/uploads/hero-pro-dashboard-1893001.jpg',
         'image_alt'        => "La technologie adaptée aux réalités de votre métier",
         'decor'            => '1',
-        // Bandeau large plutôt que visuel latéral, et aucune carte flottante.
-        'layout'           => 'banner',
-        'image_max_width'  => '1300',
-        'image_ratio'      => '1300 / 400',
+        // Texte centré par-dessus le visuel, voile teinté, aucune carte flottante.
+        'layout'             => 'overlay',
+        'image_max_width'    => '1300',
+        'image_ratio'        => '1300 / 400',
         'image_ratio_mobile' => '16 / 9',
+        'overlay_opacity'    => '62',
+        'overlay_min_height' => '420',
     ]);
 
     /**
@@ -227,10 +229,12 @@ try {
     $heroSingle  = $heroContent['single'] ?? [];
 
     $heroDefaults = [
-        'layout'             => ['text', 'banner'],
+        'layout'             => ['text', 'overlay'],
         'image_max_width'    => ['text', '1300'],
         'image_ratio'        => ['text', '1300 / 400'],
         'image_ratio_mobile' => ['text', '16 / 9'],
+        'overlay_opacity'    => ['text', '62'],
+        'overlay_min_height' => ['text', '420'],
     ];
     $added = [];
     foreach ($heroDefaults as $key => [$type, $value]) {
@@ -241,6 +245,21 @@ try {
     }
     if ($added) {
         echo "    mise en page bandeau : " . implode(', ', $added) . " ajouté(s).\n";
+    }
+
+    /**
+     * La première version en ligne posait `layout = banner` (texte au-dessus,
+     * bandeau dessous), ce qui ne correspondait pas à la référence demandée.
+     * Bascule UNIQUE vers `overlay`, et seulement si la valeur est restée
+     * celle que ce script avait écrite : un choix fait en admin est respecté.
+     */
+    if (!Setting::getVal('sectors_hero_overlay_v1')) {
+        $current = Block::getStructuredContent($id)['single']['layout'] ?? '';
+        if ($current === 'banner') {
+            Block::setVal($id, 'layout', 'text', 'overlay');
+            echo "    hero : mise en page bandeau → overlay.\n";
+        }
+        Setting::setVal('sectors_hero_overlay_v1', '1');
     }
 
     if (!Setting::getVal('sectors_hero_cards_removed')) {

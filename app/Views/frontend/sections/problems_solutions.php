@@ -76,13 +76,15 @@ $pairs = $groups ?? [];
 
 .ps-row {
     display: grid;
-    grid-template-columns: 1fr 52px 1.15fr;
-    align-items: center;
-    gap: 16px;
+    grid-template-columns: 0.95fr 44px 1.3fr;
+    /* `stretch` — les deux côtés occupent toute la hauteur de la carte : le
+       constat ne flotte plus au milieu d'un vide quand la réponse est longue. */
+    align-items: stretch;
+    gap: 20px;
     background: var(--bg-card);
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
-    padding: 26px 28px;
+    padding: 20px;
     transition: var(--transition);
 }
 .ps-row:hover {
@@ -90,7 +92,22 @@ $pairs = $groups ?? [];
     border-color: color-mix(in srgb, var(--primary) 24%, transparent);
 }
 
-.ps-side { min-width: 0; }
+.ps-side {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Le constat reçoit sa propre surface : sans elle, la moitié gauche de la
+   carte se lisait comme un vide plutôt que comme un des deux termes. */
+.ps-side-problem {
+    background: color-mix(in srgb, var(--primary) 5%, var(--bg-alt));
+    border-left: 3px solid color-mix(in srgb, var(--primary) 22%, transparent);
+    border-radius: var(--radius-md, 12px);
+    padding: 20px 22px;
+}
+.ps-side-solution { padding: 6px 8px 6px 0; }
 
 .ps-label {
     display: inline-block;
@@ -104,13 +121,17 @@ $pairs = $groups ?? [];
 .ps-label-solution { color: var(--primary); }
 
 .ps-text {
-    font-size: 1.02rem;
+    font-size: 1.04rem;
     line-height: 1.45;
     color: var(--text-main);
     margin: 0;
-    font-weight: 500;
+    font-weight: 600;
 }
-.ps-text-solution { font-weight: 700; }
+.ps-text-solution {
+    font-size: 1.12rem;
+    font-weight: 700;
+    font-family: var(--font-heading);
+}
 .ps-detail { font-size: 0.89rem; line-height: 1.5; color: var(--text-muted); margin: 7px 0 0; }
 
 .ps-solution-head { display: flex; align-items: center; gap: 10px; margin-bottom: 9px; }
@@ -126,6 +147,7 @@ $pairs = $groups ?? [];
 
 .ps-arrow {
     display: inline-flex; align-items: center; justify-content: center;
+    align-self: center;
     width: 40px; height: 40px;
     border-radius: 50%;
     background: color-mix(in srgb, var(--primary) 10%, transparent);
@@ -134,9 +156,14 @@ $pairs = $groups ?? [];
     flex-shrink: 0;
 }
 
+@media (max-width: 1000px) {
+    .ps-row { grid-template-columns: 1fr 40px 1.15fr; gap: 16px; }
+    .ps-side-problem { padding: 16px 18px; }
+}
 @media (max-width: 860px) {
-    .ps-row { grid-template-columns: 1fr; gap: 14px; padding: 22px 20px; }
+    .ps-row { grid-template-columns: 1fr; gap: 14px; padding: 18px; }
     /* La flèche bascule vers le bas : la lecture reste « problème puis solution ». */
     .ps-arrow { transform: rotate(90deg); margin: 0; }
+    .ps-side-solution { padding: 0 4px 4px; }
 }
 </style>
