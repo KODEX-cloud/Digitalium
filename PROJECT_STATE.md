@@ -493,6 +493,90 @@ cartes : 6 · pastille border-radius 50% fond var(--primary) · 1 carte mise en 
 
 ---
 
+## 2026-09-04 — HERO V4 « VISUEL + CARTES FLOTTANTES » (commit aebaf55)
+
+Nouveau modèle de hero fourni par la direction. Consigne : supprimer le hero de
+la page d'accueil et appliquer le nouveau dans sa totalité, en version administrable.
+
+### Suppression de l'ancien hero — sans toucher au moteur
+
+`pages.hero_status = 0` sur la page `home`. C'est un champ **déjà administrable**
+(sélecteur « Statut de la Hero Section » dans `admin/pages/edit.php:581`) et
+`partials/hero.php:8` fait un `return` immédiat quand il vaut 0. Aucune
+modification du moteur de hero, aucune régression sur les autres pages.
+
+### Nouveau type de section : `hero_media_cards`
+
+| Zone | Contenu |
+|---|---|
+| Colonne texte | badge à point, titre bicolore, chapô, deux CTA en pilule |
+| Colonne visuelle | image + cartes d'information flottantes superposées |
+| Décors | cercle menthe, courbe, vague, trame de points (SVG/CSS) |
+
+Tous les décors dérivent de `var(--primary)` via `color-mix` — aucune couleur en dur.
+
+### Mesures relevées sur le modèle (échelle 2.222 px image = 1 px CSS)
+
+| Élément | Valeur |
+|---|---|
+| H1 | 72 px, interligne 1.05, `#191C1C` |
+| Accent du titre | même corps, **graisse légère (300)**, couleur d'accent |
+| Chapô | 20 px / 1.55 |
+| Boutons | 50 px de haut, pilule, pastille d'icône ronde 30 px |
+| Cartes | rayon 16 px, ombre douce, pastille ronde 34 px |
+| Palette | teal `#005354`, menthe `#D3EEE7`, bord `#BEC9C8` |
+
+### Administrabilité (Règle #2)
+
+13 blocs `single` : `badge`, `title`, `title_accent`, `text`, `cta1_text/url/icon`,
+`cta2_text/url/icon`, `image`, `image_alt`, `decor`.
+
+Cartes flottantes en `groups` répétables : `card_icon`, `card_label`, `card_badge`,
+`card_value`, `card_unit`, `card_title`, `card_meta`, `card_progress`, `card_avatar`,
+**`card_top` et `card_left`** — la position de chaque carte est elle-même éditable.
+
+### Reprise du contenu existant
+
+`build_hero_v4.php` lit les champs `hero_*` de la page et les recopie en blocs.
+Le titre est scindé : la partie encadrée par `<span>` devient `title_accent`.
+Les deux premières cartes reprennent des chiffres **déjà affichés** sur le site
+(section `stats_intro`) — aucune nouvelle affirmation introduite.
+
+### Analyse de risque menée avant écriture (Règle #3)
+
+| Risque | Vérification | Conclusion |
+|---|---|---|
+| `fix_hero_layout_v2.php` réactive le hero à chaque déploiement | `$data = $page` — fusion de la ligne complète | `hero_status = 0` préservé |
+| `Page::updatePage` remet `hero_status` à 1 par défaut (`?? 1`, ligne 105) | le formulaire admin expose bien le champ | pas de réactivation silencieuse |
+| `build_home_v2.php:69` force `hero_status = 1` | protégé par `storage/homepage_v2.lock` | no-op en production |
+
+### Preuve de production (Règle #5)
+
+```
+HTTP 200 · 100KB
+.premium-hero (ancien hero)  : 0 occurrence
+sections : 10 · 1re = hero_media_cards « Hero — visuel et cartes » · 0 doublon
+titre  : "Digitaliser. / Automatiser."   accent : "Faire avancer votre entreprise."
+CTA    : "Découvrir nos services" (primaire) · "Demander un audit" (secondaire)
+image  : présente        décors : présents
+cartes : 4 — Clients accompagnés 100+ | Taux de satisfaction 95 | Premier échange | Vos données
+positions : 4%/46% · 32%/30% · 58%/18% · 82%/6%      barre de progression : 1
+```
+
+### Correctif de suivi
+
+`hero_badge` étant vide sur la page, la pastille ne s'affichait pas. Ajout
+idempotent dans `fix_hero_layout_v2.php` : le bloc `badge` n'est posé que s'il
+est absent, donc jamais réécrit une fois personnalisé.
+
+### Reste à faire
+
+- **[USER]** Le modèle utilise une photo **détourée** en pleine hauteur. L'image
+  actuelle est une photo rectangulaire affichée dans un cadre arrondi. Pour coller
+  au modèle, uploader un visuel détourné (PNG à fond transparent) via la Médiathèque.
+
+---
+
 ## FICHIERS INTOUCHABLES SANS ANALYSE
 
 - `app/Services/Router.php`
