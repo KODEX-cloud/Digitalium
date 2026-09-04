@@ -230,6 +230,7 @@ try {
         'image_ratio_mobile' => '16 / 9',
         'overlay_opacity'    => '62',
         'overlay_min_height' => '420',
+        'image_radius'       => '0',
     ]);
 
     /**
@@ -252,6 +253,9 @@ try {
         'image_ratio_mobile' => ['text', '16 / 9'],
         'overlay_opacity'    => ['text', '62'],
         'overlay_min_height' => ['text', '420'],
+        // Posé explicitement pour que le réglage soit visible en admin plutôt
+        // que de rester implicite dans le défaut du gabarit.
+        'image_radius'       => ['text', '0'],
     ];
     $added = [];
     foreach ($heroDefaults as $key => [$type, $value]) {
