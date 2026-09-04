@@ -189,6 +189,23 @@ try {
         return true;
     };
 
+    /**
+     * Pose des blocs single UNIQUEMENT s'ils manquent. Sert à introduire un
+     * nouveau réglage sur une section déjà remplie (où $seed ne s'applique
+     * plus) sans jamais écraser une valeur choisie en admin.
+     */
+    $ensure = function (int $secId, array $defaults): void {
+        $existing = Block::getStructuredContent($secId)['single'] ?? [];
+        $added = [];
+        foreach ($defaults as $key => $value) {
+            if (!array_key_exists($key, $existing)) {
+                Block::setVal($secId, $key, 'text', $value);
+                $added[] = $key;
+            }
+        }
+        if ($added) { echo "    réglages ajoutés : " . implode(', ', $added) . ".\n"; }
+    };
+
     // ── 2. HERO ─────────────────────────────────────────────────────────────
     echo "\n[1/8] Hero\n";
     $id = $reconcile('hero_media_cards', 'Hero — visuel et cartes', -1);
@@ -332,6 +349,9 @@ try {
         'title'          => "Des situations que nous rencontrons, et ce que nous y opposons",
         'problem_label'  => 'Situation',
         'solution_label' => 'Réponse',
+        // Lecture verticale — constat, puis réponse — sur deux colonnes.
+        'layout'         => 'stack',
+        'columns'        => '2',
     ], [
         ['ps_icon' => 'bot',        'ps_problem' => "Traitement manuel des demandes",
          'ps_solution' => "IA, automatisation et CRM",
@@ -346,6 +366,9 @@ try {
          'ps_solution' => "Cloud, sécurité et Managed IT",
          'ps_detail'  => "L'infrastructure est dimensionnée, sécurisée et supervisée pour suivre la croissance."],
     ]);
+    // Section déjà en ligne : $seed ne s'applique plus, on pose les réglages
+    // de disposition s'ils manquent encore.
+    $ensure($id, ['layout' => 'stack', 'columns' => '2']);
 
     // ── 6. EXPERTISES TRANSVERSALES ─────────────────────────────────────────
     echo "[5/8] Expertises transversales\n";

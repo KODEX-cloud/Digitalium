@@ -24,6 +24,7 @@
  *                      'overlay' (texte centré PAR-DESSUS le visuel, voile teinté)
  *     overlay_opacity  intensité du voile en mode overlay, 0 à 100 — défaut 62
  *     overlay_min_height  hauteur minimale du visuel en px — défaut 420
+ *     image_radius     arrondi du visuel en px — défaut 0 (angles droits)
  *     image_max_width  largeur maximale du bandeau en px — défaut 1300
  *     image_ratio      proportions du bandeau, ex. « 1300 / 400 » — défaut 1300 / 400
  *     image_ratio_mobile  proportions sous 760px — défaut 16 / 9
@@ -96,8 +97,14 @@ $overlayMinH = preg_match('#^\d{2,4}$#', trim((string)($single['overlay_min_heig
 if ($isOverlay) { $cards = []; }
 $showDecor = $showDecor && !$isOverlay;
 
+/* Arrondi du visuel — 0 par défaut (angles droits), réactivable en admin. */
+$mediaRadius = preg_match('#^\d{1,3}$#', trim((string)($single['image_radius'] ?? '')))
+    ? trim((string)$single['image_radius']) . 'px'
+    : '0px';
+
 $bannerVars = $isWide
-    ? ' style="--hero-banner-ratio:' . htmlspecialchars($bannerRatio, ENT_QUOTES, 'UTF-8')
+    ? ' style="--hero-media-radius:' . htmlspecialchars($mediaRadius, ENT_QUOTES, 'UTF-8')
+      . ';--hero-banner-ratio:' . htmlspecialchars($bannerRatio, ENT_QUOTES, 'UTF-8')
       . ';--hero-banner-ratio-sm:' . htmlspecialchars($bannerRatioSm, ENT_QUOTES, 'UTF-8')
       . ';--hero-banner-w:' . htmlspecialchars($bannerWidth, ENT_QUOTES, 'UTF-8')
       . ($isOverlay
@@ -105,7 +112,7 @@ $bannerVars = $isWide
             . ';--hero-overlay-minh:' . htmlspecialchars($overlayMinH, ENT_QUOTES, 'UTF-8')
           : '')
       . ';"'
-    : '';
+    : ' style="--hero-media-radius:' . htmlspecialchars($mediaRadius, ENT_QUOTES, 'UTF-8') . ';"';
 ?>
 
 <section class="hero-mc hero-mc-<?= $layout ?>" id="hero-media-cards"<?= $bannerVars ?>>
@@ -381,7 +388,8 @@ $bannerVars = $isWide
     position: relative;
     height: 100%;
     min-height: 520px;
-    border-radius: 28px;
+    /* Angles droits par défaut ; arrondi réactivable en admin (`image_radius`). */
+    border-radius: var(--hero-media-radius, 0);
     overflow: hidden;
 }
 .hero-mc-img {
@@ -556,10 +564,14 @@ $bannerVars = $isWide
     content: "";
     position: absolute;
     inset: 0;
+    /* Dégradé HORIZONTAL : dense à gauche, sous le texte, puis transparent à
+       droite pour que la photo reste visible — un voile plein la masquerait. */
     background: linear-gradient(
-        180deg,
-        color-mix(in srgb, var(--primary) 80%, transparent) 0%,
-        var(--primary) 100%
+        90deg,
+        var(--primary) 0%,
+        color-mix(in srgb, var(--primary) 88%, transparent) 38%,
+        color-mix(in srgb, var(--primary) 42%, transparent) 66%,
+        transparent 92%
     );
     /* L'opacité porte le réglage : pas de calc() imbriqué dans color-mix,
        dont le support est plus incertain que celui d'une simple opacité. */
@@ -573,9 +585,12 @@ $bannerVars = $isWide
     z-index: 2;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    /* Le texte se tient à gauche et n'occupe pas toute la largeur : la moitié
+       droite de la photo reste dégagée. */
+    align-items: flex-start;
     justify-content: center;
-    text-align: center;
+    text-align: left;
+    max-width: 600px;
     gap: 6px;
     min-height: var(--hero-overlay-minh, 420px);
     padding: 72px 0;
@@ -590,17 +605,20 @@ $bannerVars = $isWide
 .hero-mc-overlay .hero-mc-title-accent { color: rgba(255, 255, 255, 0.88); }
 .hero-mc-overlay .hero-mc-lead {
     color: rgba(255, 255, 255, 0.92);
-    max-width: 660px;
-    margin-left: auto;
-    margin-right: auto;
+    max-width: 520px;
+    margin-left: 0;
+    margin-right: 0;
 }
-.hero-mc-overlay .hero-mc-actions { justify-content: center; }
+.hero-mc-overlay .hero-mc-actions { justify-content: flex-start; }
 
 /* Sur photo, un bouton à la couleur de marque se fond dans le voile :
    le bouton principal passe en blanc plein, le secondaire en contour clair. */
+/* `!important` obligatoire : la règle de base pose `color: #ffffff !important`
+   sur ce bouton, ce qui rendait le libellé blanc sur fond blanc. */
 .hero-mc-overlay .hero-mc-btn-primary {
     background: #ffffff;
-    color: var(--primary);
+    color: var(--primary) !important;
+    border-color: #ffffff;
     box-shadow: 0 10px 26px -12px rgba(0, 0, 0, 0.55);
 }
 .hero-mc-overlay .hero-mc-btn-primary .hero-mc-btn-icon {
@@ -610,7 +628,7 @@ $bannerVars = $isWide
 .hero-mc-overlay .hero-mc-btn-ghost {
     background: rgba(255, 255, 255, 0.12);
     border-color: rgba(255, 255, 255, 0.55);
-    color: #ffffff;
+    color: #ffffff !important;
 }
 .hero-mc-overlay .hero-mc-btn-ghost .hero-mc-btn-icon {
     background: rgba(255, 255, 255, 0.20);
@@ -620,7 +638,16 @@ $bannerVars = $isWide
 @media (max-width: 760px) {
     .hero-mc-overlay .hero-mc-visual { width: 100vw; }
     .hero-mc-overlay .hero-mc-media { border-radius: 0; }
-    .hero-mc-overlay .hero-mc-text { padding: 56px 0; min-height: 340px; }
+    .hero-mc-overlay .hero-mc-text { padding: 56px 0; min-height: 340px; max-width: none; }
+    /* Sur mobile le texte occupe toute la largeur : un dégradé latéral le
+       laisserait à cheval sur la partie claire. Il redevient vertical. */
+    .hero-mc-overlay .hero-mc-media::after {
+        background: linear-gradient(
+            180deg,
+            color-mix(in srgb, var(--primary) 78%, transparent) 0%,
+            var(--primary) 100%
+        );
+    }
 }
 
 /* ── Adaptatif ── */

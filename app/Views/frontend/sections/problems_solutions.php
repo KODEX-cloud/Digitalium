@@ -6,11 +6,23 @@
  *
  * Blocs attendus — TOUT est administrable (Règle #2) :
  *   single : tag, title, subtitle, problem_label, solution_label
+ *            layout   'stack' (défaut — constat au-dessus, réponse en dessous)
+ *                     ou 'row' (constat et réponse côte à côte)
+ *            columns  nombre de colonnes de la grille, 1 à 4 — défaut 2
  *   groups : ps_icon, ps_problem, ps_solution, ps_detail
  *
  * Aucun texte de repli en dur : un champ vide est simplement masqué.
  */
 $pairs = $groups ?? [];
+
+/* Disposition administrable ; toute valeur inattendue retombe sur le défaut. */
+$psLayout = in_array($single['layout'] ?? 'stack', ['stack', 'row'], true)
+    ? ($single['layout'] ?? 'stack')
+    : 'stack';
+$psCols = (int)($single['columns'] ?? 2);
+if ($psCols < 1 || $psCols > 4) { $psCols = 2; }
+/* Une seule paire n'a pas besoin d'une grille : elle occupe la largeur. */
+if (count($pairs) < 2) { $psCols = 1; }
 ?>
 
 <section class="section-padding ps-section" style="background:var(--bg-alt);">
@@ -28,7 +40,7 @@ $pairs = $groups ?? [];
             <?php endif; ?>
         </div>
 
-        <div class="ps-list">
+        <div class="ps-list ps-list-<?= $psLayout ?>" style="--ps-cols:<?= $psCols ?>;">
             <?php foreach ($pairs as $i => $p):
                 if (empty($p['ps_problem']) && empty($p['ps_solution'])) { continue; }
             ?>
@@ -72,21 +84,26 @@ $pairs = $groups ?? [];
 </section>
 
 <style>
-.ps-list { display: flex; flex-direction: column; gap: 18px; }
+.ps-list { display: grid; gap: 18px; }
+
+/* Disposition « stack » (défaut) : chaque paire se lit de haut en bas —
+   constat, flèche descendante, réponse — et les paires se rangent en grille.
+   Disposition « row » : constat et réponse côte à côte, une paire par ligne. */
+.ps-list-stack { grid-template-columns: repeat(var(--ps-cols, 2), minmax(0, 1fr)); }
+.ps-list-row   { grid-template-columns: minmax(0, 1fr); }
 
 .ps-row {
     display: grid;
-    grid-template-columns: 0.95fr 44px 1.3fr;
     /* `stretch` — les deux côtés occupent toute la hauteur de la carte : le
        constat ne flotte plus au milieu d'un vide quand la réponse est longue. */
     align-items: stretch;
-    gap: 20px;
     background: var(--bg-card);
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
-    padding: 20px;
     transition: var(--transition);
 }
+.ps-list-row .ps-row   { grid-template-columns: 0.95fr 44px 1.3fr; gap: 20px; padding: 20px; }
+.ps-list-stack .ps-row { grid-template-columns: minmax(0, 1fr); gap: 14px; padding: 22px; }
 .ps-row:hover {
     box-shadow: var(--shadow-card-hover);
     border-color: color-mix(in srgb, var(--primary) 24%, transparent);
@@ -107,7 +124,8 @@ $pairs = $groups ?? [];
     border-radius: var(--radius-md, 12px);
     padding: 20px 22px;
 }
-.ps-side-solution { padding: 6px 8px 6px 0; }
+.ps-list-row   .ps-side-solution { padding: 6px 8px 6px 0; }
+.ps-list-stack .ps-side-solution { padding: 0 2px; }
 
 .ps-label {
     display: inline-block;
@@ -156,14 +174,19 @@ $pairs = $groups ?? [];
     flex-shrink: 0;
 }
 
+/* En lecture verticale, la flèche descend : elle relie le constat à la réponse. */
+.ps-list-stack .ps-arrow { transform: rotate(90deg); margin: 0 auto; }
+
 @media (max-width: 1000px) {
-    .ps-row { grid-template-columns: 1fr 40px 1.15fr; gap: 16px; }
+    .ps-list-row .ps-row { grid-template-columns: 1fr 40px 1.15fr; gap: 16px; }
     .ps-side-problem { padding: 16px 18px; }
 }
 @media (max-width: 860px) {
-    .ps-row { grid-template-columns: 1fr; gap: 14px; padding: 18px; }
+    /* Sous 860px la grille passe en colonne unique, quel que soit le réglage. */
+    .ps-list-stack { grid-template-columns: minmax(0, 1fr); }
+    .ps-list-row .ps-row { grid-template-columns: 1fr; gap: 14px; padding: 18px; }
     /* La flèche bascule vers le bas : la lecture reste « problème puis solution ». */
-    .ps-arrow { transform: rotate(90deg); margin: 0; }
-    .ps-side-solution { padding: 0 4px 4px; }
+    .ps-list-row .ps-arrow { transform: rotate(90deg); margin: 0; }
+    .ps-list-row .ps-side-solution { padding: 0 4px 4px; }
 }
 </style>

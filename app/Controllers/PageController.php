@@ -536,7 +536,7 @@ class PageController extends Controller {
                 ['badge', 'title', 'title_accent', 'text', 'cta1_text', 'cta1_url', 'cta1_icon',
                  'cta2_text', 'cta2_url', 'cta2_icon', 'image', 'image_alt', 'decor',
                  'layout', 'image_max_width', 'image_ratio', 'image_ratio_mobile',
-                 'overlay_opacity', 'overlay_min_height'],
+                 'overlay_opacity', 'overlay_min_height', 'image_radius'],
                 ['card_icon', 'card_label', 'card_badge', 'card_value', 'card_unit',
                  'card_title', 'card_meta', 'card_progress', 'card_avatar', 'card_top', 'card_left'],
                 3,
@@ -547,7 +547,7 @@ class PageController extends Controller {
                 3,
             ],
             'problems_solutions' => [
-                ['tag', 'title', 'subtitle', 'problem_label', 'solution_label'],
+                ['tag', 'title', 'subtitle', 'problem_label', 'solution_label', 'layout', 'columns'],
                 ['ps_icon', 'ps_problem', 'ps_solution', 'ps_detail'],
                 3,
             ],
