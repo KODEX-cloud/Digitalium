@@ -52,13 +52,31 @@ echo "=== BUILD SOLUTIONS PAGE (/solutions) ===\n";
 
 try {
     // ── 0. Schéma : rattachement parent/enfant ──────────────────────────────
-    $col = Database::fetch("SHOW COLUMNS FROM `pages` LIKE 'parent_slug'");
-    if (!$col) {
-        Database::query("ALTER TABLE `pages` ADD COLUMN `parent_slug` VARCHAR(150) NULL DEFAULT NULL");
-        Database::query("ALTER TABLE `pages` ADD INDEX `idx_pages_parent_slug` (`parent_slug`)");
-        echo "pages.parent_slug ajoutée (+ index).\n";
-    } else {
-        echo "pages.parent_slug déjà présente.\n";
+    //
+    // Isolé dans son propre try/catch, et volontairement SANS index.
+    //
+    // Un ALTER TABLE verrouille `pages`. Or les quatre pages contrôlées par les
+    // smoke tests du déploiement (/, /blog, /realisations, /sitemap.xml) lisent
+    // toutes cette table : un ALTER lent bloque le site le temps qu'il dure et
+    // fait échouer le déploiement entier. `pages` compte une dizaine de lignes,
+    // un index n'apporte rien de mesurable et double le nombre d'ALTER.
+    //
+    // Un échec ici ne doit pas empêcher le reste : la page se construit quand
+    // même, seules les sous-pages resteront inaccessibles, et le message dit
+    // exactement quoi regarder.
+    $hasParentSlug = false;
+    try {
+        $col = Database::fetch("SHOW COLUMNS FROM `pages` LIKE 'parent_slug'");
+        if (!$col) {
+            Database::query("ALTER TABLE `pages` ADD COLUMN `parent_slug` VARCHAR(150) NULL DEFAULT NULL");
+            echo "pages.parent_slug ajoutée.\n";
+        } else {
+            echo "pages.parent_slug déjà présente.\n";
+        }
+        $hasParentSlug = true;
+    } catch (\Throwable $e) {
+        echo "ATTENTION pages.parent_slug indisponible : " . $e->getMessage() . "\n";
+        echo "  -> la page /solutions sera construite, les sous-pages seront ignorées.\n";
     }
 
     // ── 1. Page ─────────────────────────────────────────────────────────────
@@ -84,9 +102,11 @@ try {
     // Navigation : juste après Services, avant Secteurs d'activité.
     $servicePage = Page::findBySlug('service');
     $navOrder = $servicePage ? ((int)($servicePage['sort_order'] ?? 2) + 1) : 3;
+    // `parent_slug` n est remis a NULL que si la colonne existe : /solutions
+    // est une page parente, jamais une enfant.
     Database::query(
         "UPDATE pages SET status = 'published', in_navigation = 1, sort_order = :o,
-                          hero_status = 0, parent_slug = NULL
+                          hero_status = 0" . ($hasParentSlug ? ", parent_slug = NULL" : "") . "
          WHERE id = :id",
         ['o' => $navOrder, 'id' => $pageId]
     );
@@ -522,6 +542,15 @@ try {
             ],
         ],
     ];
+
+    if (!$hasParentSlug) {
+        // Sans colonne de rattachement, une sous-page serait créée mais
+        // injoignable à son URL imbriquée : mieux vaut ne pas la créer du tout
+        // que de publier du contenu sans chemin pour y accéder.
+        echo "pages.parent_slug absente — sous-pages ignorées pour ce passage.
+";
+        $children = [];
+    }
 
     foreach ($children as $c) {
         echo "\n— /solutions/{$c['slug']}\n";

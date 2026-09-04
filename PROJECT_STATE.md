@@ -53,6 +53,23 @@ soit pas annulée au déploiement suivant.
 **Accent** `#0868B0` (bleu clair du logo), posé une seule fois via `pages.accent_color` — modifiable
 en admin, et non réécrit ensuite.
 
+**Déploiement 041cc52 en échec — correctif.** Le run a échoué à l'étape « SSH — Deploy Enterprise ».
+Le site est resté debout (aucune coupure), le code a bien été déployé (la route `/{parent}/{child}`
+répondait), mais la base n'avait pas été modifiée : `/solutions` en 404, absente du sitemap et du
+menu. Le seul `exit 1` du script SSH est « au moins 3 smoke tests HTTP en échec » — or les quatre
+pages testées (`/`, `/blog`, `/realisations`, `/sitemap.xml`) lisent toutes la table `pages`, celle
+sur laquelle le script exécutait deux `ALTER TABLE` successifs. Un `ALTER` verrouille la table.
+Correctifs : l'index est supprimé (`pages` compte une dizaine de lignes, il n'apportait rien et
+doublait le nombre d'ALTER), l'étape de schéma est isolée dans son propre try/catch, et les
+sous-pages sont ignorées si la colonne manque — plutôt que d'être publiées sans chemin d'accès.
+
+**Banc d'essai à blanc** — `scratchpad/h_build.php`. MySQL n'étant pas démarré sur le poste de
+développement, le script ne pouvait être vérifié qu'à la lecture : c'est ainsi qu'une garde posée
+avant la déclaration de `$children` était passée inaperçue. Le script s'exécute désormais pour de
+vrai sur une base bouchonnée, en trois scénarios : site vierge, `ALTER` refusé, second passage.
+22 contrôles, dont « aucune section dupliquée », « le titre modifié en admin est conservé »,
+« une section éteinte en admin n'est pas rallumée » et « aucun bouton Explorer ne mène nulle part ».
+
 **Preuves** — 3 harnais : sections 38/38 (contenu complet, minimal, vide, hostile ; équilibre des
 balises ; échappement), routage 16/16 (dont non-régression de `/blog/{slug}` et
 `/realisations/{slug}`, et ordre de déclaration), éditeur d'admin 27/27 (141 `<div>` équilibrés).
