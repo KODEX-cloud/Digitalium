@@ -3,6 +3,41 @@
 
 ---
 
+### 2026-09-04 (suite 9) — Hero carrousel plein cadre + état vide assumé
+
+**Analyse de la référence (cocodyjuste.com).** Écarts relevés avec le hero livré : pleine largeur
+bord à bord, nettement plus haut, dégradé sombre depuis la gauche laissant la photo lisible à
+droite, badge en **pavé plein** et non en pastille translucide, H1 très grand **en capitales**, et
+un **carrousel** avec flèches latérales et pastilles de pagination.
+
+**Hero**
+- `image_max_width` accepte désormais le mot **`full`** : visuel bord à bord sur toute la largeur.
+- Le mode `overlay` reçoit son **propre balisage** : dégradé sombre horizontal, badge en pavé plein, titre en capitales (`clamp(2.1rem, 5vw, 3.6rem)`), texte à gauche.
+- **Carrousel** : la première diapositive vient des blocs simples, les groupes `slide_*` en ajoutent d'autres (`slide_image`, `slide_alt`, `slide_badge`, `slide_title`, `slide_accent`, `slide_text`). Une seule diapositive = ni flèches ni pastilles.
+- Défilement automatique 7 s, suspendu au survol, **désactivé si le système demande des animations réduites**.
+- **SEO** : seule la première diapositive porte un `<h1>`, les suivantes des `<h2>` visuellement identiques. Le mode overlay ne rend plus la grille historique, qui aurait laissé un second `<h1>` caché dans le document.
+- Sous 560px les flèches disparaissent : elles recouvriraient le texte.
+
+/realisations passe en pleine largeur, 560px de haut — posé **une seule fois** sous drapeau
+`realisations_hero_full_v1`.
+
+**État vide de la page.** Une phrase seule au milieu d'une grande surface blanche se lit comme une
+page cassée. L'état vide devient un panneau assumé : icône, message, et un bouton d'appel à l'action
+administrable (`empty_cta_text`, `empty_cta_url`), posé sur la section déjà en ligne uniquement s'il
+manque.
+
+**Preuves (Règle #5)**
+- Hero, 5 cas (1 diapo, 3 diapos, borné à 1250, split, vide) : une seule diapo n'affiche ni flèche ni pastille ; 3 diapos donnent **3 pastilles, 2 flèches, 1 `<h1>` et 2 `<h2>`** ; `full` et `1250` produisent bien des conteneurs différents ; balises équilibrées partout
+- Harness hero complet **12/12** · Réalisations **17/17** · Éditeur de pages **14/14** · `php -l` 5/5
+- Commit `146636c` → run **completed / success**
+- Production `/realisations` : conteneur `hero-ov hero-ov-full`, 1 diapositive, **1 `<h1>`**, badge pavé, état vide en panneau avec bouton « Discuter de mon projet », accent `#003060` actif
+- Non-régression : `/` et `/service` → `hero-mc-split`, 1 `<h1>` · `/secteurs` → `hero-mc-overlay`, 1 `<h1>`
+
+**À noter** : `/secteurs` étant lui aussi en mode `overlay`, il hérite du nouveau rendu (badge plein,
+titre en capitales, dégradé sombre). Il reste borné à 1300px, pas en pleine largeur.
+
+---
+
 ### 2026-09-04 (suite 8) — BUG-HERO-02 : texte blanc sur fond blanc sans visuel
 
 **Symptôme.** Sur `/realisations`, le titre, le chapô et le bouton secondaire étaient invisibles.
