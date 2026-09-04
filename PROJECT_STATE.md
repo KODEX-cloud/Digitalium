@@ -3,6 +3,48 @@
 
 ---
 
+### 2026-09-04 (suite 5) — BUG-ADM-02 : trois `<div>` non refermés faisaient se chevaucher l'éditeur
+
+**Symptôme.** Dans `/admin/pages/edit/{id}`, la liste des sections, le formulaire de blocs et la
+colonne inspecteur se superposaient en cascade.
+
+**Cause réelle**, localisée en analysant la pile d'imbrication du HTML rendu (et non en devinant) :
+trois `<div>` du bloc de configuration n'étaient **jamais refermés**.
+
+```
+config-grid-wrapper   (grille 1.2fr 0.8fr)
+  card                (colonne formulaire)
+    div               (Gestionnaire de Hero Section)
+```
+
+Le navigateur imbriquait donc tout ce qui suit à l'intérieur, `builder-container` compris. La grille
+de l'éditeur devenait un élément d'une **autre** grille, comprimée dans une colonne de 1.2fr et
+superposée au simulateur `sticky` de la colonne voisine.
+
+Le défaut était **antérieur** à la colonne inspecteur mais latent : avec deux colonnes il restait
+supportable, la troisième l'a rendu visible. L'écart de 3 balises avait été mesuré au commit
+précédent et attribué au layout admin **sans vérification** — c'était faux.
+
+**Correctif** — fermeture aux trois points sémantiquement corrects :
+- `</div>` du Gestionnaire de Hero Section, avant la ligne du bouton Sauvegarder
+- `</div>` de la colonne formulaire, avant le panneau simulateur
+- `</div>` de `config-grid-wrapper`, avant `builder-container`
+
+Le simulateur redevient la colonne droite de `config-grid-wrapper`, et `builder-container` un
+élément de premier niveau.
+
+**Preuves (Règle #5)**
+- **0** `<div>` non refermé, **0** fermeture orpheline — 242 ouvertures / 242 fermetures, contre 242/239 avant
+- Pile d'imbrication vérifiée aux trois ancres : simulateur = enfant direct de `config-grid-wrapper`, `builder-container` au niveau racine, inspecteur = enfant direct de `builder-container`
+- Les 14 assertions de rendu de l'éditeur : **14/14 OK**
+- `php -l` : OK · Commit `ec337ec` → run **completed / success**
+- Production : `/admin/pages/edit/6` → 302 vers `/admin/login` · `/` et `/secteurs` → 200, aucune erreur PHP
+
+**Leçon.** Un écart de balises ne doit jamais être expliqué par hypothèse. La pile d'imbrication du
+HTML rendu donne la réponse exacte en quelques lignes de script.
+
+---
+
 ### 2026-09-04 (suite 4) — Éditeur Pages CMS : champs administrables + colonne inspecteur
 
 **BUG-ADM-01 — des réglages étaient littéralement inaccessibles.**
