@@ -925,6 +925,8 @@ if (empty($selectedLogo)) {
                 <input type="hidden" name="hero_articles" id="hero_articles_input" value="<?= htmlspecialchars($page['hero_articles'] ?? '') ?>">
             </div>
 
+            </div><!-- /Gestionnaire de Hero Section -->
+
             <div style="display: flex; justify-content: flex-end; border-top: 1px solid var(--border); padding-top: 16px;">
                 <button type="submit" class="btn-primary" style="padding: 12px 28px; font-weight: 700; font-size: 0.95rem; display: flex; align-items: center; gap: 8px;">
                     <i data-lucide="save" style="width: 20px; height: 20px;"></i>
@@ -989,6 +991,8 @@ if (empty($selectedLogo)) {
         renderHeroArticles();
         </script>
     </div>
+
+    </div><!-- /Config Form Column -->
 
     <!-- Interactive Simulator Panel -->
     <div class="card visual-simulator-card" style="padding: 20px; position: sticky; top: 20px; display: flex; flex-direction: column; gap: 14px; border: 1px solid rgba(37, 99, 235, 0.15); background: rgba(255, 255, 255, 0.45); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); box-shadow: 0 15px 35px rgba(30,58,138,0.04);">
@@ -1094,8 +1098,10 @@ if (empty($selectedLogo)) {
     </div>
 </div>
 
+</div><!-- /config-grid-wrapper -->
+
 <div class="builder-container">
-    
+
     <div class="sections-sidebar">
         <div class="sidebar-header">
             <span class="sidebar-title">Sections de la page</span>
