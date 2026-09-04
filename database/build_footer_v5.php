@@ -80,3 +80,5 @@ try {
     echo "ERREUR: " . $e->getMessage() . "\n";
     exit(1);
 }
+
+// Relance de déploiement — voir PROJECT_STATE (incident déploiement footer v5).
