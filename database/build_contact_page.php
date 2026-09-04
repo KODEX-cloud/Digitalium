@@ -204,6 +204,28 @@ try {
         return true;
     };
 
+    /**
+     * Pose des blocs single UNIQUEMENT s'ils manquent.
+     *
+     * `$seed` ne s'applique qu'à une section vide : il ne peut donc pas
+     * introduire un réglage sur une section déjà remplie lors d'un passage
+     * précédent. C'est exactement ce qui est arrivé à `show_form`, resté absent
+     * après le premier déploiement. Une valeur choisie en admin n'est jamais
+     * écrasée.
+     */
+    $ensure = function (int $secId, array $defauts): void {
+        $existant = Block::getStructuredContent($secId)['single'] ?? [];
+        $ajoutes = [];
+        foreach ($defauts as $cle => $valeur) {
+            if (array_key_exists($cle, $existant)) { continue; }
+            $type = \App\Helpers\BlockFieldHelper::type($cle);
+            if ($type === 'select') { $type = 'text'; }
+            Block::setVal($secId, $cle, $type, $valeur);
+            $ajoutes[] = $cle;
+        }
+        if ($ajoutes) { echo "    réglages ajoutés : " . implode(', ', $ajoutes) . ".\n"; }
+    };
+
     // ── Hero ────────────────────────────────────────────────────────────────
     echo "\n[1/7] Hero\n";
     $id = $reconcile('hero_media_cards', 'Hero — Contact', -1);
@@ -294,6 +316,7 @@ try {
         'cta_label'          => 'Envoyer un email',
         'whatsapp_btn_label' => 'Écrire sur WhatsApp',
     ]);
+    $ensure($id, ['show_form' => '0']);
 
     // ── Types de projets ────────────────────────────────────────────────────
     echo "[4/7] Types de projets\n";
