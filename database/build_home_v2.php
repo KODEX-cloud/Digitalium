@@ -75,6 +75,9 @@ try {
 
     // ─── 2. Sections cibles (ordre exact du visuel) ───────────────────────────
     $targetTypes = [
+        // hero_media_cards est le hero de la page (sort_order -1) : il doit figurer
+        // ici, sinon la boucle de désactivation ci-dessous le coupe à chaque passage.
+        'hero_media_cards',
         'logos_strip', 'stats_intro', 'about_visual', 'services_grid_v2',
         'process_timeline', 'projects_showcase', 'testimonials_carousel', 'team', 'cta',
     ];
