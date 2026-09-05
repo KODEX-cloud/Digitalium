@@ -80,7 +80,7 @@
                             <span class="item-drag-handle"><i data-lucide="grip-vertical" style="width:18px;height:18px;"></i></span>
                             <div style="flex:1; min-width:0;">
                                 <div class="item-label"><?= htmlspecialchars($item['label']) ?></div>
-                                <div class="item-url-preview"><?= htmlspecialchars(MenuItem::resolveUrl($item)) ?></div>
+                                <div class="item-url-preview"><?= htmlspecialchars(\App\Models\MenuItem::resolveUrl($item)) ?></div>
                             </div>
                             <div class="item-actions">
                                 <?php if (!$item['is_active']): ?>
@@ -101,7 +101,7 @@
                             </div>
                             <div class="form-group">
                                 <label class="form-label">URL</label>
-                                <input type="text" class="form-input field-url" value="<?= htmlspecialchars(MenuItem::resolveUrl($item)) ?>" placeholder="/contact ou https://...">
+                                <input type="text" class="form-input field-url" value="<?= htmlspecialchars(\App\Models\MenuItem::resolveUrl($item)) ?>" placeholder="/contact ou https://...">
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Icône Lucide (optionnel)</label>
