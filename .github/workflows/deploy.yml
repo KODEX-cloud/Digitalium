@@ -531,7 +531,9 @@ jobs:
             echo "=== [$STEP/8] SMOKE TESTS HTTP ==="
             # Attendre que le serveur soit prêt
             sleep 3
-            HTTP_PATHS=("/" "/blog" "/realisations" "/sitemap.xml")
+            # /blog et /service ne sont plus que des redirections 301 : les
+            # sonder ne prouve pas que la page qui les remplace repond.
+            HTTP_PATHS=("/" "/insights" "/solutions" "/realisations" "/sitemap.xml")
             for PATH_TEST in "${HTTP_PATHS[@]}"; do
               URL="$APP_URL$PATH_TEST"
               CODE=$(curl -s -o /dev/null -w "%{http_code}" --max-time 15 --location "$URL" 2>/dev/null || echo "000")

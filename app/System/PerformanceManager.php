@@ -11,7 +11,10 @@ class PerformanceManager {
 
     private static array $targets = [
         '/'            => 'Homepage',
-        '/blog'        => 'Blog index',
+        // /blog n'est plus qu'une redirection : on mesurerait le temps du
+        // renvoi, pas celui de la page réellement servie.
+        '/insights'    => 'Insights index',
+        '/solutions'   => 'Solutions',
         '/realisations'=> 'Portfolio',
         '/sitemap.xml' => 'Sitemap',
     ];

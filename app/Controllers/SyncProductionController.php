@@ -163,7 +163,7 @@ class SyncProductionController extends Controller {
         $urls    = [
             'frontend'   => $baseUrl . '/',
             'backend'    => $baseUrl . '/admin',
-            'blog'       => $baseUrl . '/blog',
+            'insights'   => $baseUrl . '/insights',
             'sitemap'    => $baseUrl . '/sitemap.xml',
         ];
 

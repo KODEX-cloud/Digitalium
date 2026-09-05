@@ -802,7 +802,7 @@ class PageController extends Controller {
                 Block::setVal($sectionId, 'post_summary', 'textarea', 'Résumé court de l\'article.', $groupId, 3);
                 Block::setVal($sectionId, 'post_icon', 'text', 'cpu', $groupId, 4);
                 Block::setVal($sectionId, 'post_image', 'image', '', $groupId, 5);
-                Block::setVal($sectionId, 'post_link', 'link', '/blog', $groupId, 6);
+                Block::setVal($sectionId, 'post_link', 'link', '/insights', $groupId, 6);
                 break;
 
             case 'process':

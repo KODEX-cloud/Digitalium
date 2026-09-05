@@ -1,5 +1,67 @@
 # PROJECT_STATE — Digitalium Group CMS
-> Dernière mise à jour : 2026-09-05 — Retrait des pages en doublon /service et /blog
+> Dernière mise à jour : 2026-09-05 — Insights dans l administration, traces du retrait nettoyees
+
+---
+
+### 2026-09-05 (suite 23) — « Blog » devient « Insights » dans l'administration, et quatre traces du retrait
+
+Renommage cosmétique demandé — mais le recensement préalable a mis au jour **quatre défauts réels**
+créés par le retrait de `/service` et `/blog` la veille. Aucun n'était visible ; tous pointaient vers
+une adresse qui ne fait plus que rediriger.
+
+**1. Le semis de secours des menus aurait ressuscité « Blog ».**
+`app/System/Migrations/MenuMigration.php` recrée un menu principal complet lorsque celui-ci est
+absent — donc après une perte ou une restauration par le Recovery Center. Ses valeurs par défaut
+étaient `Accueil · Services (/services) · Réalisations · Blog (/blog) · Contact`. Deux problèmes :
+`/services` **au pluriel répond 404** (vérifié en production) et n'a donc jamais fonctionné, et
+`/blog` aurait remis en place l'entrée tout juste retirée. Un secours qui remonte des liens morts
+aggrave la panne qu'il est censé réparer (Règle #8). Remplacé par l'état réel du site :
+`Accueil · À propos · Solutions · Réalisations · Insights · Contact`.
+
+Le défaut était **latent, pas actif** : le semis ne s'exécute que `if (!$menu)`, et le menu existe.
+
+**2. Cinq sondes de santé mesuraient une redirection.**
+`RouteManager::httpTest`, `CacheManager` (préchauffage), `PerformanceManager`, les smoke tests du
+Recovery Center et ceux du pipeline visaient tous `/blog`. Aucun ne cassait — ils suivent les
+redirections et acceptent 2xx/3xx — mais tous mesuraient le temps du **renvoi**, pas celui de la page
+servie, et un préchauffage de redirection ne met rien d'utile en cache. Ils visent désormais
+`/insights` et `/solutions`.
+
+**3. L'éditeur proposait `/blog` par défaut.**
+Dans `admin/pages/edit.php`, tout article ajouté au hero recevait `/blog` comme adresse de départ, et
+`PageController::sectionSkeletons()` semait `post_link = '/blog'`. Un contenu créé aujourd'hui
+naissait donc avec un lien qui redirige.
+
+**4. Les contenus de démonstration pointaient vers `/blog`.**
+`partials/hero.php` et `sections/blog.php` embarquent des articles de démonstration en repli — dette
+connue au titre de la Règle #2, **non résolue ici**, mais leurs liens ne visent plus une adresse
+retirée.
+
+**Renommage effectué** — tableau de bord (« Articles Insights »), titres des écrans (« Articles
+Insights », « Catégories Insights », « Tags Insights »). La barre latérale affichait déjà
+« Insights ».
+
+**Ce qui n'a délibérément pas été renommé.** Les routes `/admin/blog/*` restent : les changer
+casserait les favoris et n'apporte rien de visible. Le **type de section** `blog` reste `blog` — des
+pages en ligne s'en servent — seule son étiquette devient « Liste d'articles (ancien gabarit) » :
+l'appeler « Insights » l'aurait confondu avec le module du même nom, qui n'a rien à voir.
+
+**Vérifications exécutées** (Règle #5)
+
+| Banc | Portée | Résultat |
+|---|---|---|
+| `h_routes_legacy.php` | 301, moteur d'Insights, sitemap, **balayage de tout `app/` à la recherche d'une adresse retirée**, semis de secours, cinq sondes de santé, libellés d'administration | **64 / 64** |
+| `h_retire_legacy.php` | Non-régression | **46 / 46** |
+
+Non-régression complète : À propos 88 · 56 · 58 · 25, menus 51 · 30 · 27 · 27, Labs 58 · 50 · 29 · 26,
+schéma 38, clic 17. `check_views` : 0 faute. **690 assertions.**
+
+**Validé par contrôle négatif** : une adresse `/blog` réintroduite dans `CacheManager` est signalée,
+fichier et occurrence compris. Le balayage ignore les commentaires — une explication a le droit de
+nommer l'ancienne adresse, piège déjà rencontré avec `check_views`.
+
+**Dette technique inchangée** — articles de démonstration en repli dans `sections/blog.php` et
+`partials/hero.php` (Règle #2) ; DT-05 (`/public/...`) ; CLAUDE.md §7 et §8 à mettre à jour.
 
 ---
 

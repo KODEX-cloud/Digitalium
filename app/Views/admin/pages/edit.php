@@ -994,14 +994,14 @@ if (empty($selectedLogo)) {
                 <div style="background:rgba(255,255,255,0.45);border:1px solid var(--border);border-radius:10px;padding:14px 16px;display:grid;grid-template-columns:1fr 2fr 1fr auto;gap:10px;align-items:end;">
                     <div><label style="font-size:0.72rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">Catégorie</label><input type="text" value="${escHtml(a.category||'')}" oninput="heroArticles[${i}].category=this.value;syncHeroArticles()" class="admin-input" style="height:34px;font-size:0.85rem;" placeholder="TECHNOLOGIE"></div>
                     <div><label style="font-size:0.72rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">Titre de l'article</label><input type="text" value="${escHtml(a.title||'')}" oninput="heroArticles[${i}].title=this.value;syncHeroArticles()" class="admin-input" style="height:34px;font-size:0.85rem;"></div>
-                    <div><label style="font-size:0.72rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">URL</label><input type="text" value="${escHtml(a.url||'/blog')}" oninput="heroArticles[${i}].url=this.value;syncHeroArticles()" class="admin-input" style="height:34px;font-size:0.85rem;"></div>
+                    <div><label style="font-size:0.72rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">URL</label><input type="text" value="${escHtml(a.url||'/insights')}" oninput="heroArticles[${i}].url=this.value;syncHeroArticles()" class="admin-input" style="height:34px;font-size:0.85rem;"></div>
                     <button type="button" onclick="removeHeroArticle(${i})" style="padding:6px 10px;background:none;border:1px solid var(--danger);border-radius:8px;cursor:pointer;color:var(--danger);font-size:0.8rem;height:34px;">✕</button>
                 </div>`;
             });
         }
         function addHeroArticle() {
             if (heroArticles.length >= 3) { alert('Maximum 3 articles.'); return; }
-            heroArticles.push({category:'ACTUALITÉ',title:'Titre de l\'article',url:'/blog'});
+            heroArticles.push({category:'ACTUALITÉ',title:'Titre de l\'article',url:'/insights'});
             renderHeroArticles(); syncHeroArticles();
         }
         function removeHeroArticle(i) { heroArticles.splice(i,1); renderHeroArticles(); syncHeroArticles(); }
@@ -1497,7 +1497,12 @@ if (empty($selectedLogo)) {
                             <option value="testimonials">Témoignages (ancien)</option>
                             <option value="testimonials_grid">Témoignages — grille</option>
                             <option value="faq">FAQ</option>
-                            <option value="blog">Blog</option>
+                            <!-- Le TYPE reste `blog` (des pages en ligne s'en servent) ;
+                                 seule l'étiquette change. L'appeler « Insights »
+                                 le confondrait avec le module du même nom, qui
+                                 n'a rien à voir : ceci est un ancien gabarit de
+                                 liste d'articles. -->
+                            <option value="blog">Liste d'articles (ancien gabarit)</option>
                             <option value="contact">Contact</option>
                         </optgroup>
                     </select>

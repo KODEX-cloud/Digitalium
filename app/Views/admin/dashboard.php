@@ -201,7 +201,7 @@
         </div>
         <div class="stat-details">
             <span class="stat-number"><?= $stats['blog_count'] ?? 0 ?></span>
-            <span class="stat-label">Articles Blog</span>
+            <span class="stat-label">Articles Insights</span>
         </div>
     </div>
 

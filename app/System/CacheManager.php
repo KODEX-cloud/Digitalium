@@ -67,7 +67,9 @@ class CacheManager {
             $baseUrl = $scheme . '://' . $host;
         }
 
-        $urls = ['/', '/blog', '/realisations'];
+        // Préchauffer une redirection ne met rien en cache d'utile : ce sont les
+        // pages de destination qu'il faut réchauffer.
+        $urls = ['/', '/insights', '/solutions', '/realisations'];
         $warmed  = 0;
         $errors  = [];
 

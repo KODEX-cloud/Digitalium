@@ -41,7 +41,7 @@ class BlogController extends Controller {
         $this->middlewareAuth();
         $posts = Post::all('id DESC');
         $this->render('admin/blog/index', [
-            'title'       => 'Articles du blog',
+            'title'       => 'Articles Insights',
             'posts'       => $posts,
             'csrf_token'  => $this->generateCsrf(),
             'currentUser' => Auth::user(),
@@ -208,7 +208,7 @@ class BlogController extends Controller {
         $this->middlewareAuth();
         $categories = Category::getAllWithCount();
         $this->render('admin/blog/categories', [
-            'title'      => 'Catégories du blog',
+            'title'      => 'Catégories Insights',
             'categories' => $categories,
             'csrf_token' => $this->generateCsrf(),
         ], 'admin/layout');
@@ -249,7 +249,7 @@ class BlogController extends Controller {
     public function tags(): void {
         $this->middlewareAuth();
         $this->render('admin/blog/tags', [
-            'title'      => 'Tags du blog',
+            'title'      => 'Tags Insights',
             'tags'       => Tag::getAllWithCount(),
             'csrf_token' => $this->generateCsrf(),
         ], 'admin/layout');

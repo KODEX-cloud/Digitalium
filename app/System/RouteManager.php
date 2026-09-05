@@ -64,7 +64,9 @@ class RouteManager {
      */
     public static function httpTest(string $baseUrl): array {
         $t     = DSMResult::timer();
-        $tests = ['/', '/blog', '/realisations', '/sitemap.xml'];
+        // /blog et /service ne sont plus que des redirections 301 : sonder une
+        // ancienne adresse ne dit rien de la santé de la page qui la remplace.
+        $tests = ['/', '/insights', '/solutions', '/realisations', '/sitemap.xml'];
         $results = [];
         $errors  = [];
 

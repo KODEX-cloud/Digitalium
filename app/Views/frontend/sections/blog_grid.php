@@ -42,7 +42,7 @@
                             </div>
 
                             <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text-main); line-height: 1.4; margin-bottom: 0.8rem; font-family: var(--font-heading);">
-                                <a href="<?= htmlspecialchars($post['post_link'] ?? '/blog') ?>" class="bcard-title-link">
+                                <a href="<?= htmlspecialchars($post['post_link'] ?? '/insights') ?>" class="bcard-title-link">
                                     <?= htmlspecialchars($post['post_title'] ?? 'Article sans titre') ?>
                                 </a>
                             </h3>

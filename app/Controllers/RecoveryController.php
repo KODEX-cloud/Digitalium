@@ -503,7 +503,10 @@ class RecoveryController extends Controller {
         $results = [];
         $paths   = [
             '/'            => 'Homepage',
-            '/blog'        => 'Blog',
+            // /blog et /service ne sont plus que des redirections 301 : les
+            // sonder ne prouverait pas que la page qui les remplace répond.
+            '/insights'    => 'Insights',
+            '/solutions'   => 'Solutions',
             '/realisations'=> 'Réalisations',
             '/sitemap.xml' => 'Sitemap',
         ];

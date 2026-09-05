@@ -29,7 +29,7 @@
                             </div>
                             <h3 class="blog-title"><?= htmlspecialchars($post['post_title'] ?? 'Titre de l\'article') ?></h3>
                             <p class="blog-summary"><?= htmlspecialchars($post['post_summary'] ?? '') ?></p>
-                            <a href="<?= htmlspecialchars(url($post['post_url'] ?? $post['post_link'] ?? '/blog')) ?>" class="blog-readmore">
+                            <a href="<?= htmlspecialchars(url($post['post_url'] ?? $post['post_link'] ?? '/insights')) ?>" class="blog-readmore">
                                 <span>Lire la suite</span>
                                 <i data-lucide="arrow-right" style="width:14px;height:14px;"></i>
                             </a>
@@ -39,9 +39,9 @@
             <?php else: ?>
                 <?php
                 $defaults = [
-                    ['icon'=>'terminal','cat'=>'IA & Automatisation','date'=>'28 Juin 2026','title'=>'Solutions IA : automatiser vos processus','summary'=>'Comment déployer des solutions d\'IA sur mesure pour automatiser vos processus et stimuler la croissance.','url'=>'/blog'],
-                    ['icon'=>'search','cat'=>'Marketing Digital','date'=>'15 Juin 2026','title'=>'SEO & réseaux sociaux : l\'IA au service de votre visibilité','summary'=>'Automatisez votre stratégie de contenu et renforcez votre présence multicanale grâce à l\'intelligence artificielle.','url'=>'/blog'],
-                    ['icon'=>'layers','cat'=>'Transformation Digitale','date'=>'1 Juin 2026','title'=>'Transformation numérique : repenser l\'expérience client','summary'=>'Culture agile, modèles d\'affaires innovants et omniprésence en ligne — les clés d\'une transformation réussie.','url'=>'/blog'],
+                    ['icon'=>'terminal','cat'=>'IA & Automatisation','date'=>'28 Juin 2026','title'=>'Solutions IA : automatiser vos processus','summary'=>'Comment déployer des solutions d\'IA sur mesure pour automatiser vos processus et stimuler la croissance.','url'=>'/insights'],
+                    ['icon'=>'search','cat'=>'Marketing Digital','date'=>'15 Juin 2026','title'=>'SEO & réseaux sociaux : l\'IA au service de votre visibilité','summary'=>'Automatisez votre stratégie de contenu et renforcez votre présence multicanale grâce à l\'intelligence artificielle.','url'=>'/insights'],
+                    ['icon'=>'layers','cat'=>'Transformation Digitale','date'=>'1 Juin 2026','title'=>'Transformation numérique : repenser l\'expérience client','summary'=>'Culture agile, modèles d\'affaires innovants et omniprésence en ligne — les clés d\'une transformation réussie.','url'=>'/insights'],
                 ];
                 foreach ($defaults as $i => $d):
                 ?>

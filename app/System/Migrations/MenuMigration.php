@@ -23,13 +23,22 @@ class MenuMigration implements MigrationInterface {
                 $menuId = Database::getConnection()->lastInsertId();
                 $created++;
 
-                // Default items
+                /* Semis de secours — utilisé UNIQUEMENT si le menu 'primary'
+                   n'existe pas, donc après une perte ou une restauration.
+
+                   Il contenait des adresses qui ne correspondent plus au site :
+                   '/services' au pluriel répondait déjà 404, et '/blog' n'est
+                   plus qu'une redirection 301 vers /insights. Un secours qui
+                   remonte des liens morts aggrave la panne qu'il est censé
+                   réparer — et aurait ici ressuscité l'entrée « Blog » tout
+                   juste retirée (Règle #8). */
                 $items = [
-                    ['Accueil',       '/',             1],
-                    ['Services',      '/services',     2],
-                    ['Réalisations',  '/realisations', 3],
-                    ['Blog',          '/blog',         4],
-                    ['Contact',       '/contact',      5],
+                    ['Accueil',      '/',             1],
+                    ['À propos',     '/a-propos',     2],
+                    ['Solutions',    '/solutions',    3],
+                    ['Réalisations', '/realisations', 4],
+                    ['Insights',     '/insights',     5],
+                    ['Contact',      '/contact',      6],
                 ];
 
                 foreach ($items as [$label, $url, $order]) {

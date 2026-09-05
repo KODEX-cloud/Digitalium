@@ -494,9 +494,9 @@ if (!empty($page['hero_title'])):
                 }
                 if (empty($magArticles)) {
                     $magArticles = [
-                        ['category' => 'TECHNOLOGIE', 'title' => 'Stratégies d\'intégration IA dans les grandes entreprises.', 'url' => '/blog'],
-                        ['category' => 'DESIGN', 'title' => 'Le futur des Design Systems et du CMS sans code.', 'url' => '/blog'],
-                        ['category' => 'DÉVELOPPEMENT', 'title' => 'Green IT et performances serveurs : optimiser les builds.', 'url' => '/blog'],
+                        ['category' => 'TECHNOLOGIE', 'title' => 'Stratégies d\'intégration IA dans les grandes entreprises.', 'url' => '/insights'],
+                        ['category' => 'DESIGN', 'title' => 'Le futur des Design Systems et du CMS sans code.', 'url' => '/insights'],
+                        ['category' => 'DÉVELOPPEMENT', 'title' => 'Green IT et performances serveurs : optimiser les builds.', 'url' => '/insights'],
                     ];
                 }
                 $magColors = ['var(--secondary)', 'var(--primary)', '#0f5f5a'];
@@ -507,7 +507,7 @@ if (!empty($page['hero_title'])):
                         <?php foreach (array_slice($magArticles, 0, 3) as $mi => $art): ?>
                         <div class="magazine-nav-item" style="display: flex; flex-direction: column; gap: 6px;">
                             <span style="font-size: 0.7rem; color: <?= $magColors[$mi % 3] ?>; font-weight: 700; font-family: var(--font-heading);"><?= htmlspecialchars(strtoupper($art['category'] ?? 'ACTUALITÉ')) ?></span>
-                            <a href="<?= htmlspecialchars(url($art['url'] ?? '/blog')) ?>" style="font-size: 1.05rem; font-weight: 700; color: #000000; text-decoration: none; line-height: 1.3;"><?= htmlspecialchars($art['title'] ?? '') ?></a>
+                            <a href="<?= htmlspecialchars(url($art['url'] ?? '/insights')) ?>" style="font-size: 1.05rem; font-weight: 700; color: #000000; text-decoration: none; line-height: 1.3;"><?= htmlspecialchars($art['title'] ?? '') ?></a>
                         </div>
                         <?php endforeach; ?>
                     </div>
