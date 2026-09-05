@@ -252,7 +252,18 @@ jobs:
                 git stash push -m "auto-stash-$(date +%Y%m%d-%H%M%S)" --include-untracked 2>/dev/null || true
                 echo "  ✓ Modifications locales sauvegardées (stash)"
               fi
-              git fetch origin main
+              # Une seule tentative supplémentaire : le déploiement de fd30aa8 a
+              # échoué ici (étape SSH de 136 s contre 13 s d'habitude), laissant
+              # la production sur le commit précédent sans que rien ne soit
+              # appliqué. Un échec réseau passager ne doit pas coûter un
+              # déploiement entier. Si la seconde tentative échoue aussi,
+              # `set -e` interrompt : mieux vaut un déploiement en échec qu'un
+              # déploiement silencieusement parti sur du code périmé.
+              if ! git fetch origin main; then
+                echo "  ⚠ git fetch a échoué — nouvelle tentative dans 5 s"
+                sleep 5
+                git fetch origin main
+              fi
               BEFORE=$(git rev-parse --short HEAD 2>/dev/null || echo 'init')
               git reset --hard origin/main
               AFTER=$(git rev-parse --short HEAD)
