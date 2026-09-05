@@ -426,6 +426,13 @@ jobs:
                 echo "  ATTENTION Build Labs Page (non-bloquant)"
               fi
             fi
+            if [ -f "database/build_about_page.php" ]; then
+              if $PHP database/build_about_page.php 2>&1; then
+                echo "  OK Build About Page"
+              else
+                echo "  ATTENTION Build About Page (non-bloquant)"
+              fi
+            fi
             if [ -f "database/seed_demo_content.php" ]; then
               if $PHP database/seed_demo_content.php 2>&1; then
                 echo "  OK Seed Demo Content"

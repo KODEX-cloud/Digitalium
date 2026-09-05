@@ -228,6 +228,12 @@ class BlockFieldHelper {
         'flow_icon'      => ['Icône', "Nom d'icône Lucide."],
         'flow_accent'    => ['Mise en valeur', "Marque les points de bascule de la chaîne : ce qui y entre, ce qui la transforme, ce qui en sort."],
 
+        // ── Équipe : pôles d'expertise (repli de la section team_members) ──
+        'poles_title'    => ['Texte au-dessus des pôles', "Affiché uniquement tant qu'aucun collaborateur n'est publié dans Équipe."],
+        'pole_title'     => ["Nom du pôle", "Vider ce champ retire le pôle."],
+        'pole_desc'      => ['Description du pôle', "Une phrase sur ce que couvre ce pôle."],
+        'pole_icon'      => ['Icône', "Nom d'icône Lucide."],
+
         // ── Cartes flottantes du hero ──
         'card_icon'      => ['Icône', "Nom d'icône Lucide."],
         'card_label'     => ['Sur-titre', "Affiché en majuscules."],
@@ -243,7 +249,7 @@ class BlockFieldHelper {
     ];
 
     /** Préfixes retirés pour dériver un intitulé lisible d'une clé inconnue. */
-    private const PREFIXES = ['card_', 'item_', 'member_', 'client_', 'faq_', 'post_', 'sec_', 'cap_', 'proc_', 'ps_', 'svc_', 'need_', 'flow_'];
+    private const PREFIXES = ['card_', 'item_', 'member_', 'client_', 'faq_', 'post_', 'sec_', 'cap_', 'proc_', 'ps_', 'svc_', 'need_', 'flow_', 'pole_'];
 
     /**
      * Type de champ à afficher. Ordre des règles significatif : les réglages
@@ -269,7 +275,7 @@ class BlockFieldHelper {
         if (str_contains($key, 'url') || str_contains($key, 'link')) { return 'link'; }
 
         $long = ['text', 'subtitle', 'content', 'description', 'contact_address',
-                 'ps_problem', 'ps_solution', 'privacy_note', 'note', 'flow_note'];
+                 'ps_problem', 'ps_solution', 'privacy_note', 'note', 'flow_note', 'pole_desc'];
         if (in_array($key, $long, true)) { return 'textarea'; }
         foreach (['desc', 'quote', 'points', 'needs', 'detail', 'answer', 'summary'] as $needle) {
             if (str_contains($key, $needle)) { return 'textarea'; }

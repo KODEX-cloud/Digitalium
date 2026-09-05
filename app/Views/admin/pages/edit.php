@@ -1486,6 +1486,9 @@ if (empty($selectedLogo)) {
                             <option value="lab_products">Labs — grille de produits</option>
                             <option value="flow_chain">Chaîne verticale d'étapes</option>
                         </optgroup>
+                        <optgroup label="Institutionnel (page À propos)">
+                            <option value="team_members">Équipe — collaborateurs, repli sur les pôles</option>
+                        </optgroup>
                         <optgroup label="Modèles hérités">
                             <option value="hero">Hero Banner (ancien)</option>
                             <option value="services">Services (ancien)</option>

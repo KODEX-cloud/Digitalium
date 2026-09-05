@@ -1,5 +1,103 @@
 # PROJECT_STATE — Digitalium Group CMS
-> Dernière mise à jour : 2026-09-05 — Menu mobile pleinement fonctionnel, image du hero en premier
+> Dernière mise à jour : 2026-09-05 — Page A propos et module Equipe
+
+---
+
+### 2026-09-05 (suite 21) — Page institutionnelle « À propos » et module Équipe
+
+Conception validée : `docs/superpowers/specs/2026-09-05-page-a-propos-design.md` (Règle #3).
+
+**La page n'existait pas.** `/a-propos` et `/about` répondaient 404 et n'étaient dans aucun sitemap :
+le lien « À Propos » retiré du menu pointait donc bien vers du vide. Une section `about` a existé sur
+l'**accueil** (`seed.php:116`), jamais une page — aucun doublon à craindre.
+
+**Neuf blocs sur dix se replient sur des types de sections existants.** Le site en compte 44 ; le
+cahier des charges n'a imposé d'en créer qu'un seul.
+
+| Bloc | Type | |
+|---|---|---|
+| Hero 1250 × 500 | `hero_media_cards` | existant |
+| Qui sommes-nous | `about` | existant |
+| Mission & Vision | `mission` | existant |
+| Notre modèle (7 étapes) | `process_timeline` | existant |
+| Nos piliers (3) + bouton Labs | `capabilities_grid` | existant, `cta_text`/`cta_url` déjà ajoutés pour Labs |
+| Nos valeurs (5) | `values` | existant |
+| Notre trajectoire | `flow_chain` | existant |
+| Notre équipe | **`team_members`** | **créé** |
+| Notre ambition | `process_strip` | existant |
+| CTA final | `cta` | existant |
+
+**Le seul manque réel : la publication d'un collaborateur.** Un groupe de blocs répétable porte
+`group_id` et `sort_order` — création, modification et ordre sont couverts — mais **aucun indicateur
+de publication**. Retirer un membre du site aurait obligé à supprimer ses données, alors que le
+cahier des charges demande « publié / dépublié ». D'où la table `team_members` et le module
+`/admin/team`, calqués sur `lab_products`.
+
+**Le repli est DANS la section, pas à côté.** `team_members` affiche les personnes dès qu'un
+collaborateur est publié, et les **pôles d'expertise** tant qu'il n'y en a aucun. Aucun membre
+d'équipe n'est inventé : le repli n'est pas un mode dégradé, c'est l'état normal du site aujourd'hui.
+Le placer dans la section évite d'obliger l'administrateur à basculer un type de section le jour du
+premier collaborateur — ce jour-là, la page change seule. Une lecture impossible (migration non
+passée) est **attrapée** et rendue comme « aucun membre » : une page institutionnelle cassée coûte
+plus cher qu'une grille de pôles.
+
+**Ni date, ni chiffre, ni collaborateur.** « Notre trajectoire » décrit l'**ordre** dans lequel les
+métiers se sont ajoutés, ce qui est vérifiable, et non un calendrier qui ne le serait pas.
+`badge_years` n'est pas utilisé, aucune statistique n'est semée. Le banc refuse toute année `19xx` /
+`20xx` et toute formule du type « N clients », « N % », « N ans ».
+
+**La bibliothèque média a dicté deux choix.** Inventaire fait sur les pages en ligne : **six visuels**
+seulement. Un seul est conforme au cahier des charges — `digitalium-hero-team.png` (représentation
+professionnelle africaine, bleu/blanc) ; `about-team-meeting` montre une équipe majoritairement
+occidentale, `about_3d.png` est à dominante violette, les autres sont des tableaux de bord,
+explicitement écartés pour le hero. Conséquences : le hero reprend le visuel de l'accueil **en
+attendant un visuel dédié**, et « Qui sommes-nous » utilise `about` (texte + cartes) plutôt que
+`about_visual`, qui aurait laissé un cadre d'image vide.
+
+**Navigation** — entrée « À propos » insérée en **2ᵉ position**, les suivantes décalées et non
+écrasées. La recherche porte sur l'URL *et* sur `page_id`, avec les anciennes formes `/about` : un
+lien préexistant est reconnu au lieu d'être dupliqué. Drapeau `about_nav_added_v1`.
+
+**Schéma**
+
+```
+team_members  id, name, role, department, bio, photo, linkedin, email,
+              sort_order, status (draft|published), created_at
+settings + about_nav_added_v1        (drapeau : entrée de menu, opération unique)
+```
+
+`database/build_about_page.php` — réconciliateur : existence et position des dix sections réalignées
+à chaque déploiement, contenu semé **uniquement si la section est vide**, statut posé à la création
+seulement. `CREATE TABLE`, accent et bloc de navigation chacun dans leur try/catch.
+
+**Déclaration du nouveau type** — `PageController::sectionSkeletons()` **et** liste déroulante de
+`admin/pages/edit.php`. Les deux : un type absent de la liste serait créable par aucun écran, défaut
+déjà rencontré sur Insights et Labs.
+
+**Vérifications exécutées** (Règle #5)
+
+| Banc | Portée | Résultat |
+|---|---|---|
+| `h_about_build.php` | Premier passage, dix sections, idempotence, contenu admin préservé, `CREATE TABLE` refusé, `settings` inaccessible, menu absent/vide/déjà pourvu, aucune date ni statistique inventée | **88 / 88** |
+| `h_about_views.php` | Repli Équipe dans les deux sens, champs manquants, initiales, table absente, contenu hostile, les dix sections | **56 / 56** |
+| `h_about_admin.php` | CRUD, normalisation, publication, ordre, CSRF, formulaire partagé, contenu hostile | **58 / 58** |
+| `h_routes_about.php` | Résolution, ordre de déclaration, `create` ≠ `{id}`, suppression POST seule, non-régression | **25 / 25** |
+
+Non-régression : menus 51 · 30 · 27 · 27, Labs 58 · 50 · 29 · 26, schéma 38, clic du menu 17.
+`check_views` : 0 faute. **580 assertions au total.**
+
+**Validé par contrôle négatif.** Chaque banc a été rejoué contre un défaut introduit volontairement
+et l'a signalé : entrée de menu mal placée, hero moteur laissé actif, année inventée, repli d'équipe
+figé, échappement retiré, filtre de pôle retiré, complétion du lien LinkedIn retirée. Le banc de
+rendu a lui-même été corrigé avant de servir : il comptait les noms de classes cités dans le bloc
+`<style>` de la section — onze faux échecs.
+
+**Écart de documentation relevé, non corrigé** — CLAUDE.md §8 annonce `/blog → BlogController@frontendIndex`
+alors que `routes/web.php:25` déclare `legacyIndex`, et c'était déjà le cas avant ce module (vérifié
+contre HEAD). À arbitrer par le CTO, comme les autres mises à jour de §7 et §8.
+
+**Reste à faire, côté contenu** — déposer un visuel dédié pour le hero, et saisir les collaborateurs
+réels dans `/admin/team` si l'équipe doit être nommée.
 
 ---
 

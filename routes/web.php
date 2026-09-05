@@ -73,6 +73,16 @@ $router->get('/admin/labs/edit/{id}', 'LabController@editForm');
 $router->post('/admin/labs/edit/{id}', 'LabController@editSubmit');
 $router->post('/admin/labs/delete/{id}', 'LabController@delete');
 
+// --- Admin Équipe (collaborateurs) CRUD ---
+// Même discipline que ci-dessus : /admin/team/create avant toute route à
+// paramètre du même préfixe, sans quoi « create » serait pris pour un {id}.
+$router->get('/admin/team', 'TeamController@index');
+$router->get('/admin/team/create', 'TeamController@createForm');
+$router->post('/admin/team/create', 'TeamController@createSubmit');
+$router->get('/admin/team/edit/{id}', 'TeamController@editForm');
+$router->post('/admin/team/edit/{id}', 'TeamController@editSubmit');
+$router->post('/admin/team/delete/{id}', 'TeamController@delete');
+
 // --- Admin Page Manager & Custom Block Builder ---
 $router->get('/admin/pages', 'PageController@index');
 $router->get('/admin/pages/create', 'PageController@createForm');

@@ -691,6 +691,15 @@ class PageController extends Controller {
             // ── Digitalium Labs (/labs) ──
             // Les produits eux-mêmes ne sont pas des blocs : ils viennent du
             // module /admin/labs, pour rester réutilisables sur d'autres pages.
+            // Les groupes décrivent les PÔLES d'expertise : ce sont eux qui
+            // s'affichent tant qu'aucun collaborateur n'est publié dans
+            // /admin/team. Les personnes ne passent jamais par les blocs —
+            // elles seules doivent pouvoir être publiées individuellement.
+            'team_members' => [
+                ['tag', 'title', 'subtitle', 'poles_title'],
+                ['pole_icon', 'pole_title', 'pole_desc'],
+                6,
+            ],
             'lab_products' => [
                 ['tag', 'title', 'subtitle', 'show_filters', 'filter_all', 'limit',
                  'featured_only', 'cta_text', 'tech_label', 'availability_label',
