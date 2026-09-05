@@ -402,6 +402,23 @@ jobs:
                 echo "  ATTENTION Build Insights Page (non-bloquant)"
               fi
             fi
+            # Vues referencant une classe non resolvable : invisible pour le
+            # controle de syntaxe, mais fatal a l'affichage (cf. le 500 de
+            # /admin/menus/edit). Non bloquant : on signale, on ne bloque pas.
+            if [ -f "bin/check_views.php" ]; then
+              if $PHP bin/check_views.php 2>&1; then
+                echo "  OK Controle des vues"
+              else
+                echo "  ATTENTION des vues referencent une classe non resolvable (non-bloquant)"
+              fi
+            fi
+            if [ -f "database/build_menus_v2.php" ]; then
+              if $PHP database/build_menus_v2.php 2>&1; then
+                echo "  OK Build Menus v2"
+              else
+                echo "  ATTENTION Build Menus v2 (non-bloquant)"
+              fi
+            fi
             if [ -f "database/build_labs_page.php" ]; then
               if $PHP database/build_labs_page.php 2>&1; then
                 echo "  OK Build Labs Page"

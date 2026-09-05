@@ -1,5 +1,120 @@
 # PROJECT_STATE — Digitalium Group CMS
-> Dernière mise à jour : 2026-09-04 — Digitalium Labs /labs (produits propriétaires administrables)
+> Dernière mise à jour : 2026-09-05 — Navigation entièrement administrable (menus, sous-menus, pied de page)
+
+---
+
+### 2026-09-05 (suite 17) — Navigation entièrement administrable
+
+Conception validée : `docs/superpowers/specs/2026-09-05-administration-menus-design.md`.
+
+**Incident traité en premier — `/admin/menus/edit/{id}` répondait 500.** La vue appelait
+`MenuItem::resolveUrl()` sans qualifier le nom de classe. `Controller::render()` charge la vue par
+`require` ; une vue sans déclaration de `namespace` s'exécute dans le namespace **global**, où le
+`use App\Models\MenuItem;` de `MenuController.php` ne la suit pas. PHP cherchait `\MenuItem` →
+erreur fatale. **Un menu vide s'affichait normalement**, ce qui explique que le défaut ait pu vivre
+longtemps sans être vu. Corrigé en qualifiant pleinement (commit `0aa84d7`).
+
+**Le défaut central — aucun sous-menu ne pouvait être enregistré.** `MenuItem::saveForMenu`
+supprimait toutes les lignes puis les réinsérait en réutilisant les `parent_id` de l'ancien cycle.
+Or `parent_id` porte une clé étrangère vers `menu_items(id)` : l'INSERT violait la contrainte, la
+transaction était annulée, et **tout enregistrement d'un menu comportant un sous-lien échouait**.
+Un parent tout juste ajouté arrivait sous la forme `new_1001`, que `(int)` réduisait à `0` — même
+violation. Le rendu des menus déroulants existait pourtant déjà et était correct : il n'avait
+jamais reçu d'enfants.
+
+**La réconciliation remplace « effacer puis réécrire ».** Trois temps dans une seule transaction :
+écriture à plat avec tous les parents à `NULL` en notant la correspondance
+`référence du formulaire → identifiant réel` ; suppression des lignes absentes de l'envoi ; repose
+des parents. Un lien **conserve son identifiant** d'un enregistrement à l'autre, la clé étrangère
+reste satisfaite en permanence, et une panne au milieu ne peut plus vider un menu. Un parent
+introuvable, égal à soi-même ou lui-même enfant ramène le lien à la racine plutôt que de faire
+échouer l'enregistrement en bloc.
+
+**Profondeur limitée à deux niveaux, volontairement.** L'en-tête sait afficher une racine et un
+niveau d'enfants ; au-delà, un lien serait enregistré mais invisible. Le modèle ramène donc le
+troisième niveau à la racine — un lien mal placé et visible vaut mieux qu'un lien disparu. Cette
+règle élimine du même coup les cycles.
+
+**Le pied de page devient administrable.** Il était construit depuis `pages.in_navigation`, jamais
+depuis le module Menus : l'en-tête affichait « Labs » et le pied « Digitalium Labs » pour la même
+page. Deux emplacements nouveaux, `footer` et `footer_services`, avec **repli systématique** :
+
+| Zone | Source | Repli si le menu est vide |
+|---|---|---|
+| En-tête | menu `primary` | pages avec `in_navigation = 1` |
+| Pied — Navigation | menu `footer` | pages avec `in_navigation = 1` |
+| Pied — Services | menu `footer_services` | section Services de l'accueil |
+
+Il est donc impossible d'obtenir un pied de page vide, y compris si la migration échoue ou si un
+menu est supprimé par erreur.
+
+**Nouvelles pages — proposées une fois, puis le menu fait autorité.** Une page publiée et cochée
+« Afficher dans la navigation » est ajoutée en fin de menu principal, et `pages.nav_seeded` passe à
+1. Si le lien est ensuite retiré ou renommé, **rien ne le remet**. Un simple « vérifier qu'aucun
+lien ne pointe déjà vers cette page » aurait ressuscité un lien volontairement supprimé. L'appel
+est isolé : son échec ne peut pas empêcher l'enregistrement d'une page.
+
+**Administration** — la liste affiche l'emplacement, le nombre de liens et une colonne
+**« Rendu sur le site »** distinguant trois états : rendu, câblé mais vide (repli automatique), et
+emplacement non câblé. L'éditeur gagne l'imbrication et la désimbrication par boutons, la
+hiérarchie lisible sans ouvrir les champs, et le refus explicite du troisième niveau. Il faisait
+21 Ko de balisage, style et script mêlés : découpé en `edit.php`, `_styles.php`, `_script.php`.
+
+Deux défauts de l'éditeur corrigés au passage : il **n'envoyait pas l'identifiant** des liens (la
+réconciliation n'aurait rien pu conserver), et il s'appuyait sur `DOMNodeInserted`, événement de
+mutation **supprimé des navigateurs récents** — les liens ajoutés n'étaient plus déplaçables.
+`MenuController` ne transmettait pas non plus `currentUser` au layout, contrairement à la
+convention.
+
+**Schéma**
+
+```
+pages + nav_seeded TINYINT NOT NULL DEFAULT 0   (mémoire du « déjà proposé une fois »)
+settings + menus_v2_seeded_v1                   (drapeau : marquage des pages, opération unique)
+menus : emplacements primary | footer | footer_services  (+ emplacements libres, non rendus)
+```
+
+`database/build_menus_v2.php` — réconciliateur : existence des menus réalignée à chaque
+déploiement, contenu semé **uniquement si le menu est vide**, chaque étape isolée. Le semis reprend
+les sources actuelles à l'identique pour que **rien ne bouge visuellement**. Le marquage des pages
+existantes est une opération unique : sans lui, le premier enregistrement d'une page dupliquerait
+tout le menu principal.
+
+**Prévention — `bin/check_views.php`.** Signale toute vue référençant une classe qu'elle ne peut
+pas résoudre. Le contrôle de syntaxe du pipeline ne voit pas cette faute : elle n'existe qu'à
+l'exécution, et seulement sur le chemin de code concerné. Ajouté au déploiement en étape non
+bloquante. Une première version balayait le texte et signalait les mentions présentes dans les
+**commentaires** ; elle passe désormais par le tokenizer de PHP, qui distingue un appel réel d'un
+mot écrit dans une phrase.
+
+**Vérifications exécutées** (Règle #5)
+
+| Banc | Portée | Résultat |
+|---|---|---|
+| `h_menus_reconcile.php` | Sous-menus, identifiants conservés, suppression, 3ᵉ niveau, cycle, parent inexistant, identifiant d'un autre menu, ajout automatique | **30 / 30** |
+| `h_menus_build.php` | Premier passage, idempotence, menu vidé, `ALTER` refusé, `settings` inaccessible, aucune section Services | **27 / 27** |
+| `h_menus_front.php` | En-tête et pied pilotés par les menus, les trois replis, échappement | **15 / 15** |
+| `h_menus_admin.php` | Éditeur, liste, emplacement non câblé, états vides, CSRF | **27 / 27** |
+| `bin/check_views.php` | Toutes les vues | **0 faute** |
+
+Non-régression : les cinq bancs de Digitalium Labs et de la conformité au schéma restent au vert
+(201 assertions).
+
+**Le banc de réconciliation est validé par contrôle négatif.** Son bouchon **applique réellement la
+clé étrangère** — sans quoi il aurait validé l'ancien code. Rejoué contre la version précédente du
+modèle, il échoue exactement comme la production :
+`Integrity constraint violation: 1452 … FOREIGN KEY (parent_id) — id 0 absent`, dès le premier
+sous-menu. Le contrôleur de vues est lui aussi validé par contrôle négatif : le défaut réintroduit
+est signalé, ligne comprise.
+
+**Dette technique inchangée, rappelée**
+- `RecoveryController.php` — `settings(`key`, `value`)` et `menus(name, location, is_active)` :
+  phases *Settings Sync* et *Menu Rebuild* toujours inopérantes.
+- URLs `/public/...` sur tout le site (DT-05, reporté par le CTO).
+- Bibliothèque Média limitée aux images.
+- `sections/blog.php` : trois articles de démonstration en repli (Règle #2).
+- CLAUDE.md §7 et §8 à mettre à jour (validation CTO) : `newsletter_subscribers`, `lab_products`,
+  `pages.nav_seeded`, routes `/insights`, `/admin/labs`.
 
 ---
 

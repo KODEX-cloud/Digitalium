@@ -566,14 +566,35 @@
                 <?php endif; ?>
                 <ul class="footer-links">
                     <?php
-                    $footPages = array_filter($menuPages, function($p) {
-                        return (int)($p['in_navigation'] ?? 1) === 1;
-                    });
-                    foreach ($footPages as $menuPage):
-                        $menuSlug = $menuPage['slug'];
-                        $menuUrl = url($menuSlug === 'home' ? '/' : '/' . htmlspecialchars($menuSlug));
+                    /* Colonne pilotée par le menu d'emplacement « footer », géré
+                       dans /admin/menus. Tant que ce menu est vide — migration
+                       non passée, menu supprimé par erreur — on retombe sur les
+                       pages en navigation : un pied de page vide serait pire
+                       qu'un pied de page automatique. */
+                    $footItems = \App\Models\MenuItem::getActiveByLocation('footer');
+                    $footItems = array_filter($footItems, fn($i) => empty($i['parent_id']));
+
+                    if (empty($footItems)) {
+                        foreach (array_filter($menuPages, fn($p) => (int)($p['in_navigation'] ?? 1) === 1) as $p) {
+                            $footItems[] = [
+                                'label'     => $p['title'],
+                                'url'       => '',
+                                'page_slug' => $p['slug'],
+                                'target'    => '_self',
+                                'parent_id' => null,
+                            ];
+                        }
+                    }
+
+                    foreach ($footItems as $footItem):
+                        $footUrl = url(\App\Models\MenuItem::resolveUrl($footItem));
                     ?>
-                        <li><a href="<?= $menuUrl ?>" class="footer-link"><?= htmlspecialchars($menuPage['title']) ?></a></li>
+                        <li>
+                            <a href="<?= htmlspecialchars($footUrl) ?>" class="footer-link"
+                               <?= ($footItem['target'] ?? '_self') === '_blank' ? 'target="_blank" rel="noopener"' : '' ?>>
+                                <?= htmlspecialchars($footItem['label']) ?>
+                            </a>
+                        </li>
                     <?php endforeach; ?>
                 </ul>
             </div>
@@ -584,27 +605,46 @@
                 <?php endif; ?>
                 <ul class="footer-links">
                     <?php
-                    // Les services affichés proviennent de la section Services de la page
-                    // d'accueil (services_grid_v2 ou services_grid selon le gabarit choisi
-                    // en admin) — aucune liste écrite en dur (Règle #2).
-                    $servicesSec = \App\Services\Database::fetch(
-                        "SELECT id FROM sections WHERE type IN ('services_grid_v2', 'services_grid') AND status = 'active' ORDER BY FIELD(type, 'services_grid_v2', 'services_grid') LIMIT 1"
-                    );
-                    $servicesList = [];
-                    if ($servicesSec) {
-                        $servicesBlocks = \App\Models\Block::getStructuredContent($servicesSec['id']);
-                        $servicesList = $servicesBlocks['groups'] ?? [];
+                    /* Colonne pilotée par le menu d'emplacement « footer_services ».
+                       Repli : la section Services de la page d'accueil, comme
+                       auparavant — aucune liste écrite en dur (Règle #2). */
+                    $svcItems = \App\Models\MenuItem::getActiveByLocation('footer_services');
+                    $svcItems = array_filter($svcItems, fn($i) => empty($i['parent_id']));
+
+                    if (empty($svcItems)) {
+                        $servicesSec = \App\Services\Database::fetch(
+                            "SELECT id FROM sections WHERE type IN ('services_grid_v2', 'services_grid') AND status = 'active' ORDER BY FIELD(type, 'services_grid_v2', 'services_grid') LIMIT 1"
+                        );
+                        $servicesList = [];
+                        if ($servicesSec) {
+                            $servicesBlocks = \App\Models\Block::getStructuredContent($servicesSec['id']);
+                            $servicesList = $servicesBlocks['groups'] ?? [];
+                        }
+                        foreach (array_slice($servicesList, 0, 6) as $svc) {
+                            if (trim((string)($svc['svc_title'] ?? '')) === '') { continue; }
+                            $svcItems[] = [
+                                'label'     => $svc['svc_title'],
+                                'url'       => $svc['svc_link'] ?? '',
+                                'page_slug' => '',
+                                'target'    => '_self',
+                                'parent_id' => null,
+                            ];
+                        }
                     }
-                    foreach (array_slice($servicesList, 0, 6) as $svc):
-                        $svcTitle = $svc['svc_title'] ?? '';
-                        $svcLink  = $svc['svc_link']  ?? '';
-                        if ($svcTitle === '') { continue; }
+
+                    foreach (array_slice($svcItems, 0, 8) as $svcItem):
+                        $svcLabel = trim((string)($svcItem['label'] ?? ''));
+                        if ($svcLabel === '') { continue; }
+                        $svcHref  = \App\Models\MenuItem::resolveUrl($svcItem);
                     ?>
                         <li>
-                            <?php if ($svcLink !== ''): ?>
-                                <a href="<?= htmlspecialchars(url($svcLink)) ?>" class="footer-link"><?= htmlspecialchars($svcTitle) ?></a>
+                            <?php if ($svcHref !== '#'): ?>
+                                <a href="<?= htmlspecialchars(url($svcHref)) ?>" class="footer-link"
+                                   <?= ($svcItem['target'] ?? '_self') === '_blank' ? 'target="_blank" rel="noopener"' : '' ?>>
+                                    <?= htmlspecialchars($svcLabel) ?>
+                                </a>
                             <?php else: ?>
-                                <span class="footer-link"><?= htmlspecialchars($svcTitle) ?></span>
+                                <span class="footer-link"><?= htmlspecialchars($svcLabel) ?></span>
                             <?php endif; ?>
                         </li>
                     <?php endforeach; ?>

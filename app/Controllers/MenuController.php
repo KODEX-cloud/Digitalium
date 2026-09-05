@@ -19,11 +19,25 @@ class MenuController extends Controller {
 
     public function index(): void {
         $this->middlewareAuth();
+
+        // Le nombre de liens et le fait d'être « branché sur le site » sont
+        // calculés ici : une vue ne doit pas interroger la base (convention du
+        // projet), et sans ces deux informations on cherche longtemps pourquoi
+        // un menu « ne s'affiche pas ».
         $menus = Menu::all('id ASC');
+        foreach ($menus as &$m) {
+            $m['nb_liens']   = MenuItem::compter((int)$m['id']);
+            $m['est_cable']  = Menu::estCable((string)($m['location'] ?? ''));
+            $m['emplacement_libelle'] = Menu::libelleEmplacement((string)($m['location'] ?? ''));
+        }
+        unset($m);
+
         $this->render('admin/menus/index', [
-            'title'      => 'Gestion des menus',
-            'menus'      => $menus,
-            'csrf_token' => $this->generateCsrf(),
+            'title'        => 'Gestion des menus',
+            'menus'        => $menus,
+            'emplacements' => Menu::EMPLACEMENTS,
+            'csrf_token'   => $this->generateCsrf(),
+            'currentUser'  => Auth::user(),
         ], 'admin/layout');
     }
 
@@ -52,14 +66,20 @@ class MenuController extends Controller {
         }
 
         $items = MenuItem::getByMenu($id);
-        $pages = Page::all('sort_order ASC');
+        $pages = array_values(array_filter(
+            Page::all('sort_order ASC'),
+            static fn($p) => ($p['status'] ?? '') === 'published'
+        ));
 
         $this->render('admin/menus/edit', [
-            'title'      => 'Édition du menu : ' . $menu['name'],
-            'menu'       => $menu,
-            'items'      => $items,
-            'pages'      => $pages,
-            'csrf_token' => $this->generateCsrf(),
+            'title'        => 'Édition du menu : ' . $menu['name'],
+            'menu'         => $menu,
+            'items'        => $items,
+            'pages'        => $pages,
+            'emplacements' => Menu::EMPLACEMENTS,
+            'estCable'     => Menu::estCable((string)($menu['location'] ?? '')),
+            'csrf_token'   => $this->generateCsrf(),
+            'currentUser'  => Auth::user(),
         ], 'admin/layout');
     }
 

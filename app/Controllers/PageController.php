@@ -76,10 +76,36 @@ class PageController extends Controller {
 
         try {
             $pageId = Page::createPage($title, $slug, $metaTitle, $metaDescription, $status);
+            $this->proposerDansLaNavigation((int)$pageId);
             \App\Services\Cache::clear();
             $this->redirect("/admin/pages/edit/{$pageId}", 'success', "La page a été créée.");
         } catch (\Exception $e) {
             $this->redirect('/admin/pages/create', 'error', "Erreur : " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Propose la page dans le menu principal — une seule fois.
+     *
+     * Appelée après la création ET après l'enregistrement d'une page : une
+     * seule source de décision pour les deux écrans (Règle #1). Le caractère
+     * unique tient au drapeau `pages.nav_seeded` : une fois la page proposée,
+     * le menu fait autorité. Retirer le lien ne le fait pas revenir.
+     *
+     * Isolée : l'échec de cet agrément ne doit jamais empêcher l'enregistrement
+     * d'une page. Au pire le lien manque, et il s'ajoute à la main.
+     */
+    private function proposerDansLaNavigation(int $pageId): void {
+        try {
+            $page = Page::find($pageId);
+            if ($page) { \App\Models\MenuItem::semerPage($page); }
+        } catch (\Throwable $e) {
+            @file_put_contents(
+                ROOT_PATH . '/storage/logs/errors.log',
+                date('Y-m-d H:i:s') . " [PageController] navigation non semée pour la page $pageId — "
+                . $e->getMessage() . "\n",
+                FILE_APPEND | LOCK_EX
+            );
         }
     }
 
@@ -210,6 +236,7 @@ class PageController extends Controller {
 
         try {
             if (Page::updatePage($id, $data)) {
+                $this->proposerDansLaNavigation($id);
                 \App\Services\Cache::clear();
                 error_log("[{$timestamp}] [PageController::editSubmit SUCCESS] Redirecting to edit page.\n", 3, $logPath);
                 $this->redirect("/admin/pages/edit/{$id}", 'success', 'Enregistré avec succès.');
