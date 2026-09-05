@@ -822,6 +822,15 @@
             window.addEventListener('resize', () => {
                 if (!surMobile() && navMenu.classList.contains('open')) { fermer(); }
             });
+
+            // Le tiroir a la hauteur de son contenu : la page reste visible
+            // en dessous. Un appui a cote doit donc le fermer. Le bouton
+            // hamburger est dans l'en-tete, il n'est jamais concerne ici.
+            document.addEventListener('click', (e) => {
+                if (!navMenu.classList.contains('open')) { return; }
+                if (e.target.closest && e.target.closest('#siteHeader')) { return; }
+                fermer();
+            });
         }
 
         window.addEventListener('scroll', () => {
