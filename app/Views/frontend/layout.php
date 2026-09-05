@@ -503,9 +503,19 @@
                                 <?= htmlspecialchars($settings['footer_newsletter_note']) ?>
                             <?php endif; ?>
                             <?php if (!empty($settings['footer_newsletter_privacy_text'])): ?>
-                                <a href="<?= htmlspecialchars(url($settings['footer_newsletter_privacy_url'] ?? '/mentions-legales')) ?>">
-                                    <?= htmlspecialchars($settings['footer_newsletter_privacy_text']) ?>
-                                </a>
+                                <?php
+                                /* Meme raison qu'en bas de page : sans adresse
+                                   configuree, la mention reste lisible mais ne
+                                   mene pas a un 404. */
+                                $_urlConfid = trim((string)($settings['footer_newsletter_privacy_url'] ?? ''));
+                                ?>
+                                <?php if ($_urlConfid !== ''): ?>
+                                    <a href="<?= htmlspecialchars(url($_urlConfid)) ?>">
+                                        <?= htmlspecialchars($settings['footer_newsletter_privacy_text']) ?>
+                                    </a>
+                                <?php else: ?>
+                                    <span><?= htmlspecialchars($settings['footer_newsletter_privacy_text']) ?></span>
+                                <?php endif; ?>
                             <?php endif; ?>
                         </p>
                     <?php endif; ?>
@@ -692,12 +702,25 @@
                 <span><?= htmlspecialchars($settings['footer_copyright']) ?></span>
             <?php endif; ?>
             <div class="footer-bottom-links">
-                <?php if (!empty($settings['footer_legal_text'])): ?>
-                    <a href="<?= htmlspecialchars(url($settings['footer_legal_url'] ?? '/mentions-legales')) ?>"><?= htmlspecialchars($settings['footer_legal_text']) ?></a>
-                <?php endif; ?>
-                <?php if (!empty($settings['footer_privacy_text'])): ?>
-                    <a href="<?= htmlspecialchars(url($settings['footer_privacy_url'] ?? '/mentions-legales')) ?>"><?= htmlspecialchars($settings['footer_privacy_text']) ?></a>
-                <?php endif; ?>
+                <?php
+                /* Sans adresse configuree, l'intitule s'affiche SANS lien.
+                   Ces deux liens retombaient sur « /mentions-legales », une page
+                   qui n'existe pas : le pied de page envoyait donc tous les
+                   visiteurs sur un 404. Mieux vaut une mention non cliquable
+                   qu'un lien mort. */
+                $_lienPied = static function (?string $texte, ?string $url): void {
+                    $texte = trim((string)$texte);
+                    if ($texte === '') { return; }
+                    $url = trim((string)$url);
+                    if ($url === '') {
+                        echo '<span>' . htmlspecialchars($texte) . '</span>';
+                        return;
+                    }
+                    echo '<a href="' . htmlspecialchars(url($url)) . '">' . htmlspecialchars($texte) . '</a>';
+                };
+                $_lienPied($settings['footer_legal_text']   ?? '', $settings['footer_legal_url']   ?? '');
+                $_lienPied($settings['footer_privacy_text'] ?? '', $settings['footer_privacy_url'] ?? '');
+                ?>
                 <?php if (!empty($settings['footer_sitemap_text'])): ?>
                     <a href="<?= htmlspecialchars(url($settings['footer_sitemap_url'] ?? '/sitemap.xml')) ?>"><?= htmlspecialchars($settings['footer_sitemap_text']) ?></a>
                 <?php endif; ?>
@@ -723,20 +746,81 @@
         
         document.querySelectorAll('.reveal, .rev, .svc-card, .sc, .pc, .feat-item').forEach(el => observer.observe(el));
 
+        /* ── Menu mobile ────────────────────────────────────────────────────
+           Le tiroir est la MEME liste que le menu de bureau : un second
+           balisage se serait desynchronise du menu administrable.
+           Les sous-menus s'ouvrent au toucher, car `:hover` ne se declenche
+           pas de facon fiable sur un ecran tactile. */
         const menuToggle = document.getElementById('menuToggle');
-        const navMenu = document.getElementById('navMenu');
-        
+        const navMenu    = document.getElementById('navMenu');
+
         if (menuToggle && navMenu) {
+            const surMobile = () => window.matchMedia('(max-width: 991px)').matches;
+
+            const poserIcone = (nom) => {
+                const icone = menuToggle.querySelector('i');
+                if (icone) { icone.setAttribute('data-lucide', nom); }
+                if (typeof lucide !== 'undefined') { lucide.createIcons(); }
+            };
+
+            const replier = () => {
+                navMenu.querySelectorAll('.has-dropdown.expanded')
+                       .forEach(li => li.classList.remove('expanded'));
+            };
+
+            const fermer = () => {
+                navMenu.classList.remove('open');
+                document.body.classList.remove('nav-open');
+                menuToggle.setAttribute('aria-expanded', 'false');
+                replier();
+                poserIcone('menu');
+            };
+
+            const ouvrir = () => {
+                navMenu.classList.add('open');
+                document.body.classList.add('nav-open');
+                menuToggle.setAttribute('aria-expanded', 'true');
+                poserIcone('x');
+            };
+
+            menuToggle.setAttribute('aria-controls', 'navMenu');
+            menuToggle.setAttribute('aria-expanded', 'false');
+
             menuToggle.addEventListener('click', () => {
-                navMenu.classList.toggle('open');
-                
-                const icon = menuToggle.querySelector('i');
-                if (navMenu.classList.contains('open')) {
-                    icon.setAttribute('data-lucide', 'x');
-                } else {
-                    icon.setAttribute('data-lucide', 'menu');
-                }
-                lucide.createIcons();
+                navMenu.classList.contains('open') ? fermer() : ouvrir();
+            });
+
+            navMenu.querySelectorAll('a').forEach(lien => {
+                const parentDeroulant = lien.parentElement
+                    && lien.parentElement.classList.contains('has-dropdown')
+                    && lien.classList.contains('nav-link');
+
+                lien.addEventListener('click', (e) => {
+                    if (!navMenu.classList.contains('open')) { return; }
+
+                    // Un parent de sous-menu se deploie au premier appui ;
+                    // le second appui suit son lien.
+                    if (parentDeroulant && surMobile()) {
+                        const li = lien.parentElement;
+                        if (!li.classList.contains('expanded')) {
+                            e.preventDefault();
+                            replier();
+                            li.classList.add('expanded');
+                            return;
+                        }
+                    }
+                    fermer();
+                });
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && navMenu.classList.contains('open')) { fermer(); }
+            });
+
+            // Repasser en bureau doit rendre la barre normale, jamais un
+            // tiroir fige par-dessus la page.
+            window.addEventListener('resize', () => {
+                if (!surMobile() && navMenu.classList.contains('open')) { fermer(); }
             });
         }
 

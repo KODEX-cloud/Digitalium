@@ -743,16 +743,81 @@ input:focus, textarea:focus, select:focus {
 @keyframes pulseGlow   { 0%,100%{opacity:0.6} 50%{opacity:1} }
 
 /* ============================================================
-   18. MOBILE MENU
+   18. MENU MOBILE
    ============================================================ */
-.mobile-menu { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: #fff; z-index: 2000; flex-direction: column; padding: 80px 32px 40px; overflow-y: auto; }
-.mobile-menu.open { display: flex; }
-.mobile-menu-close { position: absolute; top: 20px; right: 20px; width: 44px; height: 44px; border-radius: 50%; background: rgba(0,0,0,0.04); border: 1px solid var(--border); color: var(--text-main); display: flex; align-items: center; justify-content: center; cursor: pointer; }
-.mobile-menu-links { display: flex; flex-direction: column; gap: 8px; margin-top: 20px; }
-.mobile-menu-link { display: block; padding: 14px 20px; font-size: 1.1rem; font-weight: 600; color: var(--text-main); border-radius: var(--radius-md); transition: var(--transition-fast); }
-.mobile-menu-link:hover, .mobile-menu-link.active { color: var(--primary); background: color-mix(in srgb, var(--primary) 6%, transparent); }
-.mobile-menu-cta { margin-top: 32px; }
-.mobile-menu-cta a { display: block; padding: 15px; background: var(--btn-primary-bg); color: var(--btn-primary-text) !important; text-align: center; border-radius: var(--radius-btn); font-weight: 700; font-size: 1rem; box-shadow: var(--shadow-btn); }
+/*
+ * Le menu mobile n'est PAS un second balisage : c'est la meme liste
+ * (#navMenu) que le bureau, deployee en tiroir. Un second bloc HTML aurait
+ * duplique la boucle de navigation (Regle #1) et se serait desynchronise du
+ * menu administrable des la premiere modification.
+ *
+ * Cette section contenait un jeu de regles `.mobile-menu` complet dont AUCUN
+ * balisage ne se servait — vestige d'un design precedent. Pendant ce temps, le
+ * bouton hamburger ajoutait la classe `open` a `.nav-menu`, pour laquelle il
+ * n'existait aucune regle : sous 991px, `.nav-menu` restait `display: none` et
+ * le menu ne s'ouvrait donc jamais.
+ */
+@media (max-width: 991px) {
+    .nav-menu.open {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 2px;
+        /* Sous l'en-tete fixe (72px), qui reste visible et cliquable. */
+        position: fixed;
+        top: 72px; left: 0; right: 0; bottom: 0;
+        z-index: 999;
+        background: var(--bg-surface, #fff);
+        border-top: 1px solid var(--border);
+        padding: 18px 22px calc(28px + env(safe-area-inset-bottom, 0px));
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        animation: navDrawerIn 0.18s ease-out;
+    }
+    .nav-menu.open > li { width: 100%; }
+
+    .nav-menu.open .nav-link {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 15px 14px;
+        font-size: 1.02rem; font-weight: 600;
+        border-radius: var(--radius-md);
+        min-height: 48px;                   /* cible tactile confortable */
+    }
+
+    /* Les sous-menus s'ouvrent au TOUCHER. `:hover` ne se declenche pas de
+       facon fiable sur un ecran tactile : sans cela, un sous-menu serait
+       inatteignable sur telephone. */
+    .nav-menu.open .nav-dropdown {
+        display: none;
+        position: static;
+        min-width: 0;
+        margin: 2px 0 8px 14px;
+        padding: 4px 0 4px 10px;
+        background: transparent;
+        border: none;
+        border-left: 2px solid color-mix(in srgb, var(--primary) 35%, transparent);
+        border-radius: 0;
+        box-shadow: none;
+    }
+    .nav-menu.open .has-dropdown.expanded > .nav-dropdown { display: block; }
+    .nav-menu.open .has-dropdown.expanded > .nav-link i[data-lucide="chevron-down"] { transform: rotate(180deg); }
+    .nav-menu.open .nav-dropdown li a {
+        display: flex; align-items: center;
+        padding: 12px 14px; font-size: 0.95rem; min-height: 44px;
+    }
+
+    /* Le bouton d'action principal etait masque sous 991px sans remplacement :
+       le premier appel a l'action du site disparaissait sur telephone. */
+    .nav-menu.open .btn-cta-nav {
+        display: flex; justify-content: center;
+        margin-top: 16px; padding: 15px 24px; font-size: 0.95rem;
+    }
+
+    /* Empeche la page de defiler derriere le tiroir ouvert. */
+    body.nav-open { overflow: hidden; }
+}
+
+@keyframes navDrawerIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
 
 /* ============================================================
    19. BLOG / PORTFOLIO PAGES
