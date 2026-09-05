@@ -1,5 +1,66 @@
 # PROJECT_STATE — Digitalium Group CMS
-> Dernière mise à jour : 2026-09-05 — Menu mobile réparé, liens morts du pied
+> Dernière mise à jour : 2026-09-05 — Tiroir mobile ancré correctement, image du hero en premier
+
+---
+
+### 2026-09-05 (suite 19) — Le tiroir mobile s'ouvrait sur une hauteur nulle
+
+**Suite immédiate de la suite 18, signalée en production.** Le tiroir ne montrait qu'une bande
+blanche d'environ 46px laissant apparaître le premier lien coupé en deux.
+
+**Cause — `backdrop-filter` déplace le bloc conteneur.** `.site-header` porte
+`backdrop-filter: blur(24px)`. Une valeur autre que `none` fait de l'élément le **bloc conteneur des
+descendants `position: fixed`**, au même titre que `transform` ou `filter`. Le tiroir déclaré
+`position: fixed; top: 72px; bottom: 0` ne se résolvait donc pas contre la fenêtre mais contre un
+en-tête haut de 72px : hauteur de contenu = 72 − 72 − 0 = **0**. Seules les marges internes
+(18px en haut, 28px en bas) restaient peintes, et `overflow-y: auto` rognait le reste. La géométrie
+observée en production correspond exactement à cette valeur calculée.
+
+**Correction — ancrage déterministe.** Le tiroir passe en `position: absolute`. L'ancre d'un élément
+absolu est le plus proche ancêtre **positionné**, règle identique dans tous les navigateurs, que
+`backdrop-filter` soit géré ou non — un tiroir `fixed` aurait basculé sur la fenêtre là où la
+propriété n'est pas supportée, et serait alors parti hors écran avec `top: 100%`.
+
+`.container` porte `position: relative` : sans neutralisation, l'ancre aurait été `.nav-container` et
+le tiroir aurait hérité de ses marges latérales au lieu d'occuper toute la largeur. D'où
+`.site-header .nav-container { position: static; }` sous 991px. Rien dans l'en-tête ne s'ancre sur ce
+conteneur : les sous-menus s'ancrent sur `.has-dropdown`.
+
+Bénéfice annexe : `top: 100%` suit l'en-tête qui passe à 64px au défilement, là où `72px` était figé
+et laissait un interstice.
+
+Le panneau prend désormais la hauteur de son contenu, plafonnée par
+`max-height: calc(100dvh - 72px)`. La page restant visible en dessous, **un appui à côté ferme le
+tiroir** ; le bouton hamburger est exclu de cette fermeture puisqu'il est dans l'en-tête.
+
+**Hero — l'image passe avant le texte sur téléphone.** La règle mobile de
+`app/Views/frontend/partials/hero.php` forçait `order: 1 !important` sur la colonne de texte :
+l'image arrivait après le badge, le titre, la description et les deux boutons. L'ordre est inversé.
+Deux sélecteurs sont nécessaires — certaines variantes nomment leur colonne de texte
+`hero-left-content`, d'autres seulement `hero-text-block`. `!important` reste indispensable :
+`$textOrder` / `$visualOrder` posent l'ordre **en ligne** (réglage « image à gauche / à droite » du
+back-office, qui n'a de sens que sur deux colonnes).
+
+**Portée** — la règle s'applique à toutes les pages servies par ce hero, pas à la seule page
+d'accueil. Un ordre différent par page supposerait un nouveau champ administrable
+(`hero_mobile_order`) : à arbitrer par le CTO.
+
+**Vérifications exécutées** (Règle #5)
+
+| Banc | Portée | Résultat |
+|---|---|---|
+| `h_menus_front.php` | Ancrage du tiroir, largeur, plafond de hauteur, fermeture par appui à côté, ordre du hero, replis, échappement | **46 / 46** |
+| `h_menus_reconcile.php` | Non-régression | **30 / 30** |
+| `h_menus_build.php` | Non-régression | **27 / 27** |
+| `h_menus_admin.php` | Non-régression | **27 / 27** |
+| `h_labs_views.php` · `h_routes_labs.php` · `h_schema.php` | Non-régression | **50 · 26 · 38** |
+| `bin/check_views.php` | Toutes les vues | **0 faute** |
+
+Le banc interdit explicitement le retour du défaut : `position: fixed` et `top: 72px` sur
+`.nav-menu.open` sont désormais des **échecs**, de même qu'un `order: 1` sur la colonne de texte.
+
+**Reste à confirmer sur appareil** — le rendu tactile lui-même. Aucun navigateur n'est pilotable
+depuis l'environnement de développement.
 
 ---
 
