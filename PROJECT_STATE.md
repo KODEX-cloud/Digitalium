@@ -127,6 +127,33 @@ flux de caractères mais n'est pas un attribut. Le détecteur ne regarde donc pl
 d'attributs, valeurs retirées. Troisième cas : les gabarits PHP mettent une valeur seule sur sa
 ligne, `>Publié<` ne peut pas correspondre — les assertions comparent désormais `>\s*texte\s*<`.
 
+**Incident de déploiement — `fd30aa8` a échoué sans rien appliquer.**
+`/labs` répondait 404, mais la cause n'avait rien à voir avec la page : `/admin/labs` répondait
+**404** alors que `/admin/projects` répondait **302**, donc `routes/web.php` sur le serveur ne
+contenait pas les nouvelles routes — **le code n'était jamais arrivé en production**. L'étape SSH
+avait duré **136 s** contre 13 s pour les deux déploiements précédents, ce qui situe l'échec sur le
+`git fetch origin main` de l'étape 1, interrompu ensuite par `set -e`. Aucune régression : toutes
+les pages en ligne répondaient 200 pendant l'incident, la production tournait simplement sur le
+commit précédent.
+
+Deux enseignements consignés :
+1. **`git fetch` est réessayé une fois**, après 5 s. Si la seconde tentative échoue, `set -e`
+   interrompt toujours : un déploiement en échec vaut mieux qu'un déploiement silencieusement parti
+   sur du code périmé.
+2. **Un commit vide ne relance pas le pipeline.** `on.push.paths-ignore` le fait correspondre à la
+   liste ignorée et **aucun run n'est créé** — le premier essai de relance est resté sans effet
+   pendant plusieurs minutes avant que ce soit compris. Pour relancer, il faut toucher un chemin
+   non ignoré, ou passer par `workflow_dispatch`.
+
+**Vérifié en production** (déploiement `4230fb5`) : `/labs` répond 200, canonique
+`https://digitaliumgroup.com/labs`, **8 sections** rendues, hero en mode *overlay* aux dimensions
+demandées (`--hero-banner-ratio: 1250 / 500`, voile 0.64, hauteur mini 500 px, 16/9 sur mobile).
+La grille de produits affiche son message d'attente et **aucune carte** : rien n'est inventé. Les
+neuf autres pages publiques et `/admin/projects` répondent comme avant.
+
+**Il reste deux gestes d'administration**, volontairement non faits ici : téléverser le visuel du
+hero depuis la Bibliothèque Média, et saisir les produits réels dans **Admin > Digitalium Labs**.
+
 **Dette technique inchangée, rappelée**
 - `RecoveryController.php` — `INSERT INTO settings (`key`, `value`)` (lignes 489/491) et
   `INSERT IGNORE INTO menus (name, location, is_active)` (ligne 462) : les phases *Settings Sync*
