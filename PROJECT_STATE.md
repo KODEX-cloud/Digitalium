@@ -1,5 +1,64 @@
 # PROJECT_STATE — Digitalium Group CMS
-> Dernière mise à jour : 2026-09-05 — Tiroir mobile ancré correctement, image du hero en premier
+> Dernière mise à jour : 2026-09-05 — Menu mobile pleinement fonctionnel, image du hero en premier
+
+---
+
+### 2026-09-05 (suite 20) — Le menu s'ouvrait et se refermait dans le même clic
+
+**Régression introduite par la fermeture « appui à côté » de la suite 19.** Le tiroir s'ouvrait puis
+disparaissait instantanément : aucun appui ne pouvait le maintenir ouvert.
+
+**Cause — une cible détachée du document pendant la remontée de l'événement.** Le bouton contient
+`<i data-lucide="menu">`, que **Lucide remplace par un `<svg>`** au chargement. Au clic :
+
+1. la cible réelle est le `<path>` à l'intérieur de ce `<svg>` ;
+2. le gestionnaire du bouton ouvre le tiroir, puis `poserIcone()` appelle `lucide.createIcons()`,
+   qui **remplace le nœud** — la cible du clic quitte alors le document ;
+3. l'événement poursuit sa remontée jusqu'à `document`, où `e.target.closest('#siteHeader')`
+   s'applique à un nœud **détaché** et renvoie `null` : le gestionnaire conclut à un clic extérieur
+   et referme.
+
+Le chemin de propagation est figé **avant** l'exécution des gestionnaires : détacher la cible
+n'interrompt pas la remontée, cela rend seulement la cible impossible à situer.
+
+**Correction, en deux couches.** `e.stopPropagation()` sur le bouton : le clic du hamburger
+n'atteint plus le gestionnaire de `document`, indépendamment de toute identité de nœud. Puis, en
+défense en profondeur, une cible dont `isConnected` est faux ne déclenche plus aucune fermeture —
+en cas de doute sur la provenance d'un clic, ne rien fermer.
+
+**Défaut annexe corrigé.** `poserIcone()` cherchait un `<i>` que Lucide avait déjà remplacé :
+`querySelector('i')` ne trouvait plus rien et **l'icône ne passait jamais à la croix**. Elle est
+désormais cherchée par son attribut (`[data-lucide], svg, i`).
+
+**Nouveau banc — `h_menu_clic.js` (Node).** Le comportement d'un clic ne se prouve pas en lisant du
+CSS : il fallait rejouer l'événement. Le banc extrait le **vrai script** de `layout.php` et l'exécute
+contre un DOM minimal qui reproduit les deux mécanismes en cause — chemin de propagation figé avant
+exécution, et remplacement de nœud par `lucide.createIcons()`.
+
+| Scénario | Vérifié |
+|---|---|
+| Un clic ouvre, et le menu **reste** ouvert | oui |
+| Un second clic referme | oui |
+| L'icône passe à la croix, puis revient | oui |
+| Un appui hors de l'en-tête referme | oui |
+| Un appui sur un parent déploie son sous-menu sans refermer | oui |
+| Un appui sur un lien simple referme | oui |
+
+**Validé par contrôle négatif** : rejoué contre `5d24f92` (la version alors en production), le banc
+échoue sur 9 assertions et reproduit exactement le symptôme signalé — après le clic, la liste porte
+`classes = nav-menu`, sans `open`.
+
+Le banc a par ailleurs révélé une lacune de lui-même avant de servir : son DOM minimal n'exposait pas
+`parentElement`, ce que le code de production utilise. Corrigé avant toute conclusion.
+
+**Vérifications exécutées** (Règle #5)
+
+| Banc | Portée | Résultat |
+|---|---|---|
+| `h_menu_clic.js` | Comportement du clic, rejoué sur le vrai script | **17 / 17** |
+| `h_menu_clic.js` contre `5d24f92` | Contrôle négatif | **9 échecs attendus** |
+| `h_menus_front.php` | Ancrage du tiroir, garde-fous du clic, ordre du hero, replis | **51 / 51** |
+| `h_menus_reconcile` · `h_menus_build` · `h_menus_admin` | Non-régression | **30 · 27 · 27** |
 
 ---
 

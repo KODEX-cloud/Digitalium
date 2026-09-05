@@ -757,10 +757,15 @@
         if (menuToggle && navMenu) {
             const surMobile = () => window.matchMedia('(max-width: 991px)').matches;
 
+            // Lucide REMPLACE le <i data-lucide> par un <svg> des le chargement :
+            // chercher un <i> ne trouvait donc plus rien et l'icone ne passait
+            // jamais a la croix. On vise l'element porteur, quelle que soit sa
+            // balise.
             const poserIcone = (nom) => {
-                const icone = menuToggle.querySelector('i');
-                if (icone) { icone.setAttribute('data-lucide', nom); }
-                if (typeof lucide !== 'undefined') { lucide.createIcons(); }
+                const icone = menuToggle.querySelector('[data-lucide], svg, i');
+                if (!icone) { return; }
+                icone.setAttribute('data-lucide', nom);
+                if (typeof lucide !== 'undefined' && lucide.createIcons) { lucide.createIcons(); }
             };
 
             const replier = () => {
@@ -786,7 +791,12 @@
             menuToggle.setAttribute('aria-controls', 'navMenu');
             menuToggle.setAttribute('aria-expanded', 'false');
 
-            menuToggle.addEventListener('click', () => {
+            // `stopPropagation` est INDISPENSABLE : sans lui, le clic remonte
+            // jusqu'au gestionnaire de fermeture pose sur `document`, qui ne
+            // peut plus reconnaitre sa cible (voir plus bas) et referme le
+            // menu dans le mouvement meme qui vient de l'ouvrir.
+            menuToggle.addEventListener('click', (e) => {
+                e.stopPropagation();
                 navMenu.classList.contains('open') ? fermer() : ouvrir();
             });
 
@@ -824,11 +834,20 @@
             });
 
             // Le tiroir a la hauteur de son contenu : la page reste visible
-            // en dessous. Un appui a cote doit donc le fermer. Le bouton
-            // hamburger est dans l'en-tete, il n'est jamais concerne ici.
+            // en dessous. Un appui a cote doit donc le fermer.
+            //
+            // Une cible DETACHEE du document ne peut pas etre situee : son
+            // `closest()` renvoie null, ce qui la ferait passer pour un clic
+            // exterieur. Le cas se produit reellement ici — `lucide.createIcons()`
+            // remplace le <svg> de l'icone pendant que l'evenement remonte, si
+            // bien que la cible du clic n'est plus dans la page quand ce
+            // gestionnaire s'execute. En cas de doute, ne rien fermer.
             document.addEventListener('click', (e) => {
                 if (!navMenu.classList.contains('open')) { return; }
-                if (e.target.closest && e.target.closest('#siteHeader')) { return; }
+                const cible = e.target;
+                if (!cible || cible.isConnected === false) { return; }
+                if (typeof cible.closest !== 'function') { return; }
+                if (cible.closest('#siteHeader')) { return; }
                 fermer();
             });
         }
