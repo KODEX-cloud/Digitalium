@@ -1,5 +1,45 @@
 # PROJECT_STATE — Digitalium Group CMS
-> Dernière mise à jour : 2026-09-05 — Navigation entièrement administrable (menus, sous-menus, pied de page)
+> Dernière mise à jour : 2026-09-05 — Menu mobile réparé, liens morts du pied
+
+---
+
+### 2026-09-05 (suite 18) — Le menu mobile ne s'ouvrait pas
+
+**Le menu portable était totalement inopérant.** Sous 992px, le CSS pose
+`.nav-menu { display: none }` et le bouton hamburger ajoutait la classe `open` à ce **même**
+élément — mais **aucune règle `.nav-menu.open` n'existait**. Le clic changeait l'icône, et rien
+d'autre. En regard, un jeu de règles `.mobile-menu` complet (panneau, bouton de fermeture, liens,
+bouton d'action) occupait la section « MOBILE MENU » de `index.css` **sans qu'aucun balisage ne
+s'en serve** : vestige d'un design précédent, qui donnait l'illusion d'un menu mobile existant.
+
+Le tiroir est désormais la **même liste** (`#navMenu`) que le menu de bureau, dépliée sous
+l'en-tête fixe. Un second balisage aurait dupliqué la boucle de navigation (Règle #1) et se serait
+désynchronisé du menu administrable dès la première modification.
+
+**Deux défauts voisins, corrigés dans la foulée :**
+
+| Défaut | Effet | Correction |
+|---|---|---|
+| `.btn-cta-nav { display: none }` sous 991px, sans remplacement | « Discuter de mon projet », premier appel à l'action du site, **invisible sur téléphone** | Le bouton figure dans le tiroir |
+| `.has-dropdown:hover .nav-dropdown` seulement | `:hover` ne se déclenche pas de façon fiable au toucher : les sous-menus, qui venaient tout juste de fonctionner, auraient été **inatteignables sur mobile** | Premier appui = déploiement, second = navigation |
+
+S'y ajoutent `aria-expanded`, fermeture à la touche Échap, fermeture après navigation, fermeture au
+retour en affichage bureau, et blocage du défilement de la page derrière le tiroir.
+
+**Liens légaux du pied.** « Mentions Légales » et « politique de confidentialité » retombaient sur
+`/mentions-legales` — une page qui **n'existe pas** : le pied envoyait les visiteurs sur un 404.
+Sans adresse configurée, l'intitulé s'affiche désormais **sans lien**. En production, ces deux
+réglages sont explicitement renseignés sur `/mentions-legales` : le code honore la configuration,
+**la page reste à créer** (contenu juridique, décision du CTO).
+
+**Vérifié en production** (déploiement `e09582a`) : la feuille servie contient bien
+`.nav-menu.open` en `display:flex` sous l'en-tête, le bouton d'action réactivé, le déploiement des
+sous-menus au toucher et le blocage du défilement ; le bloc `.mobile-menu` mort a disparu.
+`aria-expanded`, Échap et la fermeture au redimensionnement sont présents dans la page. **Le
+comportement tactile lui-même reste à confirmer sur appareil** : aucun navigateur n'est pilotable
+depuis cet environnement.
+
+`h_menus_front.php` porté à **31 assertions** (règles CSS manquantes et liens légaux compris).
 
 ---
 
