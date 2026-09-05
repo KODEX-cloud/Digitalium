@@ -25,6 +25,15 @@ $router->get('/insights/{slug}', 'BlogController@frontendPost');
 $router->get('/blog', 'BlogController@legacyIndex');
 $router->get('/blog/{slug}', 'BlogController@legacyPost');
 
+// /service a été remplacée par /solutions, qui porte les cinq pages filles.
+// La route est déclarée AVANT le catch-all : la redirection l'emporte donc sur
+// la page CMS, que celle-ci ait déjà été supprimée ou non.
+// `/service` n'a jamais eu d'enfant (les slugs de Solutions y répondaient 404) :
+// une adresse héritée à deux segments part vers la nouvelle référence plutôt
+// que vers un 404.
+$router->get('/service', 'HomeController@legacyService');
+$router->get('/service/{slug}', 'HomeController@legacyService');
+
 // Le formulaire de commentaires poste toujours ici : l'adresse est déjà en
 // production dans le JavaScript des pages servies, la changer casserait les
 // pages encore en cache navigateur.

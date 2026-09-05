@@ -433,6 +433,15 @@ jobs:
                 echo "  ATTENTION Build About Page (non-bloquant)"
               fi
             fi
+            # APRES les scripts de construction : on retire des pages, il faut
+            # que celles qui les remplacent existent d'abord.
+            if [ -f "database/retire_legacy_pages.php" ]; then
+              if $PHP database/retire_legacy_pages.php 2>&1; then
+                echo "  OK Retrait des pages en doublon"
+              else
+                echo "  ATTENTION Retrait des pages en doublon (non-bloquant)"
+              fi
+            fi
             if [ -f "database/seed_demo_content.php" ]; then
               if $PHP database/seed_demo_content.php 2>&1; then
                 echo "  OK Seed Demo Content"

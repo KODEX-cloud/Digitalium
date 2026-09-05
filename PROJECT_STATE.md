@@ -1,5 +1,100 @@
 # PROJECT_STATE — Digitalium Group CMS
-> Dernière mise à jour : 2026-09-05 — Page A propos et module Equipe
+> Dernière mise à jour : 2026-09-05 — Retrait des pages en doublon /service et /blog
+
+---
+
+### 2026-09-05 (suite 22) — Retrait des pages en doublon : `/service` et `/blog`
+
+Conception validée : `docs/superpowers/specs/2026-09-05-retrait-pages-doublons-design.md` (Règles #3 et #4).
+
+**`/blog` était déjà traité.** `GET /blog` et `GET /blog/{slug}` répondaient **301** vers `/insights`
+(routes ajoutées lors de la construction d'Insights), l'adresse était absente du sitemap et **aucune
+page publique n'y renvoyait**. Il restait néanmoins un objet : une **page CMS `blog` publiée**,
+invisible car interceptée par la route, mais listée dans `/admin/pages` — le doublon à retirer. Le
+filtre `if ($slug === 'blog')` du sitemap n'existait d'ailleurs que pour elle.
+
+**`/service` n'était pas traité du tout** : servi en **200**, présent au **sitemap**, et lié depuis le
+**pied de page de toutes les pages**. Comparaison faite avant de trancher :
+
+| `/service` — 4 sections | `/solutions` — 8 sections |
+|---|---|
+| hero, process_timeline, testimonials_carousel, cta | hero, sectors_grid, process_strip, capabilities_grid, needs_router, sectors_grid, projects_cms, cta |
+
+`/solutions` est un sur-ensemble et porte les cinq pages filles ; `/service` n'a jamais eu d'enfant
+(les cinq slugs de Solutions y répondaient 404). Désigner Solutions comme référence correspond donc à
+l'état réel du site.
+
+**Ce qui n'a PAS été supprimé, et c'est le point important.** `/insights/{slug}` est servi par
+**`BlogController@frontendPost`** et les articles vivent dans **`blog_posts`**. Le « blog » n'est pas
+un module concurrent d'Insights : **c'est son moteur**. Supprimer `BlogController`, `blog_posts` ou
+`/admin/blog` aurait détruit la vitrine éditoriale qu'il s'agit justement de conserver. Ce qui
+disparaît est l'**adresse publique** et la **page CMS**, pas le moteur.
+
+De même, les routes `/blog` et `/blog/{slug}` **restent déclarées** : ce sont elles qui portent la
+redirection. Le contrôle négatif l'a montré sans ambiguïté — en les retirant, `/blog` retombe sur le
+catch-all, donc en **404** une fois la page supprimée. L'inverse exact de la demande.
+
+**Redirections**
+
+```
+/service        → 301 → /solutions      HomeController@legacyService
+/service/{slug} → 301 → /solutions      (aucun enfant n'a jamais existé)
+/blog           → 301 → /insights       (déjà en place)
+/blog/{slug}    → 301 → /insights/{slug} (déjà en place)
+```
+
+Déclarées **avant** le catch-all : la redirection l'emporte sur la page CMS, que celle-ci soit encore
+là ou non. Le routeur normalisant l'URI, une seule route couvre `/service` **et** `/public/service` —
+vérifié : `/public/blog` répond déjà 301 vers `/public/insights`.
+
+**Sitemap** — le test en dur sur le seul slug `blog` devient une liste `SLUGS_RETIRES`. Une adresse
+qui redirige n'a rien à faire dans un sitemap, et le filtre reste valable même si une suppression
+échoue ou si une page est recréée.
+
+**Suppression — `database/retire_legacy_pages.php`**
+
+Par page : retrait des entrées de menu, puis des blocs, des sections et de la page, puis pose du
+drapeau. Trois précautions qui ne sont pas décoratives :
+
+1. **Les entrées de menu d'abord.** `menu_items.page_id` est en `ON DELETE SET NULL`, **pas** en
+   CASCADE : après suppression de la page, l'entrée survivrait avec son `url` intacte et le lien
+   « Services » resterait au pied de page. Un enfant éventuel remonte à la racine plutôt que de
+   disparaître avec son parent.
+2. **Opération unique**, sous drapeau `settings`. Sans cela, une page volontairement recréée sous le
+   même slug serait supprimée au déploiement suivant — le script deviendrait une régression
+   permanente.
+3. **Drapeau illisible ⇒ on ne supprime rien.** Impossible de garantir que l'opération n'a pas déjà
+   eu lieu : mieux vaut une page en trop qu'une page perdue. Et si la suppression échoue, **aucun
+   drapeau n'est posé** : on retentera, la 301 protégeant déjà l'utilisateur entre-temps.
+
+Étape placée **après** les scripts de construction dans le pipeline : les pages de remplacement
+doivent exister avant qu'on en retire d'autres. Une sauvegarde SQL est créée par `RollbackManager`
+avant chaque déploiement — la suppression reste récupérable.
+
+**Schéma**
+
+```
+settings + service_page_retired_v1
+settings + blog_page_retired_v1
+pages    − 'service', − 'blog'  (sections et blocs emportés par la cascade)
+```
+
+**Vérifications exécutées** (Règle #5)
+
+| Banc | Portée | Résultat |
+|---|---|---|
+| `h_retire_legacy.php` | Suppression, préservation de /solutions et /insights, entrées de menu, enfant remonté, idempotence, page absente, drapeau illisible, menu inaccessible, suppression refusée, aucun `DROP`/`TRUNCATE`/`DELETE` sans condition | **46 / 46** |
+| `h_routes_legacy.php` | 301 en place, ordre vs catch-all, moteur d'Insights intact, `/admin/blog` préservé, sitemap, non-régression | **36 / 36** |
+
+Non-régression : À propos 88 · 56 · 58 · 25, menus 51 · 30 · 27 · 27, Labs 58 · 50 · 29 · 26,
+schéma 38, clic du menu 17. `check_views` : 0 faute. **662 assertions.**
+
+**Validé par contrôle négatif** : garde du drapeau retirée → les quatre assertions d'idempotence
+tombent ; suppression des entrées de menu retirée → le lien du pied de page survit ; routes `/blog`
+retirées → `/blog` part sur le catch-all.
+
+**Dette technique** — DT-05 (`/public/...`) reste ouverte : elle est sans effet ici, le routeur
+absorbant le préfixe.
 
 ---
 

@@ -511,6 +511,35 @@ class HomeController extends Controller {
         exit;
     }
 
+    // ─── Anciennes adresses ─────────────────────────────────────────────────
+
+    /**
+     * Slugs retirés du site public, chacun redirigé en 301.
+     *
+     * Une adresse qui redirige n'a rien à faire dans un sitemap : l'y déclarer
+     * revient à soumettre à l'indexation une URL dont on annonce soi-même
+     * qu'elle n'est plus la bonne. La liste est indépendante de la suppression
+     * effective des pages : si une suppression échoue, le sitemap reste juste.
+     */
+    private const SLUGS_RETIRES = ['blog', 'service'];
+
+    /**
+     * /service → /solutions, définitivement.
+     *
+     * `/service` n'a jamais eu d'enfant — les cinq slugs de Solutions y
+     * répondaient 404 — donc une adresse héritée du type /service/quelque-chose
+     * pointe vers la nouvelle référence plutôt que vers un 404.
+     *
+     * Le routeur normalise l'URI avant de router : cette route couvre aussi
+     * bien /service que /public/service.
+     */
+    public function legacyService(): void {
+        if (!headers_sent()) {
+            header('Location: ' . url('/solutions'), true, 301);
+        }
+        exit;
+    }
+
     /**
      * Generate dynamic sitemap.xml for search engines.
      */
@@ -528,9 +557,11 @@ class HomeController extends Controller {
         foreach ($publishedPages as $p) {
             $slug = $p['slug'];
 
-            // /blog redirige en 301 vers /insights : déclarer l'ancienne adresse
-            // reviendrait à remplir le sitemap d'une redirection.
-            if ($slug === 'blog') { continue; }
+            // /blog redirige vers /insights, /service vers /solutions : déclarer
+            // une ancienne adresse reviendrait à remplir le sitemap de
+            // redirections. Le filtre reste en place même après la suppression
+            // des pages : il protège aussi le cas où l'une serait recréée.
+            if (in_array($slug, self::SLUGS_RETIRES, true)) { continue; }
 
             // Une page rattachée à un parent n'est servie qu'à son URL imbriquée :
             // l'URL courte y redirige en 301. Déclarer la courte reviendrait à
