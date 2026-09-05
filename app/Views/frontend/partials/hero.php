@@ -1105,23 +1105,13 @@ if (!empty($page['hero_title'])):
         gap: 50px !important;
         text-align: center;
     }
-    /* Sur telephone, l'image passe AVANT le texte : elle doit etre le premier
-       element vu, le texte se lit ensuite. `order` est pose en ligne par
-       $textOrder / $visualOrder (choix "image a gauche/droite" du back-office,
-       qui n'a de sens que sur deux colonnes) : `!important` est donc necessaire
-       pour le neutraliser sur une seule colonne.
-       Deux selecteurs : certaines variantes nomment leur colonne de texte
-       `hero-left-content`, d'autres seulement `hero-text-block`. */
-    .hero-right-visual {
-        order: 1 !important;
-    }
-    .hero-grid > .hero-text-block {
-        order: 2 !important;
-    }
     .hero-left-content {
         display: flex;
         flex-direction: column;
         align-items: center;
+        order: 1 !important;
+    }
+    .hero-right-visual {
         order: 2 !important;
     }
     .hero-left-content div[style*="display: flex; gap: 6px"] {

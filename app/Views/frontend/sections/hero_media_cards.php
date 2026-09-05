@@ -958,6 +958,14 @@ $bannerVars = $isWide
     .hero-mc-grid { grid-template-columns: 1fr; gap: 40px; min-height: 0; }
     .hero-mc-lead { max-width: none; }
     .hero-mc-visual { min-height: 0; }
+    /* Sur une seule colonne, l'image doit etre le PREMIER element vu : le texte
+       se lit ensuite. Sans cela le visuel arrivait apres le badge, le titre, le
+       chapo et les deux boutons, soit un ecran entier de texte avant l'image.
+       Prefixe `.hero-mc-split` : le mode « bandeau » place volontairement son
+       visuel sous le texte, et le mode « overlay » superpose les deux dans une
+       meme zone de grille — aucun des deux ne doit etre touche. */
+    .hero-mc-split .hero-mc-grid > .hero-mc-visual { order: 1; }
+    .hero-mc-split .hero-mc-grid > .hero-mc-text   { order: 2; }
     .hero-mc-media, .hero-mc-img { min-height: 380px; height: 380px; }
     /* Les cartes cessent de flotter et passent en grille sous le visuel. */
     .hero-mc-card {

@@ -33,23 +33,31 @@ Le panneau prend désormais la hauteur de son contenu, plafonnée par
 `max-height: calc(100dvh - 72px)`. La page restant visible en dessous, **un appui à côté ferme le
 tiroir** ; le bouton hamburger est exclu de cette fermeture puisqu'il est dans l'en-tête.
 
-**Hero — l'image passe avant le texte sur téléphone.** La règle mobile de
-`app/Views/frontend/partials/hero.php` forçait `order: 1 !important` sur la colonne de texte :
-l'image arrivait après le badge, le titre, la description et les deux boutons. L'ordre est inversé.
-Deux sélecteurs sont nécessaires — certaines variantes nomment leur colonne de texte
-`hero-left-content`, d'autres seulement `hero-text-block`. `!important` reste indispensable :
-`$textOrder` / `$visualOrder` posent l'ordre **en ligne** (réglage « image à gauche / à droite » du
-back-office, qui n'a de sens que sur deux colonnes).
+**Hero de l'accueil — l'image passe avant le texte sur téléphone.** Sous 1000px la grille passe sur
+une colonne et le visuel arrivait **après** le badge, le titre, le chapô et les deux boutons : un
+écran entier de texte avant la moindre image. `order` est inversé sur les deux colonnes.
 
-**Portée** — la règle s'applique à toutes les pages servies par ce hero, pas à la seule page
-d'accueil. Un ordre différent par page supposerait un nouveau champ administrable
-(`hero_mobile_order`) : à arbitrer par le CTO.
+**Piège rencontré, à retenir.** La première correction a porté sur `app/Views/frontend/partials/hero.php`
+— **la page d'accueil n'en dépend pas**. Son hero est une *section* de type `hero_media_cards`
+(`.hero-mc.hero-mc-split`), pas le moteur de hero des champs `pages.hero_*`. Le déploiement a été
+vérifié vert et le CSS servi conforme, sans que la page bouge. La modification de `partials/hero.php`
+a été annulée : elle changeait des pages qui n'étaient pas en cause.
+
+L'assertion du banc n'avait rien vu, et c'est le second enseignement : elle cherchait un bloc absent
+du fichier, or `strpos` en échec renvoie `false` et **toutes les assertions négatives passaient alors
+sans rien vérifier**. Le banc ancre désormais explicitement le bloc examiné et échoue s'il est
+introuvable ; un contrôle négatif confirme qu'il détecte le retour du défaut.
+
+La règle est préfixée `.hero-mc-split` : le mode **bandeau** place volontairement son visuel sous le
+texte et le mode **overlay** superpose les deux dans une même zone de grille — ni l'un ni l'autre ne
+doit bouger. La portée reste large au sein du mode « split » (accueil et /service) : un ordre
+différent par page supposerait un champ administrable dédié, à arbitrer par le CTO.
 
 **Vérifications exécutées** (Règle #5)
 
 | Banc | Portée | Résultat |
 |---|---|---|
-| `h_menus_front.php` | Ancrage du tiroir, largeur, plafond de hauteur, fermeture par appui à côté, ordre du hero, replis, échappement | **46 / 46** |
+| `h_menus_front.php` | Ancrage du tiroir, largeur, plafond de hauteur, fermeture par appui à côté, ordre du hero de l'accueil, non-régression des modes bandeau et overlay, replis, échappement | **48 / 48** |
 | `h_menus_reconcile.php` | Non-régression | **30 / 30** |
 | `h_menus_build.php` | Non-régression | **27 / 27** |
 | `h_menus_admin.php` | Non-régression | **27 / 27** |
