@@ -241,16 +241,16 @@ try {
         $cards = [
             ['card_icon' => 'layout-grid', 'card_label' => 'Domaines couverts',
              'card_value' => '6', 'card_badge' => 'Sur mesure',
-             'card_top' => '4', 'card_left' => '46'],
+             'card_top' => '66', 'card_left' => '3'],
             ['card_icon' => 'route', 'card_label' => 'Notre processus',
              'card_value' => '4', 'card_unit' => 'étapes', 'card_progress' => '100',
-             'card_top' => '32', 'card_left' => '30'],
+             'card_top' => '66', 'card_left' => '52'],
             ['card_icon' => 'file-text', 'card_label' => 'Devis',
              'card_title' => 'Gratuit et sans engagement', 'card_meta' => 'Réponse sous 24 h ouvrées',
-             'card_top' => '58', 'card_left' => '18'],
+             'card_top' => '83', 'card_left' => '3'],
             ['card_icon' => 'headphones',
              'card_title' => 'Support continu', 'card_meta' => 'Déploiement, formation, suivi.',
-             'card_top' => '82', 'card_left' => '6'],
+             'card_top' => '83', 'card_left' => '52'],
         ];
         foreach ($cards as $g => $card) {
             foreach ($card as $k => $v) {

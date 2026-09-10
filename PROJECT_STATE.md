@@ -2325,6 +2325,95 @@ anciennes classes .footer-newsletter- : 0
 
 ---
 
+## 2026-09-10 — CARTES DU HERO : VISAGES DÉGAGÉS, ET DES CARTES SUR TOUTES LES PAGES
+
+### Signalement
+
+« Ces bulles ferment les visages et on ne peut pas bien voir la photo du Hero. »
+Puis : « ajoute 1 ou 2 cartes (max) flottantes sur chacune des autres pages ».
+
+### TECHNICAL_AUDIT
+
+Le défaut n'était **pas** la position des cartes mais leur encombrement.
+
+- `app/Views/frontend/sections/hero_media_cards.php` — chaque `.hero-mc-card`
+  mesurait `min-width: 232px` / `max-width: 300px` dans une colonne visuelle de
+  ~600px (grille `0.92fr 1.08fr`, conteneur 1240 − 80 de marge, gouttière 48).
+- `object-fit: cover` sur une image 1280×720 dans un cadre presque carré : le
+  cadrage est **horizontal uniquement**, toute la hauteur de la photo est
+  visible. Les visages y occupent la largeur entière, de 8 % à 62 % de la
+  hauteur. Seul le tiers bas (bureaux, claviers, mains) est libre.
+- Conséquence : aucune disposition de quatre cartes de 232px ne pouvait
+  dégager les visages. Les déplacer sans réduire leur emprise n'aurait fait
+  que déplacer la gêne.
+- Les positions étaient **enregistrées en base** (`blocks.card_top` /
+  `card_left` : 4/46, 32/30, 58/18, 82/6) et l'emportaient sur les valeurs par
+  défaut du gabarit : corriger le seul code n'aurait rien changé en production.
+
+### RISK_ANALYSIS
+
+- Inventaire des 7 autres pages : **toutes en mode `overlay`**, zéro carte
+  flottante. Les règles ajoutées sont préfixées `.hero-mc-split` → périmètre
+  strictement limité à l'accueil.
+- Sous 1000px les cartes s'empilaient déjà sous l'image : le défaut était
+  **desktop uniquement**. Les nouvelles règles sont en `min-width: 1001px`,
+  ce comportement mobile n'est pas touché.
+- `build_service_v2.php` : vérifié, il s'interrompt si la page `service`
+  n'existe plus (`:73`) — la page retirée n'est pas ressuscitée à chaque
+  déploiement.
+
+### IMPLEMENTATION_PLAN — réalisé
+
+1. `hero_media_cards.php` — bloc `@media (min-width: 1001px)` en fin de feuille :
+   visuel porté à 680px, carte en `width: 45%` avec `min-width: 0`
+   (deux cartes tiennent toujours côte à côte, plus aucun débordement),
+   flottement réduit à 4px (`hero-mc-float-sm`).
+2. Valeurs par défaut → grille 2×2 basse : `[66,66,83,83]` / `[3,52,3,52]`.
+3. `database/fix_hero_cards_layout.php` (nouveau) — réécrit les positions
+   **enregistrées**, sous drapeau `hero_cards_grid_v1`, heros `split` seulement.
+4. `build_hero_v4.php` et `build_service_v2.php` — semis alignés sur le gabarit.
+5. Balisage de carte sorti dans une fonction partagée `$renduCarte` :
+   un seul balisage pour les deux modes (Règle #1).
+6. Mode overlay — les groupes préfixés `card_` deviennent une colonne de cartes
+   à droite du texte, du côté clair du dégradé. Les groupes `slide_` restent
+   des diapositives : le préfixe tranche, les deux listes ne peuvent pas se
+   recouvrir. Classe `.hero-ov-inner-cards` posée **uniquement** s'il y a des
+   cartes → un hero overlay sans carte garde exactement sa mise en page.
+7. `database/build_hero_overlay_cards.php` (nouveau) — 2 cartes sur chacune des
+   7 pages, sous drapeau `hero_overlay_cards_v1`.
+8. `.github/workflows/deploy.yml` — deux étapes non bloquantes.
+
+### Aucun chiffre inventé (Règle du brief /a-propos)
+
+Les seules valeurs numériques posées sont des **décomptes de ce que la page
+affiche déjà** : 5 domaines sur /solutions, 8 secteurs sur /secteurs, 3 pôles
+sur /a-propos. /realisations, /insights et /labs ont un contenu qui grandit —
+leurs cartes ne portent donc aucun nombre. /contact reprend mot pour mot deux
+cartes déjà publiées sur l'accueil.
+
+### Preuve (Règle #5)
+
+```
+banc h_hero_cards.js    166 assertions — geometrie calculee, 6 largeurs d'ecran
+   marge sous les visages : 9.6px a 1001 / 1024 / 1180 / 1280 / 1440 / 1920px
+   controle negatif : l'ancienne disposition declenche 3 violations
+banc h_hero_render.php   32 assertions — rendu compare a HEAD, caractere par
+   caractere : le balisage des cartes est INCHANGE apres refactoring
+   controle negatif 1 (classe renommee)      -> 1 echec detecte
+   controle negatif 2 (prefixe card_ ignore) -> 3 echecs detectes
+tous bancs : 1077 assertions, 0 echec
+php -l : 0 erreur · bin/check_views.php : 0 faute
+```
+
+### Reste à faire
+
+- **[USER]** Vérifier le rendu sur écran réel (aucun navigateur pilotable ici) :
+  accueil desktop, et les 7 pages en overlay.
+- **[USER]** Les positions restent réglables carte par carte :
+  /admin/pages → la page → section Hero.
+
+---
+
 ## FICHIERS INTOUCHABLES SANS ANALYSE
 
 - `app/Services/Router.php`

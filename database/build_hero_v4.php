@@ -143,16 +143,16 @@ try {
         $cards = [
             ['card_icon' => 'users', 'card_label' => 'Clients accompagnés',
              'card_value' => '100+', 'card_badge' => 'Actif',
-             'card_top' => '4', 'card_left' => '46'],
+             'card_top' => '66', 'card_left' => '3'],
             ['card_icon' => 'gauge', 'card_label' => 'Taux de satisfaction',
              'card_value' => '95', 'card_unit' => '%', 'card_progress' => '95',
-             'card_top' => '32', 'card_left' => '30'],
+             'card_top' => '66', 'card_left' => '52'],
             ['card_icon' => 'video', 'card_label' => 'Premier échange',
              'card_title' => 'Audit offert', 'card_meta' => '30 min • en visioconférence',
-             'card_top' => '58', 'card_left' => '18'],
+             'card_top' => '83', 'card_left' => '3'],
             ['card_icon' => 'shield-check',
              'card_title' => 'Vos données. Vos règles.', 'card_meta' => 'Sécurisé, hébergé, maîtrisé.',
-             'card_top' => '82', 'card_left' => '6'],
+             'card_top' => '83', 'card_left' => '52'],
         ];
         foreach ($cards as $g => $card) {
             foreach ($card as $key => $value) {

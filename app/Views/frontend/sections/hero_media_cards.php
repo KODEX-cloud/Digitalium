@@ -60,6 +60,75 @@ $heroLine = static function (string $raw): string {
 $showDecor = !isset($single['decor']) || $single['decor'] !== '0';
 $cards     = $groups ?? [];
 
+/**
+ * Rendu d'une carte d'information.
+ *
+ * Partagé par le mode « split » (cartes flottantes posées sur le visuel) et le
+ * mode « overlay » (colonne de cartes à droite du texte) : un seul balisage,
+ * une seule feuille de style, aucune duplication à maintenir en double.
+ *
+ * $style : styles en ligne — position et délai d'animation en mode « split ».
+ *          Vide en mode « overlay », où la colonne est rangée par la feuille
+ *          de style et non carte par carte.
+ */
+$renduCarte = static function (array $card, string $style = ''): string {
+    $e = static function ($v): string {
+        return htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8');
+    };
+    $progress = isset($card['card_progress']) && $card['card_progress'] !== ''
+        ? max(0, min(100, (float)$card['card_progress'])) : null;
+
+    $h  = '<div class="hero-mc-card"' . ($style !== '' ? ' style="' . $e($style) . '"' : '') . '>';
+    $h .= '<div class="hero-mc-card-row">';
+
+    if (!empty($card['card_icon'])) {
+        // IconHelper produit du balisage : il ne doit pas être échappé.
+        $h .= '<span class="hero-mc-card-icon">'
+            . \App\Helpers\IconHelper::render($card['card_icon'], ['size' => '16px'])
+            . '</span>';
+    }
+
+    $h .= '<div class="hero-mc-card-main">';
+
+    if (!empty($card['card_label'])) {
+        $h .= '<div class="hero-mc-card-labelrow">'
+            . '<span class="hero-mc-card-label">' . $e($card['card_label']) . '</span>';
+        if (!empty($card['card_badge'])) {
+            $h .= '<span class="hero-mc-card-badge">' . $e($card['card_badge']) . '</span>';
+        }
+        $h .= '</div>';
+    }
+
+    if (!empty($card['card_value'])) {
+        $h .= '<div class="hero-mc-card-value">' . $e($card['card_value']);
+        if (!empty($card['card_unit'])) {
+            $h .= '<span class="hero-mc-card-unit">' . $e($card['card_unit']) . '</span>';
+        }
+        $h .= '</div>';
+    }
+
+    if (!empty($card['card_title'])) {
+        $h .= '<div class="hero-mc-card-title">' . $e($card['card_title']) . '</div>';
+    }
+    if (!empty($card['card_meta'])) {
+        $h .= '<div class="hero-mc-card-meta">' . $e($card['card_meta']) . '</div>';
+    }
+    if ($progress !== null) {
+        $h .= '<div class="hero-mc-card-bar"><span style="width:' . $progress . '%;"></span></div>';
+    }
+
+    $h .= '</div>';
+
+    if (!empty($card['card_avatar'])) {
+        $h .= '<img src="' . $e(url($card['card_avatar'])) . '"'
+            . ' alt="' . $e($card['card_title'] ?? '') . '"'
+            . ' class="hero-mc-card-avatar" loading="lazy">';
+    }
+
+    $h .= '</div></div>';
+    return $h;
+};
+
 
 /* Mise en page — 'split' reste le comportement historique (accueil, /service). */
 $layout    = in_array($single['layout'] ?? 'split', ['split', 'banner', 'overlay'], true)
@@ -137,7 +206,25 @@ $overlayMinH = preg_match('#^\d{2,4}$#', trim((string)($single['overlay_min_heig
 
 /* En mode overlay le visuel devient le fond du hero : une carte flottante n'a
    plus de panneau sur lequel se poser, et passerait sous le texte centré. */
-if ($isOverlay) { $cards = []; }
+/* En overlay, les groupes servent DEUX usages : les diapositives (préfixe
+   `slide_`) et les cartes (préfixe `card_`). Le préfixe tranche sans ambiguïté,
+   et la construction de `$slides` ci-dessus ignore déjà tout groupe dépourvu de
+   `slide_title` et de `slide_image` : les deux listes ne peuvent pas se
+   recouvrir. Les cartes ne flottent pas ici — elles se rangent en colonne à
+   droite du texte, du côté clair du dégradé, là où la photo est la moins
+   masquée. */
+$overlayCards = [];
+if ($isOverlay) {
+    foreach ($cards as $groupe) {
+        foreach ($groupe as $cle => $valeur) {
+            if (strncmp((string)$cle, 'card_', 5) === 0 && trim((string)$valeur) !== '') {
+                $overlayCards[] = $groupe;
+                break;
+            }
+        }
+    }
+    $cards = [];
+}
 $showDecor = $showDecor && !$isOverlay;
 
 /* Arrondi du visuel — 0 par défaut (angles droits), réactivable en admin. */
@@ -187,7 +274,10 @@ $bannerVars = $isWide
                         <?php endif; ?>
                     </div>
 
-                    <div class="hero-ov-inner">
+                    <?php /* La classe supplémentaire n'apparaît QUE s'il y a des
+                             cartes : un hero overlay sans carte garde exactement
+                             la mise en page qu'il avait, y compris sur mobile. */ ?>
+                    <div class="hero-ov-inner<?= !empty($overlayCards) ? ' hero-ov-inner-cards' : '' ?>">
                         <div class="hero-ov-text">
                             <?php if ($s['badge'] !== ''): ?>
                                 <span class="hero-ov-badge"><?= htmlspecialchars($s['badge']) ?></span>
@@ -231,6 +321,16 @@ $bannerVars = $isWide
                                 </div>
                             <?php endif; ?>
                         </div>
+
+                        <?php if (!empty($overlayCards)): ?>
+                            <?php /* Les cartes accompagnent CHAQUE diapositive : ce sont
+                                     des informations de section, pas de diapositive. Les
+                                     répéter les garde visibles quel que soit le visuel
+                                     affiché, sans dupliquer la saisie en admin. */ ?>
+                            <div class="hero-ov-cards">
+                                <?php foreach ($overlayCards as $carte) { echo $renduCarte($carte); } ?>
+                            </div>
+                        <?php endif; ?>
                     </div>
                 </div>
             <?php endforeach; ?>
@@ -314,59 +414,19 @@ $bannerVars = $isWide
             <?php endif; ?>
 
             <?php
-            $defaultsTop  = [6, 36, 62, 88];
-            $defaultsLeft = [48, 32, 20, 8];
+            /* Grille 2x2 dans le tiers bas du visuel. Les positions restent
+               modifiables carte par carte en admin (`card_top` / `card_left`) ;
+               ces valeurs ne servent que si le champ est vide. Le tiers bas est
+               le seul endroit du cadrage libre de visages — voir la note du
+               bloc « Cartes flottantes : grille basse » en fin de feuille. */
+            $defaultsTop  = [66, 66, 83, 83];
+            $defaultsLeft = [3, 52, 3, 52];
             foreach ($cards as $i => $card):
                 $top      = ($card['card_top']  ?? '') !== '' ? $card['card_top']  : $defaultsTop[$i % 4];
                 $left     = ($card['card_left'] ?? '') !== '' ? $card['card_left'] : $defaultsLeft[$i % 4];
-                $progress = isset($card['card_progress']) && $card['card_progress'] !== ''
-                    ? max(0, min(100, (float)$card['card_progress'])) : null;
-            ?>
-                <div class="hero-mc-card" style="top:<?= htmlspecialchars((string)$top) ?>%;left:<?= htmlspecialchars((string)$left) ?>%;animation-delay:<?= $i * 0.35 ?>s;">
-                    <div class="hero-mc-card-row">
-                        <?php if (!empty($card['card_icon'])): ?>
-                            <span class="hero-mc-card-icon"><?= \App\Helpers\IconHelper::render($card['card_icon'], ['size' => '16px']) ?></span>
-                        <?php endif; ?>
-
-                        <div class="hero-mc-card-main">
-                            <?php if (!empty($card['card_label'])): ?>
-                                <div class="hero-mc-card-labelrow">
-                                    <span class="hero-mc-card-label"><?= htmlspecialchars($card['card_label']) ?></span>
-                                    <?php if (!empty($card['card_badge'])): ?>
-                                        <span class="hero-mc-card-badge"><?= htmlspecialchars($card['card_badge']) ?></span>
-                                    <?php endif; ?>
-                                </div>
-                            <?php endif; ?>
-
-                            <?php if (!empty($card['card_value'])): ?>
-                                <div class="hero-mc-card-value">
-                                    <?= htmlspecialchars($card['card_value']) ?>
-                                    <?php if (!empty($card['card_unit'])): ?>
-                                        <span class="hero-mc-card-unit"><?= htmlspecialchars($card['card_unit']) ?></span>
-                                    <?php endif; ?>
-                                </div>
-                            <?php endif; ?>
-
-                            <?php if (!empty($card['card_title'])): ?>
-                                <div class="hero-mc-card-title"><?= htmlspecialchars($card['card_title']) ?></div>
-                            <?php endif; ?>
-                            <?php if (!empty($card['card_meta'])): ?>
-                                <div class="hero-mc-card-meta"><?= htmlspecialchars($card['card_meta']) ?></div>
-                            <?php endif; ?>
-
-                            <?php if ($progress !== null): ?>
-                                <div class="hero-mc-card-bar"><span style="width:<?= $progress ?>%;"></span></div>
-                            <?php endif; ?>
-                        </div>
-
-                        <?php if (!empty($card['card_avatar'])): ?>
-                            <img src="<?= htmlspecialchars(url($card['card_avatar'])) ?>"
-                                 alt="<?= htmlspecialchars($card['card_title'] ?? '') ?>"
-                                 class="hero-mc-card-avatar" loading="lazy">
-                        <?php endif; ?>
-                    </div>
-                </div>
-            <?php endforeach; ?>
+                $style = 'top:' . $top . '%;left:' . $left . '%;animation-delay:' . ($i * 0.35) . 's;';
+                echo $renduCarte($card, $style);
+            endforeach; ?>
         </div>
 
     </div>
@@ -749,6 +809,57 @@ $bannerVars = $isWide
 }
 
 .hero-ov-actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 30px; }
+
+/* ── Cartes du mode overlay ─────────────────────────────────────────────────
+   Le voile du visuel est dense à gauche (0.82) et presque transparent à droite
+   (0.06) : la colonne de droite est à la fois la zone où la photo reste la plus
+   lisible et la seule qui ne porte aucun texte. Les cartes s'y rangent en
+   colonne — sans coordonnées, contrairement au mode « split » : la place se
+   calcule seule et rien ne peut déborder du cadre.
+
+   Tout est suspendu à `.hero-ov-inner-cards`, classe posée uniquement quand la
+   section porte au moins une carte. Un hero overlay sans carte n'est donc
+   touché par aucune de ces règles.                                          */
+.hero-ov-inner-cards { gap: 40px; }
+
+.hero-ov-cards {
+    margin-left: auto;
+    flex-shrink: 0;
+    width: min(300px, 32%);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+.hero-ov-cards .hero-mc-card {
+    position: static;
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    animation: none;
+    /* La règle mobile du mode « split » ajoute 14px au-dessus de chaque carte ;
+       ici l'espacement vient du `gap` de la colonne, la marge ferait double. */
+    margin-top: 0;
+}
+
+/* Sous 900px, la colonne ne tient plus à côté du texte : elle passe dessous.
+   `justify-content: center` reprend le centrage vertical que `align-items`
+   assurait en disposition horizontale. */
+@media (max-width: 900px) {
+    .hero-ov-inner-cards {
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+        gap: 28px;
+    }
+    .hero-ov-cards {
+        margin-left: 0;
+        width: 100%;
+        max-width: 460px;
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+    .hero-ov-cards .hero-mc-card { flex: 1 1 190px; width: auto; }
+}
 .hero-ov-btn {
     display: inline-flex; align-items: center; gap: 10px;
     padding: 15px 30px;
@@ -980,6 +1091,47 @@ $bannerVars = $isWide
     .hero-mc-actions { flex-direction: column; align-items: stretch; }
     .hero-mc-btn { justify-content: center; }
     .hero-mc-media, .hero-mc-img { min-height: 300px; height: 300px; }
+}
+
+/* ── Cartes flottantes : grille basse (desktop, mode « split ») ─────────────
+   Le visuel de l'accueil est un cadrage vertical d'une photo d'équipe : les
+   visages y occupent TOUTE la largeur, de 8% à 62% de la hauteur. Une carte
+   de 232px posée n'importe où dans une colonne de 600px masque donc
+   forcément quelqu'un — le défaut n'était pas la position des cartes mais
+   leur encombrement rapporté au cadre.
+
+   Deux corrections, et deux seulement :
+   1. la largeur passe en pourcentage, pour que deux cartes tiennent toujours
+      côte à côte sans jamais déborder du visuel, quelle que soit la largeur
+      d'écran (232px fixes débordaient dès que la colonne se resserrait) ;
+   2. le visuel gagne en hauteur, ce qui creuse la bande basse — bureaux,
+      claviers, mains, aucun visage — où les quatre cartes se rangent en 2x2.
+
+   Placé en dernier et en `min-width` : sous 1001px les cartes s'empilent déjà
+   sous l'image (règle plus haut), comportement volontairement intact. Les
+   sélecteurs sont préfixés `.hero-mc-split` — les modes « bandeau » et
+   « overlay » ne sont pas concernés.                                        */
+@media (min-width: 1001px) {
+    .hero-mc-split .hero-mc-visual,
+    .hero-mc-split .hero-mc-media,
+    .hero-mc-split .hero-mc-img { min-height: 680px; }
+
+    /* 45% + 45% + 4% d'écart = 94% : il reste toujours une marge de chaque
+       côté, y compris si le texte d'une carte s'allonge. `min-width: 0` lève
+       le plancher de 232px qui provoquait le débordement. */
+    .hero-mc-split .hero-mc-card {
+        width: 45%;
+        min-width: 0;
+        max-width: none;
+        /* Le flottement d'origine (9px) suffisait à faire remonter la rangée
+           haute sur les mentons au sommet du cycle. Amplitude réduite : le
+           mouvement reste perceptible, la marge de sécurité est tenue. */
+        animation-name: hero-mc-float-sm;
+    }
+}
+@keyframes hero-mc-float-sm {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-4px); }
 }
 </style>
 

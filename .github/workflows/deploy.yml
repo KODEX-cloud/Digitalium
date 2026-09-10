@@ -442,6 +442,24 @@ jobs:
                 echo "  ATTENTION Retrait des pages en doublon (non-bloquant)"
               fi
             fi
+            # APRES build_hero_v4 : ce script repositionne les cartes que
+            # build_hero_v4 vient éventuellement de (re)créer.
+            if [ -f "database/fix_hero_cards_layout.php" ]; then
+              if $PHP database/fix_hero_cards_layout.php 2>&1; then
+                echo "  OK Repositionnement des cartes du hero"
+              else
+                echo "  ATTENTION Repositionnement des cartes du hero (non-bloquant)"
+              fi
+            fi
+            # APRES les pages : le hero de chaque page doit exister avant qu'on
+            # puisse y poser des cartes.
+            if [ -f "database/build_hero_overlay_cards.php" ]; then
+              if $PHP database/build_hero_overlay_cards.php 2>&1; then
+                echo "  OK Cartes des heros overlay"
+              else
+                echo "  ATTENTION Cartes des heros overlay (non-bloquant)"
+              fi
+            fi
             if [ -f "database/seed_demo_content.php" ]; then
               if $PHP database/seed_demo_content.php 2>&1; then
                 echo "  OK Seed Demo Content"
