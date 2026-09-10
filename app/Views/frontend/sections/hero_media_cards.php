@@ -829,6 +829,13 @@ $bannerVars = $isWide
     display: flex;
     flex-direction: column;
     gap: 14px;
+    /* `.hero-ov-inner` centre ses enfants verticalement : les cartes se
+       posaient donc au milieu du cadre, où elles coupaient le visuel en deux et
+       rivalisaient avec le titre. `align-self` les descend en bas, comme sur
+       l'accueil. La marge négative les fait mordre sur le rembourrage bas
+       (96px) sans jamais sortir du cadre — il en reste 48. */
+    align-self: flex-end;
+    margin-bottom: -48px;
 }
 .hero-ov-cards .hero-mc-card {
     position: static;
@@ -853,6 +860,11 @@ $bannerVars = $isWide
     }
     .hero-ov-cards {
         margin-left: 0;
+        /* En colonne, `align-self` agit sur l'axe HORIZONTAL : laissé à
+           `flex-end`, il collerait les cartes à droite. Et la marge négative
+           n'a plus de rembourrage à mordre une fois les cartes sous le texte. */
+        align-self: stretch;
+        margin-bottom: 0;
         width: 100%;
         max-width: 460px;
         flex-direction: row;
