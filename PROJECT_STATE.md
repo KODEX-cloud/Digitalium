@@ -2414,6 +2414,86 @@ php -l : 0 erreur · bin/check_views.php : 0 faute
 
 ---
 
+## 2026-09-10 — HEROS OVERLAY ALIGNÉS SUR /secteurs (commit à suivre)
+
+### Demande
+
+« Applique la taille et la hauteur exacte de cet héro aux 6 autres pages (sans
+la page d'Accueil) — que cela soit entièrement administrable. »
+
+### TECHNICAL_AUDIT
+
+Relevé des variables CSS servies en production (attribut `style` de la section) :
+
+| Page | largeur | hauteur | voile |
+|---|---|---|---|
+| /secteurs (référence) | **full** (bord à bord) | **560** | 62 |
+| /realisations | full | 560 | 62 |
+| /a-propos | 1250 | 500 | 62 |
+| /solutions · /insights · /labs · /contact | 1250 | 500 | 64 |
+
+Trois clés seulement portent la géométrie : `image_max_width` (« full » =
+`.hero-ov-full`, 100vw), `overlay_min_height`, `image_radius`.
+
+**L'administrabilité demandée existait déjà** : ces clés sont des blocs `single`
+présents dans `sectionSkeletons()`, libellés et documentés dans
+`BlockFieldHelper` (`:100`, `:111`, `:112`, `:113`), et `admin/pages/edit.php:1204`
+complète les clés jamais initialisées avec une valeur vide — le champ apparaît
+donc dans l'éditeur même sur une page qui ne l'a jamais renseigné. Rien à
+construire de ce côté ; il ne restait qu'à aligner les valeurs.
+
+### RISK_ANALYSIS
+
+- Les constructeurs de page (`build_*_page.php`) sèment via une closure `$seed`
+  qui **n'écrit que si la section est entièrement vide** — l'alignement ne sera
+  pas défait au déploiement suivant.
+- `build_realisations_page.php:252` force full/560 mais sous son propre drapeau
+  `realisations_hero_full_v1` — aucun conflit.
+- `.hero-mc-overlay` est en `overflow: hidden` : le passage en `100vw` ne peut
+  pas créer de défilement horizontal. /secteurs et /realisations le prouvent
+  déjà en production.
+
+### IMPLEMENTATION_PLAN — réalisé
+
+`database/align_overlay_heroes.php` (nouveau) — la référence est **relue en base**
+sur le hero de /secteurs au moment de l'exécution, pas recopiée en dur : si le
+hero de référence est ajusté en admin avant le déploiement, c'est sa valeur qui
+se propage. Copie les 3 clés de géométrie sur les 6 cibles, sous drapeau
+`hero_overlay_size_aligned_v1`, uniquement sur les heros en mode overlay.
+Étape non bloquante ajoutée à `deploy.yml`.
+
+**Hors périmètre, volontairement** : le voile (`overlay_opacity`, 62 vs 64), la
+photo, les titres et les boutons de chaque page. La demande portait sur la
+taille et la hauteur.
+
+### Preuve (Règle #5)
+
+```
+banc h_hero_align.php   52 assertions — le VRAI script tourne dans un processus
+   isole contre une base en memoire ensemencee avec les valeurs de production
+   6 cibles a 560/full/0 · reference intacte · accueil (split) jamais ecrit
+   voile inchange sur les 7 pages · seule la geometrie est ecrite
+   idempotence : seconde execution = 0 ecriture
+   3 controles negatifs, tous detectes :
+     voile ajoute aux cles copiees · accueil cible sans garde-fou · drapeau non pose
+h_hero_cards.js 197 · h_hero_render.php 32 · check_views 0 faute
+```
+
+### Reste à faire
+
+- **[USER]** `/insights`, `/labs` et `/contact` n'ont **aucune image de hero** :
+  leur bandeau est un aplat bleu. Plus grand, il le sera davantage — un visuel
+  par page via la Médiathèque serait utile.
+- **[USER]** `/a-propos` utilise `digitalium-hero-team.png` (1280×720), la même
+  image que l'accueil : en 100vw × 560 sur un écran 1920, elle est agrandie 1,5×.
+- **[USER]** `/secteurs` et `/solutions` partagent la même photo
+  (`hero-pro-dashboard`, 1600×1068).
+- **[USER]** `/realisations` utilise un visuel **portrait** (1200×1797) dans un
+  cadre paysage : 31 % de sa hauteur seulement est visible. Antérieur à ce
+  changement, mais visible.
+
+---
+
 ## FICHIERS INTOUCHABLES SANS ANALYSE
 
 - `app/Services/Router.php`

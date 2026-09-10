@@ -460,6 +460,15 @@ jobs:
                 echo "  ATTENTION Cartes des heros overlay (non-bloquant)"
               fi
             fi
+            # APRES build_hero_overlay_cards : on aligne la geometrie des heros
+            # une fois que toutes les pages et leurs cartes existent.
+            if [ -f "database/align_overlay_heroes.php" ]; then
+              if $PHP database/align_overlay_heroes.php 2>&1; then
+                echo "  OK Alignement des heros overlay"
+              else
+                echo "  ATTENTION Alignement des heros overlay (non-bloquant)"
+              fi
+            fi
             if [ -f "database/seed_demo_content.php" ]; then
               if $PHP database/seed_demo_content.php 2>&1; then
                 echo "  OK Seed Demo Content"
