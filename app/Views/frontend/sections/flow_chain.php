@@ -108,7 +108,7 @@ foreach (($groups ?? []) as $g) {
     border-color: var(--primary);
 }
 .fc-step.is-milestone .fc-label { color: #ffffff; }
-.fc-step.is-milestone .fc-note  { color: rgba(255, 255, 255, 0.82); }
+.fc-step.is-milestone .fc-note  { color: rgba(255, 255, 255, 0.92); }
 .fc-step.is-milestone .fc-icon  { background: rgba(255, 255, 255, 0.18); color: #ffffff; }
 
 .fc-icon {
@@ -125,7 +125,7 @@ foreach (($groups ?? []) as $g) {
     color: var(--text-main);
     line-height: 1.35;
 }
-.fc-note { font-size: 0.84rem; color: var(--text-muted); line-height: 1.55; }
+.fc-note { font-size: var(--fs-small); color: var(--text-muted); line-height: 1.55; }
 
 .fc-arrow {
     display: inline-flex; align-items: center; justify-content: center;

@@ -119,7 +119,7 @@ $cardLinkText = trim($single['card_link_text'] ?? '');
     border-radius: 999px;
     background: var(--badge-bg);
     color: var(--badge-text);
-    font-size: 0.72rem;
+    font-size: var(--fs-caption);
     font-weight: 700;
     letter-spacing: 0.05em;
     text-transform: uppercase;
@@ -149,7 +149,7 @@ $cardLinkText = trim($single['card_link_text'] ?? '');
     border-color: var(--primary);
 }
 .svc-v2-card.is-featured .svc-v2-title { color: #ffffff; }
-.svc-v2-card.is-featured .svc-v2-desc  { color: rgba(255,255,255,0.82); }
+.svc-v2-card.is-featured .svc-v2-desc  { color: rgba(255,255,255,0.92); }
 .svc-v2-card.is-featured .svc-v2-icon  { background: #ffffff; color: var(--primary); }
 .svc-v2-card.is-featured:hover         { border-color: var(--primary); }
 

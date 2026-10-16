@@ -129,7 +129,7 @@ if (count($pairs) < 2) { $psCols = 1; }
 
 .ps-label {
     display: inline-block;
-    font-size: 0.68rem;
+    font-size: var(--fs-caption);
     font-weight: 700;
     letter-spacing: 0.09em;
     text-transform: uppercase;

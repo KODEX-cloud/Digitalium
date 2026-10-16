@@ -272,7 +272,7 @@ $ctaUrl   = trim((string)($settings['case_cta_url']   ?? '/contact'));
 .cs-hero-media ~ .cs-hero-inner .cs-facts { color: #ffffff; }
 
 .cs-back {
-    display: inline-flex; align-items: center; gap: 7px;
+    display: flex; width: max-content; align-items: center; gap: 7px;
     color: var(--text-muted); text-decoration: none;
     font-size: 0.85rem; font-weight: 600; margin-bottom: 22px;
 }
@@ -290,7 +290,7 @@ $ctaUrl   = trim((string)($settings['case_cta_url']   ?? '/contact'));
 .cs-lead  { font-size: 1.05rem; line-height: 1.65; max-width: 620px; margin: 0; opacity: 0.94; }
 
 .cs-facts { display: flex; flex-wrap: wrap; gap: 30px; margin: 30px 0 0; padding: 0; }
-.cs-facts dt { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.07em; opacity: 0.75; margin-bottom: 4px; }
+.cs-facts dt { font-size: var(--fs-caption); text-transform: uppercase; letter-spacing: 0.07em; opacity: 0.88; margin-bottom: 4px; }
 .cs-facts dd { margin: 0; font-size: 1rem; font-weight: 700; }
 
 /* ── Corps ── */
@@ -330,15 +330,16 @@ $ctaUrl   = trim((string)($settings['case_cta_url']   ?? '/contact'));
 .cs-aside { position: sticky; top: 24px; }
 .cs-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; }
 .cs-card-title { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-muted); margin: 0 0 14px; font-weight: 700; }
-.cs-card-title + * { margin-bottom: 24px; }
+/* Spécificité relevée : `.cs-aside-facts { margin: 0 }`, déclaré plus bas, l'annulait. */
+.cs-card .cs-card-title + * { margin-bottom: 24px; }
 .cs-aside-facts { margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
-.cs-aside-facts dt { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 2px; }
+.cs-aside-facts dt { font-size: var(--fs-meta); color: var(--text-muted); margin-bottom: 2px; }
 .cs-aside-facts dd { margin: 0; font-size: 0.94rem; font-weight: 600; color: var(--text-main); }
 .cs-techs { list-style: none; display: flex; flex-wrap: wrap; gap: 7px; margin: 0; padding: 0; }
 .cs-techs li {
     padding: 5px 12px; border-radius: 7px;
     background: color-mix(in srgb, var(--primary) 9%, transparent);
-    color: var(--primary); font-size: 0.79rem; font-weight: 600;
+    color: var(--primary); font-size: var(--fs-meta); font-weight: 600;
 }
 .cs-visit {
     display: inline-flex; align-items: center; gap: 8px;
@@ -359,13 +360,14 @@ $ctaUrl   = trim((string)($settings['case_cta_url']   ?? '/contact'));
 .cs-related-media { display: block; aspect-ratio: 16 / 10; overflow: hidden; }
 .cs-related-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .cs-related-body { display: flex; flex-direction: column; gap: 5px; padding: 16px 18px; }
-.cs-related-cat { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--primary); font-weight: 700; }
+.cs-related-cat { font-size: var(--fs-caption); text-transform: uppercase; letter-spacing: 0.05em; color: var(--primary); font-weight: 700; }
 .cs-related-body b { color: var(--text-main); font-size: 1rem; line-height: 1.35; }
 
 /* ── CTA ── */
 .cs-cta { background: var(--primary); color: #ffffff; padding: 68px 0; text-align: center; }
-.cs-cta h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); margin: 0 0 12px; font-weight: 800; }
-.cs-cta p { max-width: 560px; margin: 0 auto 26px; opacity: 0.9; line-height: 1.65; }
+/* Couleur explicite : les règles globales `h2` et `p` d'index.css l'emportent sur l'héritage. */
+.cs-cta h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); margin: 0 0 12px; font-weight: 800; color: #ffffff; }
+.cs-cta p { max-width: 560px; margin: 0 auto 26px; color: rgba(255,255,255,0.92); line-height: 1.65; }
 .cs-cta-btn {
     display: inline-flex; align-items: center; gap: 9px;
     padding: 15px 32px; border-radius: 999px;

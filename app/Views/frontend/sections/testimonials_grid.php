@@ -2,7 +2,7 @@
     <div class="container">
         
         <div style="text-align: center; max-width: 600px; margin: 0 auto 3rem auto;" class="reveal">
-            <span class="section-tag" style="display: inline-flex; align-items: center; gap: 8px; font-size: 0.68rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--primary); margin-bottom: 1rem;"><?= htmlspecialchars($single['tag'] ?? 'Avis') ?></span>
+            <span class="section-tag" style="display: inline-flex; align-items: center; gap: 8px; font-size: var(--fs-caption); letter-spacing: 0.14em; text-transform: uppercase; color: var(--primary); margin-bottom: 1rem;"><?= htmlspecialchars($single['tag'] ?? 'Avis') ?></span>
             <h2 class="section-title" style="color: var(--text-main); font-family: var(--font-heading);"><?= htmlspecialchars($single['title'] ?? 'Ce que disent nos clients') ?></h2>
         </div>
 
@@ -23,12 +23,12 @@
                             </p>
                         </div>
                         <div class="tcard-author" style="display: flex; align-items: center; gap: 12px; border-top: 1px solid var(--border); padding-top: 1rem;">
-                            <div class="tcard-av" style="width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; background: var(--primary-glow); color: var(--accent); border: 1px solid var(--border);">
+                            <div class="tcard-av" style="width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: var(--fs-meta); font-weight: 700; background: var(--primary-glow); color: var(--accent); border: 1px solid var(--border);">
                                 <?= htmlspecialchars($testi['client_avatar'] ?? 'U') ?>
                             </div>
                             <div>
                                 <div class="tcard-name" style="font-size: 0.88rem; font-weight: 700; color: var(--text-main); font-family: var(--font-heading);"><?= htmlspecialchars($testi['client_name'] ?? '') ?></div>
-                                <div class="tcard-role" style="font-size: 0.72rem; color: var(--text-muted);"><?= htmlspecialchars($testi['client_company'] ?? '') ?></div>
+                                <div class="tcard-role" style="font-size: var(--fs-small); color: var(--text-muted);"><?= htmlspecialchars($testi['client_company'] ?? '') ?></div>
                             </div>
                         </div>
                     </div>

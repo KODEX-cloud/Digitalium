@@ -270,7 +270,7 @@ $err = static function (string $k) use ($erreurs): string {
     display: inline-flex; align-items: center; justify-content: center;
     width: 22px; height: 22px; border-radius: 50%;
     background: color-mix(in srgb, var(--primary) 12%, transparent);
-    color: var(--primary); font-weight: 700; font-size: 0.74rem;
+    color: var(--primary); font-weight: 700; font-size: var(--fs-meta);
 }
 .lf-step.active .lf-step-num { background: var(--primary); color: #fff; }
 
@@ -327,13 +327,13 @@ $err = static function (string $k) use ($erreurs): string {
     outline: none; border-color: var(--primary);
     box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 14%, transparent);
 }
-.lf-hint { display: block; margin-top: 6px; font-size: 0.78rem; color: var(--text-muted); }
-.lf-err  { display: block; margin-top: 6px; font-size: 0.8rem; color: #c0392b; font-weight: 600; }
+.lf-hint { display: block; margin-top: 6px; font-size: var(--fs-small); color: var(--text-muted); }
+.lf-err  { display: block; margin-top: 6px; font-size: var(--fs-meta); color: #c0392b; font-weight: 600; }
 
 .lf-recap { margin: 0; display: grid; grid-template-columns: minmax(140px, auto) 1fr; gap: 10px 20px; }
-.lf-recap dt { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; }
+.lf-recap dt { font-size: var(--fs-meta); color: var(--text-muted); font-weight: 600; }
 .lf-recap dd { margin: 0; font-size: 0.92rem; color: var(--text-main); overflow-wrap: anywhere; }
-.lf-privacy { margin: 20px 0 0; font-size: 0.8rem; color: var(--text-muted); line-height: 1.55; }
+.lf-privacy { margin: 20px 0 0; font-size: var(--fs-meta); color: var(--text-muted); line-height: 1.55; }
 
 .lf-actions { display: flex; gap: 12px; justify-content: flex-end; margin-top: 22px; }
 .lf-btn {

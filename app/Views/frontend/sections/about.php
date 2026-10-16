@@ -169,7 +169,7 @@ $valAccents = ['var(--primary)', 'var(--secondary)', 'var(--accent)', 'var(--pri
 }
 
 .about-val-text {
-    font-size: 0.83rem;
+    font-size: var(--fs-small);
     line-height: 1.65;
     color: var(--text-muted);
     margin: 0;

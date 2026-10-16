@@ -152,7 +152,7 @@ if ($succes && $message === '') {
 }
 .insn-form button:hover { gap: 12px; box-shadow: var(--shadow-btn); }
 
-.insn-note { margin: 18px auto 0; max-width: 480px; font-size: 0.78rem; line-height: 1.6; color: var(--text-muted); }
+.insn-note { margin: 18px auto 0; max-width: 480px; font-size: var(--fs-small); line-height: 1.6; color: var(--text-muted); }
 
 /* Le piège à robots doit rester invisible sans être `display:none`, que
    certains automates détectent et contournent. */

@@ -2,7 +2,7 @@
     <div class="container" style="display: flex; flex-direction: column; align-items: center; position: relative; z-index: 2;">
         
         <?php if (!empty($single['badge'])): ?>
-            <div class="hero-badge reveal" style="display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--border); padding: 0.4rem 1.2rem; border-radius: 50px; font-size: 0.72rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--accent); margin-bottom: 2rem;">
+            <div class="hero-badge reveal" style="display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--border); padding: 0.4rem 1.2rem; border-radius: 50px; font-size: var(--fs-caption); letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); margin-bottom: 2rem;">
                 <div class="badge-dot" style="width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulse 2s ease-in-out infinite;"></div>
                 <?= htmlspecialchars($single['badge']) ?>
             </div>

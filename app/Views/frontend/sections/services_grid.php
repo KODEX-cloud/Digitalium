@@ -23,7 +23,7 @@
                             <?php if (!empty($svc['svc_image'])): ?>
                                 <div style="position:absolute;inset:0;background:rgba(15,23,42,0.5);z-index:1;"></div>
                             <?php endif; ?>
-                            <span style="position:absolute;top:14px;left:14px;padding:4px 12px;border-radius:100px;font-size:0.65rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;background:color-mix(in srgb, var(--primary) 15%, transparent);color:var(--primary);border:1px solid color-mix(in srgb, var(--primary) 25%, transparent);z-index:2;">
+                            <span style="position:absolute;top:14px;left:14px;padding:4px 12px;border-radius:100px;font-size: var(--fs-caption);font-weight:700;letter-spacing:0.12em;text-transform:uppercase;background:color-mix(in srgb, var(--primary) 15%, transparent);color:var(--primary);border:1px solid color-mix(in srgb, var(--primary) 25%, transparent);z-index:2;">
                                 <?= htmlspecialchars($svc['svc_tag'] ?? 'Expertise') ?>
                             </span>
                             <div style="width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:1px solid color-mix(in srgb, var(--primary) 20%, transparent);background:color-mix(in srgb, var(--primary) 10%, transparent);color:var(--primary);z-index:2;overflow:hidden;padding:12px;">
@@ -53,7 +53,7 @@
                                     <span>Découvrir</span>
                                     <i data-lucide="arrow-right" style="width:14px;height:14px;"></i>
                                 </a>
-                                <span style="font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;padding:3px 10px;border-radius:100px;font-weight:700;background:color-mix(in srgb, var(--primary) 8%, transparent);color:var(--primary);border:1px solid color-mix(in srgb, var(--primary) 20%, transparent);">
+                                <span style="font-size: var(--fs-caption);letter-spacing:0.1em;text-transform:uppercase;padding:3px 10px;border-radius:100px;font-weight:700;background:color-mix(in srgb, var(--primary) 8%, transparent);color:var(--primary);border:1px solid color-mix(in srgb, var(--primary) 20%, transparent);">
                                     Service Pro
                                 </span>
                             </div>

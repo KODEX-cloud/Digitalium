@@ -14,7 +14,7 @@
                             <i data-lucide="<?= htmlspecialchars($card['strip_icon'] ?? 'check') ?>" style="width: 20px; height: 20px;"></i>
                         </div>
                         <h3 class="strip-label" style="font-size: 0.88rem; font-weight: 700; color: var(--text-main); margin-bottom: 0.4rem; font-family: var(--font-heading);"><?= htmlspecialchars($card['strip_label'] ?? '') ?></h3>
-                        <div class="strip-sub" style="font-size: 0.72rem; color: var(--text-muted); line-height: 1.5;"><?= htmlspecialchars($card['strip_sub'] ?? '') ?></div>
+                        <div class="strip-sub" style="font-size: var(--fs-small); color: var(--text-muted); line-height: 1.5;"><?= htmlspecialchars($card['strip_sub'] ?? '') ?></div>
                     </div>
                 <?php endforeach; ?>
             <?php endif; ?>

@@ -18,7 +18,7 @@ $afficherFormulaire = (($single['show_form'] ?? '1') !== '0');
             <!-- LEFT COLUMN: Contact Form Card -->
             <div class="form-card reveal" style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: 16px; padding: 2.5rem; transition: var(--transition);">
                 <h2 class="card-title" style="font-size: 1.3rem; font-weight: 700; color: var(--text-main); margin-bottom: 0.4rem; font-family: var(--font-heading);"><?= htmlspecialchars($single['title'] ?? 'Envoyez-nous votre demande') ?></h2>
-                <p class="card-sub" style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 2rem; line-height: 1.6;"><?= htmlspecialchars($single['subtitle'] ?? '') ?></p>
+                <p class="card-sub" style="font-size: var(--fs-small); color: var(--text-muted); margin-bottom: 2rem; line-height: 1.6;"><?= htmlspecialchars($single['subtitle'] ?? '') ?></p>
 
                 <form id="mainContactForm" onsubmit="handleMainContactSubmit(event)">
                     <?= \App\Services\CSRF::field() ?>
@@ -27,34 +27,34 @@ $afficherFormulaire = (($single['show_form'] ?? '1') !== '0');
 
                     <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 1rem;">
                         <div class="form-group" style="display: flex; flex-direction: column; gap: 6px;">
-                            <label style="font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); font-weight: 600;">Prénom *</label>
+                            <label style="font-size: var(--fs-caption); letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); font-weight: 600;">Prénom *</label>
                             <input type="text" name="firstname" class="contact-input" placeholder="Jean" required style="width: 100%; padding: 0.75rem 1rem; background: var(--bg-surface-alt); border: 1px solid var(--border); border-radius: 7px; color: var(--text-main); font-size: 0.88rem; outline: none;">
                         </div>
                         <div class="form-group" style="display: flex; flex-direction: column; gap: 6px;">
-                            <label style="font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); font-weight: 600;">Nom *</label>
+                            <label style="font-size: var(--fs-caption); letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); font-weight: 600;">Nom *</label>
                             <input type="text" name="lastname" class="contact-input" placeholder="Kouassi" required style="width: 100%; padding: 0.75rem 1rem; background: var(--bg-surface-alt); border: 1px solid var(--border); border-radius: 7px; color: var(--text-main); font-size: 0.88rem; outline: none;">
                         </div>
                     </div>
 
                     <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 1rem;">
                         <div class="form-group" style="display: flex; flex-direction: column; gap: 6px;">
-                            <label style="font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); font-weight: 600;">Email *</label>
+                            <label style="font-size: var(--fs-caption); letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); font-weight: 600;">Email *</label>
                             <input type="email" name="email" class="contact-input" placeholder="jean@entreprise.com" required style="width: 100%; padding: 0.75rem 1rem; background: var(--bg-surface-alt); border: 1px solid var(--border); border-radius: 7px; color: var(--text-main); font-size: 0.88rem; outline: none;">
-                            <div class="error-msg" id="err-main-email" style="color: #f87171; font-size: 0.8rem; margin-top: 4px; display: none;"></div>
+                            <div class="error-msg" id="err-main-email" style="color: #f87171; font-size: var(--fs-meta); margin-top: 4px; display: none;"></div>
                         </div>
                         <div class="form-group" style="display: flex; flex-direction: column; gap: 6px;">
-                            <label style="font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); font-weight: 600;">Téléphone / WhatsApp</label>
+                            <label style="font-size: var(--fs-caption); letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); font-weight: 600;">Téléphone / WhatsApp</label>
                             <input type="tel" name="phone" class="contact-input" placeholder="+225 07 00 00 00" style="width: 100%; padding: 0.75rem 1rem; background: var(--bg-surface-alt); border: 1px solid var(--border); border-radius: 7px; color: var(--text-main); font-size: 0.88rem; outline: none;">
                         </div>
                     </div>
 
                     <div class="form-group" style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 1rem;">
-                        <label style="font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); font-weight: 600;">Société / Organisation</label>
+                        <label style="font-size: var(--fs-caption); letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); font-weight: 600;">Société / Organisation</label>
                         <input type="text" name="company" class="contact-input" placeholder="Nom de votre entreprise" style="width: 100%; padding: 0.75rem 1rem; background: var(--bg-surface-alt); border: 1px solid var(--border); border-radius: 7px; color: var(--text-main); font-size: 0.88rem; outline: none;">
                     </div>
 
                     <div class="form-group" style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 1.5rem;">
-                        <label style="font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); font-weight: 600;">Service principal souhaité *</label>
+                        <label style="font-size: var(--fs-caption); letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); font-weight: 600;">Service principal souhaité *</label>
                         <select name="service_primary" style="width: 100%; padding: 0.75rem 1rem; background: var(--bg-surface-alt); border: 1px solid var(--border); border-radius: 7px; color: var(--text-main); font-size: 0.88rem; outline: none; cursor: pointer;">
                             <?php
                             $defaultPrimary = 'Web Design & Développement|Maintenance Informatique|Câblage Réseaux|Montage Vidéo TikTok / YouTube|Création de Contenu Digital|Intelligence Artificielle & Stratégie|Autre / Plusieurs services';
@@ -67,7 +67,7 @@ $afficherFormulaire = (($single['show_form'] ?? '1') !== '0');
                     </div>
 
                     <div class="form-group" style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 1.5rem;">
-                        <label style="font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); font-weight: 600;">Services additionnels d'intérêt</label>
+                        <label style="font-size: var(--fs-caption); letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); font-weight: 600;">Services additionnels d'intérêt</label>
                         <div class="services-check" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 0.5rem;">
                             <?php
                             $defaultExtra = 'Web Design|Maintenance TI|Câblage Réseau|Vidéo TikTok/YT|Contenu Digital|IA & Stratégie';
@@ -83,12 +83,12 @@ $afficherFormulaire = (($single['show_form'] ?? '1') !== '0');
                     </div>
 
                     <div class="form-group" style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 1.5rem;">
-                        <label style="font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); font-weight: 600;">Message *</label>
+                        <label style="font-size: var(--fs-caption); letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); font-weight: 600;">Message *</label>
                         <textarea name="message" rows="5" class="contact-textarea" placeholder="Décrivez votre projet, vos objectifs ou vos questions..." required style="width: 100%; padding: 0.75rem 1rem; background: var(--bg-surface-alt); border: 1px solid var(--border); border-radius: 7px; color: var(--text-main); font-size: 0.88rem; outline: none; resize: vertical; min-height: 110px;"></textarea>
-                        <div class="error-msg" id="err-main-message" style="color: #f87171; font-size: 0.8rem; margin-top: 4px; display: none;"></div>
+                        <div class="error-msg" id="err-main-message" style="color: #f87171; font-size: var(--fs-meta); margin-top: 4px; display: none;"></div>
                     </div>
 
-                    <p class="form-legal" style="font-size: 0.72rem; color: var(--text-muted); line-height: 1.6; margin: 1rem 0;">En soumettant ce formulaire, vous acceptez que vos données soient traitées par <?= htmlspecialchars($settings['site_name'] ?? 'Digitalium Group') ?> pour répondre à votre demande. Consulter notre <a href="<?= htmlspecialchars(url($settings['footer_legal_url'] ?? '/mentions-legales')) ?>" style="color: var(--accent); text-decoration: none;">politique de confidentialité / Mentions Légales</a>.</p>
+                    <p class="form-legal" style="font-size: var(--fs-small); color: var(--text-muted); line-height: 1.6; margin: 1rem 0;">En soumettant ce formulaire, vous acceptez que vos données soient traitées par <?= htmlspecialchars($settings['site_name'] ?? 'Digitalium Group') ?> pour répondre à votre demande. Consulter notre <a href="<?= htmlspecialchars(url($settings['footer_legal_url'] ?? '/mentions-legales')) ?>" style="color: var(--accent); text-decoration: none;">politique de confidentialité / Mentions Légales</a>.</p>
 
                     <!-- B-01 FIX: removed onclick="window.location.href=..." — the form onsubmit handler manages AJAX submission -->
                     <button type="submit" class="btn-contact-submit" id="mainSubmitBtn" style="padding: 14px; font-weight: 600; font-size: 0.95rem;">
@@ -119,7 +119,7 @@ $afficherFormulaire = (($single['show_form'] ?? '1') !== '0');
                                 <i data-lucide="map-pin" style="width: 18px; height: 18px;"></i>
                             </div>
                             <div>
-                                <div class="info-item-label" style="font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); font-weight: 600;">Adresse</div>
+                                <div class="info-item-label" style="font-size: var(--fs-caption); letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); font-weight: 600;">Adresse</div>
                                 <div class="info-item-value" style="font-size: 0.88rem; font-weight: 700; color: var(--text-main); font-family: var(--font-heading); white-space: pre-line;"><?= htmlspecialchars($single['contact_address'] ?? $settings['contact_address'] ?? '') ?></div>
                             </div>
                         </div>
@@ -129,7 +129,7 @@ $afficherFormulaire = (($single['show_form'] ?? '1') !== '0');
                                 <i data-lucide="phone" style="width: 18px; height: 18px;"></i>
                             </div>
                             <div>
-                                <div class="info-item-label" style="font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); font-weight: 600;">Téléphone</div>
+                                <div class="info-item-label" style="font-size: var(--fs-caption); letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); font-weight: 600;">Téléphone</div>
                                 <div class="info-item-value" style="font-size: 0.88rem; font-weight: 700; color: var(--text-main); font-family: var(--font-heading);">
                                     <a href="tel:<?= htmlspecialchars($single['contact_phone'] ?? $settings['contact_phone'] ?? '') ?>"><?= htmlspecialchars($single['contact_phone'] ?? $settings['contact_phone'] ?? '') ?></a>
                                 </div>
@@ -142,7 +142,7 @@ $afficherFormulaire = (($single['show_form'] ?? '1') !== '0');
                                 <i data-lucide="mail" style="width: 18px; height: 18px;"></i>
                             </div>
                             <div>
-                                <div class="info-item-label" style="font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); font-weight: 600;">Email</div>
+                                <div class="info-item-label" style="font-size: var(--fs-caption); letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); font-weight: 600;">Email</div>
                                 <div class="info-item-value" style="font-size: 0.88rem; font-weight: 700; color: var(--text-main); font-family: var(--font-heading);">
                                     <a href="mailto:<?= htmlspecialchars($single['contact_email'] ?? $settings['contact_email'] ?? '') ?>"><?= htmlspecialchars($single['contact_email'] ?? $settings['contact_email'] ?? '') ?></a>
                                 </div>
@@ -167,7 +167,7 @@ $afficherFormulaire = (($single['show_form'] ?? '1') !== '0');
                         <?php endif; ?>
                         <?php if (!empty($settings['site_whatsapp'])): ?>
                             <a href="https://wa.me/<?= preg_replace('/[^0-9]/', '', $settings['site_whatsapp']) ?>" target="_blank" rel="noopener"
-                               style="width: 100%; padding: 0.85rem; background: transparent; color: #25d366; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; border: 1.5px solid #25d366; border-radius: 7px; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; transition: var(--transition);">
+                               style="width: 100%; padding: 0.85rem; background: transparent; color: #128c4a; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; border: 1.5px solid #25d366; border-radius: 7px; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; transition: var(--transition);">
                                 <i data-lucide="phone-call" style="width: 16px; height: 16px;"></i>
                                 <span><?= htmlspecialchars($single['whatsapp_btn_label'] ?? 'Écrire sur WhatsApp') ?></span>
                             </a>
@@ -201,31 +201,31 @@ $afficherFormulaire = (($single['show_form'] ?? '1') !== '0');
                     <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 1.2rem;"><?= htmlspecialchars($single['social_section_subtitle'] ?? 'Restez informé de nos derniers projets, conseils digitaux et offres exclusives.') ?></p>
                     <div class="social-row" style="display: flex; gap: 10px; flex-wrap: wrap;">
                         <?php if (!empty($settings['social_facebook'])): ?>
-                            <a href="<?= htmlspecialchars($settings['social_facebook']) ?>" target="_blank" class="social-btn" style="flex: 1; min-width: 90px; padding: 0.6rem 0.5rem; border: 1px solid var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 0.72rem; font-weight: 600; color: var(--text-muted); text-decoration: none; transition: var(--transition);">
+                            <a href="<?= htmlspecialchars($settings['social_facebook']) ?>" target="_blank" class="social-btn" style="flex: 1; min-width: 90px; padding: 0.6rem 0.5rem; border: 1px solid var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: var(--fs-meta); font-weight: 600; color: var(--text-muted); text-decoration: none; transition: var(--transition);">
                                 <i data-lucide="facebook" style="width: 14px; height: 14px;"></i>
                                 <span>Facebook</span>
                             </a>
                         <?php endif; ?>
                         <?php if (!empty($settings['social_linkedin'])): ?>
-                            <a href="<?= htmlspecialchars($settings['social_linkedin']) ?>" target="_blank" class="social-btn" style="flex: 1; min-width: 90px; padding: 0.6rem 0.5rem; border: 1px solid var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 0.72rem; font-weight: 600; color: var(--text-muted); text-decoration: none; transition: var(--transition);">
+                            <a href="<?= htmlspecialchars($settings['social_linkedin']) ?>" target="_blank" class="social-btn" style="flex: 1; min-width: 90px; padding: 0.6rem 0.5rem; border: 1px solid var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: var(--fs-meta); font-weight: 600; color: var(--text-muted); text-decoration: none; transition: var(--transition);">
                                 <i data-lucide="linkedin" style="width: 14px; height: 14px;"></i>
                                 <span>LinkedIn</span>
                             </a>
                         <?php endif; ?>
                         <?php if (!empty($settings['social_twitter'])): ?>
-                            <a href="<?= htmlspecialchars($settings['social_twitter']) ?>" target="_blank" class="social-btn" style="flex: 1; min-width: 90px; padding: 0.6rem 0.5rem; border: 1px solid var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 0.72rem; font-weight: 600; color: var(--text-muted); text-decoration: none; transition: var(--transition);">
+                            <a href="<?= htmlspecialchars($settings['social_twitter']) ?>" target="_blank" class="social-btn" style="flex: 1; min-width: 90px; padding: 0.6rem 0.5rem; border: 1px solid var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: var(--fs-meta); font-weight: 600; color: var(--text-muted); text-decoration: none; transition: var(--transition);">
                                 <i data-lucide="twitter" style="width: 14px; height: 14px;"></i>
                                 <span>Twitter / X</span>
                             </a>
                         <?php endif; ?>
                         <?php if (!empty($settings['social_instagram'])): ?>
-                            <a href="<?= htmlspecialchars($settings['social_instagram']) ?>" target="_blank" class="social-btn" style="flex: 1; min-width: 90px; padding: 0.6rem 0.5rem; border: 1px solid var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 0.72rem; font-weight: 600; color: var(--text-muted); text-decoration: none; transition: var(--transition);">
+                            <a href="<?= htmlspecialchars($settings['social_instagram']) ?>" target="_blank" class="social-btn" style="flex: 1; min-width: 90px; padding: 0.6rem 0.5rem; border: 1px solid var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: var(--fs-meta); font-weight: 600; color: var(--text-muted); text-decoration: none; transition: var(--transition);">
                                 <i data-lucide="instagram" style="width: 14px; height: 14px;"></i>
                                 <span>Instagram</span>
                             </a>
                         <?php endif; ?>
                         <?php if (!empty($settings['social_github'])): ?>
-                            <a href="<?= htmlspecialchars($settings['social_github']) ?>" target="_blank" class="social-btn" style="flex: 1; min-width: 90px; padding: 0.6rem 0.5rem; border: 1px solid var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 0.72rem; font-weight: 600; color: var(--text-muted); text-decoration: none; transition: var(--transition);">
+                            <a href="<?= htmlspecialchars($settings['social_github']) ?>" target="_blank" class="social-btn" style="flex: 1; min-width: 90px; padding: 0.6rem 0.5rem; border: 1px solid var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: var(--fs-meta); font-weight: 600; color: var(--text-muted); text-decoration: none; transition: var(--transition);">
                                 <i data-lucide="github" style="width: 14px; height: 14px;"></i>
                                 <span>GitHub</span>
                             </a>
@@ -247,7 +247,7 @@ $afficherFormulaire = (($single['show_form'] ?? '1') !== '0');
                         <div class="map-pin" style="width: 36px; height: 36px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); background: var(--primary); display: flex; align-items: center; justify-content: center;">
                             <i data-lucide="map-pin" style="width: 16px; height: 16px; color: white; transform: rotate(45deg);"></i>
                         </div>
-                        <span class="map-label" style="font-size: 0.78rem; color: var(--text-muted);<?= $mapImage !== '' ? ' background: rgba(255,255,255,0.92); padding: 3px 10px; border-radius: 999px; color: var(--text-main); font-weight: 600;' : '' ?>"><?= htmlspecialchars($single['contact_address'] ?? $settings['contact_address'] ?? '') ?></span>
+                        <span class="map-label" style="font-size: var(--fs-meta); color: var(--text-muted);<?= $mapImage !== '' ? ' background: rgba(255,255,255,0.92); padding: 3px 10px; border-radius: 999px; color: var(--text-main); font-weight: 600;' : '' ?>"><?= htmlspecialchars($single['contact_address'] ?? $settings['contact_address'] ?? '') ?></span>
                     </div>
                     <div class="map-addr" style="padding: 1rem 1.2rem; font-size: 0.85rem; color: var(--text-main); font-weight: 700; display: flex; align-items: center; gap: 8px; font-family: var(--font-heading);">
                         <i data-lucide="building-2" style="width: 16px; height: 16px; color: var(--primary);"></i>

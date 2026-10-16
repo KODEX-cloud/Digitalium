@@ -45,7 +45,7 @@
                         <div class="stat-num" style="font-size:2rem;font-weight:900;font-family:var(--font-heading);background:linear-gradient(135deg,var(--primary),var(--secondary));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;">
                             <?= htmlspecialchars($single['stats_years'] ?? '10+') ?>
                         </div>
-                        <div class="stat-label" style="font-size:0.72rem;color:var(--text-muted);font-weight:500;margin-top:6px;text-transform:uppercase;letter-spacing:0.08em;">
+                        <div class="stat-label" style="font-size: var(--fs-caption);color:var(--text-muted);font-weight:500;margin-top:6px;text-transform:uppercase;letter-spacing:0.08em;">
                             <?= htmlspecialchars($single['stats_label_years'] ?? 'Expérience') ?>
                         </div>
                     </div>
@@ -54,7 +54,7 @@
                         <div class="stat-num" style="font-size:2rem;font-weight:900;font-family:var(--font-heading);background:linear-gradient(135deg,var(--primary),var(--secondary));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;">
                             <?= htmlspecialchars($single['stats_clients'] ?? '100+') ?>
                         </div>
-                        <div class="stat-label" style="font-size:0.72rem;color:var(--text-muted);font-weight:500;margin-top:6px;text-transform:uppercase;letter-spacing:0.08em;">
+                        <div class="stat-label" style="font-size: var(--fs-caption);color:var(--text-muted);font-weight:500;margin-top:6px;text-transform:uppercase;letter-spacing:0.08em;">
                             <?= htmlspecialchars($single['stats_label_clients'] ?? 'Clients') ?>
                         </div>
                     </div>
@@ -63,7 +63,7 @@
                         <div class="stat-num" style="font-size:2rem;font-weight:900;font-family:var(--font-heading);background:linear-gradient(135deg,var(--primary),var(--secondary));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;">
                             <?= htmlspecialchars($single['stats_satisfaction'] ?? '98%') ?>
                         </div>
-                        <div class="stat-label" style="font-size:0.72rem;color:var(--text-muted);font-weight:500;margin-top:6px;text-transform:uppercase;letter-spacing:0.08em;">
+                        <div class="stat-label" style="font-size: var(--fs-caption);color:var(--text-muted);font-weight:500;margin-top:6px;text-transform:uppercase;letter-spacing:0.08em;">
                             <?= htmlspecialchars($single['stats_label_satisfaction'] ?? 'Satisfaction') ?>
                         </div>
                     </div>
@@ -82,11 +82,11 @@
                     </div>
                     <div style="display:flex;align-items:center;gap:10px;padding:12px 16px;background:color-mix(in srgb, var(--primary) 8%, transparent);border:1px solid color-mix(in srgb, var(--primary) 20%, transparent);border-radius:12px;width:100%;margin-top:4px;">
                         <div style="width:8px;height:8px;border-radius:50%;background:var(--success);box-shadow:0 0 8px var(--success);flex-shrink:0;"></div>
-                        <span style="font-size:0.72rem;color:var(--text-sub);font-weight:500;letter-spacing:0.05em;">
+                        <span style="font-size: var(--fs-meta);color:var(--text-sub);font-weight:500;letter-spacing:0.05em;">
                             <?= htmlspecialchars($settings['site_name'] ?? 'Digitalium Group') ?> — Systèmes actifs
                         </span>
                         <?php if (!empty($single['visual_label'])): ?>
-                            <span style="margin-left:auto;font-size:0.72rem;color:#60a5fa;font-weight:700;"><?= htmlspecialchars($single['visual_label']) ?></span>
+                            <span style="margin-left:auto;font-size: var(--fs-meta);color:#60a5fa;font-weight:700;"><?= htmlspecialchars($single['visual_label']) ?></span>
                         <?php endif; ?>
                     </div>
                 </div>

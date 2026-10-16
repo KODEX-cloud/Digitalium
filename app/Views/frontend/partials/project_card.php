@@ -44,7 +44,7 @@ if (isset($project)):
 <div class="project-card pc reveal" data-category="<?= $category ?>" style="background: rgba(255, 255, 255, 0.65); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(255,255,255,0.7); border-radius: 24px; padding: 24px; display: flex; flex-direction: column; gap: 20px; box-shadow: 0 15px 35px -10px rgba(30, 58, 138, 0.05); transition: var(--transition); position: relative; overflow: visible;">
     
     <!-- Top-Left Floating Category Badge -->
-    <span class="project-category-badge" style="position: absolute; top: 12px; left: 12px; z-index: 10; padding: 5px 14px; border-radius: 30px; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.03em; font-family: var(--font-heading); <?= $catColor ?>">
+    <span class="project-category-badge" style="position: absolute; top: 12px; left: 12px; z-index: 10; padding: 5px 14px; border-radius: 30px; font-size: var(--fs-meta); font-weight: 700; letter-spacing: 0.03em; font-family: var(--font-heading); <?= $catColor ?>">
         <?= $category ?>
     </span>
 
@@ -71,8 +71,8 @@ if (isset($project)):
 
         <!-- Context & Impact Pills (Exact replicated layout) -->
         <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-            <span style="font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; padding: 4px 10px; border-radius: 6px; background: rgba(226, 109, 54, 0.09); border: 1.5px solid rgba(226, 109, 54, 0.25); color: var(--accent); font-family: var(--font-heading);">Contexte</span>
-            <span style="font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; padding: 4px 10px; border-radius: 6px; background: color-mix(in srgb, var(--secondary) 9%, transparent); border: 1.5px solid color-mix(in srgb, var(--secondary) 25%, transparent); color: var(--secondary); font-family: var(--font-heading);">Impact</span>
+            <span style="font-size: var(--fs-caption); font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; padding: 4px 10px; border-radius: 6px; background: rgba(226, 109, 54, 0.09); border: 1.5px solid rgba(226, 109, 54, 0.25); color: var(--accent); font-family: var(--font-heading);">Contexte</span>
+            <span style="font-size: var(--fs-caption); font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; padding: 4px 10px; border-radius: 6px; background: color-mix(in srgb, var(--secondary) 9%, transparent); border: 1.5px solid color-mix(in srgb, var(--secondary) 25%, transparent); color: var(--secondary); font-family: var(--font-heading);">Impact</span>
         </div>
 
         <!-- Description Paragraphs -->
@@ -94,7 +94,7 @@ if (isset($project)):
         <?php if (!empty($techs)): ?>
             <div style="display: flex; flex-wrap: wrap; gap: 6px; align-items: center; border-top: 1px dashed var(--border); padding-top: 12px;">
                 <i data-lucide="cpu" style="width: 14px; height: 14px; color: var(--primary);"></i>
-                <span style="font-size: 0.72rem; font-family: monospace; font-weight: 600; color: var(--text-muted);"><?= $techs ?></span>
+                <span style="font-size: var(--fs-meta); font-family: monospace; font-weight: 600; color: var(--text-muted);"><?= $techs ?></span>
             </div>
         <?php endif; ?>
 

@@ -103,7 +103,7 @@ $tcId = 'testi-carousel-' . $sectionId;
 .testi-carousel-avatar img { width: 100%; height: 100%; object-fit: cover; }
 
 .testi-carousel-name { font-weight: 700; font-size: 0.88rem; color: var(--text-main); }
-.testi-carousel-role { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
+.testi-carousel-role { font-size: var(--fs-small); color: var(--text-muted); margin-top: 2px; }
 
 .testi-carousel-nav {
     flex-shrink: 0;

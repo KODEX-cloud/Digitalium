@@ -529,7 +529,7 @@ $bannerVars = $isWide
 /* Dans le modèle, la fin du titre est plus LÉGÈRE, pas plus grasse. */
 .hero-mc-title-accent {
     display: block;
-    font-weight: 300;
+    font-weight: 400;
     color: var(--primary);
 }
 
@@ -631,14 +631,14 @@ $bannerVars = $isWide
 
 .hero-mc-card-labelrow { display: flex; align-items: center; gap: 8px; justify-content: space-between; }
 .hero-mc-card-label {
-    font-size: 0.68rem;
+    font-size: var(--fs-caption);
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--text-muted);
 }
 .hero-mc-card-badge {
-    font-size: 0.66rem;
+    font-size: var(--fs-meta);
     font-weight: 600;
     padding: 3px 9px;
     border-radius: 999px;
@@ -655,10 +655,10 @@ $bannerVars = $isWide
     margin-top: 4px;
     font-family: var(--font-heading);
 }
-.hero-mc-card-unit { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); margin-left: 2px; }
+.hero-mc-card-unit { font-size: var(--fs-meta); font-weight: 600; color: var(--text-muted); margin-left: 2px; }
 
 .hero-mc-card-title { font-size: 0.95rem; font-weight: 700; color: var(--text-main); line-height: 1.3; margin-top: 2px; }
-.hero-mc-card-meta  { font-size: 0.8rem; color: var(--text-muted); line-height: 1.4; margin-top: 2px; }
+.hero-mc-card-meta  { font-size: var(--fs-small); color: var(--text-muted); line-height: 1.4; margin-top: 2px; }
 
 .hero-mc-card-bar {
     margin-top: 10px;
@@ -828,7 +828,7 @@ $bannerVars = $isWide
     letter-spacing: -0.01em;
     text-shadow: 0 2px 18px rgba(0, 0, 0, 0.35);
 }
-.hero-ov-accent { display: block; font-weight: 300; text-transform: none; }
+.hero-ov-accent { display: block; font-weight: 400; text-transform: none; }
 
 .hero-ov-lead {
     margin: 0;
@@ -965,7 +965,7 @@ $bannerVars = $isWide
 }
 @media (max-width: 560px) {
     .hero-ov-inner { padding: calc(var(--hero-header-h) + 32px) 18px 40px; }
-    .hero-ov-badge { margin-bottom: 16px; padding: 7px 14px; font-size: 0.7rem; }
+    .hero-ov-badge { margin-bottom: 16px; padding: 7px 14px; font-size: var(--fs-meta); }
     .hero-ov-lead { font-size: 0.98rem; line-height: 1.6; }
     .hero-ov-actions { flex-direction: column; align-items: stretch; margin-top: 24px; gap: 10px; }
     .hero-ov-btn { justify-content: center; padding: 13px 24px; }
@@ -976,7 +976,7 @@ $bannerVars = $isWide
     .hero-ov-cards .hero-mc-card { padding: 11px 12px; border-radius: 12px; }
     .hero-ov-cards .hero-mc-card-icon { display: none; }
     .hero-ov-cards .hero-mc-card-title { font-size: 0.86rem; }
-    .hero-ov-cards .hero-mc-card-meta { font-size: 0.74rem; }
+    .hero-ov-cards .hero-mc-card-meta { font-size: var(--fs-small); }
     .hero-ov-cards .hero-mc-card-value { font-size: 1.3rem; }
     /* Les flèches recouvriraient le texte sur un écran étroit : seules les
        pastilles restent, et le balayage n'est pas nécessaire au sens. */
@@ -1162,10 +1162,10 @@ $bannerVars = $isWide
     .hero-mc-split .hero-mc-visual { gap: 10px; }
     .hero-mc-split .hero-mc-card { padding: 11px 12px; border-radius: 12px; }
     .hero-mc-split .hero-mc-card-icon { display: none; }
-    .hero-mc-split .hero-mc-card-label { font-size: 0.6rem; }
+    .hero-mc-split .hero-mc-card-label { font-size: var(--fs-meta); }
     .hero-mc-split .hero-mc-card-value { font-size: 1.3rem; }
     .hero-mc-split .hero-mc-card-title { font-size: 0.86rem; }
-    .hero-mc-split .hero-mc-card-meta { font-size: 0.74rem; }
+    .hero-mc-split .hero-mc-card-meta { font-size: var(--fs-small); }
 }
 
 /* ── Cartes flottantes : grille basse (desktop, mode « split ») ─────────────

@@ -82,8 +82,8 @@ $introLabel = trim((string)($single['intro_label'] ?? ''));
 
 .needs-label {
     display: block;
-    font-size: 0.68rem;
-    letter-spacing: 0.28em;
+    font-size: var(--fs-caption);
+    letter-spacing: 0.14em;
     text-transform: uppercase;
     font-weight: 700;
     color: var(--primary);

@@ -126,7 +126,7 @@ $emptyText    = trim((string)($single['empty_text'] ?? ''));
     color: var(--primary);
 }
 .insr-type {
-    font-size: 0.69rem; font-weight: 700;
+    font-size: var(--fs-caption); font-weight: 700;
     letter-spacing: 0.13em; text-transform: uppercase;
     color: var(--primary);
 }

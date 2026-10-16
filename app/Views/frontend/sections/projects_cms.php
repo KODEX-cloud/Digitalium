@@ -260,7 +260,7 @@ $moreText    = trim((string)($single['more_text'] ?? ''));
     border-radius: 999px;
     background: rgba(255,255,255,0.92);
     color: var(--primary);
-    font-size: 0.72rem;
+    font-size: var(--fs-meta);
     font-weight: 700;
     letter-spacing: 0.03em;
 }
@@ -295,7 +295,7 @@ $moreText    = trim((string)($single['more_text'] ?? ''));
     border-radius: 6px;
     background: color-mix(in srgb, var(--primary) 8%, transparent);
     color: var(--primary);
-    font-size: 0.73rem;
+    font-size: var(--fs-meta);
     font-weight: 600;
 }
 

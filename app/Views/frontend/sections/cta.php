@@ -89,7 +89,7 @@
 .cta-band-sub {
     font-size: 0.88rem;
     line-height: 1.6;
-    color: rgba(255,255,255,0.82);
+    color: rgba(255,255,255,0.92);
     margin: 0;
     max-width: 560px;
 }

@@ -331,7 +331,7 @@ document.getElementById('commentForm')?.addEventListener('submit', async functio
 .art { background: var(--bg-base); }
 .art-col { max-width: 820px; }
 .art-head { padding: 130px 0 42px; }
-.art-breadcrumb { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; font-size: 0.79rem; }
+.art-breadcrumb { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; font-size: var(--fs-meta); }
 .art-breadcrumb a { display: inline-flex; align-items: center; gap: 6px; color: var(--text-muted); text-decoration: none; }
 .art-breadcrumb a:hover { color: var(--primary); }
 .art-breadcrumb .art-cat { color: var(--primary); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
@@ -348,14 +348,14 @@ document.getElementById('commentForm')?.addEventListener('submit', async functio
 .art-meta {
     display: flex; flex-wrap: wrap; align-items: center; gap: 10px 22px;
     padding-top: 20px; border-top: 1px solid var(--border);
-    font-size: 0.84rem; color: var(--text-muted);
+    font-size: var(--fs-small); color: var(--text-muted);
 }
 .art-author { display: inline-flex; align-items: center; gap: 9px; font-weight: 650; color: var(--text-main); }
 .art-avatar {
     display: inline-flex; align-items: center; justify-content: center;
     width: 32px; height: 32px; border-radius: 50%;
     background: var(--primary); color: #ffffff;
-    font-size: 0.74rem; font-weight: 700;
+    font-size: var(--fs-meta); font-weight: 700;
     flex-shrink: 0;
 }
 
@@ -375,7 +375,7 @@ document.getElementById('commentForm')?.addEventListener('submit', async functio
 .art-toc { position: sticky; top: 110px; }
 .art-toc-title {
     margin: 0 0 12px;
-    font-size: 0.72rem; font-weight: 700;
+    font-size: var(--fs-caption); font-weight: 700;
     letter-spacing: 0.14em; text-transform: uppercase;
     color: var(--text-muted);
 }
@@ -390,7 +390,7 @@ document.getElementById('commentForm')?.addEventListener('submit', async functio
     padding: 5px 14px; border-radius: 999px;
     background: color-mix(in srgb, var(--primary) 7%, transparent);
     border: 1px solid color-mix(in srgb, var(--primary) 18%, transparent);
-    color: var(--primary); font-size: 0.76rem; font-weight: 650; text-decoration: none;
+    color: var(--primary); font-size: var(--fs-meta); font-weight: 650; text-decoration: none;
 }
 .art-tags a:hover { background: color-mix(in srgb, var(--primary) 14%, transparent); }
 
@@ -428,12 +428,12 @@ document.getElementById('commentForm')?.addEventListener('submit', async functio
 .art-comment { padding: 22px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); }
 .art-comment-head { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
 .art-comment-head strong { display: block; font-size: 0.9rem; color: var(--text-main); }
-.art-comment-head time { font-size: 0.75rem; color: var(--text-muted); }
+.art-comment-head time { font-size: var(--fs-meta); color: var(--text-muted); }
 .art-comment p { margin: 0; font-size: 0.93rem; line-height: 1.75; color: var(--text-muted); }
 
 .art-comment-form { padding: 28px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); }
 .art-comment-form h3 { margin: 0 0 20px; font-size: 1rem; font-weight: 750; color: var(--text-main); }
-.art-comment-form label { display: block; font-size: 0.79rem; font-weight: 650; color: var(--text-main); margin-bottom: 6px; }
+.art-comment-form label { display: block; font-size: var(--fs-meta); font-weight: 650; color: var(--text-main); margin-bottom: 6px; }
 .art-comment-form input, .art-comment-form textarea {
     width: 100%; box-sizing: border-box;
     padding: 11px 14px; margin-bottom: 14px;
@@ -467,7 +467,7 @@ document.getElementById('commentForm')?.addEventListener('submit', async functio
 .art-related-media { display: block; aspect-ratio: 16 / 9; background: color-mix(in srgb, var(--primary) 7%, transparent); }
 .art-related-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .art-related-body { display: block; padding: 20px; }
-.art-related-cat { display: block; font-size: 0.69rem; font-weight: 700; letter-spacing: 0.13em; text-transform: uppercase; color: var(--primary); margin-bottom: 8px; }
+.art-related-cat { display: block; font-size: var(--fs-caption); font-weight: 700; letter-spacing: 0.13em; text-transform: uppercase; color: var(--primary); margin-bottom: 8px; }
 .art-related-body strong { display: block; font-family: var(--font-heading); font-size: 0.96rem; font-weight: 750; line-height: 1.4; color: var(--text-main); }
 
 @media (max-width: 1000px) {

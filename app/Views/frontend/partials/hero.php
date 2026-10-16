@@ -202,7 +202,7 @@ if (!empty($page['hero_title'])):
                             <!-- Slide Content -->
                             <div class="hero-text-block" style="<?= $textOrder ?> max-width: <?= $heroTextWidth ?>; <?= $textMarginCss ?> <?= $textAlignmentCss ?> display: flex; flex-direction: column; <?= ($heroTextAlignment === 'center' || $heroTextAlignment === 'centre') ? 'align-items: center;' : (($heroTextAlignment === 'right' || $heroTextAlignment === 'droite') ? 'align-items: flex-end;' : 'align-items: flex-start;') ?>">
                                 <?php if (!empty($slide['badge'])): ?>
-                                    <div class="hero-brand-badge" style="display: inline-flex; align-items: center; gap: 8px; background: color-mix(in srgb, var(--primary) 25%, transparent); border: 1px solid color-mix(in srgb, var(--primary) 40%, transparent); padding: 6px 18px; border-radius: 50px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; color: #93c5fd; margin-bottom: 28px; font-family: var(--font-heading);">
+                                    <div class="hero-brand-badge" style="display: inline-flex; align-items: center; gap: 8px; background: color-mix(in srgb, var(--primary) 25%, transparent); border: 1px solid color-mix(in srgb, var(--primary) 40%, transparent); padding: 6px 18px; border-radius: 50px; font-size: var(--fs-caption); font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; color: #93c5fd; margin-bottom: 28px; font-family: var(--font-heading);">
                                         <div style="width: 6px; height: 6px; border-radius: 50%; background: #60a5fa; box-shadow: 0 0 8px #60a5fa;"></div>
                                         <span><?= htmlspecialchars($slide['badge']) ?></span>
                                     </div>
@@ -353,7 +353,7 @@ if (!empty($page['hero_title'])):
             <div class="hero-text-block" style="max-width: <?= $heroTextWidth ?>; <?= $textMarginCss ?> <?= $textAlignmentCss ?> display: flex; flex-direction: column; <?= ($heroTextAlignment === 'center' || $heroTextAlignment === 'centre') ? 'align-items: center;' : (($heroTextAlignment === 'right' || $heroTextAlignment === 'droite') ? 'align-items: flex-end;' : 'align-items: flex-start;') ?> opacity: 0; transform: translateY(20px); animation: heroFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;">
                 
                 <?php if (!empty($badge)): ?>
-                    <div class="hero-brand-badge" style="display: inline-flex; align-items: center; gap: 8px; background: color-mix(in srgb, var(--primary) 20%, transparent); border: 1px solid color-mix(in srgb, var(--primary) 30%, transparent); padding: 6px 18px; border-radius: 50px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; color: #93c5fd; margin-bottom: 28px; font-family: var(--font-heading); box-shadow: 0 0 15px color-mix(in srgb, var(--primary) 15%, transparent);">
+                    <div class="hero-brand-badge" style="display: inline-flex; align-items: center; gap: 8px; background: color-mix(in srgb, var(--primary) 20%, transparent); border: 1px solid color-mix(in srgb, var(--primary) 30%, transparent); padding: 6px 18px; border-radius: 50px; font-size: var(--fs-caption); font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; color: #93c5fd; margin-bottom: 28px; font-family: var(--font-heading); box-shadow: 0 0 15px color-mix(in srgb, var(--primary) 15%, transparent);">
                         <div style="width: 6px; height: 6px; border-radius: 50%; background: #60a5fa;"></div>
                         <span><?= htmlspecialchars($badge) ?></span>
                     </div>
@@ -452,7 +452,7 @@ if (!empty($page['hero_title'])):
                 <!-- Left Editorial Text Column -->
                 <div class="hero-text-block" style="display: flex; flex-direction: column; align-items: start; text-align: left;">
                     <?php if (!empty($badge)): ?>
-                        <span style="font-size: 0.72rem; text-transform: uppercase; font-weight: 800; color: var(--secondary); letter-spacing: 0.25em; border-bottom: 2px solid var(--secondary); padding-bottom: 4px; margin-bottom: 28px; font-family: var(--font-heading);"><?= htmlspecialchars($badge) ?></span>
+                        <span style="font-size: var(--fs-caption); text-transform: uppercase; font-weight: 800; color: var(--secondary); letter-spacing: 0.14em; border-bottom: 2px solid var(--secondary); padding-bottom: 4px; margin-bottom: 28px; font-family: var(--font-heading);"><?= htmlspecialchars($badge) ?></span>
                     <?php endif; ?>
 
                     <h1 style="font-size: clamp(2.8rem, 6.5vw, 4.2rem); line-height: 1.05; font-weight: 800; color: #000000; margin-bottom: 28px; font-family: var(--font-heading); letter-spacing: -0.04em;">
@@ -503,7 +503,7 @@ if (!empty($page['hero_title'])):
                     <div style="display: flex; flex-direction: column; gap: 24px;">
                         <?php foreach (array_slice($magArticles, 0, 3) as $mi => $art): ?>
                         <div class="magazine-nav-item" style="display: flex; flex-direction: column; gap: 6px;">
-                            <span style="font-size: 0.7rem; color: <?= $magColors[$mi % 3] ?>; font-weight: 700; font-family: var(--font-heading);"><?= htmlspecialchars(strtoupper($art['category'] ?? 'ACTUALITÉ')) ?></span>
+                            <span style="font-size: var(--fs-meta); color: <?= $magColors[$mi % 3] ?>; font-weight: 700; font-family: var(--font-heading);"><?= htmlspecialchars(strtoupper($art['category'] ?? 'ACTUALITÉ')) ?></span>
                             <a href="<?= htmlspecialchars(url($art['url'] ?? '/insights')) ?>" style="font-size: 1.05rem; font-weight: 700; color: #000000; text-decoration: none; line-height: 1.3;"><?= htmlspecialchars($art['title'] ?? '') ?></a>
                         </div>
                         <?php endforeach; ?>
@@ -532,7 +532,7 @@ if (!empty($page['hero_title'])):
             <div class="floating-glass-card-hero" style="background: rgba(11,18,34,0.85); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(255,255,255,0.1); padding: 48px 40px; border-radius: 24px; box-shadow: 0 30px 60px -15px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.06); max-width: 800px; width: 100%; text-align: center; display: flex; flex-direction: column; align-items: center; animation: floatBadge 8s ease-in-out infinite;">
                 
                 <?php if (!empty($badge)): ?>
-                    <span class="hero-brand-badge" style="display: inline-flex; align-items: center; gap: 8px; background: color-mix(in srgb, var(--primary) 12%, transparent); border: 1px solid color-mix(in srgb, var(--primary) 25%, transparent); padding: 6px 18px; border-radius: 50px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; color: var(--primary); margin-bottom: 24px; font-family: var(--font-heading);"><?= htmlspecialchars($badge) ?></span>
+                    <span class="hero-brand-badge" style="display: inline-flex; align-items: center; gap: 8px; background: color-mix(in srgb, var(--primary) 12%, transparent); border: 1px solid color-mix(in srgb, var(--primary) 25%, transparent); padding: 6px 18px; border-radius: 50px; font-size: var(--fs-caption); font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; color: var(--primary); margin-bottom: 24px; font-family: var(--font-heading);"><?= htmlspecialchars($badge) ?></span>
                 <?php endif; ?>
 
                 <h1 style="font-size: clamp(2.2rem, 5vw, 3.6rem); line-height: 1.15; font-weight: 900; color: var(--text-main); margin-bottom: 20px; font-family: var(--font-heading); letter-spacing: -0.02em; text-shadow: none !important;">
@@ -600,7 +600,7 @@ if (!empty($page['hero_title'])):
                 
                 <!-- Badge / Label -->
                 <?php if (!empty($badge)): ?>
-                    <div class="hero-brand-badge" style="display: inline-flex; align-items: center; gap: 8px; background: color-mix(in srgb, var(--primary) 12%, transparent); border: 1px solid color-mix(in srgb, var(--primary) 25%, transparent); padding: 6px 18px; border-radius: 50px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; color: #93c5fd; margin-bottom: 28px; font-family: var(--font-heading); box-shadow: 0 0 15px color-mix(in srgb, var(--primary) 10%, transparent);">
+                    <div class="hero-brand-badge" style="display: inline-flex; align-items: center; gap: 8px; background: color-mix(in srgb, var(--primary) 12%, transparent); border: 1px solid color-mix(in srgb, var(--primary) 25%, transparent); padding: 6px 18px; border-radius: 50px; font-size: var(--fs-caption); font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; color: #93c5fd; margin-bottom: 28px; font-family: var(--font-heading); box-shadow: 0 0 15px color-mix(in srgb, var(--primary) 10%, transparent);">
                         <div style="width: 6px; height: 6px; border-radius: 50%; background: #60a5fa; box-shadow: 0 0 8px #60a5fa;"></div>
                         <span><?= htmlspecialchars($badge) ?></span>
                     </div>
@@ -658,7 +658,7 @@ if (!empty($page['hero_title'])):
                 
                 <!-- Badge -->
                 <?php if (!empty($badge)): ?>
-                    <div class="hero-brand-badge" style="display: inline-flex; align-items: center; gap: 8px; background: color-mix(in srgb, var(--secondary) 8%, transparent); border: 1px solid color-mix(in srgb, var(--secondary) 20%, transparent); padding: 6px 16px; border-radius: 50px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; color: var(--secondary); margin-bottom: 24px; font-family: var(--font-heading);">
+                    <div class="hero-brand-badge" style="display: inline-flex; align-items: center; gap: 8px; background: color-mix(in srgb, var(--secondary) 8%, transparent); border: 1px solid color-mix(in srgb, var(--secondary) 20%, transparent); padding: 6px 16px; border-radius: 50px; font-size: var(--fs-caption); font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; color: var(--secondary); margin-bottom: 24px; font-family: var(--font-heading);">
                         <div style="width: 6px; height: 6px; border-radius: 50%; background: var(--secondary); box-shadow: 0 0 8px var(--secondary);"></div>
                         <span><?= htmlspecialchars($badge) ?></span>
                     </div>
@@ -741,7 +741,7 @@ if (!empty($page['hero_title'])):
                 <?php if (!empty($badge)): ?>
                 <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(13,148,136,0.15);border:1px solid rgba(13,148,136,0.3);padding:8px 20px;border-radius:100px;margin-bottom:36px;">
                     <span style="width:7px;height:7px;border-radius:50%;background:#0d9488;box-shadow:0 0 10px rgba(13,148,136,0.9);flex-shrink:0;animation:pulse-dot 2s ease-in-out infinite;"></span>
-                    <span style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.2em;color:#5eead4;font-family:var(--font-heading);"><?= htmlspecialchars($badge) ?></span>
+                    <span style="font-size: var(--fs-caption);font-weight:700;text-transform:uppercase;letter-spacing: 0.14em;color:#5eead4;font-family:var(--font-heading);"><?= htmlspecialchars($badge) ?></span>
                 </div>
                 <?php endif; ?>
 
@@ -795,7 +795,7 @@ if (!empty($page['hero_title'])):
                 <div class="hero-left-content hero-text-block" style="<?= $textOrder ?> max-width: <?= $heroTextWidth ?>; <?= $textMarginCss ?> <?= $textAlignmentCss ?> display: flex; flex-direction: column; <?= ($heroTextAlignment === 'center' || $heroTextAlignment === 'centre') ? 'align-items: center;' : (($heroTextAlignment === 'right' || $heroTextAlignment === 'droite') ? 'align-items: flex-end;' : 'align-items: flex-start;') ?> opacity: 0; transform: translateY(20px); animation: heroFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;">
                     
                     <?php if (!empty($badge)): ?>
-                        <div class="hero-brand-badge" style="display: inline-flex; align-items: center; gap: 8px; background: color-mix(in srgb, var(--secondary) 8%, transparent); border: 1px solid color-mix(in srgb, var(--secondary) 20%, transparent); padding: 6px 16px; border-radius: 50px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.15em; color: var(--secondary); margin-bottom: 24px; font-family: var(--font-heading);">
+                        <div class="hero-brand-badge" style="display: inline-flex; align-items: center; gap: 8px; background: color-mix(in srgb, var(--secondary) 8%, transparent); border: 1px solid color-mix(in srgb, var(--secondary) 20%, transparent); padding: 6px 16px; border-radius: 50px; font-size: var(--fs-caption); font-weight: 600; text-transform: uppercase; letter-spacing: 0.14em; color: var(--secondary); margin-bottom: 24px; font-family: var(--font-heading);">
                             <div style="width: 6px; height: 6px; border-radius: 50%; background: var(--secondary); box-shadow: 0 0 8px var(--secondary);"></div>
                             <span><?= htmlspecialchars($badge) ?></span>
                         </div>
@@ -854,7 +854,7 @@ if (!empty($page['hero_title'])):
                             </div>
                             <div>
                                 <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--text-main); margin-bottom: 2px;"><?= htmlspecialchars($feat['title'] ?? '') ?></h4>
-                                <p style="font-size: 0.75rem; color: var(--text-muted);"><?= htmlspecialchars($feat['desc'] ?? '') ?></p>
+                                <p style="font-size: var(--fs-meta); color: var(--text-muted);"><?= htmlspecialchars($feat['desc'] ?? '') ?></p>
                             </div>
                         </div>
                         <?php endforeach; ?>
@@ -879,7 +879,7 @@ if (!empty($page['hero_title'])):
                 <div class="hero-left-content hero-text-block" style="<?= $textOrder ?> max-width: <?= $heroTextWidth ?>; <?= $textMarginCss ?> <?= $textAlignmentCss ?> display: flex; flex-direction: column; <?= ($heroTextAlignment === 'center' || $heroTextAlignment === 'centre') ? 'align-items: center;' : (($heroTextAlignment === 'right' || $heroTextAlignment === 'droite') ? 'align-items: flex-end;' : 'align-items: flex-start;') ?> opacity: 0; transform: translateY(20px); animation: heroFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;">
                     
                     <?php if (!empty($badge)): ?>
-                        <div class="hero-brand-badge" style="display: inline-flex; align-items: center; gap: 8px; background: color-mix(in srgb, var(--primary) 8%, transparent); border: 1px solid color-mix(in srgb, var(--primary) 20%, transparent); padding: 6px 16px; border-radius: 50px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.15em; color: var(--primary); margin-bottom: 24px; font-family: var(--font-heading);">
+                        <div class="hero-brand-badge" style="display: inline-flex; align-items: center; gap: 8px; background: color-mix(in srgb, var(--primary) 8%, transparent); border: 1px solid color-mix(in srgb, var(--primary) 20%, transparent); padding: 6px 16px; border-radius: 50px; font-size: var(--fs-caption); font-weight: 600; text-transform: uppercase; letter-spacing: 0.14em; color: var(--primary); margin-bottom: 24px; font-family: var(--font-heading);">
                             <div style="width: 6px; height: 6px; border-radius: 50%; background: var(--primary); box-shadow: 0 0 8px var(--primary);"></div>
                             <span><?= htmlspecialchars($badge) ?></span>
                         </div>
@@ -934,7 +934,7 @@ if (!empty($page['hero_title'])):
                             </div>
                             <div>
                                 <h4 style="font-size: 0.9rem; font-weight: 700; color: var(--text-main); margin-bottom: 4px;"><?= htmlspecialchars($gf['title'] ?? '') ?></h4>
-                                <p style="font-size: 0.72rem; color: var(--text-muted); line-height: 1.4;"><?= htmlspecialchars($gf['desc'] ?? '') ?></p>
+                                <p style="font-size: var(--fs-meta); color: var(--text-muted); line-height: 1.4;"><?= htmlspecialchars($gf['desc'] ?? '') ?></p>
                             </div>
                         </div>
                         <?php endforeach; ?>
@@ -965,7 +965,7 @@ if (!empty($page['hero_title'])):
                 <div class="hero-left-content hero-text-block" style="<?= $textOrder ?> max-width: <?= $heroTextWidth ?>; <?= $textMarginCss ?> <?= $textAlignmentCss ?> display: flex; flex-direction: column; <?= ($heroTextAlignment === 'center' || $heroTextAlignment === 'centre') ? 'align-items: center;' : (($heroTextAlignment === 'right' || $heroTextAlignment === 'droite') ? 'align-items: flex-end;' : 'align-items: flex-start;') ?> opacity: 0; transform: translateY(20px); animation: heroFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;">
                     
                     <!-- Brand Badge / Label -->
-                    <div class="hero-brand-badge" style="display: inline-flex; align-items: center; gap: 8px; background: color-mix(in srgb, var(--secondary) 8%, transparent); border: 1px solid color-mix(in srgb, var(--secondary) 20%, transparent); padding: 6px 16px; border-radius: 50px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.15em; color: var(--secondary); margin-bottom: 24px; font-family: var(--font-heading);">
+                    <div class="hero-brand-badge" style="display: inline-flex; align-items: center; gap: 8px; background: color-mix(in srgb, var(--secondary) 8%, transparent); border: 1px solid color-mix(in srgb, var(--secondary) 20%, transparent); padding: 6px 16px; border-radius: 50px; font-size: var(--fs-caption); font-weight: 600; text-transform: uppercase; letter-spacing: 0.14em; color: var(--secondary); margin-bottom: 24px; font-family: var(--font-heading);">
                         <div style="width: 6px; height: 6px; border-radius: 50%; background: var(--secondary); box-shadow: 0 0 8px var(--secondary);"></div>
                         <span><?= htmlspecialchars(!empty($badge) ? $badge : ($settings['site_name'] ?? 'Digitalium Group')) ?></span>
                     </div>
@@ -1016,7 +1016,7 @@ if (!empty($page['hero_title'])):
                         <?php if ($variant !== 'hero_split_small_image'): ?>
                             <div class="expert-circular-badge" style="position: absolute; top: -35px; right: -25px; width: 110px; height: 110px; border-radius: 50%; background: linear-gradient(135deg, var(--primary) 0%, #1e40af 100%); border: 3px solid rgba(255,255,255,0.9); box-shadow: 0 15px 30px -5px rgba(30, 58, 138, 0.3); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10; color: white; text-align: center; padding: 8px; animation: floatBadge 6s ease-in-out infinite;">
                                 <i data-lucide="award" style="width: 22px; height: 22px; margin-bottom: 4px; color: #f5b800;"></i>
-                                <span style="font-size: 0.52rem; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700; font-family: var(--font-heading); line-height: 1.1;">Digital Innovation Expert</span>
+                                <span style="font-size: var(--fs-caption); text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700; font-family: var(--font-heading); line-height: 1.1;">Digital Innovation Expert</span>
                             </div>
                         <?php endif; ?>
 
@@ -1058,7 +1058,7 @@ if (!empty($page['hero_title'])):
                                                 <i data-lucide="cpu" style="width: 28px; height: 28px; color: var(--accent);"></i>
                                             </div>
                                             <h4 style="color: white; font-size: 1rem; font-family: var(--font-heading); font-weight: 600;"><?= htmlspecialchars($page['title']) ?></h4>
-                                            <p style="font-size: 0.72rem; color: #94a3b8; max-width: 220px;">Digitalium Group &bull; Agence d'innovation et solutions sur-mesure</p>
+                                            <p style="font-size: var(--fs-meta); color: #94a3b8; max-width: 220px;">Digitalium Group &bull; Agence d'innovation et solutions sur-mesure</p>
                                         </div>
                                     <?php endif; ?>
                                 </div>

@@ -28,7 +28,7 @@
                         <?= \App\Helpers\IconHelper::render($fIcon, ['image' => $fImage, 'size' => '26px']) ?>
                     </div>
                     <!-- Number accent -->
-                    <div style="font-size:0.62rem;font-weight:800;letter-spacing:0.2em;color:rgba(13,148,136,0.35);font-family:var(--font-heading);margin-bottom:14px;"><?= sprintf('%02d', $i + 1) ?></div>
+                    <div style="font-size: var(--fs-caption);font-weight:800;letter-spacing: 0.14em;color:rgba(13,148,136,0.35);font-family:var(--font-heading);margin-bottom:14px;"><?= sprintf('%02d', $i + 1) ?></div>
                     <h3 class="feat-title"><?= htmlspecialchars($fTitle) ?></h3>
                     <p class="feat-desc"><?= htmlspecialchars($fDesc) ?></p>
                     <?php if ($tag === 'a'): ?>

@@ -28,7 +28,7 @@
     <div class="container">
         <span class="error-code">404</span>
         <div class="reveal" style="max-width: 520px; margin: 0 auto;">
-            <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.2); padding: 0.35rem 1rem; border-radius: 50px; font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase; color: #ef4444; margin-bottom: 20px;">
+            <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.2); padding: 0.35rem 1rem; border-radius: 50px; font-size: var(--fs-caption); letter-spacing: 0.14em; text-transform: uppercase; color: #ef4444; margin-bottom: 20px;">
                 <i data-lucide="alert-circle" style="width: 12px; height: 12px;"></i>
                 Erreur 404
             </div>

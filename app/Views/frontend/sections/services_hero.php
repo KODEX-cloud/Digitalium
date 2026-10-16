@@ -3,7 +3,7 @@
     <!-- Left Column -->
     <div class="hero-left reveal" style="position: relative; z-index: 2;">
         <?php if (!empty($single['badge'])): ?>
-            <div class="hero-eyebrow" style="display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--border); padding: 0.38rem 1.1rem; border-radius: 50px; font-size: 0.7rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.5rem;">
+            <div class="hero-eyebrow" style="display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--border); padding: 0.38rem 1.1rem; border-radius: 50px; font-size: var(--fs-caption); letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.5rem;">
                 <div class="bdot" style="width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulse 2s ease-in-out infinite;"></div>
                 <?= htmlspecialchars($single['badge']) ?>
             </div>
@@ -39,7 +39,7 @@
     <!-- Right Column -->
     <div class="hero-right reveal" style="position: relative; z-index: 2;">
         <div class="hero-panel" style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: 16px; padding: 2rem;">
-            <div class="panel-title" style="font-size: 0.72rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 1.5rem; font-weight: 600;">Nos 5 domaines d'expertise</div>
+            <div class="panel-title" style="font-size: var(--fs-caption); letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 1.5rem; font-weight: 600;">Nos 5 domaines d'expertise</div>
             
             <div class="panel-services" style="display: flex; flex-direction: column; gap: 12px;">
                 <div class="ps-item" style="display: flex; align-items: center; gap: 14px; padding: 0.8rem 1.2rem; background: var(--bg-surface-alt); border: 1px solid var(--border); border-radius: 8px; transition: var(--transition);">
@@ -72,11 +72,11 @@
             <div class="panel-bottom" style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 1.5rem;">
                 <div class="pstat" style="text-align: center; padding: 1rem; background: var(--bg-surface-alt); border: 1px solid var(--border); border-radius: 8px;">
                     <div class="pstat-num" style="font-size: 1.8rem; font-weight: 700; color: var(--text-main); font-family: var(--font-heading);"><?= htmlspecialchars($single['pstat_clients'] ?? '100+') ?></div>
-                    <div class="pstat-label" style="font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); margin-top: 0.3rem;">Clients satisfaits</div>
+                    <div class="pstat-label" style="font-size: var(--fs-caption); letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); margin-top: 0.3rem;">Clients satisfaits</div>
                 </div>
                 <div class="pstat" style="text-align: center; padding: 1rem; background: var(--bg-surface-alt); border: 1px solid var(--border); border-radius: 8px;">
                     <div class="pstat-num" style="font-size: 1.8rem; font-weight: 700; color: var(--text-main); font-family: var(--font-heading);"><?= htmlspecialchars($single['pstat_years'] ?? '7+') ?></div>
-                    <div class="pstat-label" style="font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); margin-top: 0.3rem;">Années d'expérience</div>
+                    <div class="pstat-label" style="font-size: var(--fs-caption); letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); margin-top: 0.3rem;">Années d'expérience</div>
                 </div>
             </div>
         </div>

@@ -176,10 +176,10 @@ $tmAccents = ['var(--primary)', 'var(--secondary)', 'var(--accent)'];
     letter-spacing: 0.04em;
 }
 .tm-name  { font-family: var(--font-heading); font-size: 1.05rem; font-weight: 700; color: var(--text-main); margin: 0 0 4px; }
-.tm-role  { font-size: 0.85rem; font-weight: 600; margin: 0 0 10px; }
+.tm-role  { font-size: var(--fs-small); font-weight: 600; margin: 0 0 10px; }
 .tm-dept  {
     display: inline-block;
-    font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase;
+    font-size: var(--fs-caption); letter-spacing: 0.12em; text-transform: uppercase;
     color: var(--text-muted);
     border: 1px solid var(--border);
     border-radius: 999px;
@@ -230,7 +230,7 @@ $tmAccents = ['var(--primary)', 'var(--secondary)', 'var(--accent)'];
     border: 1px solid color-mix(in srgb, var(--tm-accent, var(--primary)) 30%, transparent);
 }
 .tm-pole-title { font-family: var(--font-heading); font-size: 0.98rem; font-weight: 700; color: var(--text-main); margin: 0 0 6px; }
-.tm-pole-desc  { font-size: 0.85rem; line-height: 1.55; color: var(--text-muted); margin: 0; }
+.tm-pole-desc  { font-size: var(--fs-small); line-height: 1.55; color: var(--text-muted); margin: 0; }
 
 @media (max-width: 560px) {
     .tm-grid, .tm-poles-grid { grid-template-columns: 1fr; }

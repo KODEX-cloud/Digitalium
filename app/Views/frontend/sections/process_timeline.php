@@ -119,7 +119,7 @@ $stepAccents = ['var(--primary)', 'var(--secondary)'];
 }
 
 .proc-timeline-desc {
-    font-size: 0.78rem;
+    font-size: var(--fs-small);
     line-height: 1.6;
     color: var(--text-muted);
     margin: 0;

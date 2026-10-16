@@ -61,12 +61,12 @@
                         <div class="contact-form-group">
                             <label for="contactName">Nom complet <span style="color: var(--primary);">*</span></label>
                             <input type="text" id="contactName" name="name" class="contact-input" placeholder="Alexandre Dumas" required>
-                            <div class="error-msg" id="err-name" style="color: #f87171; font-size: 0.8rem; margin-top: 4px; display: none;"></div>
+                            <div class="error-msg" id="err-name" style="color: #f87171; font-size: var(--fs-meta); margin-top: 4px; display: none;"></div>
                         </div>
                         <div class="contact-form-group">
                             <label for="contactEmail">Adresse e-mail <span style="color: var(--primary);">*</span></label>
                             <input type="email" id="contactEmail" name="email" class="contact-input" placeholder="alex@digitaliumgroup.com" required>
-                            <div class="error-msg" id="err-email" style="color: #f87171; font-size: 0.8rem; margin-top: 4px; display: none;"></div>
+                            <div class="error-msg" id="err-email" style="color: #f87171; font-size: var(--fs-meta); margin-top: 4px; display: none;"></div>
                         </div>
                     </div>
 
@@ -78,7 +78,7 @@
                     <div class="contact-form-group">
                         <label for="contactMessage">Message <span style="color: var(--primary);">*</span></label>
                         <textarea id="contactMessage" name="message" rows="5" class="contact-textarea" placeholder="Décrivez brièvement les objectifs de votre projet..." required></textarea>
-                        <div class="error-msg" id="err-message" style="color: #f87171; font-size: 0.8rem; margin-top: 4px; display: none;"></div>
+                        <div class="error-msg" id="err-message" style="color: #f87171; font-size: var(--fs-meta); margin-top: 4px; display: none;"></div>
                     </div>
 
                     <button type="submit" class="btn-contact-submit" id="contactSubmitBtn" onclick="window.location.href='<?= url('/contact') ?>'">

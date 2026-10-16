@@ -286,7 +286,7 @@ $dispoLabel = trim((string)($single['availability_label'] ?? ''));
 .lp-stage, .lp-sector {
     display: inline-flex; align-items: center;
     padding: 4px 12px; border-radius: 999px;
-    font-size: 0.7rem; font-weight: 700;
+    font-size: var(--fs-caption); font-weight: 700;
     letter-spacing: 0.06em; text-transform: uppercase;
 }
 .lp-sector { background: var(--bg-alt); border: 1px solid var(--border); color: var(--text-muted); }
@@ -303,15 +303,15 @@ $dispoLabel = trim((string)($single['availability_label'] ?? ''));
 .lp-desc { margin: 0; font-size: 0.9rem; line-height: 1.68; color: var(--text-muted); flex: 1; }
 
 .lp-techs { display: flex; flex-wrap: wrap; align-items: center; gap: 7px; }
-.lp-techs-label { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); }
+.lp-techs-label { font-size: var(--fs-caption); font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); }
 .lp-techs ul { display: flex; flex-wrap: wrap; gap: 7px; list-style: none; margin: 0; padding: 0; }
 .lp-techs li {
     padding: 3px 10px; border-radius: 6px;
     background: var(--bg-alt); border: 1px solid var(--border);
-    font-size: 0.72rem; color: var(--text-muted);
+    font-size: var(--fs-meta); color: var(--text-muted);
 }
 
-.lp-availability { display: flex; align-items: center; gap: 7px; margin: 0; font-size: 0.79rem; color: var(--text-muted); }
+.lp-availability { display: flex; align-items: center; gap: 7px; margin: 0; font-size: var(--fs-meta); color: var(--text-muted); }
 .lp-availability strong { font-weight: 650; color: var(--text-main); }
 
 .lp-link {

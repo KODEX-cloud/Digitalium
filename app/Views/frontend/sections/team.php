@@ -152,7 +152,7 @@ $teamAccents = ['var(--primary)', 'var(--secondary)', 'var(--accent)', 'var(--pr
 }
 
 .team-role {
-    font-size: 0.8rem;
+    font-size: var(--fs-small);
     color: var(--text-muted);
     font-weight: 500;
     margin-bottom: 12px;
@@ -165,7 +165,7 @@ $teamAccents = ['var(--primary)', 'var(--secondary)', 'var(--accent)', 'var(--pr
     margin-bottom: 16px;
     border-radius: var(--radius-pill);
     color: #fff;
-    font-size: 0.68rem;
+    font-size: var(--fs-caption);
     font-weight: 700;
     letter-spacing: 0.06em;
     text-transform: uppercase;

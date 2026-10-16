@@ -1,5 +1,47 @@
 # PROJECT_STATE — Digitalium Group CMS
-> Dernière mise à jour : 2026-10-16 — Visuels générés pour les emplacements d'image vides
+> Dernière mise à jour : 2026-10-16 — Lisibilité des textes sur tout le site
+
+---
+
+### 2026-10-16 (suite 3) — Lisibilité des textes : planchers de taille, contrastes, graisses
+
+Demande : « les écritures n'affichent pas bien, corrige pour une meilleure lisibilité sur tout le site ».
+
+**TECHNICAL_AUDIT** — audit automatisé en production (12 pages, 1440 et 390 px, ~1 500 textes) :
+taille, graisse, interlettrage, opacité cumulée et contraste WCAG calculé sur le fond effectif.
+Les couleurs du thème sont saines (`--text-muted` #4d4f63 : 8:1). Défauts réels :
+
+| Constat | Mesure | Cause |
+|---|---|---|
+| Petits textes | 300 textes < 13 px, **153 < 12 px** (178 sur mobile) ; descriptions d'étapes à 12,5 px, étiquettes en capitales à 9,9–10,9 px interlettrées jusqu'à 0,3 em | 218 déclarations `font-size` < 14 px dans 48 gabarits, sans plancher commun |
+| Bandeau « Vous avez un projet similaire ? » (pages Réalisation) | titre 2,6:1, texte **1,7:1** sur bleu | `h2`/`p` globaux d'`index.css` l'emportent sur la couleur héritée de `.cs-cta` |
+| Encadré « Le projet » : « Software » collé à « TECHNOLOGIES UTILISÉES » | marge 0 | `.cs-aside-facts { margin: 0 }` annule `.cs-card-title + *` (même spécificité, déclaré après) |
+| Blanc translucide sur bleu (newsletter, étapes jalons, carte de service vedette, CTA) | 4,3–4,45:1 | `rgba(255,255,255,0.8/0.82)` |
+| « Écrire sur WhatsApp » | 1,9:1 | vert `#25d366` sur blanc |
+| Suite des titres de hero sur photo | graisse 300 | `hero_media_cards.php` |
+
+Fausse piste écartée : des textes relevés à opacité 0 étaient dus au défilement trop rapide de
+l'outil ; à vitesse humaine, toutes les apparitions (`.reveal`) se déclenchent.
+
+**IMPLEMENTATION_PLAN — réalisé**
+1. `index.css` `:root` : trois jetons — `--fs-caption` 12 px (capitales, pastilles),
+   `--fs-meta` 13 px (métadonnées, puces), `--fs-small` 14 px (phrases secondaires).
+2. Transformation mécanique (150 déclarations, 43 fichiers) : capitales < 12 px → `--fs-caption`
+   et interlettrage plafonné à 0,14 em ; phrases (desc, note, rôle, extrait…) < 14 px →
+   `--fs-small` ; le reste < 13 px → `--fs-meta`. **Exclus** : logotype (« GROUP »), icônes, `em`.
+3. Corrections ciblées : `.cs-cta` en blanc explicite ; spécificité de l'encadré relevée ;
+   `.cs-back` sur sa propre ligne ; étiquettes du hero Réalisation 0,75 → 0,88 d'opacité ;
+   blancs translucides 0,8/0,82 → 0,92 ; WhatsApp `#128c4a` ; graisse 300 → 400.
+
+**Preuve (Règle #5)** — banc MySQL 8.4 jetable, 10 pages (l'accueil n'existe qu'en production) :
+
+| Vérification | Production (avant) | Banc (après) |
+|---|---|---|
+| Textes < 12 px (1440) | 153 | **10** (logotype seul) |
+| Contraste < AA | 31 | 10 — tous dans le hero photo des Réalisations (texte blanc sur voile bleu, faux positif du détecteur, vérifié à l'œil) |
+| Graisse 300 | 10 | 0 |
+| Texte coupé ou hors cadre (1440 / 820 / 390) | 0 | 0 |
+| `php -l` (44 fichiers) | — | 0 erreur |
 
 ---
 

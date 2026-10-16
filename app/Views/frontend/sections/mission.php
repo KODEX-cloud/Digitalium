@@ -124,7 +124,7 @@
 }
 
 .mission-card-desc {
-    font-size: 0.84rem;
+    font-size: var(--fs-small);
     line-height: 1.65;
     color: var(--text-muted);
     margin: 0;

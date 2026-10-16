@@ -95,7 +95,7 @@ $projAccents = ['var(--primary)', 'var(--secondary)', 'var(--accent)'];
 .project-showcase-tag {
     position: absolute; top: 14px; left: 14px;
     padding: 4px 12px; border-radius: 100px;
-    font-size: 0.62rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+    font-size: var(--fs-caption); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
     color: #fff;
     box-shadow: 0 4px 12px rgba(15,23,42,0.2);
 }
@@ -107,10 +107,10 @@ $projAccents = ['var(--primary)', 'var(--secondary)', 'var(--accent)'];
     margin-bottom: 10px; font-family: var(--font-heading); line-height: 1.3;
 }
 
-.project-showcase-desc { font-size: 0.85rem; line-height: 1.6; color: var(--text-muted); margin-bottom: 16px; }
+.project-showcase-desc { font-size: var(--fs-small); line-height: 1.6; color: var(--text-muted); margin-bottom: 16px; }
 
 .project-showcase-result {
-    font-size: 0.8rem; color: var(--primary); font-weight: 600;
+    font-size: var(--fs-meta); color: var(--primary); font-weight: 600;
     padding-top: 14px; border-top: 1px solid var(--border);
 }
 .project-showcase-result strong { color: var(--text-main); }

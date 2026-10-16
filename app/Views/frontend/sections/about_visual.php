@@ -127,7 +127,7 @@
 }
 
 .about-visual-badge-label {
-    font-size: 0.72rem;
+    font-size: var(--fs-meta);
     font-weight: 600;
     letter-spacing: 0.03em;
     opacity: 0.9;

@@ -3,11 +3,11 @@
         
         <div class="blog-header reveal" style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 3rem;">
             <div>
-                <span class="section-tag" style="display: inline-flex; align-items: center; gap: 8px; font-size: 0.68rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--primary); margin-bottom: 1rem;"><?= htmlspecialchars($single['tag'] ?? 'Derniers articles') ?></span>
+                <span class="section-tag" style="display: inline-flex; align-items: center; gap: 8px; font-size: var(--fs-caption); letter-spacing: 0.14em; text-transform: uppercase; color: var(--primary); margin-bottom: 1rem;"><?= htmlspecialchars($single['tag'] ?? 'Derniers articles') ?></span>
                 <h2 style="font-size: 1.6rem; font-weight: 700; color: var(--text-main); font-family: var(--font-heading);"><?= htmlspecialchars($single['title'] ?? 'Tous nos contenus') ?></h2>
             </div>
             
-            <select style="background: var(--bg-surface); border: 1px solid var(--border); color: var(--text-muted); padding: 0.45rem 1rem; border-radius: 6px; font-size: 0.8rem; outline: none; font-weight: 600;">
+            <select style="background: var(--bg-surface); border: 1px solid var(--border); color: var(--text-muted); padding: 0.45rem 1rem; border-radius: 6px; font-size: var(--fs-meta); outline: none; font-weight: 600;">
                 <option>Plus récents</option>
                 <option>Plus populaires</option>
             </select>
@@ -33,10 +33,10 @@
                         <!-- Card Content Body -->
                         <div class="bcard-body" style="padding: 1.8rem; display: flex; flex-direction: column; flex-grow: 1;">
                             <div class="bcard-meta" style="display: flex; gap: 10px; align-items: center; margin-bottom: 1rem; flex-wrap: wrap;">
-                                <span class="pill" style="padding: 4px 12px; border-radius: 8px; font-size: 0.65rem; letter-spacing: 0.05em; text-transform: uppercase; font-weight: 700; background: color-mix(in srgb, var(--secondary) 8%, transparent); color: var(--secondary); border: 1px solid color-mix(in srgb, var(--secondary) 15%, transparent);">
+                                <span class="pill" style="padding: 4px 12px; border-radius: 8px; font-size: var(--fs-caption); letter-spacing: 0.05em; text-transform: uppercase; font-weight: 700; background: color-mix(in srgb, var(--secondary) 8%, transparent); color: var(--secondary); border: 1px solid color-mix(in srgb, var(--secondary) 15%, transparent);">
                                     <?= htmlspecialchars($category) ?>
                                 </span>
-                                <span class="bcard-date" style="font-size: 0.72rem; color: var(--text-muted); font-family: monospace;">
+                                <span class="bcard-date" style="font-size: var(--fs-meta); color: var(--text-muted); font-family: monospace;">
                                     <?= htmlspecialchars($post['post_date'] ?? date('d.m.Y')) ?>
                                 </span>
                             </div>
@@ -53,12 +53,12 @@
 
                             <div class="bcard-footer" style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); padding-top: 1.2rem; margin-top: auto;">
                                 <div class="bcard-author" style="display: flex; align-items: center; gap: 8px;">
-                                    <div class="author-av" style="width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.68rem; font-weight: 700; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); color: white;">
+                                    <div class="author-av" style="width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: var(--fs-meta); font-weight: 700; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); color: white;">
                                         DG
                                     </div>
-                                    <span class="author-name" style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">Équipe DG</span>
+                                    <span class="author-name" style="font-size: var(--fs-meta); color: var(--text-muted); font-weight: 600;">Équipe DG</span>
                                 </div>
-                                <span class="bcard-read" style="font-size: 0.72rem; color: var(--text-muted); font-family: monospace;">5 min de lecture</span>
+                                <span class="bcard-read" style="font-size: var(--fs-meta); color: var(--text-muted); font-family: monospace;">5 min de lecture</span>
                             </div>
                         </div>
 

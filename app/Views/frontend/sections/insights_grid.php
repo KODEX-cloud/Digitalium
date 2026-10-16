@@ -248,12 +248,12 @@ $readSuffix  = trim((string)($single['read_suffix'] ?? '')) ?: 'min';
 }
 .insg-filter:hover { color: var(--primary); border-color: color-mix(in srgb, var(--primary) 35%, transparent); }
 .insg-filter.is-on { background: var(--primary); border-color: var(--primary); color: #ffffff; }
-.insg-count { font-size: 0.74rem; opacity: 0.72; }
+.insg-count { font-size: var(--fs-meta); opacity: 0.72; }
 
 .insg-search { max-width: 620px; margin: 0 auto 30px; }
 .insg-search-label {
     display: block; text-align: center;
-    font-size: 0.74rem; font-weight: 700;
+    font-size: var(--fs-caption); font-weight: 700;
     letter-spacing: 0.1em; text-transform: uppercase;
     color: var(--text-muted); margin-bottom: 10px;
 }
@@ -282,7 +282,7 @@ $readSuffix  = trim((string)($single['read_suffix'] ?? '')) ?: 'min';
 }
 .insg-search-row button:hover { box-shadow: var(--shadow-btn); }
 
-.insg-summary { text-align: center; font-size: 0.87rem; color: var(--text-muted); margin: 0 0 26px; }
+.insg-summary { text-align: center; font-size: var(--fs-small); color: var(--text-muted); margin: 0 0 26px; }
 .insg-summary a { color: var(--primary); font-weight: 650; text-decoration: none; margin-left: 10px; }
 .insg-summary a:hover { text-decoration: underline; }
 
@@ -310,7 +310,7 @@ $readSuffix  = trim((string)($single['read_suffix'] ?? '')) ?: 'min';
 }
 .insg-body { display: flex; flex-direction: column; gap: 11px; padding: 24px 24px 22px; flex: 1; }
 .insg-cat {
-    font-size: 0.69rem; font-weight: 700;
+    font-size: var(--fs-caption); font-weight: 700;
     letter-spacing: 0.13em; text-transform: uppercase;
     color: var(--primary);
 }
@@ -320,7 +320,7 @@ $readSuffix  = trim((string)($single['read_suffix'] ?? '')) ?: 'min';
 .insg-excerpt { margin: 0; font-size: 0.89rem; line-height: 1.68; color: var(--text-muted); flex: 1; }
 .insg-meta {
     display: flex; flex-wrap: wrap; gap: 4px 14px;
-    font-size: 0.77rem; color: var(--text-muted);
+    font-size: var(--fs-small); color: var(--text-muted);
     padding-top: 13px; border-top: 1px solid var(--border);
 }
 .insg-link {

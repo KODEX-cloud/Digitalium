@@ -143,7 +143,7 @@ $ctaText    = trim((string)($single['cta_text'] ?? '')) ?: 'Lire l’analyse';
     border-radius: 999px;
     background: var(--primary);
     color: #ffffff;
-    font-size: 0.7rem; font-weight: 700;
+    font-size: var(--fs-caption); font-weight: 700;
     letter-spacing: 0.09em; text-transform: uppercase;
 }
 .insf-body {
@@ -154,7 +154,7 @@ $ctaText    = trim((string)($single['cta_text'] ?? '')) ?: 'Lire l’analyse';
 }
 .insf-cat {
     align-self: flex-start;
-    font-size: 0.72rem; font-weight: 700;
+    font-size: var(--fs-caption); font-weight: 700;
     letter-spacing: 0.13em; text-transform: uppercase;
     color: var(--primary);
 }
@@ -164,7 +164,7 @@ $ctaText    = trim((string)($single['cta_text'] ?? '')) ?: 'Lire l’analyse';
 .insf-excerpt { margin: 0; color: var(--text-muted); font-size: 1rem; line-height: 1.72; }
 .insf-meta {
     display: flex; flex-wrap: wrap; gap: 8px 20px;
-    font-size: 0.82rem; color: var(--text-muted);
+    font-size: var(--fs-small); color: var(--text-muted);
 }
 .insf-meta > * { display: inline-flex; align-items: center; gap: 6px; }
 .insf-btn {

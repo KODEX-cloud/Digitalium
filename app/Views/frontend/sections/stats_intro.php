@@ -88,7 +88,7 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    font-size: 0.85rem;
+    font-size: var(--fs-small);
     font-weight: 700;
     color: var(--primary);
     letter-spacing: 0.02em;
@@ -127,7 +127,7 @@
 }
 
 .stat-intro-label {
-    font-size: 0.86rem;
+    font-size: var(--fs-small);
     font-weight: 700;
     color: var(--text-main);
     font-family: var(--font-heading);
@@ -136,7 +136,7 @@
 }
 
 .stat-intro-desc {
-    font-size: 0.76rem;
+    font-size: var(--fs-small);
     line-height: 1.55;
     color: var(--text-muted);
     margin: 0;
