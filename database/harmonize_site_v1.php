@@ -87,7 +87,7 @@ $modifie = false;
 // ════════════════════════════════════════════════════════════════════════════
 //  1. MENU PRINCIPAL
 // ════════════════════════════════════════════════════════════════════════════
-echo "\n[1/3] Menu principal\n";
+echo "\n[1/5] Menu principal\n";
 const DRAPEAU_MENU = 'primary_menu_v3_applied';
 
 $etat = $drapeau(DRAPEAU_MENU);
@@ -193,7 +193,7 @@ if ($etat === true) {
 // ════════════════════════════════════════════════════════════════════════════
 //  2. PALETTE UNIQUE
 // ════════════════════════════════════════════════════════════════════════════
-echo "\n[2/3] Palette\n";
+echo "\n[2/5] Palette\n";
 const DRAPEAU_PALETTE = 'brand_palette_blue_v1';
 
 $etat = $drapeau(DRAPEAU_PALETTE);
@@ -257,7 +257,7 @@ if ($etat === true) {
 // ════════════════════════════════════════════════════════════════════════════
 //  3. GÉOMÉTRIE DES HEROS OVERLAY
 // ════════════════════════════════════════════════════════════════════════════
-echo "\n[3/3] Heros overlay\n";
+echo "\n[3/5] Heros overlay\n";
 const DRAPEAU_HEROS = 'hero_overlay_size_aligned_v2';
 const REFERENCE     = 'secteurs';
 
@@ -344,7 +344,7 @@ if ($etat === true) {
 // disparaître. Il est AJOUTÉ devant les rubriques existantes ; aucun autre
 // lien n'est modifié, déplacé ou supprimé. Si un lien vers l'accueil existe
 // déjà (étape 1 jouée avec le plan à jour, ou ajout manuel), rien n'est fait.
-echo "\n[4/4] Lien « Accueil »\n";
+echo "\n[4/5] Lien « Accueil »\n";
 const DRAPEAU_ACCUEIL = 'primary_menu_home_v1';
 
 $etat = $drapeau(DRAPEAU_ACCUEIL);
@@ -387,6 +387,47 @@ if ($etat === true) {
         $poserDrapeau(DRAPEAU_ACCUEIL);
     } catch (\Throwable $e) {
         echo "  ERREUR accueil : " . $e->getMessage() . "\n";
+        echo "  Drapeau NON posé — l'étape sera rejouée au prochain déploiement.\n";
+    }
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  5. SECTION « ÉQUIPE » DE L'ACCUEIL MASQUÉE
+// ════════════════════════════════════════════════════════════════════════════
+// Demande utilisateur : cacher « Les experts derrière Digitalium ». La section
+// passe en `inactive` — contenu conservé, réactivable depuis /admin/pages ->
+// Accueil -> bouton « œil » de la section. Opération UNIQUE : la réafficher en
+// admin n'est jamais défait par un déploiement.
+echo "\n[5/5] Section Équipe de l'accueil\n";
+const DRAPEAU_EQUIPE = 'home_team_hidden_v1';
+
+$etat = $drapeau(DRAPEAU_EQUIPE);
+if ($etat === true) {
+    echo "  Drapeau " . DRAPEAU_EQUIPE . " déjà posé — statut laissé tel qu'il est en admin.\n";
+} elseif ($etat === null) {
+    echo "  Étape abandonnée.\n";
+} else {
+    try {
+        $equipes = Database::fetchAll(
+            "SELECT s.id, s.name, s.status
+               FROM sections s JOIN pages p ON p.id = s.page_id
+              WHERE p.slug = 'home' AND s.type = 'team'"
+        );
+        if (empty($equipes)) {
+            echo "  Aucune section « team » sur l'accueil — rien à masquer.\n";
+        }
+        foreach ($equipes as $s) {
+            if (($s['status'] ?? '') === 'inactive') {
+                echo "  #{$s['id']} « {$s['name']} » déjà masquée.\n";
+                continue;
+            }
+            Database::query("UPDATE sections SET status = 'inactive' WHERE id = :id", ['id' => (int)$s['id']]);
+            echo "  #{$s['id']} « {$s['name']} » masquée (contenu conservé).\n";
+            $modifie = true;
+        }
+        $poserDrapeau(DRAPEAU_EQUIPE);
+    } catch (\Throwable $e) {
+        echo "  ERREUR équipe : " . $e->getMessage() . "\n";
         echo "  Drapeau NON posé — l'étape sera rejouée au prochain déploiement.\n";
     }
 }

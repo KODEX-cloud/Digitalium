@@ -108,6 +108,30 @@ sections `contact_details` de /contact (#21, #72). Pages servies : /insights, /l
 
 ---
 
+### 2026-10-16 (suite 2) — Section « Les experts derrière Digitalium » masquée, activable en admin
+
+Demande : cacher la section Équipe de l'accueil (`team`, `#team`) et pouvoir l'activer ou la
+désactiver depuis le tableau de bord.
+
+**L'interrupteur existait déjà** : `/admin/pages` → Accueil → bouton « œil » de la section
+(`PageController::toggleSection`, `POST /admin/pages/sections/toggle`, CSRF, cache vidé ; le site ne
+rend que `Section::getActiveByPage`). Rien à construire de ce côté.
+
+**Défaut trouvé** : `build_home_v2.php` remettait `status = 'active'` sur TOUTES les sections de
+l'accueil. Inoffensif tant que `storage/homepage_v2.lock` existe, mais à la première perte du verrou
+(restauration), tout ce qui a été masqué en admin réapparaissait. Le statut d'une section existante
+n'est plus réécrit.
+
+**Masquage** : étape 5 de `harmonize_site_v1.php`, drapeau `home_team_hidden_v1` — opération unique,
+contenu conservé.
+
+**Preuve** (MySQL jetable, pipeline réel, admin piloté par puppeteer) : étape 5 → section masquée,
+absente de `/` ; admin → clic sur l'œil → réaffichée en admin ET sur le site, second clic → masquée
+partout ; redéploiement complet **sans verrou** : masquée reste masquée, réaffichée reste
+réaffichée ; contrôle négatif : l'ancien `build_home_v2.php` sans verrou **réactive** la section.
+
+---
+
 ### 2026-10-16 (suite) — Mot « Démo » retiré du site · « Accueil » rétabli dans le menu
 
 **« Démo » sur le site** — recensement en production (22 pages, fiches de réalisation comprises) :

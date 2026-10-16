@@ -102,7 +102,10 @@ try {
     $sec = function (string $type, string $name) use (&$order, &$sectionIdByType, $pageId) {
         if (isset($sectionIdByType[$type])) {
             $id = $sectionIdByType[$type];
-            Database::query("UPDATE sections SET status = 'active', sort_order = :o, name = :n WHERE id = :id", [
+            // Le statut d'une section existante n'est PAS réécrit : une section
+            // masquée en admin (bouton « œil ») doit le rester, même si ce
+            // script venait à être rejoué après la perte de son verrou.
+            Database::query("UPDATE sections SET sort_order = :o, name = :n WHERE id = :id", [
                 'o' => $order, 'n' => $name, 'id' => $id,
             ]);
         } else {
