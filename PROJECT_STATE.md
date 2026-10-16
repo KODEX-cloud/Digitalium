@@ -49,6 +49,13 @@ la zone du titre, de l'en-tête fixe et des cartes du hero.
 Limites du banc : `/` en 404 et adresse absente — la page `home` et `contact_address` n'existent
 qu'en production (saisies en admin), aucun script ne les crée.
 
+**Vérifié en production** (commit `16b9939`, run GitHub Actions `38885494641` : success, 73 s).
+Journal : 7 médias inscrits (#27 à #33), 3 heros, 3 couvertures, fond de carte posé sur les **deux**
+sections `contact_details` de /contact (#21, #72). Pages servies : /insights, /labs, /contact et les
+3 articles à 1440 et 390 px — **0** emplacement vide, **0** image cassée, 0 débordement ; 7 fichiers
+`visuel-*.webp` en 200 `image/webp` ; /, /secteurs, /solutions, /realisations, /a-propos,
+/sitemap.xml en 200.
+
 **Reste à faire**
 - **[USER]** Avatar sans photo dans la section Équipe de l'accueil : à remplir depuis l'admin avec
   une vraie photo.
