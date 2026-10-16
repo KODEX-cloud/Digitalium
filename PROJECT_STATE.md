@@ -91,6 +91,14 @@ version HEAD (état de production reproduit : mêmes accents par page), puis ver
 | `h_blog.php` | **11 / 11** ; contre la version HEAD : **5 / 11** (contrôle négatif) |
 | `php -l` (17 fichiers) · `bin/check_views.php` | 0 erreur · 0 faute |
 
+**Vérifié en production** (commit `30c55ea`, run GitHub Actions `38837111056` : success, 59 s).
+Journal du déploiement : menu reconstruit (8 liens sauvegardés → 4 rubriques + 10 sous-liens),
+8 clés de thème passées au bleu, 10 accents de page retirés, 5 heros de sous-pages alignés —
+identique au banc. Pages servies : 9 pages + sitemap en **200** ; `--primary` `#0868B0` et aucun
+`page-accent` sur les 9 ; menu à 4 rubriques partout ; 4 cartes « solutions voisines » sur
+/solutions/ia-automatisation ; une seule newsletter sur /insights ; heros à 632 px (1440) sur
+/a-propos et /contact, 0 débordement horizontal à 390 px.
+
 **Reste à faire**
 - **[USER]** /realisations et /solutions affichent toujours **6 réalisations « Démo — … »** (clients,
   chiffres et témoignages inventés, `seed_demo_content.php`). Non touchées : elles avaient été demandées
