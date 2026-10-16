@@ -1,5 +1,35 @@
 # PROJECT_STATE — Digitalium Group CMS
-> Dernière mise à jour : 2026-10-16 — Lisibilité des textes sur tout le site
+> Dernière mise à jour : 2026-10-16 — Textes gris passés au noir
+
+---
+
+### 2026-10-16 (suite 4) — Textes gris passés au noir
+
+Demande : « certaines écritures sont de couleur grise, mets-les en noir ». Après le déploiement des
+tailles minimales (309044d, en production avec 5c1403c), le texte restait gris : les trois couleurs
+de texte du thème étaient un charbon et deux ardoises (`#272727`, `#3b3f4a`, `#4d4f63`), plus des gris
+écrits en dur (`#64748b`, `#6b7280`, `#8aa0be`, `#475569`, `#334155`, `#374151`).
+
+**Réalisé** (travail mené à deux sessions sur le même dossier, une seule série de valeurs retenue) :
+- `database/text_colors_black_v1.php` (nouveau, drapeau `text_colors_black_v1`, étape non bloquante de
+  `deploy.yml`) : `theme_text_main` / `color_text_main` `#111111`, `theme_text_sub` `#1a1a1a`,
+  `theme_text_muted` / `color_text_muted` `#262626`. Les `color_*` gagnent la cascade : réglés ensemble.
+  Anciennes valeurs dans `text_colors_backup_v1`.
+- Valeurs par défaut alignées : `index.css` (`:root`, `--text-faint` `#404040`), replis de `layout.php`,
+  `master_migration.php`, `SettingsMigration.php`, `admin/theme.php`.
+- Gris en dur sur fond clair → variables du thème : `index.css` (.stat-label, .blog-post-meta,
+  .breadcrumb), `layout.php` (liens du menu, sous-titre du logo), `partials/hero.php` (l.411, 463, 502).
+- Laissés exprès (texte clair sur fond sombre) : `.page-hero p`, `partials/hero.php` l.221, 372, 1061.
+
+**Preuve** — base MySQL 8.4 jetable (réglages identiques à la production) :
+
+| Vérification | Résultat |
+|---|---|
+| Script, 1er / 2e passage | 5 réglages posés + sauvegarde / « Déjà appliqué » |
+| Textes gris sur fond clair (10 pages) — production | **398** (1440 px) |
+| Même mesure sur le banc | **0** à 1440 et 390 px (10 faux positifs : texte blanc sur la photo des pages Réalisation) |
+| Contraste < AA | aucun nouveau cas (mêmes 10 faux positifs) |
+| `php -l` (6 fichiers) | 0 erreur |
 
 ---
 

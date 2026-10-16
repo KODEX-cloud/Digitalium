@@ -518,6 +518,14 @@ jobs:
                 echo "  ATTENTION Visuels generes (non-bloquant)"
               fi
             fi
+            # Couleurs de texte grises -> noires (operation unique, drapeau en base).
+            if [ -f "database/text_colors_black_v1.php" ]; then
+              if $PHP database/text_colors_black_v1.php 2>&1; then
+                echo "  OK Couleurs de texte"
+              else
+                echo "  ATTENTION Couleurs de texte (non-bloquant)"
+              fi
+            fi
 
             # ─────────────────────────────────────────────────────────────────
             # ÉTAPE 4 — Cache Clear

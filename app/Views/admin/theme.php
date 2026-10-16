@@ -146,9 +146,9 @@ function thv(array $s, string $key, string $default): string {
                     <div class="tb-row">
                         <?php
                         $textColors = [
-                            ['theme_text_main',  '#0f172a', 'Texte principal',  'Titres, textes importants'],
-                            ['theme_text_sub',   '#334155', 'Texte secondaire', 'Paragraphes courants'],
-                            ['theme_text_muted', '#64748b', 'Texte atténué',    'Labels, métadonnées'],
+                            ['theme_text_main',  '#111111', 'Texte principal',  'Titres, textes importants'],
+                            ['theme_text_sub',   '#1a1a1a', 'Texte secondaire', 'Paragraphes courants'],
+                            ['theme_text_muted', '#262626', 'Texte atténué',    'Labels, métadonnées'],
                         ];
                         foreach ($textColors as [$key, $def, $label, $hint]): ?>
                         <div class="tb-field">

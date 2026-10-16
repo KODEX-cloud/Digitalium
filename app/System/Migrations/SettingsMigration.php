@@ -27,8 +27,8 @@ class SettingsMigration implements MigrationInterface {
         'meta_description_default' => 'CMS Enterprise Digitalium Group',
         'color_primary'      => '#2563eb',
         'color_accent'       => '#f59e0b',
-        'color_text_main'    => '#0f172a',
-        'color_text_muted'   => '#64748b',
+        'color_text_main'    => '#111111',
+        'color_text_muted'   => '#262626',
         'color_bg_base'      => '#ffffff',
     ];
 

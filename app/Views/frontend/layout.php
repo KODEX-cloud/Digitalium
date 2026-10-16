@@ -65,8 +65,8 @@
     $_thS    = htmlspecialchars($settings['theme_secondary']              ?? '#0891b2', ENT_QUOTES);
     $_thAc   = htmlspecialchars($settings['theme_accent']                 ?? '#f59e0b', ENT_QUOTES);
     $_thTM   = htmlspecialchars($settings['theme_text_main']              ?? 'var(--surface-dark)', ENT_QUOTES);
-    $_thTS   = htmlspecialchars($settings['theme_text_sub']               ?? '#334155', ENT_QUOTES);
-    $_thTMu  = htmlspecialchars($settings['theme_text_muted']             ?? '#64748b', ENT_QUOTES);
+    $_thTS   = htmlspecialchars($settings['theme_text_sub']               ?? '#1a1a1a', ENT_QUOTES);
+    $_thTMu  = htmlspecialchars($settings['theme_text_muted']             ?? '#262626', ENT_QUOTES);
     $_thBB   = htmlspecialchars($settings['theme_bg_base']                ?? '#ffffff', ENT_QUOTES);
     $_thBA   = htmlspecialchars($settings['theme_bg_alt']                 ?? 'var(--bg-base)', ENT_QUOTES);
     $_thBC   = htmlspecialchars($settings['theme_bg_card']                ?? '#ffffff', ENT_QUOTES);
@@ -247,7 +247,7 @@
         .logo-text-col span {
             font-size: .5rem;
             letter-spacing: .25em;
-            color: #6b7280 !important;
+            color: var(--text-muted) !important;
             text-transform: uppercase;
             font-weight: 500;
             transition: var(--transition);
@@ -281,7 +281,7 @@
         }
 
         /* Navigation links — light theme */
-        #siteHeader .nav-link { color: #374151 !important; }
+        #siteHeader .nav-link { color: var(--text-main) !important; }
         #siteHeader .nav-link:hover { color: #111827 !important; background: rgba(0,0,0,0.04) !important; }
         #siteHeader .nav-link.active { color: var(--primary) !important; background: color-mix(in srgb, var(--primary) 8%, transparent) !important; }
         #siteHeader .menu-toggle { color: #111827 !important; }
@@ -372,7 +372,7 @@
                 <?php if (!empty($settings['site_logo_text'])): ?>
                     <div class="logo-text-col" style="margin-left: 6px;">
                         <strong style="color: var(--primary); font-size: 1.05rem; font-weight: 700; font-family: var(--font-heading);"><?= htmlspecialchars($settings['site_logo_text']) ?></strong>
-                        <span style="font-size: .55rem; color: #8aa0be; text-transform: uppercase; letter-spacing: .25em; font-weight: 500;"><?= htmlspecialchars($settings['site_logo_subtext'] ?? 'Group') ?></span>
+                        <span style="font-size: .55rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: .25em; font-weight: 500;"><?= htmlspecialchars($settings['site_logo_subtext'] ?? 'Group') ?></span>
                     </div>
                 <?php elseif (empty($settings['site_logo'])): ?>
                     <div class="logo-d-mark"></div>

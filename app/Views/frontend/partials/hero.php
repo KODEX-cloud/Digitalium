@@ -408,7 +408,7 @@ if (!empty($page['hero_title'])):
                     <div style="width: 40px; height: 3px; background: var(--primary); margin: 8px 0 20px 0;"></div>
 
                     <?php if (!empty($page['hero_subtitle'])): ?>
-                        <p style="font-size: 1.1rem; line-height: 1.7; color: #475569; margin-bottom: 32px; max-width: 580px; font-weight: 500;">
+                        <p style="font-size: 1.1rem; line-height: 1.7; color: var(--text-sub); margin-bottom: 32px; max-width: 580px; font-weight: 500;">
                             <?= htmlspecialchars($page['hero_subtitle']) ?>
                         </p>
                     <?php endif; ?>
@@ -460,7 +460,7 @@ if (!empty($page['hero_title'])):
                     </h1>
 
                     <?php if (!empty($page['hero_subtitle'])): ?>
-                        <p style="font-size: 1.2rem; line-height: 1.7; color: #334155; margin-bottom: 44px; font-weight: 500; font-family: var(--font-body);">
+                        <p style="font-size: 1.2rem; line-height: 1.7; color: var(--text-sub); margin-bottom: 44px; font-weight: 500; font-family: var(--font-body);">
                             <?= htmlspecialchars($page['hero_subtitle']) ?>
                         </p>
                     <?php endif; ?>
@@ -499,7 +499,7 @@ if (!empty($page['hero_title'])):
                 ?>
                 <?php if (!empty($magArticles)): ?>
                 <div style="display: flex; flex-direction: column; gap: 32px; border-left: 1px solid #e2e8f0; padding-left: 40px; min-height: 250px;">
-                    <div style="font-size: 0.75rem; text-transform: uppercase; font-weight: 700; color: #64748b; letter-spacing: 0.15em; font-family: var(--font-heading);">Dernières actualités</div>
+                    <div style="font-size: 0.75rem; text-transform: uppercase; font-weight: 700; color: var(--text-muted); letter-spacing: 0.15em; font-family: var(--font-heading);">Dernières actualités</div>
                     <div style="display: flex; flex-direction: column; gap: 24px;">
                         <?php foreach (array_slice($magArticles, 0, 3) as $mi => $art): ?>
                         <div class="magazine-nav-item" style="display: flex; flex-direction: column; gap: 6px;">
