@@ -354,7 +354,7 @@ document.getElementById('commentForm')?.addEventListener('submit', async functio
 .art-avatar {
     display: inline-flex; align-items: center; justify-content: center;
     width: 32px; height: 32px; border-radius: 50%;
-    background: var(--primary); color: #ffffff;
+    background: var(--primary); color: var(--text-on-dark);
     font-size: var(--fs-meta); font-weight: 700;
     flex-shrink: 0;
 }
@@ -402,7 +402,7 @@ document.getElementById('commentForm')?.addEventListener('submit', async functio
     border: 1.5px solid var(--border); color: var(--text-muted);
     transition: var(--transition);
 }
-.art-share a:hover { background: var(--primary); border-color: var(--primary); color: #ffffff; }
+.art-share a:hover { background: var(--primary); border-color: var(--primary); color: var(--text-on-dark); }
 
 .art-cta { padding: 0 0 70px; }
 .art-cta-panel {
@@ -416,7 +416,7 @@ document.getElementById('commentForm')?.addEventListener('submit', async functio
 .art-cta-panel a {
     display: inline-flex; align-items: center; gap: 9px;
     padding: 14px 30px; border-radius: 999px;
-    background: var(--primary); color: #ffffff;
+    background: var(--primary); color: var(--text-on-dark);
     font-size: 0.92rem; font-weight: 650; text-decoration: none;
     transition: var(--transition);
 }
@@ -447,7 +447,7 @@ document.getElementById('commentForm')?.addEventListener('submit', async functio
 .art-comment-form button {
     display: inline-flex; align-items: center; gap: 8px;
     padding: 12px 26px; border: 0; border-radius: 999px;
-    background: var(--primary); color: #ffffff;
+    background: var(--primary); color: var(--text-on-dark);
     font-family: var(--font-heading); font-size: 0.87rem; font-weight: 650;
     cursor: pointer; transition: var(--transition);
 }
@@ -502,7 +502,7 @@ document.getElementById('commentForm')?.addEventListener('submit', async functio
 }
 .blog-content img { max-width: 100%; height: auto; border-radius: 12px; margin: 1rem 0; }
 .blog-content code { background: color-mix(in srgb, var(--primary) 8%, transparent); padding: 2px 8px; border-radius: 4px; font-size: 0.88em; font-family: monospace; }
-.blog-content pre { background: var(--surface-dark); color: #e2e8f0; padding: 20px 24px; border-radius: 12px; overflow-x: auto; margin: 1.5rem 0; }
+.blog-content pre { background: var(--surface-dark); color: var(--text-on-dark-muted); padding: 20px 24px; border-radius: 12px; overflow-x: auto; margin: 1.5rem 0; }
 .blog-content pre code { background: none; padding: 0; font-size: 0.9rem; }
 .blog-content table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; display: block; overflow-x: auto; }
 .blog-content th, .blog-content td { border: 1px solid var(--border); padding: 10px 14px; text-align: left; }

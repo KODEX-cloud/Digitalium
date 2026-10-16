@@ -149,6 +149,9 @@ function thv(array $s, string $key, string $default): string {
                             ['theme_text_main',  '#111111', 'Texte principal',  'Titres, textes importants'],
                             ['theme_text_sub',   '#1a1a1a', 'Texte secondaire', 'Paragraphes courants'],
                             ['theme_text_muted', '#262626', 'Texte atténué',    'Labels, métadonnées'],
+                            ['theme_text_on_dark',        '#ffffff', 'Texte sur fond sombre',      'Titres et boutons sur bleu ou sombre'],
+                            ['theme_text_on_dark_muted',  '#eef4fb', 'Texte secondaire sur fond sombre', 'Paragraphes et notes sur bleu ou sombre'],
+                            ['theme_text_on_dark_accent', '#93c5fd', 'Accent sur fond sombre',     'Étiquettes colorées sur fond sombre'],
                         ];
                         foreach ($textColors as [$key, $def, $label, $hint]): ?>
                         <div class="tb-field">

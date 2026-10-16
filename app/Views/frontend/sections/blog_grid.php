@@ -53,7 +53,7 @@
 
                             <div class="bcard-footer" style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); padding-top: 1.2rem; margin-top: auto;">
                                 <div class="bcard-author" style="display: flex; align-items: center; gap: 8px;">
-                                    <div class="author-av" style="width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: var(--fs-meta); font-weight: 700; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); color: white;">
+                                    <div class="author-av" style="width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: var(--fs-meta); font-weight: 700; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); color: var(--text-on-dark);">
                                         DG
                                     </div>
                                     <span class="author-name" style="font-size: var(--fs-meta); color: var(--text-muted); font-weight: 600;">Équipe DG</span>

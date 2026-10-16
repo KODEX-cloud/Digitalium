@@ -86,7 +86,7 @@
                             <?= htmlspecialchars($settings['site_name'] ?? 'Digitalium Group') ?> — Systèmes actifs
                         </span>
                         <?php if (!empty($single['visual_label'])): ?>
-                            <span style="margin-left:auto;font-size: var(--fs-meta);color:#60a5fa;font-weight:700;"><?= htmlspecialchars($single['visual_label']) ?></span>
+                            <span style="margin-left:auto;font-size: var(--fs-meta);color:var(--text-on-dark-accent);font-weight:700;"><?= htmlspecialchars($single['visual_label']) ?></span>
                         <?php endif; ?>
                     </div>
                 </div>

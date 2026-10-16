@@ -558,7 +558,7 @@ $bannerVars = $isWide
 }
 .hero-mc-btn-primary {
     background: var(--primary);
-    color: #ffffff !important;
+    color: var(--text-on-dark) !important;
     border: 1.5px solid var(--primary);
 }
 .hero-mc-btn-ghost {
@@ -575,7 +575,7 @@ $bannerVars = $isWide
     border-radius: 50%;
     flex-shrink: 0;
 }
-.hero-mc-btn-primary .hero-mc-btn-icon { background: rgba(255,255,255,0.20); color: #ffffff; }
+.hero-mc-btn-primary .hero-mc-btn-icon { background: rgba(255,255,255,0.20); color: var(--text-on-dark); }
 .hero-mc-btn-ghost   .hero-mc-btn-icon { background: color-mix(in srgb, var(--primary) 12%, transparent); color: var(--primary); }
 
 /* ── Colonne visuelle ── */
@@ -806,7 +806,7 @@ $bannerVars = $isWide
     margin-bottom: 20px;
     padding: 9px 18px;
     background: var(--primary);
-    color: #ffffff;
+    color: var(--text-on-dark);
     font-family: var(--font-heading);
     font-size: 0.76rem;
     font-weight: 700;
@@ -816,7 +816,7 @@ $bannerVars = $isWide
 
 .hero-ov-title {
     margin: 0 0 18px;
-    color: #ffffff;
+    color: var(--text-on-dark);
     font-family: var(--font-heading);
     /* Plafond abaissé (3.6rem -> 3.1rem) : en capitales, un titre de cinquante
        signes prenait quatre lignes, et la hauteur du hero variait de 622 à
@@ -832,7 +832,7 @@ $bannerVars = $isWide
 
 .hero-ov-lead {
     margin: 0;
-    color: rgba(255, 255, 255, 0.92);
+    color: var(--text-on-dark-muted);
     font-size: 1.04rem;
     line-height: 1.7;
     max-width: 560px;
@@ -919,7 +919,7 @@ $bannerVars = $isWide
 .hero-ov-btn-ghost {
     background: rgba(255, 255, 255, 0.10);
     border-color: rgba(255, 255, 255, 0.65);
-    color: #ffffff !important;
+    color: var(--text-on-dark) !important;
 }
 .hero-ov-btn-ghost:hover { background: rgba(255, 255, 255, 0.22); }
 
@@ -932,7 +932,7 @@ $bannerVars = $isWide
     display: inline-flex; align-items: center; justify-content: center;
     background: rgba(0, 0, 0, 0.28);
     border: 1.5px solid rgba(255, 255, 255, 0.6);
-    color: #ffffff;
+    color: var(--text-on-dark);
     cursor: pointer;
     transition: var(--transition);
 }
@@ -1061,12 +1061,12 @@ $bannerVars = $isWide
 .hero-mc-overlay .hero-mc-badge {
     background: rgba(255, 255, 255, 0.16);
     border-color: rgba(255, 255, 255, 0.34);
-    color: #ffffff;
+    color: var(--text-on-dark);
 }
-.hero-mc-overlay .hero-mc-title { color: #ffffff; }
-.hero-mc-overlay .hero-mc-title-accent { color: rgba(255, 255, 255, 0.88); }
+.hero-mc-overlay .hero-mc-title { color: var(--text-on-dark); }
+.hero-mc-overlay .hero-mc-title-accent { color: var(--text-on-dark-muted); }
 .hero-mc-overlay .hero-mc-lead {
-    color: rgba(255, 255, 255, 0.92);
+    color: var(--text-on-dark-muted);
     max-width: 520px;
     margin-left: 0;
     margin-right: 0;
@@ -1075,7 +1075,7 @@ $bannerVars = $isWide
 
 /* Sur photo, un bouton à la couleur de marque se fond dans le voile :
    le bouton principal passe en blanc plein, le secondaire en contour clair. */
-/* `!important` obligatoire : la règle de base pose `color: #ffffff !important`
+/* `!important` obligatoire : la règle de base pose `color: var(--text-on-dark) !important`
    sur ce bouton, ce qui rendait le libellé blanc sur fond blanc. */
 .hero-mc-overlay .hero-mc-btn-primary {
     background: #ffffff;
@@ -1090,11 +1090,11 @@ $bannerVars = $isWide
 .hero-mc-overlay .hero-mc-btn-ghost {
     background: rgba(255, 255, 255, 0.12);
     border-color: rgba(255, 255, 255, 0.55);
-    color: #ffffff !important;
+    color: var(--text-on-dark) !important;
 }
 .hero-mc-overlay .hero-mc-btn-ghost .hero-mc-btn-icon {
     background: rgba(255, 255, 255, 0.20);
-    color: #ffffff;
+    color: var(--text-on-dark);
 }
 
 @media (max-width: 760px) {

@@ -164,7 +164,7 @@ $teamAccents = ['var(--primary)', 'var(--secondary)', 'var(--accent)', 'var(--pr
     padding: 5px 16px;
     margin-bottom: 16px;
     border-radius: var(--radius-pill);
-    color: #fff;
+    color: var(--text-on-dark);
     font-size: var(--fs-caption);
     font-weight: 700;
     letter-spacing: 0.06em;
@@ -193,7 +193,7 @@ $teamAccents = ['var(--primary)', 'var(--secondary)', 'var(--accent)', 'var(--pr
 .team-social-link:hover {
     background: var(--primary);
     border-color: var(--primary);
-    color: #fff;
+    color: var(--text-on-dark);
     transform: translateY(-3px);
     box-shadow: 0 6px 16px color-mix(in srgb, var(--primary) 28%, transparent);
 }

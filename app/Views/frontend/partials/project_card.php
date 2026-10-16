@@ -122,7 +122,7 @@ if (isset($project)):
 }
 .btn-card-cta:hover {
     background: linear-gradient(135deg, var(--accent) 0%, #f97316 100%) !important;
-    color: white !important;
+    color: var(--text-on-dark) !important;
     border-color: transparent !important;
     box-shadow: 0 8px 20px -4px rgba(226, 109, 54, 0.3) !important;
     transform: translateY(-1px);

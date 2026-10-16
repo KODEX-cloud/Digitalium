@@ -184,7 +184,7 @@ $moreText    = trim((string)($single['more_text'] ?? ''));
     padding: 14px 30px;
     border-radius: 999px;
     background: var(--primary);
-    color: #ffffff;
+    color: var(--text-on-dark);
     font-size: 0.92rem; font-weight: 650;
     text-decoration: none;
     transition: var(--transition);
@@ -215,7 +215,7 @@ $moreText    = trim((string)($single['more_text'] ?? ''));
 .pj-filter.active {
     background: var(--primary);
     border-color: var(--primary);
-    color: #ffffff;
+    color: var(--text-on-dark);
 }
 
 .pj-grid {
@@ -343,7 +343,7 @@ $moreText    = trim((string)($single['more_text'] ?? ''));
     padding: 13px 26px;
     border-radius: 999px;
     background: var(--primary);
-    color: #ffffff;
+    color: var(--text-on-dark);
     font-size: 0.9rem;
     font-weight: 700;
     text-decoration: none;

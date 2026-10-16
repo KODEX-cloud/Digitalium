@@ -96,7 +96,7 @@ $projAccents = ['var(--primary)', 'var(--secondary)', 'var(--accent)'];
     position: absolute; top: 14px; left: 14px;
     padding: 4px 12px; border-radius: 100px;
     font-size: var(--fs-caption); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
-    color: #fff;
+    color: var(--text-on-dark);
     box-shadow: 0 4px 12px rgba(15,23,42,0.2);
 }
 

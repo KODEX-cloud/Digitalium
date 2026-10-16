@@ -67,6 +67,9 @@
     $_thTM   = htmlspecialchars($settings['theme_text_main']              ?? 'var(--surface-dark)', ENT_QUOTES);
     $_thTS   = htmlspecialchars($settings['theme_text_sub']               ?? '#1a1a1a', ENT_QUOTES);
     $_thTMu  = htmlspecialchars($settings['theme_text_muted']             ?? '#262626', ENT_QUOTES);
+    $_thTOD  = htmlspecialchars($settings['theme_text_on_dark']           ?? '#ffffff', ENT_QUOTES);
+    $_thTODm = htmlspecialchars($settings['theme_text_on_dark_muted']     ?? '#eef4fb', ENT_QUOTES);
+    $_thTODa = htmlspecialchars($settings['theme_text_on_dark_accent']    ?? '#93c5fd', ENT_QUOTES);
     $_thBB   = htmlspecialchars($settings['theme_bg_base']                ?? '#ffffff', ENT_QUOTES);
     $_thBA   = htmlspecialchars($settings['theme_bg_alt']                 ?? 'var(--bg-base)', ENT_QUOTES);
     $_thBC   = htmlspecialchars($settings['theme_bg_card']                ?? '#ffffff', ENT_QUOTES);
@@ -104,6 +107,9 @@
         --text-main:                <?= $_thTM ?>;
         --text-sub:                 <?= $_thTS ?>;
         --text-muted:               <?= $_thTMu ?>;
+        --text-on-dark:             <?= $_thTOD ?>;
+        --text-on-dark-muted:       <?= $_thTODm ?>;
+        --text-on-dark-accent:      <?= $_thTODa ?>;
         --bg-base:                  <?= $_thBB ?>;
         --bg-alt:                   <?= $_thBA ?>;
         --bg-card:                  <?= $_thBC ?>;

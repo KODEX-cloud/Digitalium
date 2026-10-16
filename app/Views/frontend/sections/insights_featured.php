@@ -142,7 +142,7 @@ $ctaText    = trim((string)($single['cta_text'] ?? '')) ?: 'Lire l’analyse';
     padding: 6px 15px;
     border-radius: 999px;
     background: var(--primary);
-    color: #ffffff;
+    color: var(--text-on-dark);
     font-size: var(--fs-caption); font-weight: 700;
     letter-spacing: 0.09em; text-transform: uppercase;
 }
@@ -174,7 +174,7 @@ $ctaText    = trim((string)($single['cta_text'] ?? '')) ?: 'Lire l’analyse';
     padding: 13px 28px;
     border-radius: 999px;
     background: var(--primary);
-    color: #ffffff;
+    color: var(--text-on-dark);
     font-size: 0.9rem; font-weight: 650;
     text-decoration: none;
     transition: var(--transition);

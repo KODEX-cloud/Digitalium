@@ -269,7 +269,7 @@ $ctaUrl   = trim((string)($settings['case_cta_url']   ?? '/contact'));
 .cs-hero-media ~ .cs-hero-inner .cs-eyebrow,
 .cs-hero-media ~ .cs-hero-inner .cs-title,
 .cs-hero-media ~ .cs-hero-inner .cs-lead,
-.cs-hero-media ~ .cs-hero-inner .cs-facts { color: #ffffff; }
+.cs-hero-media ~ .cs-hero-inner .cs-facts { color: var(--text-on-dark); }
 
 .cs-back {
     display: flex; width: max-content; align-items: center; gap: 7px;
@@ -284,7 +284,7 @@ $ctaUrl   = trim((string)($settings['case_cta_url']   ?? '/contact'));
     letter-spacing: 0.09em; text-transform: uppercase;
     color: var(--primary);
 }
-.cs-hero-media ~ .cs-hero-inner .cs-eyebrow { color: rgba(255,255,255,0.85); }
+.cs-hero-media ~ .cs-hero-inner .cs-eyebrow { color: var(--text-on-dark-muted); }
 
 .cs-title { font-size: clamp(2rem, 4.2vw, 3.1rem); line-height: 1.1; font-weight: 800; margin: 0 0 16px; max-width: 800px; }
 .cs-lead  { font-size: 1.05rem; line-height: 1.65; max-width: 620px; margin: 0; opacity: 0.94; }
@@ -344,7 +344,7 @@ $ctaUrl   = trim((string)($settings['case_cta_url']   ?? '/contact'));
 .cs-visit {
     display: inline-flex; align-items: center; gap: 8px;
     margin-top: 20px; padding: 11px 18px;
-    border-radius: 999px; background: var(--primary); color: #ffffff;
+    border-radius: 999px; background: var(--primary); color: var(--text-on-dark);
     font-size: 0.86rem; font-weight: 700; text-decoration: none;
 }
 
@@ -364,10 +364,10 @@ $ctaUrl   = trim((string)($settings['case_cta_url']   ?? '/contact'));
 .cs-related-body b { color: var(--text-main); font-size: 1rem; line-height: 1.35; }
 
 /* ── CTA ── */
-.cs-cta { background: var(--primary); color: #ffffff; padding: 68px 0; text-align: center; }
+.cs-cta { background: var(--primary); color: var(--text-on-dark); padding: 68px 0; text-align: center; }
 /* Couleur explicite : les règles globales `h2` et `p` d'index.css l'emportent sur l'héritage. */
-.cs-cta h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); margin: 0 0 12px; font-weight: 800; color: #ffffff; }
-.cs-cta p { max-width: 560px; margin: 0 auto 26px; color: rgba(255,255,255,0.92); line-height: 1.65; }
+.cs-cta h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); margin: 0 0 12px; font-weight: 800; color: var(--text-on-dark); }
+.cs-cta p { max-width: 560px; margin: 0 auto 26px; color: var(--text-on-dark-muted); line-height: 1.65; }
 .cs-cta-btn {
     display: inline-flex; align-items: center; gap: 9px;
     padding: 15px 32px; border-radius: 999px;

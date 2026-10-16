@@ -146,7 +146,7 @@ $emptyText    = trim((string)($single['empty_text'] ?? ''));
     text-decoration: none;
     transition: var(--transition);
 }
-.insr-btn:hover { background: var(--primary); border-color: var(--primary); color: #ffffff; gap: 12px; }
+.insr-btn:hover { background: var(--primary); border-color: var(--primary); color: var(--text-on-dark); gap: 12px; }
 
 .insr-empty {
     display: flex; flex-direction: column; align-items: center; gap: 14px;

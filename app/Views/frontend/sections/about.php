@@ -48,7 +48,7 @@ $valAccents = ['var(--primary)', 'var(--secondary)', 'var(--accent)', 'var(--pri
                     ?>
                     <div class="about-check-item">
                         <div class="about-check-icon">
-                            <i data-lucide="check" style="width:13px;height:13px;color:#fff;stroke-width:3;"></i>
+                            <i data-lucide="check" style="width:13px;height:13px;color:var(--text-on-dark);stroke-width:3;"></i>
                         </div>
                         <span><?= htmlspecialchars($single[$ck]) ?></span>
                     </div>

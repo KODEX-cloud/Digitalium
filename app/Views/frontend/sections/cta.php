@@ -81,7 +81,7 @@
     font-size: clamp(1.25rem, 2.4vw, 1.75rem);
     font-weight: 800;
     line-height: 1.25;
-    color: #ffffff;
+    color: var(--text-on-dark);
     margin: 0 0 8px;
     letter-spacing: -0.01em;
 }
@@ -89,7 +89,7 @@
 .cta-band-sub {
     font-size: 0.88rem;
     line-height: 1.6;
-    color: rgba(255,255,255,0.92);
+    color: var(--text-on-dark-muted);
     margin: 0;
     max-width: 560px;
 }
@@ -123,7 +123,7 @@
 
 .cta-band-btn-ghost {
     background: rgba(255,255,255,0.10);
-    color: #ffffff !important;
+    color: var(--text-on-dark) !important;
     border: 1px solid rgba(255,255,255,0.45);
 }
 .cta-band-btn-ghost:hover { transform: translateY(-2px); background: rgba(255,255,255,0.18); }
@@ -131,7 +131,7 @@
 .cta-sec .section-badge {
     background: rgba(255,255,255,0.16);
     border-color: rgba(255,255,255,0.3);
-    color: #ffffff;
+    color: var(--text-on-dark);
 }
 .cta-sec .section-badge::before { background: #ffffff; }
 

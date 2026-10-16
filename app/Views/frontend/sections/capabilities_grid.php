@@ -68,7 +68,7 @@ $capsCta = trim((string)($single['cta_text'] ?? ''));
 .caps-cta-btn {
     display: inline-flex; align-items: center; gap: 9px;
     padding: 14px 30px; border-radius: 999px;
-    background: var(--primary); color: #ffffff;
+    background: var(--primary); color: var(--text-on-dark);
     font-size: 0.92rem; font-weight: 650; text-decoration: none;
     transition: var(--transition);
 }

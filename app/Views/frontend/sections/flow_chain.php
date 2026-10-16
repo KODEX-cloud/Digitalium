@@ -107,9 +107,9 @@ foreach (($groups ?? []) as $g) {
     background: var(--primary);
     border-color: var(--primary);
 }
-.fc-step.is-milestone .fc-label { color: #ffffff; }
-.fc-step.is-milestone .fc-note  { color: rgba(255, 255, 255, 0.92); }
-.fc-step.is-milestone .fc-icon  { background: rgba(255, 255, 255, 0.18); color: #ffffff; }
+.fc-step.is-milestone .fc-label { color: var(--text-on-dark); }
+.fc-step.is-milestone .fc-note  { color: var(--text-on-dark-muted); }
+.fc-step.is-milestone .fc-icon  { background: rgba(255, 255, 255, 0.18); color: var(--text-on-dark); }
 
 .fc-icon {
     display: inline-flex; align-items: center; justify-content: center;

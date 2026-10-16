@@ -58,7 +58,7 @@ foreach ($projectsList as $proj) {
 }
 .portfolio-tab-btn.active {
     background: linear-gradient(135deg, #0d9488 0%, #0891b2 100%) !important;
-    color: white !important;
+    color: var(--text-on-dark) !important;
     border-color: transparent !important;
     box-shadow: 0 8px 20px -4px rgba(13,148,136,0.3) !important;
 }

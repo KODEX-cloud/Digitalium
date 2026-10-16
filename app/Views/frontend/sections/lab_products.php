@@ -253,7 +253,7 @@ $dispoLabel = trim((string)($single['availability_label'] ?? ''));
     cursor: pointer; transition: var(--transition);
 }
 .lp-filter:hover { color: var(--primary); border-color: color-mix(in srgb, var(--primary) 35%, transparent); }
-.lp-filter.is-on { background: var(--primary); border-color: var(--primary); color: #ffffff; }
+.lp-filter.is-on { background: var(--primary); border-color: var(--primary); color: var(--text-on-dark); }
 
 .lp-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 26px; }
 
@@ -298,7 +298,7 @@ $dispoLabel = trim((string)($single['availability_label'] ?? ''));
 .lp-stage-prototype     { background: color-mix(in srgb, var(--primary) 8%, transparent); }
 .lp-stage-developpement { background: color-mix(in srgb, var(--primary) 14%, transparent); }
 .lp-stage-beta          { background: color-mix(in srgb, var(--primary) 20%, transparent); }
-.lp-stage-disponible    { background: var(--primary); color: #ffffff; border-color: var(--primary); }
+.lp-stage-disponible    { background: var(--primary); color: var(--text-on-dark); border-color: var(--primary); }
 
 .lp-desc { margin: 0; font-size: 0.9rem; line-height: 1.68; color: var(--text-muted); flex: 1; }
 
@@ -340,7 +340,7 @@ $dispoLabel = trim((string)($single['availability_label'] ?? ''));
 .lp-empty-btn {
     display: inline-flex; align-items: center; gap: 8px;
     padding: 12px 26px; border-radius: 999px;
-    background: var(--primary); color: #ffffff;
+    background: var(--primary); color: var(--text-on-dark);
     font-size: 0.88rem; font-weight: 650; text-decoration: none;
 }
 
@@ -348,7 +348,7 @@ $dispoLabel = trim((string)($single['availability_label'] ?? ''));
 .lp-more-btn {
     display: inline-flex; align-items: center; gap: 9px;
     padding: 14px 30px; border-radius: 999px;
-    background: var(--primary); color: #ffffff;
+    background: var(--primary); color: var(--text-on-dark);
     font-size: 0.92rem; font-weight: 650; text-decoration: none;
     transition: var(--transition);
 }

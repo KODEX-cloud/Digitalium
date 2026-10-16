@@ -1,5 +1,34 @@
 # PROJECT_STATE — Digitalium Group CMS
-> Dernière mise à jour : 2026-10-16 — Textes gris passés au noir
+> Dernière mise à jour : 2026-10-16 — Couleurs de texte sur fond sombre administrables
+
+---
+
+### 2026-10-16 (suite 5) — Plus aucune couleur de texte écrite en dur dans le frontend
+
+Demande : « si c'est codé en dur, ne peux-tu pas trouver une solution pour le transformer ? ».
+Après la suite 4, 133 couleurs de texte restaient écrites en dur, toutes pour du texte sur fond bleu
+ou sombre : blancs (`#fff`, `#f1f5f9`), gris clairs (`#cbd5e1`, `#94a3b8`, `#e2e8f0`), blancs
+translucides (`rgba(255,255,255,.6 à .92)`), bleus clairs et un turquoise hérité du thème vert (`#5eead4`).
+
+**Réalisé**
+- 3 réglages de thème (Règle #2) : `theme_text_on_dark` `#ffffff`, `theme_text_on_dark_muted` `#eef4fb`,
+  `theme_text_on_dark_accent` `#93c5fd`. Déclarés dans `AdminController::themeSubmit`, le panneau
+  `/admin/theme` (section Couleurs de texte), `layout.php` (`--text-on-dark*`), `index.css` (replis) et
+  `master_migration.php` (créés seulement s'ils manquent).
+- 133 déclarations `color:` de 33 fichiers rattachées à ces jetons (106 / 20 / 7) ; seules les propriétés
+  `color` sont touchées. Laissé : l'icône de visuel vide à 30 % d'opacité (décor).
+
+**Preuve** — banc MySQL 8.4 :
+
+| Vérification | Résultat |
+|---|---|
+| Couleurs claires en dur restantes (grep) | **0** |
+| `master_migration.php` | 3 réglages créés avec leurs valeurs |
+| Textes sur fond sombre (7 pages) — production | blanc ×62, blanc translucide ×24 |
+| Même mesure sur le banc | blanc ×58, `#eef4fb` ×24 (opaques) · contraste < 4,5 : **0** |
+| Réglage passé à `#ffd400` en base | les 24 textes secondaires sur fond sombre deviennent jaunes → piloté par l'admin |
+| Rendu de `/admin/theme` | 6 couleurs de texte affichées, valeurs correctes |
+| Textes gris sur fond clair · débordements (1440/820/390) | 0 · 0 |
 
 ---
 

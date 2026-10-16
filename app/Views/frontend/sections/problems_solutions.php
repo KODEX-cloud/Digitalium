@@ -158,7 +158,7 @@ if (count($pairs) < 2) { $psCols = 1; }
     width: 34px; height: 34px;
     border-radius: 50%;
     background: var(--primary);
-    color: #ffffff;
+    color: var(--text-on-dark);
     flex-shrink: 0;
 }
 .ps-solution-head .ps-label { margin-bottom: 0; }

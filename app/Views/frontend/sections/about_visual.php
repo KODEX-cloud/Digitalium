@@ -61,7 +61,7 @@
                     ?>
                     <div class="about-visual-check-item">
                         <div class="about-visual-check-icon">
-                            <i data-lucide="check" style="width:13px;height:13px;color:#fff;stroke-width:3;"></i>
+                            <i data-lucide="check" style="width:13px;height:13px;color:var(--text-on-dark);stroke-width:3;"></i>
                         </div>
                         <span><?= htmlspecialchars($single[$ck]) ?></span>
                     </div>
@@ -111,7 +111,7 @@
     left: 24px;
     bottom: -24px;
     background: linear-gradient(135deg, var(--primary), var(--secondary));
-    color: #fff;
+    color: var(--text-on-dark);
     border-radius: var(--radius-md);
     padding: 16px 22px;
     box-shadow: 0 14px 30px color-mix(in srgb, var(--primary) 32%, transparent);

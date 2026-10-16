@@ -105,7 +105,7 @@ $cardLinkText = trim($single['card_link_text'] ?? '');
     width: 56px; height: 56px;
     border-radius: 50%;
     background: var(--primary);
-    color: #ffffff;
+    color: var(--text-on-dark);
     display: flex; align-items: center; justify-content: center;
     flex-shrink: 0;
     margin-bottom: 26px;
@@ -124,7 +124,7 @@ $cardLinkText = trim($single['card_link_text'] ?? '');
     letter-spacing: 0.05em;
     text-transform: uppercase;
 }
-.svc-v2-card.is-featured .svc-v2-tag { background: rgba(255,255,255,0.18); color: #ffffff; }
+.svc-v2-card.is-featured .svc-v2-tag { background: rgba(255,255,255,0.18); color: var(--text-on-dark); }
 
 .svc-v2-title {
     font-size: 1.25rem;
@@ -148,8 +148,8 @@ $cardLinkText = trim($single['card_link_text'] ?? '');
     background: var(--primary);
     border-color: var(--primary);
 }
-.svc-v2-card.is-featured .svc-v2-title { color: #ffffff; }
-.svc-v2-card.is-featured .svc-v2-desc  { color: rgba(255,255,255,0.92); }
+.svc-v2-card.is-featured .svc-v2-title { color: var(--text-on-dark); }
+.svc-v2-card.is-featured .svc-v2-desc  { color: var(--text-on-dark-muted); }
 .svc-v2-card.is-featured .svc-v2-icon  { background: #ffffff; color: var(--primary); }
 .svc-v2-card.is-featured:hover         { border-color: var(--primary); }
 
@@ -179,6 +179,6 @@ $cardLinkText = trim($single['card_link_text'] ?? '');
     text-decoration: none;
     transition: var(--transition-fast);
 }
-.svc-v2-arrow:hover { background: var(--primary); color: #ffffff; }
-.svc-v2-card.is-featured .svc-v2-arrow { background: rgba(255,255,255,0.16); color: #ffffff; }
+.svc-v2-arrow:hover { background: var(--primary); color: var(--text-on-dark); }
+.svc-v2-card.is-featured .svc-v2-arrow { background: rgba(255,255,255,0.16); color: var(--text-on-dark); }
 </style>

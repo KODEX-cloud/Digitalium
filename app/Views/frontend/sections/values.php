@@ -93,7 +93,7 @@
 .vcard:hover .vcard-icon-wrap {
     background: var(--vcard-accent, var(--primary));
     border-color: var(--vcard-accent, var(--primary));
-    color: #fff;
+    color: var(--text-on-dark);
     box-shadow: 0 10px 28px rgba(13,148,136,0.28);
     transform: scale(1.08) translateY(-3px);
 }

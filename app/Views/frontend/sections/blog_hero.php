@@ -28,7 +28,7 @@
         <div class="filter-bar reveal" style="width: 100%; max-width: 700px; display: flex; flex-direction: column; gap: 20px; align-items: center; margin-top: 1rem;">
             <div class="search-box" style="display: flex; align-items: center; width: 100%; max-width: 520px; background: var(--bg-surface-alt); border: 1px solid var(--border); border-radius: 8px; overflow: hidden;">
                 <input type="text" id="blogSearchInput" onkeyup="filterBlogSearch()" placeholder="Rechercher un article, un sujet..." style="flex: 1; background: transparent; border: none; outline: none; padding: 0.75rem 1.2rem; color: var(--text-main); font-size: 0.9rem;">
-                <button style="background: var(--primary); border: none; padding: 0.75rem 1.5rem; cursor: pointer; color: white; display: flex; align-items: center; justify-content: center;">
+                <button style="background: var(--primary); border: none; padding: 0.75rem 1.5rem; cursor: pointer; color: var(--text-on-dark); display: flex; align-items: center; justify-content: center;">
                     <i data-lucide="search" style="width: 16px; height: 16px;"></i>
                 </button>
             </div>
@@ -79,7 +79,7 @@
 .blog-tag-btn.active, .blog-tag-btn:hover {
     background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
     border-color: transparent;
-    color: white;
+    color: var(--text-on-dark);
     box-shadow: 0 10px 20px -8px color-mix(in srgb, var(--primary) 30%, transparent);
     transform: translateY(-1px);
 }

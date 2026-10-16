@@ -146,7 +146,7 @@ if ($succes && $message === '') {
     display: inline-flex; align-items: center; gap: 8px;
     padding: 13px 26px;
     border: 0; border-radius: 999px;
-    background: var(--primary); color: #ffffff;
+    background: var(--primary); color: var(--text-on-dark);
     font-family: var(--font-heading); font-size: 0.87rem; font-weight: 650;
     cursor: pointer; transition: var(--transition);
 }

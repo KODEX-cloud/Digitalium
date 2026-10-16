@@ -93,7 +93,7 @@ $stepAccents = ['var(--primary)', 'var(--secondary)'];
     width: 36px; height: 36px;
     border-radius: 50%;
     display: inline-flex; align-items: center; justify-content: center;
-    color: #fff;
+    color: var(--text-on-dark);
     font-weight: 800;
     font-size: 0.88rem;
     font-family: var(--font-heading);

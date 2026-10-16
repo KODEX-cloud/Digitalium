@@ -160,7 +160,7 @@ $afficherFormulaire = (($single['show_form'] ?? '1') !== '0');
                     <div class="info-card reveal" style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; display: flex; flex-direction: column; gap: 12px;">
                         <?php if (!empty($settings['contact_email'])): ?>
                             <a href="mailto:<?= htmlspecialchars($settings['contact_email'], ENT_QUOTES) ?>"
-                               style="width: 100%; padding: 0.9rem; background: var(--primary); color: #fff; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; border-radius: 7px; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; transition: var(--transition);">
+                               style="width: 100%; padding: 0.9rem; background: var(--primary); color: var(--text-on-dark); font-size: 0.82rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; border-radius: 7px; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; transition: var(--transition);">
                                 <i data-lucide="mail" style="width: 16px; height: 16px;"></i>
                                 <span><?= htmlspecialchars($single['cta_label'] ?? 'Envoyer un email') ?></span>
                             </a>
@@ -245,7 +245,7 @@ $afficherFormulaire = (($single['show_form'] ?? '1') !== '0');
                 <div class="map-card reveal" style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; display: flex; flex-direction: column;">
                     <div class="map-placeholder<?= $mapImage !== '' ? ' has-map-image' : '' ?>" style="height: 160px; background: <?= $mapFond ?>; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; border-bottom: 1px solid var(--border);">
                         <div class="map-pin" style="width: 36px; height: 36px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); background: var(--primary); display: flex; align-items: center; justify-content: center;">
-                            <i data-lucide="map-pin" style="width: 16px; height: 16px; color: white; transform: rotate(45deg);"></i>
+                            <i data-lucide="map-pin" style="width: 16px; height: 16px; color: var(--text-on-dark); transform: rotate(45deg);"></i>
                         </div>
                         <span class="map-label" style="font-size: var(--fs-meta); color: var(--text-muted);<?= $mapImage !== '' ? ' background: rgba(255,255,255,0.92); padding: 3px 10px; border-radius: 999px; color: var(--text-main); font-weight: 600;' : '' ?>"><?= htmlspecialchars($single['contact_address'] ?? $settings['contact_address'] ?? '') ?></span>
                     </div>
@@ -363,6 +363,6 @@ async function handleMainContactSubmit(event) {
 }
 .whatsapp-btn:hover {
     background: #25d366 !important;
-    color: white !important;
+    color: var(--text-on-dark) !important;
 }
 </style>

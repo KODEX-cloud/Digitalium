@@ -272,7 +272,7 @@ $err = static function (string $k) use ($erreurs): string {
     background: color-mix(in srgb, var(--primary) 12%, transparent);
     color: var(--primary); font-weight: 700; font-size: var(--fs-meta);
 }
-.lf-step.active .lf-step-num { background: var(--primary); color: #fff; }
+.lf-step.active .lf-step-num { background: var(--primary); color: var(--text-on-dark); }
 
 .lf-panel {
     border: 1px solid var(--border);
@@ -345,7 +345,7 @@ $err = static function (string $k) use ($erreurs): string {
 /* `display: inline-flex` l'emportait sur l'attribut `hidden` : « Retour » et
    « Envoyer ma demande » s'affichaient dès la première étape. */
 .lf-btn[hidden] { display: none; }
-.lf-btn-primary { background: var(--primary); color: #fff; }
+.lf-btn-primary { background: var(--primary); color: var(--text-on-dark); }
 .lf-btn-primary:hover { transform: translateY(-2px); box-shadow: var(--shadow-btn); }
 .lf-btn-ghost { background: transparent; color: var(--text-main); border-color: var(--border); }
 .lf-btn-ghost:hover { border-color: var(--primary); color: var(--primary); }

@@ -202,13 +202,13 @@ if (!empty($page['hero_title'])):
                             <!-- Slide Content -->
                             <div class="hero-text-block" style="<?= $textOrder ?> max-width: <?= $heroTextWidth ?>; <?= $textMarginCss ?> <?= $textAlignmentCss ?> display: flex; flex-direction: column; <?= ($heroTextAlignment === 'center' || $heroTextAlignment === 'centre') ? 'align-items: center;' : (($heroTextAlignment === 'right' || $heroTextAlignment === 'droite') ? 'align-items: flex-end;' : 'align-items: flex-start;') ?>">
                                 <?php if (!empty($slide['badge'])): ?>
-                                    <div class="hero-brand-badge" style="display: inline-flex; align-items: center; gap: 8px; background: color-mix(in srgb, var(--primary) 25%, transparent); border: 1px solid color-mix(in srgb, var(--primary) 40%, transparent); padding: 6px 18px; border-radius: 50px; font-size: var(--fs-caption); font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; color: #93c5fd; margin-bottom: 28px; font-family: var(--font-heading);">
+                                    <div class="hero-brand-badge" style="display: inline-flex; align-items: center; gap: 8px; background: color-mix(in srgb, var(--primary) 25%, transparent); border: 1px solid color-mix(in srgb, var(--primary) 40%, transparent); padding: 6px 18px; border-radius: 50px; font-size: var(--fs-caption); font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; color: var(--text-on-dark-accent); margin-bottom: 28px; font-family: var(--font-heading);">
                                         <div style="width: 6px; height: 6px; border-radius: 50%; background: #60a5fa; box-shadow: 0 0 8px #60a5fa;"></div>
                                         <span><?= htmlspecialchars($slide['badge']) ?></span>
                                     </div>
                                 <?php endif; ?>
 
-                                <h1 style="font-size: clamp(2.4rem, 5.5vw, 4rem); line-height: 1.15; font-weight: 900; letter-spacing: -0.03em; color: #ffffff; margin-bottom: 24px; font-family: var(--font-heading);">
+                                <h1 style="font-size: clamp(2.4rem, 5.5vw, 4rem); line-height: 1.15; font-weight: 900; letter-spacing: -0.03em; color: var(--text-on-dark); margin-bottom: 24px; font-family: var(--font-heading);">
                                     <?= $slide['title'] ?>
                                 </h1>
 
@@ -218,14 +218,14 @@ if (!empty($page['hero_title'])):
                                 </div>
 
                                 <?php if (!empty($slide['subtitle'])): ?>
-                                    <p style="font-size: 1.15rem; line-height: 1.7; color: #cbd5e1; margin-bottom: 36px; max-width: 620px; font-weight: 500;">
+                                    <p style="font-size: 1.15rem; line-height: 1.7; color: var(--text-on-dark-muted); margin-bottom: 36px; max-width: 620px; font-weight: 500;">
                                         <?= htmlspecialchars($slide['subtitle']) ?>
                                     </p>
                                 <?php endif; ?>
 
                                 <?php if (!empty($slide['cta_text'])): ?>
                                     <div style="display: flex; gap: 16px;">
-                                        <a href="<?= htmlspecialchars(url($slide['cta_url'] ?? url('/contact'))) ?>" class="btn-cta-primary" style="display: inline-flex; align-items: center; gap: 10px; padding: 14px 32px; border-radius: 12px; font-weight: 700; color: white; background: linear-gradient(135deg, #0d9488 0%, #0891b2 100%); border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 25px -5px rgba(13,148,136,0.4); text-transform: uppercase; font-size: 0.82rem; letter-spacing: 0.05em; transition: var(--transition);">
+                                        <a href="<?= htmlspecialchars(url($slide['cta_url'] ?? url('/contact'))) ?>" class="btn-cta-primary" style="display: inline-flex; align-items: center; gap: 10px; padding: 14px 32px; border-radius: 12px; font-weight: 700; color: var(--text-on-dark); background: linear-gradient(135deg, #0d9488 0%, #0891b2 100%); border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 25px -5px rgba(13,148,136,0.4); text-transform: uppercase; font-size: 0.82rem; letter-spacing: 0.05em; transition: var(--transition);">
                                             <span><?= htmlspecialchars($slide['cta_text']) ?></span>
                                             <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
                                         </a>
@@ -241,7 +241,7 @@ if (!empty($page['hero_title'])):
                                             <?php if (!empty($slide['image'])): ?>
                                                 <img src="<?= htmlspecialchars(url($slide['image'])) ?>" alt="Slide Visual" style="width: 100%; height: 100%; object-fit: cover; <?= $imageFilter ?>">
                                             <?php else: ?>
-                                                <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #0b1329 0%, var(--surface-dark) 100%); display: flex; align-items: center; justify-content: center; color: white;">
+                                                <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #0b1329 0%, var(--surface-dark) 100%); display: flex; align-items: center; justify-content: center; color: var(--text-on-dark);">
                                                     <i data-lucide="image" style="width: 48px; height: 48px; color: rgba(255,255,255,0.3);"></i>
                                                 </div>
                                             <?php endif; ?>
@@ -353,13 +353,13 @@ if (!empty($page['hero_title'])):
             <div class="hero-text-block" style="max-width: <?= $heroTextWidth ?>; <?= $textMarginCss ?> <?= $textAlignmentCss ?> display: flex; flex-direction: column; <?= ($heroTextAlignment === 'center' || $heroTextAlignment === 'centre') ? 'align-items: center;' : (($heroTextAlignment === 'right' || $heroTextAlignment === 'droite') ? 'align-items: flex-end;' : 'align-items: flex-start;') ?> opacity: 0; transform: translateY(20px); animation: heroFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;">
                 
                 <?php if (!empty($badge)): ?>
-                    <div class="hero-brand-badge" style="display: inline-flex; align-items: center; gap: 8px; background: color-mix(in srgb, var(--primary) 20%, transparent); border: 1px solid color-mix(in srgb, var(--primary) 30%, transparent); padding: 6px 18px; border-radius: 50px; font-size: var(--fs-caption); font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; color: #93c5fd; margin-bottom: 28px; font-family: var(--font-heading); box-shadow: 0 0 15px color-mix(in srgb, var(--primary) 15%, transparent);">
+                    <div class="hero-brand-badge" style="display: inline-flex; align-items: center; gap: 8px; background: color-mix(in srgb, var(--primary) 20%, transparent); border: 1px solid color-mix(in srgb, var(--primary) 30%, transparent); padding: 6px 18px; border-radius: 50px; font-size: var(--fs-caption); font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; color: var(--text-on-dark-accent); margin-bottom: 28px; font-family: var(--font-heading); box-shadow: 0 0 15px color-mix(in srgb, var(--primary) 15%, transparent);">
                         <div style="width: 6px; height: 6px; border-radius: 50%; background: #60a5fa;"></div>
                         <span><?= htmlspecialchars($badge) ?></span>
                     </div>
                 <?php endif; ?>
 
-                <h1 style="font-size: clamp(2.6rem, 6vw, 4.4rem); line-height: 1.1; font-weight: 900; letter-spacing: -0.03em; color: #ffffff; margin-bottom: 24px; font-family: var(--font-heading);">
+                <h1 style="font-size: clamp(2.6rem, 6vw, 4.4rem); line-height: 1.1; font-weight: 900; letter-spacing: -0.03em; color: var(--text-on-dark); margin-bottom: 24px; font-family: var(--font-heading);">
                     <?= $page['hero_title'] ?>
                 </h1>
 
@@ -369,14 +369,14 @@ if (!empty($page['hero_title'])):
                 </div>
 
                 <?php if (!empty($page['hero_subtitle'])): ?>
-                    <p style="font-size: 1.15rem; line-height: 1.75; color: #cbd5e1; margin-bottom: 40px; max-width: 700px; font-weight: 500;">
+                    <p style="font-size: 1.15rem; line-height: 1.75; color: var(--text-on-dark-muted); margin-bottom: 40px; max-width: 700px; font-weight: 500;">
                         <?= htmlspecialchars($page['hero_subtitle']) ?>
                     </p>
                 <?php endif; ?>
 
                 <div style="display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; align-items: center;">
                     <?php if (!empty($page['hero_cta1_text'])): ?>
-                        <a href="<?= htmlspecialchars($page['hero_cta1_url'] ?? '#contact') ?>" class="btn-cta-primary" style="display: inline-flex; align-items: center; gap: 10px; padding: 14px 34px; border-radius: 12px; font-weight: 700; color: white; background: linear-gradient(135deg, #0d9488 0%, #0891b2 100%); border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 25px -5px rgba(13,148,136,0.4); text-transform: uppercase; font-size: 0.82rem; letter-spacing: 0.05em; transition: var(--transition);">
+                        <a href="<?= htmlspecialchars($page['hero_cta1_url'] ?? '#contact') ?>" class="btn-cta-primary" style="display: inline-flex; align-items: center; gap: 10px; padding: 14px 34px; border-radius: 12px; font-weight: 700; color: var(--text-on-dark); background: linear-gradient(135deg, #0d9488 0%, #0891b2 100%); border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 25px -5px rgba(13,148,136,0.4); text-transform: uppercase; font-size: 0.82rem; letter-spacing: 0.05em; transition: var(--transition);">
                             <span><?= htmlspecialchars($page['hero_cta1_text']) ?></span>
                             <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
                         </a>
@@ -415,7 +415,7 @@ if (!empty($page['hero_title'])):
 
                     <div style="display: flex; gap: 14px; flex-wrap: wrap;">
                         <?php if (!empty($page['hero_cta1_text'])): ?>
-                            <a href="<?= htmlspecialchars(url($page['hero_cta1_url'] ?? '#contact')) ?>" class="btn-cta-primary" style="display: inline-flex; align-items: center; gap: 8px; padding: 13px 30px; border-radius: var(--radius-btn); font-weight: 700; color: white; background: var(--primary); border: 1px solid var(--primary); box-shadow: var(--shadow-btn); font-size: 0.92rem; transition: var(--transition);">
+                            <a href="<?= htmlspecialchars(url($page['hero_cta1_url'] ?? '#contact')) ?>" class="btn-cta-primary" style="display: inline-flex; align-items: center; gap: 8px; padding: 13px 30px; border-radius: var(--radius-btn); font-weight: 700; color: var(--text-on-dark); background: var(--primary); border: 1px solid var(--primary); box-shadow: var(--shadow-btn); font-size: 0.92rem; transition: var(--transition);">
                                 <span><?= htmlspecialchars($page['hero_cta1_text']) ?></span>
                                 <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
                             </a>
@@ -467,7 +467,7 @@ if (!empty($page['hero_title'])):
 
                     <div style="display: flex; gap: 16px; align-items: center;">
                         <?php if (!empty($page['hero_cta1_text'])): ?>
-                            <a href="<?= htmlspecialchars(url($page['hero_cta1_url'] ?? '#contact')) ?>" class="btn-cta-primary" style="display: inline-flex; align-items: center; gap: 10px; padding: 14px 36px; border-radius: 0; font-weight: 700; color: white; background: #000000; border: 1px solid #000000; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.1em; transition: var(--transition);">
+                            <a href="<?= htmlspecialchars(url($page['hero_cta1_url'] ?? '#contact')) ?>" class="btn-cta-primary" style="display: inline-flex; align-items: center; gap: 10px; padding: 14px 36px; border-radius: 0; font-weight: 700; color: var(--text-on-dark); background: #000000; border: 1px solid #000000; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.1em; transition: var(--transition);">
                                 <span><?= htmlspecialchars($page['hero_cta1_text']) ?></span>
                                 <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
                             </a>
@@ -552,7 +552,7 @@ if (!empty($page['hero_title'])):
 
                 <div style="display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; align-items: center;">
                     <?php if (!empty($page['hero_cta1_text'])): ?>
-                        <a href="<?= htmlspecialchars(url($page['hero_cta1_url'] ?? '#contact')) ?>" class="btn-cta-primary" style="display: inline-flex; align-items: center; gap: 10px; padding: 14px 32px; border-radius: 12px; font-weight: 700; color: white; background: linear-gradient(135deg, #0d9488 0%, #0891b2 100%); border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 25px -5px rgba(13,148,136,0.4); text-transform: uppercase; font-size: 0.82rem; letter-spacing: 0.05em; transition: var(--transition);">
+                        <a href="<?= htmlspecialchars(url($page['hero_cta1_url'] ?? '#contact')) ?>" class="btn-cta-primary" style="display: inline-flex; align-items: center; gap: 10px; padding: 14px 32px; border-radius: 12px; font-weight: 700; color: var(--text-on-dark); background: linear-gradient(135deg, #0d9488 0%, #0891b2 100%); border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 25px -5px rgba(13,148,136,0.4); text-transform: uppercase; font-size: 0.82rem; letter-spacing: 0.05em; transition: var(--transition);">
                             <span><?= htmlspecialchars($page['hero_cta1_text']) ?></span>
                             <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
                         </a>
@@ -600,14 +600,14 @@ if (!empty($page['hero_title'])):
                 
                 <!-- Badge / Label -->
                 <?php if (!empty($badge)): ?>
-                    <div class="hero-brand-badge" style="display: inline-flex; align-items: center; gap: 8px; background: color-mix(in srgb, var(--primary) 12%, transparent); border: 1px solid color-mix(in srgb, var(--primary) 25%, transparent); padding: 6px 18px; border-radius: 50px; font-size: var(--fs-caption); font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; color: #93c5fd; margin-bottom: 28px; font-family: var(--font-heading); box-shadow: 0 0 15px color-mix(in srgb, var(--primary) 10%, transparent);">
+                    <div class="hero-brand-badge" style="display: inline-flex; align-items: center; gap: 8px; background: color-mix(in srgb, var(--primary) 12%, transparent); border: 1px solid color-mix(in srgb, var(--primary) 25%, transparent); padding: 6px 18px; border-radius: 50px; font-size: var(--fs-caption); font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; color: var(--text-on-dark-accent); margin-bottom: 28px; font-family: var(--font-heading); box-shadow: 0 0 15px color-mix(in srgb, var(--primary) 10%, transparent);">
                         <div style="width: 6px; height: 6px; border-radius: 50%; background: #60a5fa; box-shadow: 0 0 8px #60a5fa;"></div>
                         <span><?= htmlspecialchars($badge) ?></span>
                     </div>
                 <?php endif; ?>
 
                 <!-- Heading -->
-                <h1 style="font-size: clamp(2.6rem, 6vw, 4.4rem); line-height: 1.1; font-weight: 900; letter-spacing: -0.03em; color: #ffffff; margin-bottom: 24px; font-family: var(--font-heading);">
+                <h1 style="font-size: clamp(2.6rem, 6vw, 4.4rem); line-height: 1.1; font-weight: 900; letter-spacing: -0.03em; color: var(--text-on-dark); margin-bottom: 24px; font-family: var(--font-heading);">
                     <?= $page['hero_title'] ?>
                 </h1>
 
@@ -621,7 +621,7 @@ if (!empty($page['hero_title'])):
                 <!-- Subtitle / Pitch (Ensured contrast with backdrop blur card) -->
                 <?php if (!empty($page['hero_subtitle'])): ?>
                     <div style="background: rgba(15, 23, 42, 0.45); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.06); padding: 16px 28px; border-radius: 16px; margin-bottom: 40px; max-width: 700px; box-shadow: 0 10px 30px rgba(0,0,0,0.15);">
-                        <p style="font-size: 1.12rem; line-height: 1.75; color: #e2e8f0; font-weight: 500; margin: 0;">
+                        <p style="font-size: 1.12rem; line-height: 1.75; color: var(--text-on-dark-muted); font-weight: 500; margin: 0;">
                             <?= htmlspecialchars($page['hero_subtitle']) ?>
                         </p>
                     </div>
@@ -630,14 +630,14 @@ if (!empty($page['hero_title'])):
                 <!-- Actions -->
                 <div style="display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; align-items: center;">
                     <?php if (!empty($page['hero_cta1_text'])): ?>
-                        <a href="<?= htmlspecialchars($page['hero_cta1_url'] ?? '#contact') ?>" class="btn-cta-primary" style="display: inline-flex; align-items: center; gap: 10px; padding: 14px 34px; border-radius: 12px; font-weight: 700; color: white; background: linear-gradient(135deg, #0d9488 0%, #0891b2 100%); border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 25px -5px rgba(13,148,136,0.4); text-transform: uppercase; font-size: 0.82rem; letter-spacing: 0.05em; transition: var(--transition);">
+                        <a href="<?= htmlspecialchars($page['hero_cta1_url'] ?? '#contact') ?>" class="btn-cta-primary" style="display: inline-flex; align-items: center; gap: 10px; padding: 14px 34px; border-radius: 12px; font-weight: 700; color: var(--text-on-dark); background: linear-gradient(135deg, #0d9488 0%, #0891b2 100%); border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 25px -5px rgba(13,148,136,0.4); text-transform: uppercase; font-size: 0.82rem; letter-spacing: 0.05em; transition: var(--transition);">
                             <span><?= htmlspecialchars($page['hero_cta1_text']) ?></span>
                             <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
                         </a>
                     <?php endif; ?>
 
                     <?php if (!empty($page['hero_cta2_text'])): ?>
-                        <a href="<?= htmlspecialchars($page['hero_cta2_url'] ?? '#services') ?>" class="btn-cta-secondary" style="display: inline-flex; align-items: center; gap: 8px; padding: 14px 30px; border-radius: 12px; font-weight: 600; color: #ffffff; background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.15); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); transition: var(--transition);">
+                        <a href="<?= htmlspecialchars($page['hero_cta2_url'] ?? '#services') ?>" class="btn-cta-secondary" style="display: inline-flex; align-items: center; gap: 8px; padding: 14px 30px; border-radius: 12px; font-weight: 600; color: var(--text-on-dark); background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.15); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); transition: var(--transition);">
                             <span><?= htmlspecialchars($page['hero_cta2_text']) ?></span>
                         </a>
                     <?php endif; ?>
@@ -685,7 +685,7 @@ if (!empty($page['hero_title'])):
                 <!-- Actions -->
                 <div style="display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; align-items: center;">
                     <?php if (!empty($page['hero_cta1_text'])): ?>
-                        <a href="<?= htmlspecialchars($page['hero_cta1_url'] ?? '#contact') ?>" class="btn-cta-primary" style="display: inline-flex; align-items: center; gap: 10px; padding: 14px 32px; border-radius: 12px; font-weight: 700; color: white; background: linear-gradient(135deg, #0d9488 0%, #0891b2 100%); border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 25px -5px rgba(13,148,136,0.4); text-transform: uppercase; font-size: 0.82rem; letter-spacing: 0.05em; transition: var(--transition);">
+                        <a href="<?= htmlspecialchars($page['hero_cta1_url'] ?? '#contact') ?>" class="btn-cta-primary" style="display: inline-flex; align-items: center; gap: 10px; padding: 14px 32px; border-radius: 12px; font-weight: 700; color: var(--text-on-dark); background: linear-gradient(135deg, #0d9488 0%, #0891b2 100%); border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 25px -5px rgba(13,148,136,0.4); text-transform: uppercase; font-size: 0.82rem; letter-spacing: 0.05em; transition: var(--transition);">
                             <span><?= htmlspecialchars($page['hero_cta1_text']) ?></span>
                             <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
                         </a>
@@ -741,18 +741,18 @@ if (!empty($page['hero_title'])):
                 <?php if (!empty($badge)): ?>
                 <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(13,148,136,0.15);border:1px solid rgba(13,148,136,0.3);padding:8px 20px;border-radius:100px;margin-bottom:36px;">
                     <span style="width:7px;height:7px;border-radius:50%;background:#0d9488;box-shadow:0 0 10px rgba(13,148,136,0.9);flex-shrink:0;animation:pulse-dot 2s ease-in-out infinite;"></span>
-                    <span style="font-size: var(--fs-caption);font-weight:700;text-transform:uppercase;letter-spacing: 0.14em;color:#5eead4;font-family:var(--font-heading);"><?= htmlspecialchars($badge) ?></span>
+                    <span style="font-size: var(--fs-caption);font-weight:700;text-transform:uppercase;letter-spacing: 0.14em;color:var(--text-on-dark-accent);font-family:var(--font-heading);"><?= htmlspecialchars($badge) ?></span>
                 </div>
                 <?php endif; ?>
 
                 <!-- H1 — taille administrable depuis le backend -->
-                <h1 style="font-size:<?= $titleSize ?>;line-height:1.06;font-weight:900;letter-spacing:-0.04em;color:#ffffff;margin-bottom:28px;font-family:var(--font-heading);">
+                <h1 style="font-size:<?= $titleSize ?>;line-height:1.06;font-weight:900;letter-spacing:-0.04em;color:var(--text-on-dark);margin-bottom:28px;font-family:var(--font-heading);">
                     <?= $page['hero_title'] ?>
                 </h1>
 
                 <!-- Subtitle -->
                 <?php if (!empty($page['hero_subtitle'])): ?>
-                <p style="font-size:1.15rem;line-height:1.8;color:rgba(255,255,255,0.72);margin-bottom:52px;max-width:560px;">
+                <p style="font-size:1.15rem;line-height:1.8;color:var(--text-on-dark-muted);margin-bottom:52px;max-width:560px;">
                     <?= htmlspecialchars($page['hero_subtitle']) ?>
                 </p>
                 <?php endif; ?>
@@ -761,7 +761,7 @@ if (!empty($page['hero_title'])):
                 <div style="display:flex;gap:18px;flex-wrap:wrap;align-items:center;">
                     <?php if (!empty($page['hero_cta1_text'])): ?>
                     <a href="<?= htmlspecialchars(url($page['hero_cta1_url'] ?? '#services')) ?>"
-                       style="display:inline-flex;align-items:center;gap:10px;padding:18px 42px;border-radius:100px;font-weight:700;font-size:1rem;color:#ffffff;background:var(--primary);box-shadow:0 8px 32px rgba(13,148,136,0.45);transition:all 0.3s cubic-bezier(0.16,1,0.3,1);letter-spacing:0.01em;"
+                       style="display:inline-flex;align-items:center;gap:10px;padding:18px 42px;border-radius:100px;font-weight:700;font-size:1rem;color:var(--text-on-dark);background:var(--primary);box-shadow:0 8px 32px rgba(13,148,136,0.45);transition:all 0.3s cubic-bezier(0.16,1,0.3,1);letter-spacing:0.01em;"
                        onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 16px 40px rgba(13,148,136,0.6)'"
                        onmouseout="this.style.transform='none';this.style.boxShadow='0 8px 32px rgba(13,148,136,0.45)'">
                         <span><?= htmlspecialchars($page['hero_cta1_text']) ?></span>
@@ -770,7 +770,7 @@ if (!empty($page['hero_title'])):
                     <?php endif; ?>
                     <?php if (!empty($page['hero_cta2_text'])): ?>
                     <a href="<?= htmlspecialchars(url($page['hero_cta2_url'] ?? '#contact')) ?>"
-                       style="display:inline-flex;align-items:center;gap:10px;padding:17px 40px;border-radius:100px;font-weight:600;font-size:1rem;color:#ffffff;background:rgba(255,255,255,0.12);border:1.5px solid rgba(255,255,255,0.4);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);transition:all 0.3s cubic-bezier(0.16,1,0.3,1);"
+                       style="display:inline-flex;align-items:center;gap:10px;padding:17px 40px;border-radius:100px;font-weight:600;font-size:1rem;color:var(--text-on-dark);background:rgba(255,255,255,0.12);border:1.5px solid rgba(255,255,255,0.4);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);transition:all 0.3s cubic-bezier(0.16,1,0.3,1);"
                        onmouseover="this.style.background='rgba(255,255,255,0.22)';this.style.transform='translateY(-3px)'"
                        onmouseout="this.style.background='rgba(255,255,255,0.12)';this.style.transform='none'">
                         <span><?= htmlspecialchars($page['hero_cta2_text']) ?></span>
@@ -818,7 +818,7 @@ if (!empty($page['hero_title'])):
 
                     <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center;">
                         <?php if (!empty($page['hero_cta1_text'])): ?>
-                            <a href="<?= htmlspecialchars(url($page['hero_cta1_url'] ?? '#contact')) ?>" class="btn-cta-primary" style="display: inline-flex; align-items: center; gap: 10px; padding: 14px 32px; border-radius: 12px; font-weight: 700; color: white; background: linear-gradient(135deg, #0d9488 0%, #0891b2 100%); border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 25px -5px rgba(13,148,136,0.4); text-transform: uppercase; font-size: 0.82rem; letter-spacing: 0.05em; transition: var(--transition);">
+                            <a href="<?= htmlspecialchars(url($page['hero_cta1_url'] ?? '#contact')) ?>" class="btn-cta-primary" style="display: inline-flex; align-items: center; gap: 10px; padding: 14px 32px; border-radius: 12px; font-weight: 700; color: var(--text-on-dark); background: linear-gradient(135deg, #0d9488 0%, #0891b2 100%); border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 25px -5px rgba(13,148,136,0.4); text-transform: uppercase; font-size: 0.82rem; letter-spacing: 0.05em; transition: var(--transition);">
                                 <span><?= htmlspecialchars($page['hero_cta1_text']) ?></span>
                                 <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
                             </a>
@@ -902,7 +902,7 @@ if (!empty($page['hero_title'])):
 
                     <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center;">
                         <?php if (!empty($page['hero_cta1_text'])): ?>
-                            <a href="<?= htmlspecialchars(url($page['hero_cta1_url'] ?? '#contact')) ?>" class="btn-cta-primary" style="display: inline-flex; align-items: center; gap: 10px; padding: 14px 32px; border-radius: 12px; font-weight: 700; color: white; background: linear-gradient(135deg, #0d9488 0%, #0891b2 100%); border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 25px -5px rgba(13,148,136,0.4); text-transform: uppercase; font-size: 0.82rem; letter-spacing: 0.05em; transition: var(--transition);">
+                            <a href="<?= htmlspecialchars(url($page['hero_cta1_url'] ?? '#contact')) ?>" class="btn-cta-primary" style="display: inline-flex; align-items: center; gap: 10px; padding: 14px 32px; border-radius: 12px; font-weight: 700; color: var(--text-on-dark); background: linear-gradient(135deg, #0d9488 0%, #0891b2 100%); border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 25px -5px rgba(13,148,136,0.4); text-transform: uppercase; font-size: 0.82rem; letter-spacing: 0.05em; transition: var(--transition);">
                                 <span><?= htmlspecialchars($page['hero_cta1_text']) ?></span>
                                 <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
                             </a>
@@ -992,7 +992,7 @@ if (!empty($page['hero_title'])):
                     <!-- Actions -->
                     <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center;">
                         <?php if (!empty($page['hero_cta1_text'])): ?>
-                            <a href="<?= htmlspecialchars($page['hero_cta1_url'] ?? '#contact') ?>" class="btn-cta-primary" style="display: inline-flex; align-items: center; gap: 10px; padding: 14px 32px; border-radius: 12px; font-weight: 700; color: white; background: linear-gradient(135deg, #0d9488 0%, #0891b2 100%); border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 25px -5px rgba(13,148,136,0.4); text-transform: uppercase; font-size: 0.82rem; letter-spacing: 0.05em; transition: var(--transition);">
+                            <a href="<?= htmlspecialchars($page['hero_cta1_url'] ?? '#contact') ?>" class="btn-cta-primary" style="display: inline-flex; align-items: center; gap: 10px; padding: 14px 32px; border-radius: 12px; font-weight: 700; color: var(--text-on-dark); background: linear-gradient(135deg, #0d9488 0%, #0891b2 100%); border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 25px -5px rgba(13,148,136,0.4); text-transform: uppercase; font-size: 0.82rem; letter-spacing: 0.05em; transition: var(--transition);">
                                 <span><?= htmlspecialchars($page['hero_cta1_text']) ?></span>
                                 <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
                             </a>
@@ -1014,7 +1014,7 @@ if (!empty($page['hero_title'])):
                         
                         <!-- Circular Expert Badge -->
                         <?php if ($variant !== 'hero_split_small_image'): ?>
-                            <div class="expert-circular-badge" style="position: absolute; top: -35px; right: -25px; width: 110px; height: 110px; border-radius: 50%; background: linear-gradient(135deg, var(--primary) 0%, #1e40af 100%); border: 3px solid rgba(255,255,255,0.9); box-shadow: 0 15px 30px -5px rgba(30, 58, 138, 0.3); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10; color: white; text-align: center; padding: 8px; animation: floatBadge 6s ease-in-out infinite;">
+                            <div class="expert-circular-badge" style="position: absolute; top: -35px; right: -25px; width: 110px; height: 110px; border-radius: 50%; background: linear-gradient(135deg, var(--primary) 0%, #1e40af 100%); border: 3px solid rgba(255,255,255,0.9); box-shadow: 0 15px 30px -5px rgba(30, 58, 138, 0.3); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10; color: var(--text-on-dark); text-align: center; padding: 8px; animation: floatBadge 6s ease-in-out infinite;">
                                 <i data-lucide="award" style="width: 22px; height: 22px; margin-bottom: 4px; color: #f5b800;"></i>
                                 <span style="font-size: var(--fs-caption); text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700; font-family: var(--font-heading); line-height: 1.1;">Digital Innovation Expert</span>
                             </div>
@@ -1034,9 +1034,9 @@ if (!empty($page['hero_title'])):
                                             <img src="<?= htmlspecialchars(url($page['hero_image'])) ?>" alt="En-tête" style="width: 100%; height: 100%; object-fit: cover; <?= $imageFilter ?>">
                                         </picture>
                                     <?php else: ?>
-                                        <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #0b1329 0%, var(--surface-dark) 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; color: white; padding: 20px; text-align: center;">
+                                        <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #0b1329 0%, var(--surface-dark) 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; color: var(--text-on-dark); padding: 20px; text-align: center;">
                                             <i data-lucide="cpu" style="width: 28px; height: 28px; color: var(--accent);"></i>
-                                            <h4 style="color: white; font-size: 0.95rem; font-family: var(--font-heading);"><?= htmlspecialchars($page['title']) ?></h4>
+                                            <h4 style="color: var(--text-on-dark); font-size: 0.95rem; font-family: var(--font-heading);"><?= htmlspecialchars($page['title']) ?></h4>
                                         </div>
                                     <?php endif; ?>
                                 </div>
@@ -1053,12 +1053,12 @@ if (!empty($page['hero_title'])):
                                             <img src="<?= htmlspecialchars(url($page['hero_image'])) ?>" alt="En-tête" style="width: 100%; height: 100%; object-fit: cover; <?= $imageFilter ?>">
                                         </picture>
                                     <?php else: ?>
-                                        <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #0b1329 0%, var(--surface-dark) 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; color: white; padding: 20px; text-align: center;">
+                                        <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #0b1329 0%, var(--surface-dark) 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; color: var(--text-on-dark); padding: 20px; text-align: center;">
                                             <div style="width: 60px; height: 60px; border-radius: 50%; background: rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: center; box-shadow: 0 0 20px color-mix(in srgb, var(--primary) 10%, transparent);">
                                                 <i data-lucide="cpu" style="width: 28px; height: 28px; color: var(--accent);"></i>
                                             </div>
-                                            <h4 style="color: white; font-size: 1rem; font-family: var(--font-heading); font-weight: 600;"><?= htmlspecialchars($page['title']) ?></h4>
-                                            <p style="font-size: var(--fs-meta); color: #94a3b8; max-width: 220px;">Digitalium Group &bull; Agence d'innovation et solutions sur-mesure</p>
+                                            <h4 style="color: var(--text-on-dark); font-size: 1rem; font-family: var(--font-heading); font-weight: 600;"><?= htmlspecialchars($page['title']) ?></h4>
+                                            <p style="font-size: var(--fs-meta); color: var(--text-on-dark-muted); max-width: 220px;">Digitalium Group &bull; Agence d'innovation et solutions sur-mesure</p>
                                         </div>
                                     <?php endif; ?>
                                 </div>

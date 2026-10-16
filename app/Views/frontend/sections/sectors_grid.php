@@ -110,7 +110,7 @@ $sectorsAncre = $GLOBALS['__sectorsGridRang'] === 1 ? 'secteurs' : 'secteurs-' .
 .sec-more-btn {
     display: inline-flex; align-items: center; gap: 9px;
     padding: 14px 30px; border-radius: 999px;
-    background: var(--primary); color: #ffffff;
+    background: var(--primary); color: var(--text-on-dark);
     font-size: 0.92rem; font-weight: 650; text-decoration: none;
     transition: var(--transition);
 }
@@ -150,7 +150,7 @@ $sectorsAncre = $GLOBALS['__sectorsGridRang'] === 1 ? 'secteurs' : 'secteurs-' .
     width: 50px; height: 50px;
     border-radius: 50%;
     background: var(--primary);
-    color: #ffffff;
+    color: var(--text-on-dark);
     flex-shrink: 0;
 }
 .sector-card-media {

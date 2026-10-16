@@ -115,7 +115,7 @@ $tcId = 'testi-carousel-' . $sectionId;
     cursor: pointer;
     transition: var(--transition-fast);
 }
-.testi-carousel-nav:hover { background: var(--primary); border-color: var(--primary); color: #fff; }
+.testi-carousel-nav:hover { background: var(--primary); border-color: var(--primary); color: var(--text-on-dark); }
 
 @media (max-width: 900px) {
     .testi-carousel-card { flex: 0 0 calc(70% - 12px); }

@@ -40,7 +40,7 @@
                 ?>
                     <div class="mcard mission-card" style="border-left:3px solid <?= $borderColor ?>;">
                         <div class="mission-card-icon" style="background:linear-gradient(135deg,<?= $borderColor ?>,var(--secondary));">
-                            <i data-lucide="<?= htmlspecialchars($card['card_icon'] ?? 'check') ?>" style="width:18px;height:18px;color:#fff;"></i>
+                            <i data-lucide="<?= htmlspecialchars($card['card_icon'] ?? 'check') ?>" style="width:18px;height:18px;color:var(--text-on-dark);"></i>
                         </div>
                         <div class="mission-card-body">
                             <h4 class="mission-card-title">

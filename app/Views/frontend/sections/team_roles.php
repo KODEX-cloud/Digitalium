@@ -111,7 +111,7 @@
 .role-card:hover .role-avatar-wrap {
     background: linear-gradient(135deg, var(--primary), var(--secondary));
     border-color: var(--primary);
-    color: #fff;
+    color: var(--text-on-dark);
     box-shadow: 0 8px 24px rgba(13,148,136,0.28);
     transform: scale(1.08);
 }

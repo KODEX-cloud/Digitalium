@@ -247,7 +247,7 @@ $readSuffix  = trim((string)($single['read_suffix'] ?? '')) ?: 'min';
     transition: var(--transition);
 }
 .insg-filter:hover { color: var(--primary); border-color: color-mix(in srgb, var(--primary) 35%, transparent); }
-.insg-filter.is-on { background: var(--primary); border-color: var(--primary); color: #ffffff; }
+.insg-filter.is-on { background: var(--primary); border-color: var(--primary); color: var(--text-on-dark); }
 .insg-count { font-size: var(--fs-meta); opacity: 0.72; }
 
 .insg-search { max-width: 620px; margin: 0 auto 30px; }
@@ -276,7 +276,7 @@ $readSuffix  = trim((string)($single['read_suffix'] ?? '')) ?: 'min';
     flex-shrink: 0;
     padding: 11px 24px;
     border: 0; border-radius: 999px;
-    background: var(--primary); color: #ffffff;
+    background: var(--primary); color: var(--text-on-dark);
     font-family: var(--font-heading); font-size: 0.85rem; font-weight: 650;
     cursor: pointer; transition: var(--transition);
 }
@@ -348,7 +348,7 @@ $readSuffix  = trim((string)($single['read_suffix'] ?? '')) ?: 'min';
 .insg-empty-btn {
     display: inline-flex; align-items: center; gap: 8px;
     padding: 11px 24px; border-radius: 999px;
-    background: var(--primary); color: #ffffff;
+    background: var(--primary); color: var(--text-on-dark);
     font-size: 0.87rem; font-weight: 650; text-decoration: none;
 }
 
@@ -362,7 +362,7 @@ $readSuffix  = trim((string)($single['read_suffix'] ?? '')) ?: 'min';
     transition: var(--transition);
 }
 .insg-page:hover { border-color: color-mix(in srgb, var(--primary) 40%, transparent); color: var(--primary); }
-.insg-page.is-on { background: var(--primary); border-color: var(--primary); color: #ffffff; }
+.insg-page.is-on { background: var(--primary); border-color: var(--primary); color: var(--text-on-dark); }
 
 @media (max-width: 1000px) { .insg-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 660px) {
