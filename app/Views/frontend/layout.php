@@ -36,19 +36,24 @@
         ?: 'Solutions logicielles de pointe et transformation digitale sur-mesure pour votre entreprise.';
     $_metaTtl = ($page['meta_title'] ?? '') ?: ($page['title'] ?? '');
     $_siteNom = $settings['site_name'] ?? 'Digitalium Group';
+    /* Le nom du site n'est ajouté que s'il manque : la plupart des titres SEO
+       saisis le contiennent déjà, d'où « … — Digitalium Group | Digitalium Group ». */
+    $_titrePage = ($_siteNom !== '' && mb_stripos($_metaTtl, $_siteNom) !== false)
+        ? $_metaTtl
+        : $_metaTtl . ' | ' . $_siteNom;
     ?>
-    <title><?= htmlspecialchars($_metaTtl) ?> | <?= htmlspecialchars($_siteNom) ?></title>
+    <title><?= htmlspecialchars($_titrePage) ?></title>
     <meta name="description" content="<?= htmlspecialchars($_metaDsc) ?>">
     <link rel="canonical" href="<?= htmlspecialchars($_canonUrl) ?>">
 
     <meta property="og:type" content="<?= htmlspecialchars($_ogType) ?>">
     <meta property="og:url" content="<?= htmlspecialchars($_canonUrl) ?>">
-    <meta property="og:title" content="<?= htmlspecialchars($_metaTtl) ?> | <?= htmlspecialchars($_siteNom) ?>">
+    <meta property="og:title" content="<?= htmlspecialchars($_titrePage) ?>">
     <meta property="og:description" content="<?= htmlspecialchars($_metaDsc) ?>">
     <meta property="og:image" content="<?= htmlspecialchars($_ogImage) ?>">
 
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:title" content="<?= htmlspecialchars($_metaTtl) ?> | <?= htmlspecialchars($_siteNom) ?>">
+    <meta property="twitter:title" content="<?= htmlspecialchars($_titrePage) ?>">
     <meta property="twitter:description" content="<?= htmlspecialchars($_metaDsc) ?>">
     <meta property="twitter:image" content="<?= htmlspecialchars($_ogImage) ?>">
 
@@ -69,8 +74,8 @@
     $_thShB  = htmlspecialchars($settings['theme_shadow_btn']             ?? '0 4px 18px color-mix(in srgb, var(--primary) 28%, transparent)', ENT_QUOTES);
     $_thBtnBg = htmlspecialchars($settings['theme_btn_primary_bg']    ?? '#272727', ENT_QUOTES);
     $_thBtnFg = htmlspecialchars($settings['theme_btn_primary_text']  ?? '#ffffff', ENT_QUOTES);
-    $_thBdgBg = htmlspecialchars($settings['theme_badge_bg']          ?? '#e0f1df', ENT_QUOTES);
-    $_thBdgFg = htmlspecialchars($settings['theme_badge_text']        ?? '#004d3f', ENT_QUOTES);
+    $_thBdgBg = htmlspecialchars($settings['theme_badge_bg']          ?? '#e3effa', ENT_QUOTES);
+    $_thBdgFg = htmlspecialchars($settings['theme_badge_text']        ?? '#0B4F8A', ENT_QUOTES);
     $_thFtBg  = htmlspecialchars($settings['theme_footer_bg']         ?? '#ffffff', ENT_QUOTES);
     $_thSfDk  = htmlspecialchars($settings['theme_surface_dark']      ?? '#12202c', ENT_QUOTES);
     $_thRP   = (int)($settings['theme_radius_pill']            ?? 9);
@@ -410,11 +415,32 @@
                         $childrenByParent[$child['parent_id']][] = $child;
                     }
 
+                    /* Chemin de la page affichée, parent compris : une sous-page
+                       (/solutions/ia-automatisation) n'a pour `currentSlug` que son
+                       propre segment, qui ne peut être comparé qu'au chemin complet. */
+                    $navCurrentPath = '/' . trim(
+                        (!empty($page['parent_slug']) ? $page['parent_slug'] . '/' : '') . ($currentSlug ?? ''),
+                        '/'
+                    );
+                    if ($navCurrentPath === '/home') { $navCurrentPath = '/'; }
+                    $navIsCurrent = static function (array $item) use ($navCurrentPath): bool {
+                        $chemin = parse_url(\App\Models\MenuItem::resolveUrl($item), PHP_URL_PATH);
+                        $chemin = '/' . trim((string)$chemin, '/');
+                        return $chemin !== '/#' && $chemin === $navCurrentPath;
+                    };
+
                     foreach ($rootItems as $navItem):
                         $itemUrl   = url(\App\Models\MenuItem::resolveUrl($navItem));
-                        $itemSlug  = ltrim($navItem['page_slug'] ?? parse_url($navItem['url'] ?? '', PHP_URL_PATH) ?? '', '/');
-                        $isActive  = ($currentSlug === $itemSlug || '/'.$currentSlug === ($navItem['url'] ?? '')) ? 'active' : '';
                         $hasChildren = !empty($childrenByParent[$navItem['id'] ?? '']);
+                        // Un parent est actif s'il est la page affichée OU si l'un de
+                        // ses sous-liens l'est : on sait ainsi dans quelle rubrique on se trouve.
+                        $estCourant = $navIsCurrent($navItem);
+                        if (!$estCourant && $hasChildren) {
+                            foreach ($childrenByParent[$navItem['id']] as $enfant) {
+                                if ($navIsCurrent($enfant)) { $estCourant = true; break; }
+                            }
+                        }
+                        $isActive  = $estCourant ? 'active' : '';
                     ?>
                         <li class="<?= $hasChildren ? 'has-dropdown' : '' ?>">
                             <a href="<?= htmlspecialchars($itemUrl) ?>"
@@ -435,7 +461,8 @@
                                 ?>
                                 <li>
                                     <a href="<?= htmlspecialchars($childUrl) ?>"
-                                       class="nav-link"
+                                       class="nav-link<?= $navIsCurrent($child) ? ' active' : '' ?>"
+                                       <?= $navIsCurrent($child) ? 'aria-current="page"' : '' ?>
                                        <?= ($child['target'] ?? '_self') === '_blank' ? 'target="_blank" rel="noopener"' : '' ?>>
                                         <?= htmlspecialchars($child['label']) ?>
                                     </a>
@@ -465,7 +492,16 @@
 
     <footer class="site-footer">
 
-        <?php if (!empty($settings['footer_newsletter_title']) || !empty($settings['footer_newsletter_text'])): ?>
+        <?php
+        /* Une page qui porte déjà sa propre section Newsletter (/insights) ne
+           reçoit pas celle du pied de page : les deux formulaires s'affichaient
+           l'un sous l'autre. */
+        $pageANewsletter = false;
+        foreach (($sections ?? []) as $_sec) {
+            if (($_sec['type'] ?? '') === 'newsletter') { $pageANewsletter = true; break; }
+        }
+        ?>
+        <?php if (!$pageANewsletter && (!empty($settings['footer_newsletter_title']) || !empty($settings['footer_newsletter_text']))): ?>
         <div class="container">
             <div class="footer-promo">
                 <?php if (!empty($settings['footer_newsletter_image'])): ?>

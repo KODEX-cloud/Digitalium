@@ -196,7 +196,10 @@ class BlockFieldHelper {
         // ── Aperçu de réalisations ──
         'limit'          => ['Nombre de réalisations affichées', "Laisser vide pour toutes les afficher. Exemple : 3 pour un aperçu."],
         'more_text'      => ['Bouton sous la grille — libellé', "Laisser vide pour masquer le bouton."],
-        'more_url'       => ['Bouton sous la grille — lien', "Par défaut /realisations."],
+        'more_url'       => ['Bouton sous la grille — lien', "Vide : la page d'ensemble de la rubrique (/realisations pour les réalisations, la page parente pour « Autres pages de la rubrique »)."],
+
+        // ── Autres pages de la rubrique ──
+        'link_text'      => ['Lien de chaque carte — libellé', "Exemple : « Découvrir ». Laisser vide : la carte reste cliquable, sans libellé."],
 
         // ── Expertises ──
         'show_form'      => ['Formulaire de contact', "À masquer quand la page porte déjà un formulaire de demande : deux formulaires côte à côte brouillent le parcours."],

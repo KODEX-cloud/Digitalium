@@ -31,14 +31,17 @@ class MenuMigration implements MigrationInterface {
                    plus qu'une redirection 301 vers /insights. Un secours qui
                    remonte des liens morts aggrave la panne qu'il est censé
                    réparer — et aurait ici ressuscité l'entrée « Blog » tout
-                   juste retirée (Règle #8). */
+                   juste retirée (Règle #8).
+
+                   Aligné sur le menu resserré à quatre rubriques : l'accueil est
+                   atteint par le logo et le contact par le bouton d'action de
+                   l'en-tête. Le secours reste à plat — les sous-menus se
+                   rétablissent depuis /admin/menus. */
                 $items = [
-                    ['Accueil',      '/',             1],
-                    ['À propos',     '/a-propos',     2],
-                    ['Solutions',    '/solutions',    3],
-                    ['Réalisations', '/realisations', 4],
-                    ['Insights',     '/insights',     5],
-                    ['Contact',      '/contact',      6],
+                    ['Solutions',    '/solutions',    1],
+                    ['Réalisations', '/realisations', 2],
+                    ['Insights',     '/insights',     3],
+                    ['À propos',     '/a-propos',     4],
                 ];
 
                 foreach ($items as [$label, $url, $order]) {

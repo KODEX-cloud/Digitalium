@@ -113,21 +113,15 @@ try {
     echo "Navigation : publiée, in_navigation = 1, position $navOrder.\n";
 
     /**
-     * Couleur d'accent de la page — bleu clair du logo Digitalium.
-     * Posée UNE SEULE FOIS : si la valeur a été changée en admin, on n'y touche
-     * plus. Le champ existe depuis la page Réalisations (colonne accent_color).
+     * Colonne `accent_color` garantie (les sous-pages et le gabarit la lisent),
+     * mais plus aucun accent n'est semé : le site a une palette unique
+     * (database/harmonize_site_v1.php). Le reposer dès que le champ est vide
+     * défaisait l'harmonisation à chaque déploiement.
      */
     $accentCol = Database::fetch("SHOW COLUMNS FROM `pages` LIKE 'accent_color'");
     if (!$accentCol) {
         Database::query("ALTER TABLE `pages` ADD COLUMN `accent_color` VARCHAR(20) NULL DEFAULT NULL");
         echo "pages.accent_color ajoutée.\n";
-    }
-    $current = Database::fetch("SELECT accent_color FROM pages WHERE id = :id", ['id' => $pageId]);
-    if (trim((string)($current['accent_color'] ?? '')) === '') {
-        Database::query("UPDATE pages SET accent_color = '#0868B0' WHERE id = :id", ['id' => $pageId]);
-        echo "Accent : #0868B0 (bleu clair du logo).\n";
-    } else {
-        echo "Accent : {$current['accent_color']} — choix conservé.\n";
     }
 
     /**
@@ -571,7 +565,7 @@ try {
         // rejoint depuis /solutions, elle n'encombre pas le menu.
         Database::query(
             "UPDATE pages SET status = 'published', parent_slug = 'solutions',
-                              in_navigation = 0, hero_status = 0, accent_color = '#0868B0'
+                              in_navigation = 0, hero_status = 0
              WHERE id = :id",
             ['id' => $childId]
         );
@@ -609,7 +603,19 @@ try {
             'subtitle' => "Rarement toutes mobilisées à la fois : le périmètre se définit à partir de votre besoin.",
         ], $groupsCaps);
 
-        $sid = $reconcile($childId, 'cta', 'CTA final', 1);
+        // Les autres domaines : la sous-page ne se termine plus en impasse. Les
+        // cartes sont lues sur les pages sœurs elles-mêmes (titre, résumé),
+        // rien n'est recopié ici — seul l'habillage est semé.
+        $sid = $reconcile($childId, 'related_pages', 'Autres domaines', 1);
+        $seed($sid, [
+            'tag'       => 'Nos autres domaines',
+            'title'     => 'Les solutions voisines.',
+            'subtitle'  => "La plupart des projets combinent plusieurs de ces familles.",
+            'link_text' => 'Découvrir',
+            'more_text' => 'Voir toutes les solutions',
+        ]);
+
+        $sid = $reconcile($childId, 'cta', 'CTA final', 2);
         $seed($sid, [
             'eyebrow'   => 'Un besoin dans ce domaine ?',
             'title'     => "Parlons-en avant de parler technologie.",

@@ -119,21 +119,9 @@ try {
     );
     echo "Navigation : publiée, in_navigation = 1, position $navOrder.\n";
 
-    // Accent — posé UNE SEULE FOIS, comme sur les autres pages.
-    try {
-        $aAccent = (bool)Database::fetch("SHOW COLUMNS FROM `pages` LIKE 'accent_color'");
-        if ($aAccent) {
-            $actuel = Database::fetch("SELECT accent_color FROM pages WHERE id = :id", ['id' => $pageId]);
-            if (trim((string)($actuel['accent_color'] ?? '')) === '') {
-                Database::query("UPDATE pages SET accent_color = '#0B4F8A' WHERE id = :id", ['id' => $pageId]);
-                echo "Accent : #0B4F8A (bleu institutionnel).\n";
-            } else {
-                echo "Accent : {$actuel['accent_color']} — choix conservé.\n";
-            }
-        }
-    } catch (\Throwable $e) {
-        echo "  ATTENTION accent non posé : " . $e->getMessage() . "\n";
-    }
+    // Accent de page : plus aucun n'est semé. Le site a une palette unique
+    // (database/harmonize_site_v1.php) ; un accent reposé ici dès que le champ
+    // est vide aurait défait l'harmonisation à chaque déploiement.
 
     // ── Entrée de menu — opération à faire UNE FOIS ─────────────────────────
     //

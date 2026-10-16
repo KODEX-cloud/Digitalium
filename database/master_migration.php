@@ -249,14 +249,15 @@ try {
 // ─── 12. Theme Builder — seed default design tokens (skip if already set) ────
 try {
     $themeDefaults = [
-        'theme_primary'                => '#1d6363',
-        'theme_secondary'              => '#346a6d',
-        'theme_accent'                 => '#004d3f',
+        // Palette du logo — alignée sur database/harmonize_site_v1.php.
+        'theme_primary'                => '#0868B0',
+        'theme_secondary'              => '#003060',
+        'theme_accent'                 => '#003060',
         'theme_text_main'              => '#272727',
         'theme_text_sub'               => '#3b3f4a',
         'theme_text_muted'             => '#4d4f63',
         'theme_bg_base'                => '#fbfbfb',
-        'theme_bg_alt'                 => '#e8f3e9',
+        'theme_bg_alt'                 => '#eef5fb',
         'theme_bg_card'                => '#ffffff',
         'theme_radius_pill'            => '9',
         'theme_radius_card'            => '20',
@@ -279,8 +280,8 @@ try {
         'theme_hero_overlay_color'     => '#0a0f1e',
         'theme_btn_primary_bg'         => '#272727',
         'theme_btn_primary_text'       => '#ffffff',
-        'theme_badge_bg'               => '#e0f1df',
-        'theme_badge_text'             => '#004d3f',
+        'theme_badge_bg'               => '#e3effa',
+        'theme_badge_text'             => '#0B4F8A',
         'theme_footer_bg'              => '#ffffff',
         'theme_surface_dark'           => '#12202c',
     ];

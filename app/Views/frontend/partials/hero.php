@@ -488,19 +488,16 @@ if (!empty($page['hero_title'])):
                         $magArticles[] = [
                             'category' => strtoupper($lp['category'] ?? 'ACTUALITÉ'),
                             'title' => $lp['title'],
-                            'url' => '/blog/' . $lp['slug'],
+                            'url' => '/insights/' . $lp['slug'],
                         ];
                     }
                 }
-                if (empty($magArticles)) {
-                    $magArticles = [
-                        ['category' => 'TECHNOLOGIE', 'title' => 'Stratégies d\'intégration IA dans les grandes entreprises.', 'url' => '/insights'],
-                        ['category' => 'DESIGN', 'title' => 'Le futur des Design Systems et du CMS sans code.', 'url' => '/insights'],
-                        ['category' => 'DÉVELOPPEMENT', 'title' => 'Green IT et performances serveurs : optimiser les builds.', 'url' => '/insights'],
-                    ];
-                }
-                $magColors = ['var(--secondary)', 'var(--primary)', '#0f5f5a'];
+                /* Aucun article réel : la colonne n'est pas rendue. Des titres
+                   inventés présentaient comme publiés des articles qui n'existent
+                   pas (Règle #2). */
+                $magColors = ['var(--secondary)', 'var(--primary)', 'var(--accent)'];
                 ?>
+                <?php if (!empty($magArticles)): ?>
                 <div style="display: flex; flex-direction: column; gap: 32px; border-left: 1px solid #e2e8f0; padding-left: 40px; min-height: 250px;">
                     <div style="font-size: 0.75rem; text-transform: uppercase; font-weight: 700; color: #64748b; letter-spacing: 0.15em; font-family: var(--font-heading);">Dernières actualités</div>
                     <div style="display: flex; flex-direction: column; gap: 24px;">
@@ -512,6 +509,7 @@ if (!empty($page['hero_title'])):
                         <?php endforeach; ?>
                     </div>
                 </div>
+                <?php endif; ?>
 
             </div>
         </div>
@@ -839,15 +837,11 @@ if (!empty($page['hero_title'])):
                 if (!empty($page['hero_features'])) {
                     $heroFeatures = json_decode($page['hero_features'], true) ?: [];
                 }
-                if (empty($heroFeatures)) {
-                    $heroFeatures = [
-                        ['icon' => 'zap', 'title' => htmlspecialchars($settings['site_name'] ?? 'Digitalium'), 'desc' => 'Solutions digitales haute performance.', 'color' => 'color-mix(in srgb, var(--primary) 10%, transparent)', 'iconColor' => 'var(--primary)', 'offset' => '-15px'],
-                        ['icon' => 'shield-check', 'title' => 'Sécurité & Fiabilité', 'desc' => 'Protection de vos données et transactions.', 'color' => 'color-mix(in srgb, var(--secondary) 10%, transparent)', 'iconColor' => 'var(--secondary)', 'offset' => '0'],
-                        ['icon' => 'layout-grid', 'title' => 'CMS Modulaire', 'desc' => 'Administration dynamique en temps réel.', 'color' => 'rgba(13,148,136,0.12)', 'iconColor' => '#0d9488', 'offset' => '15px'],
-                    ];
-                }
+                /* Aucune carte saisie (`hero_features`) : la colonne n'est pas
+                   rendue plutôt que remplie de textes de démonstration. */
                 $stackOffsets = ['-15px', '0', '15px'];
                 ?>
+                <?php if (!empty($heroFeatures)): ?>
                 <div class="hero-right-visual" style="<?= $visualOrder ?> position: relative; opacity: 0; transform: scale(0.95) translateY(10px); animation: heroFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards; display: flex; justify-content: center; align-items: center;">
                     <div class="asymmetric-card-stack" style="display: flex; flex-direction: column; gap: 20px; width: 100%; max-width: 440px;">
                         <?php foreach (array_slice($heroFeatures, 0, 3) as $fi => $feat):
@@ -866,6 +860,7 @@ if (!empty($page['hero_title'])):
                         <?php endforeach; ?>
                     </div>
                 </div>
+                <?php endif; ?>
 
             </div>
         </div>
@@ -926,15 +921,10 @@ if (!empty($page['hero_title'])):
                 if (!empty($page['hero_features'])) {
                     $gridFeats = json_decode($page['hero_features'], true) ?: [];
                 }
-                if (empty($gridFeats)) {
-                    $gridFeats = [
-                        ['icon' => 'cpu', 'title' => 'IA & Automation', 'desc' => 'Optimisez vos process métiers.', 'color' => 'color-mix(in srgb, var(--primary) 10%, transparent)', 'iconColor' => 'var(--primary)'],
-                        ['icon' => 'cloud', 'title' => 'Infrastructure Cloud', 'desc' => 'Hébergement sécurisé scalable.', 'color' => 'color-mix(in srgb, var(--secondary) 10%, transparent)', 'iconColor' => 'var(--secondary)'],
-                        ['icon' => 'globe', 'title' => 'Applications Web', 'desc' => 'Solutions sur-mesure modernes.', 'color' => 'rgba(6,182,212,0.1)', 'iconColor' => '#0891b2'],
-                        ['icon' => 'phone-call', 'title' => 'Support 24/7', 'desc' => 'Une équipe d\'experts à votre écoute.', 'color' => 'rgba(13,148,136,0.12)', 'iconColor' => '#0d9488'],
-                    ];
-                }
+                /* Même règle que la variante précédente : sans saisie, pas de
+                   colonne, et non quatre cartes inventées. */
                 ?>
+                <?php if (!empty($gridFeats)): ?>
                 <div class="hero-right-visual" style="<?= $visualOrder ?> position: relative; opacity: 0; transform: scale(0.95) translateY(10px); animation: heroFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards; display: flex; justify-content: center; align-items: center;">
                     <div class="grid-features-wrap" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; width: 100%; max-width: 440px;">
                         <?php foreach (array_slice($gridFeats, 0, 4) as $gf): ?>
@@ -950,6 +940,7 @@ if (!empty($page['hero_title'])):
                         <?php endforeach; ?>
                     </div>
                 </div>
+                <?php endif; ?>
 
             </div>
         </div>

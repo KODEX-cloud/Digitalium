@@ -266,7 +266,10 @@ $bannerVars = $isWide
         <div class="hero-ov<?= $isFullBleed ? ' hero-ov-full' : '' ?>">
             <?php foreach ($slides as $i => $s): ?>
                 <div class="hero-ov-slide<?= $i === 0 ? ' active' : '' ?>" data-slide="<?= $i ?>">
-                    <div class="hero-ov-media">
+                    <?php /* Sans visuel, le cadre reçoit un fond composé (dégradé et
+                             trame) plutôt qu'un aplat : la moitié droite, vide de
+                             texte, ne paraît plus inachevée. */ ?>
+                    <div class="hero-ov-media<?= $s['image'] === '' ? ' hero-ov-media-empty' : '' ?>">
                         <?php if ($s['image'] !== ''): ?>
                             <img src="<?= htmlspecialchars(url($s['image'])) ?>"
                                  alt="<?= htmlspecialchars($s['alt']) ?>"
@@ -513,7 +516,9 @@ $bannerVars = $isWide
 }
 
 .hero-mc-title {
-    font-size: clamp(2.4rem, 5.2vw, 4.5rem);
+    /* 4.5rem portait le titre de l'accueil sur cinq lignes et le hero au-delà
+       de la hauteur d'un écran de 900px : le bas des boutons était coupé. */
+    font-size: clamp(2.3rem, 4.3vw, 3.8rem);
     line-height: 1.05;
     font-weight: 800;
     letter-spacing: -0.025em;
@@ -721,12 +726,18 @@ $bannerVars = $isWide
    lisible sans masquer la photo, badge en pavé plein, titre en capitales.   */
 .hero-mc-overlay { padding: 0; overflow: hidden; }
 
+/* L'en-tête est FIXE (72px) et le hero commence sous lui : sans le compter, le
+   badge se retrouvait à 24px de la barre de navigation et la hauteur réglée en
+   admin perdait 72px. `--hero-header-h` ajoute cette bande au cadre, si bien
+   que `overlay_min_height` désigne désormais la partie réellement visible. */
+.hero-mc-overlay { --hero-header-h: 72px; }
+
 .hero-ov {
     position: relative;
     width: min(var(--hero-banner-w, 1300px), calc(100vw - 48px));
     margin-left: 50%;
     transform: translateX(-50%);
-    min-height: var(--hero-overlay-minh, 460px);
+    min-height: calc(var(--hero-overlay-minh, 460px) + var(--hero-header-h));
     overflow: hidden;
     border-radius: var(--hero-media-radius, 0);
     background: var(--primary);
@@ -748,6 +759,23 @@ $bannerVars = $isWide
 
 .hero-ov-media { position: absolute; inset: 0; background: var(--primary); }
 .hero-ov-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.hero-ov-media-empty {
+    background:
+        radial-gradient(ellipse 60% 80% at 85% 30%, color-mix(in srgb, #ffffff 16%, transparent) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 70% at 70% 100%, color-mix(in srgb, var(--secondary, #003060) 70%, transparent) 0%, transparent 70%),
+        linear-gradient(120deg, var(--surface-dark, #12202c) 0%, var(--primary) 100%);
+}
+/* Trame discrète, effacée vers la gauche pour ne jamais passer sous le texte. */
+.hero-ov-media-empty::before {
+    content: "";
+    position: absolute; inset: 0;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+    background-size: 56px 56px;
+    -webkit-mask-image: linear-gradient(90deg, transparent 30%, #000 85%);
+            mask-image: linear-gradient(90deg, transparent 30%, #000 85%);
+}
 .hero-ov-media::after {
     content: "";
     position: absolute; inset: 0;
@@ -766,12 +794,12 @@ $bannerVars = $isWide
     z-index: 2;
     max-width: var(--max-width, 1240px);
     margin: 0 auto;
-    padding: 96px 40px;
-    min-height: var(--hero-overlay-minh, 460px);
+    padding: calc(var(--hero-header-h) + 56px) 40px 64px;
+    min-height: calc(var(--hero-overlay-minh, 460px) + var(--hero-header-h));
     display: flex;
     align-items: center;
 }
-.hero-ov-text { max-width: 640px; }
+.hero-ov-text { max-width: 740px; }
 
 .hero-ov-badge {
     display: inline-block;
@@ -790,8 +818,11 @@ $bannerVars = $isWide
     margin: 0 0 18px;
     color: #ffffff;
     font-family: var(--font-heading);
-    font-size: clamp(2.1rem, 5vw, 3.6rem);
-    line-height: 1.06;
+    /* Plafond abaissé (3.6rem -> 3.1rem) : en capitales, un titre de cinquante
+       signes prenait quatre lignes, et la hauteur du hero variait de 622 à
+       868px d'une page à l'autre selon la seule longueur du titre. */
+    font-size: clamp(1.9rem, 3.4vw, 3.1rem);
+    line-height: 1.08;
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: -0.01em;
@@ -833,9 +864,9 @@ $bannerVars = $isWide
        posaient donc au milieu du cadre, où elles coupaient le visuel en deux et
        rivalisaient avec le titre. `align-self` les descend en bas, comme sur
        l'accueil. La marge négative les fait mordre sur le rembourrage bas
-       (96px) sans jamais sortir du cadre — il en reste 48. */
+       (64px) sans jamais sortir du cadre — il en reste 32. */
     align-self: flex-end;
-    margin-bottom: -48px;
+    margin-bottom: -32px;
 }
 .hero-ov-cards .hero-mc-card {
     position: static;
@@ -926,17 +957,27 @@ $bannerVars = $isWide
 .hero-ov-dot.active { background: var(--primary); }
 
 @media (max-width: 900px) {
-    .hero-ov-inner { padding: 72px 24px; min-height: 400px; }
-    .hero-ov, .hero-ov-full { width: 100vw; border-radius: 0; min-height: 400px; }
+    .hero-ov-inner { padding: calc(var(--hero-header-h) + 44px) 24px 56px; min-height: 0; }
+    .hero-ov, .hero-ov-full { width: 100vw; border-radius: 0; min-height: 0; }
     .hero-ov-arrow { width: 38px; height: 38px; }
     .hero-ov-prev { left: 10px; }
     .hero-ov-next { right: 10px; }
 }
 @media (max-width: 560px) {
-    .hero-ov-inner { padding: 60px 18px 68px; min-height: 340px; }
-    .hero-ov, .hero-ov-full { min-height: 340px; }
-    .hero-ov-actions { flex-direction: column; align-items: stretch; }
-    .hero-ov-btn { justify-content: center; }
+    .hero-ov-inner { padding: calc(var(--hero-header-h) + 32px) 18px 40px; }
+    .hero-ov-badge { margin-bottom: 16px; padding: 7px 14px; font-size: 0.7rem; }
+    .hero-ov-lead { font-size: 0.98rem; line-height: 1.6; }
+    .hero-ov-actions { flex-direction: column; align-items: stretch; margin-top: 24px; gap: 10px; }
+    .hero-ov-btn { justify-content: center; padding: 13px 24px; }
+    /* Cartes compactes, deux par rangée : empilées une par ligne, elles
+       repoussaient la fin du hero au-delà du premier écran (jusqu'à 1 065px). */
+    .hero-ov-inner-cards { gap: 22px; }
+    .hero-ov-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; max-width: none; }
+    .hero-ov-cards .hero-mc-card { padding: 11px 12px; border-radius: 12px; }
+    .hero-ov-cards .hero-mc-card-icon { display: none; }
+    .hero-ov-cards .hero-mc-card-title { font-size: 0.86rem; }
+    .hero-ov-cards .hero-mc-card-meta { font-size: 0.74rem; }
+    .hero-ov-cards .hero-mc-card-value { font-size: 1.3rem; }
     /* Les flèches recouvriraient le texte sur un écran étroit : seules les
        pastilles restent, et le balayage n'est pas nécessaire au sens. */
     .hero-ov-arrow { display: none; }
@@ -1077,7 +1118,10 @@ $bannerVars = $isWide
     .hero-mc-circle { width: 460px; height: 460px; }
 }
 @media (max-width: 1000px) {
-    .hero-mc { padding: 84px 0 64px; }
+    /* Hors overlay : ce rembourrage, placé après `.hero-mc-overlay { padding: 0 }`,
+       l'emportait aussi sur les heros plein cadre — 84px de vide au-dessus du
+       visuel et une bande blanche de 64px dessous, sur tablette et téléphone. */
+    .hero-mc:not(.hero-mc-overlay) { padding: 84px 0 64px; }
     .hero-mc-grid { grid-template-columns: 1fr; gap: 40px; min-height: 0; }
     .hero-mc-lead { max-width: none; }
     .hero-mc-visual { min-height: 0; }
@@ -1102,7 +1146,26 @@ $bannerVars = $isWide
 @media (max-width: 560px) {
     .hero-mc-actions { flex-direction: column; align-items: stretch; }
     .hero-mc-btn { justify-content: center; }
-    .hero-mc-media, .hero-mc-img { min-height: 300px; height: 300px; }
+    .hero-mc-media, .hero-mc-img { min-height: 260px; height: 260px; }
+}
+
+/* ── Accueil sur tablette et téléphone : cartes en grille 2x2 ──────────────
+   Empilées une par ligne sous l'image, les quatre cartes occupaient à elles
+   seules un écran de téléphone, et le titre n'apparaissait qu'au-delà de
+   1 000px de défilement. En grille, elles tiennent sur deux rangées. */
+@media (max-width: 1000px) {
+    .hero-mc-split .hero-mc-visual { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .hero-mc-split .hero-mc-media { grid-column: 1 / -1; }
+    .hero-mc-split .hero-mc-card { margin-top: 0; min-width: 0; }
+}
+@media (max-width: 560px) {
+    .hero-mc-split .hero-mc-visual { gap: 10px; }
+    .hero-mc-split .hero-mc-card { padding: 11px 12px; border-radius: 12px; }
+    .hero-mc-split .hero-mc-card-icon { display: none; }
+    .hero-mc-split .hero-mc-card-label { font-size: 0.6rem; }
+    .hero-mc-split .hero-mc-card-value { font-size: 1.3rem; }
+    .hero-mc-split .hero-mc-card-title { font-size: 0.86rem; }
+    .hero-mc-split .hero-mc-card-meta { font-size: 0.74rem; }
 }
 
 /* ── Cartes flottantes : grille basse (desktop, mode « split ») ─────────────

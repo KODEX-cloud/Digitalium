@@ -342,6 +342,9 @@ $err = static function (string $k) use ($erreurs): string {
     font-size: 0.92rem; font-weight: 650; font-family: inherit;
     cursor: pointer; transition: var(--transition);
 }
+/* `display: inline-flex` l'emportait sur l'attribut `hidden` : « Retour » et
+   « Envoyer ma demande » s'affichaient dès la première étape. */
+.lf-btn[hidden] { display: none; }
 .lf-btn-primary { background: var(--primary); color: #fff; }
 .lf-btn-primary:hover { transform: translateY(-2px); box-shadow: var(--shadow-btn); }
 .lf-btn-ghost { background: transparent; color: var(--text-main); border-color: var(--border); }
@@ -396,7 +399,10 @@ $err = static function (string $k) use ($erreurs): string {
     prev.hidden = false;
     next.hidden = false;
 
-    function afficher(i) {
+    /* `defiler` vaut false à l'initialisation : l'appel d'ouverture faisait
+       défiler la page jusqu'au formulaire, si bien que /contact s'ouvrait au
+       milieu de la page, hero et introduction sautés. */
+    function afficher(i, defiler) {
         courant = Math.max(0, Math.min(panels.length - 1, i));
         panels.forEach(function (p, n) { p.hidden = (n !== courant); });
         dots.forEach(function (d, n) {
@@ -407,6 +413,7 @@ $err = static function (string $k) use ($erreurs): string {
         next.hidden   = courant === panels.length - 1;
         submit.hidden = courant !== panels.length - 1;
         if (courant === panels.length - 1) { remplirRecap(); }
+        if (defiler === false) { return; }
         var y = form.getBoundingClientRect().top + window.pageYOffset - 90;
         window.scrollTo({ top: y, behavior: 'smooth' });
     }
@@ -474,6 +481,6 @@ $err = static function (string $k) use ($erreurs): string {
         submit.textContent = 'Envoi…';
     });
 
-    afficher(0);
+    afficher(0, false);
 })();
 </script>

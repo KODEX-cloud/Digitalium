@@ -665,6 +665,12 @@ class PageController extends Controller {
                 [],
                 0,
             ],
+            // Cartes générées depuis les pages sœurs : aucun groupe à saisir.
+            'related_pages' => [
+                ['tag', 'title', 'subtitle', 'link_text', 'more_text', 'more_url'],
+                [],
+                0,
+            ],
             // ── Centre de ressources (/insights) ──
             'insights_featured' => [
                 ['tag', 'title', 'subtitle', 'badge_label', 'cta_text', 'read_suffix', 'fallback_latest'],

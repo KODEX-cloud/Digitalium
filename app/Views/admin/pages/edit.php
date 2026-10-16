@@ -1475,6 +1475,7 @@ if (empty($selectedLogo)) {
                             <option value="team">Équipe</option>
                             <option value="values">Principes / valeurs — cartes</option>
                             <option value="cta">Bandeau CTA</option>
+                            <option value="related_pages">Autres pages de la rubrique (sous-pages, automatique)</option>
                         </optgroup>
                         <optgroup label="Centre de ressources (module Insights)">
                             <option value="insights_featured">Insights — article à la une</option>

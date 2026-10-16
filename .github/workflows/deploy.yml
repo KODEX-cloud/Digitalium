@@ -490,6 +490,16 @@ jobs:
                 echo "  ⚠ Fix Hero Layout v2 warning (non-bloquant)"
               fi
             fi
+            # EN DERNIER : menu resserre, palette unique, heros alignes. Apres
+            # tous les constructeurs de pages, pour que les pages et leurs heros
+            # existent. Chaque etape est unique (drapeau en base).
+            if [ -f "database/harmonize_site_v1.php" ]; then
+              if $PHP database/harmonize_site_v1.php 2>&1; then
+                echo "  OK Harmonisation du site"
+              else
+                echo "  ATTENTION Harmonisation du site (non-bloquant)"
+              fi
+            fi
 
             # ─────────────────────────────────────────────────────────────────
             # ÉTAPE 4 — Cache Clear

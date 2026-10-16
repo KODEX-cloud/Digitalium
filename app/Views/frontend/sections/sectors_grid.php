@@ -17,9 +17,16 @@
  * /admin/pages (suppression de groupe).
  */
 $sectors = $groups ?? [];
+
+/* Identifiant unique : /solutions porte deux grilles, qui produisaient deux
+   `id="secteurs"` — HTML invalide, et une ancre ne menait qu'à la première.
+   La première garde `secteurs` (les liens « #secteurs » existants tiennent),
+   les suivantes sont numérotées. */
+$GLOBALS['__sectorsGridRang'] = ($GLOBALS['__sectorsGridRang'] ?? 0) + 1;
+$sectorsAncre = $GLOBALS['__sectorsGridRang'] === 1 ? 'secteurs' : 'secteurs-' . $GLOBALS['__sectorsGridRang'];
 ?>
 
-<section class="section-padding sectors-section" id="secteurs" style="background:var(--bg-base);">
+<section class="section-padding sectors-section" id="<?= $sectorsAncre ?>" style="background:var(--bg-base);">
     <div class="container">
 
         <div class="section-header reveal">

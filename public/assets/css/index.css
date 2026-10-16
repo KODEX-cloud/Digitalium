@@ -287,9 +287,15 @@ img { max-width: 100%; display: block; }
     border-radius: var(--radius-md); padding: 8px; list-style: none;
     box-shadow: 0 12px 40px rgba(0,0,0,0.12); z-index: 10;
 }
-.has-dropdown:hover .nav-dropdown { display: block; }
-.nav-dropdown li a { display: block; padding: 10px 14px; border-radius: var(--radius-sm); font-size: 0.875rem; color: var(--text-sub); }
+/* Pont invisible sur les 12px qui séparent le lien de son sous-menu : sans lui,
+   la souris quittait le survol en descendant vers le sous-menu, qui se refermait
+   avant d'être atteint. */
+.nav-dropdown::before { content: ''; position: absolute; left: 0; right: 0; top: -14px; height: 14px; }
+.has-dropdown:hover .nav-dropdown,
+.has-dropdown:focus-within .nav-dropdown { display: block; }
+.nav-dropdown li a { display: block; padding: 10px 14px; border-radius: var(--radius-sm); font-size: 0.875rem; color: var(--text-sub); white-space: nowrap; }
 .nav-dropdown li a:hover { background: rgba(0,0,0,0.04); color: var(--text-main); }
+.nav-dropdown li a.active { color: var(--primary); background: color-mix(in srgb, var(--primary) 8%, transparent); font-weight: 600; }
 
 /* ============================================================
    6. HERO
@@ -818,6 +824,10 @@ input:focus, textarea:focus, select:focus {
         border-radius: 0;
         box-shadow: none;
     }
+    /* Le pont de survol n'a pas lieu d'être dans le tiroir, où le sous-menu est
+       en flux : positionné sur `.has-dropdown`, il recouvrirait le lien précédent
+       et en capterait les appuis. */
+    .nav-menu.open .nav-dropdown::before { display: none; }
     .nav-menu.open .has-dropdown.expanded > .nav-dropdown { display: block; }
     .nav-menu.open .has-dropdown.expanded > .nav-link i[data-lucide="chevron-down"] { transform: rotate(180deg); }
     .nav-menu.open .nav-dropdown li a {

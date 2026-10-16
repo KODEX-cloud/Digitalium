@@ -214,17 +214,9 @@ try {
     );
     echo "Navigation : publiée, in_navigation = 1, position $navOrder.\n";
 
-    // Couleur d'accent — posée UNE SEULE FOIS, comme sur les autres pages.
-    $aAccent = (bool)Database::fetch("SHOW COLUMNS FROM `pages` LIKE 'accent_color'");
-    if ($aAccent) {
-        $actuel = Database::fetch("SELECT accent_color FROM pages WHERE id = :id", ['id' => $pageId]);
-        if (trim((string)($actuel['accent_color'] ?? '')) === '') {
-            Database::query("UPDATE pages SET accent_color = '#0868B0' WHERE id = :id", ['id' => $pageId]);
-            echo "Accent : #0868B0 (bleu clair du logo).\n";
-        } else {
-            echo "Accent : {$actuel['accent_color']} — choix conservé.\n";
-        }
-    }
+    // Accent de page : plus aucun n'est semé — palette unique du site
+    // (database/harmonize_site_v1.php). Le reposer dès que le champ est vide
+    // défaisait l'harmonisation à chaque déploiement.
 
     // ── Navigation : reprendre l'entrée « Blog » plutôt que la doubler ──────
     //

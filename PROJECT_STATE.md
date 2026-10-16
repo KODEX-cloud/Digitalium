@@ -1,5 +1,103 @@
 # PROJECT_STATE — Digitalium Group CMS
-> Dernière mise à jour : 2026-09-05 — Insights dans l administration, traces du retrait nettoyees
+> Dernière mise à jour : 2026-10-16 — Harmonisation : menu à 4 rubriques, palette unique, heros, structure des pages
+
+---
+
+### 2026-10-16 — Harmonisation du site : menu, palette, heros, structure, contenus de démonstration
+
+Demande : « diminue le nombre de menu · ajuste les hero · structure et harmonise les différentes
+pages · supprime les articles de démonstration en dur ». Deux décisions prises par l'utilisateur :
+**bleu du logo comme couleur unique**, **menu à 4 rubriques**.
+
+**TECHNICAL_AUDIT** — relevé en production (captures Chrome headless pilotées par puppeteer-core,
+mesures DOM, 1440 / 1280 / 820 / 390 px) :
+
+| Constat | Cause | Fichier |
+|---|---|---|
+| 8 liens au menu, dont « Accueil » (= logo) et « Contact » (= bouton d'action) | contenu `menu_items` | base |
+| 4 couleurs principales selon la page : vert `#1d6363` (accueil, /secteurs, /contact), `#0868B0` (Solutions et sous-pages, Insights, Labs), `#0B4F8A` (/a-propos), `#003060` (/realisations) — en-tête et pied changeaient de couleur | thème vert + `pages.accent_color` | base |
+| …et 4 constructeurs **reposaient l'accent dès que le champ était vide** ; celui des sous-pages Solutions l'écrivait **sans condition** à chaque déploiement | `build_{about,insights,labs,solutions}_page.php` | database/ |
+| Heros de 622 à 868 px de haut selon la seule longueur du titre | titre plafonné à 3.6rem en capitales | `hero_media_cards.php` |
+| Badge à 24 px de la barre de navigation | en-tête **fixe** de 72 px non compté dans le rembourrage | idem |
+| 5 sous-pages Solutions encore à 1250 px de large, 420 de haut | hors périmètre de `align_overlay_heroes` v1 | base |
+| Heros de 1 000 à 1 450 px sur téléphone | cartes empilées une par ligne ; `.hero-mc { padding: 84px 0 64px }` (≤1000px) l'emportait sur le `padding: 0` du mode overlay → 84 px de vide dessus, bande blanche de 64 px dessous | `hero_media_cards.php` |
+| /insights, /labs, /contact sans visuel : aplat uni | aucune image en base | idem |
+| **/contact s'ouvrait au milieu de la page** (défilement de 656 px) | `afficher(0)` à l'initialisation fait défiler jusqu'au formulaire | `lead_form.php` |
+| « Retour » et « Envoyer ma demande » visibles dès l'étape 1 | `.lf-btn { display: inline-flex }` l'emporte sur l'attribut `hidden` | `lead_form.php` |
+| Sous-menu desktop qui se referme quand la souris descend vers lui | 12 px de vide entre le lien et le sous-menu (`top: calc(100% + 12px)`) | `index.css` |
+| Rubrique parente jamais en surbrillance sur une sous-page | comparaison sur `currentSlug` seul | `layout.php` |
+| Deux newsletters l'une sous l'autre sur /insights | section Newsletter + newsletter du pied de page | `layout.php` |
+| Deux `id="secteurs"` sur /solutions | identifiant fixe dans le gabarit | `sectors_grid.php` |
+| Titres « … — Digitalium Group \| Digitalium Group » | nom du site ajouté sans vérifier sa présence | `layout.php` |
+| Sous-pages Solutions en impasse : hero, capacités, CTA, aucun lien vers les domaines voisins | — | — |
+| Articles et cartes inventés en repli | tableaux codés en dur | `sections/blog.php`, `partials/hero.php` |
+
+**RISK_ANALYSIS**
+- Vider `accent_color` seul aurait été défait au déploiement suivant (constructeurs) — vérifié par
+  contrôle négatif : l'ancien `build_about_page.php` rejoué après l'harmonisation repose `#0B4F8A`.
+- `build_solutions_page.php` réaligne la POSITION des sections des sous-pages à chaque déploiement :
+  la nouvelle section devait y être déclarée, sinon sa position aurait été écrasée.
+- Le pont de survol (`::before`) positionné sur `.has-dropdown` aurait recouvert le lien précédent
+  dans le tiroir mobile : neutralisé sous 991 px.
+- Menu et palette sont du contenu administrable : opérations **uniques sous drapeau**, état
+  antérieur sauvegardé en JSON (`primary_menu_backup_v2`, `brand_palette_backup_v1`).
+
+**IMPLEMENTATION_PLAN — réalisé**
+
+1. `database/harmonize_site_v1.php` (nouveau, dernière étape non bloquante de `deploy.yml`) —
+   trois étapes indépendantes, un drapeau chacune :
+   - `primary_menu_v3_applied` : **Solutions ▾** (Toutes nos solutions, 5 sous-pages, Par secteur
+     d'activité) · **Réalisations** · **Insights** · **À propos ▾** (Digitalium Group, Digitalium Labs,
+     Contact). Via `MenuItem::saveForMenu` (réconciliation déjà éprouvée). Lien créé seulement si la
+     page est publiée.
+   - `brand_palette_blue_v1` : `theme_primary`/`color_primary` `#0868B0`, `theme_secondary`/`theme_accent`/
+     `color_accent` `#003060`, `theme_bg_alt` `#eef5fb`, `theme_badge_bg` `#e3effa`, `theme_badge_text`
+     `#0B4F8A` ; `pages.accent_color` vidé partout.
+   - `hero_overlay_size_aligned_v2` : géométrie de /secteurs (relue en base) sur tous les heros overlay,
+     sous-pages comprises.
+2. Constructeurs : semis d'accent retiré (`build_about_page`, `build_insights_page`, `build_labs_page`,
+   `build_solutions_page` ×2). `master_migration.php` et replis de `layout.php` : valeurs par défaut au bleu.
+3. `hero_media_cards.php` — en-tête compté (`--hero-header-h`), titre overlay `clamp(1.9rem, 3.4vw, 3.1rem)`,
+   colonne de texte 740 px, titre de l'accueil `clamp(2.3rem, 4.3vw, 3.8rem)`, fond composé (dégradé +
+   trame) quand aucun visuel, cartes en 2 colonnes compactes sur tablette/téléphone, rembourrage mobile
+   corrigé.
+4. Menu — `layout.php` : rubrique active si elle ou l'un de ses sous-liens est la page affichée
+   (chemin complet, parent compris) ; `index.css` : pont de survol, `:focus-within`, sous-lien actif.
+   `MenuMigration` (semis de secours) aligné sur les 4 rubriques.
+5. Nouveau type de section **`related_pages`** (« Autres pages de la rubrique ») : cartes lues sur les
+   pages sœurs (`Page::childrenOf`), rien n'est recopié. Déclaré dans `sectionSkeletons()`, le sélecteur
+   d'admin et `BlockFieldHelper` (`link_text`). Posé sur les 5 sous-pages par `build_solutions_page.php`.
+6. `lead_form.php` : pas de défilement à l'ouverture, `.lf-btn[hidden]`.
+7. `layout.php` : newsletter du pied masquée si la page a sa propre section Newsletter ; titre sans
+   nom de site en double. `sectors_grid.php` : identifiants uniques (`secteurs`, `secteurs-2`…).
+8. **Contenus de démonstration supprimés** : `sections/blog.php` (3 articles datés inventés, pastille
+   « Blog » et titre codés en dur) ne rend plus rien sans article saisi ; `partials/hero.php` : 3 titres
+   d'articles et 7 cartes inventés retirés, lien de repli `/blog/…` → `/insights/…`.
+
+**Preuve (Règle #5)** — base MySQL 8.4 jetable (port 3317), pipeline **réel** rejoué deux fois :
+version HEAD (état de production reproduit : mêmes accents par page), puis version de travail.
+
+| Vérification | Résultat |
+|---|---|
+| `harmonize_site_v1.php`, 1er passage | menu 4 rubriques + 10 sous-liens · 8 clés de thème · 10 accents retirés · 5 heros alignés |
+| 2e déploiement complet | 3 drapeaux bloquent · menu identique (somme de contrôle) · **0 accent** revenu |
+| Ordre des sections d'une sous-page | hero → capacités → autres domaines → CTA |
+| Rendu local (serveur PHP intégré) | 10 adresses en 200 ; `--primary` `#0868B0` et aucun `page-accent` sur 4 pages testées |
+| Menu desktop / mobile | rubrique active sur sous-page · sous-menu ouvert après descente de la souris · 1er appui mobile = déploiement · 0 `id` en double |
+| Contrôle négatif menu | sans le pont : sous-menu **refermé** pendant la descente |
+| /contact | `scrollY` 0 à l'ouverture (656 en production) · étape 1 : « Continuer » seul · étape 2 : défilement + « Retour » |
+| Heros 1440 px | 7 pages sur 8 à **632 px** (production : 622 → 868) ; /labs 703 (titre de 52 signes) |
+| Heros 390 px | badge à 32 px sous l'en-tête (116 avant) ; 581 → 821 px (production : 696 → 1 065) ; 0 débordement horizontal |
+| `h_blog.php` | **11 / 11** ; contre la version HEAD : **5 / 11** (contrôle négatif) |
+| `php -l` (17 fichiers) · `bin/check_views.php` | 0 erreur · 0 faute |
+
+**Reste à faire**
+- **[USER]** /realisations et /solutions affichent toujours **6 réalisations « Démo — … »** (clients,
+  chiffres et témoignages inventés, `seed_demo_content.php`). Non touchées : elles avaient été demandées
+  explicitement. À dépublier depuis /admin/projects dès que de vraies réalisations existent.
+- **[USER]** Visuels : /insights, /labs et /contact n'ont pas de photo (fond composé en attendant) ; la
+  médiathèque ne contient aucune autre image assez large pour un bandeau plein écran.
+- CLAUDE.md §7/§8 à mettre à jour (validation CTO) — inchangé.
 
 ---
 
@@ -2414,7 +2512,7 @@ php -l : 0 erreur · bin/check_views.php : 0 faute
 
 ---
 
-## 2026-09-10 — HEROS OVERLAY ALIGNÉS SUR /secteurs (commit à suivre)
+## 2026-09-10 — HEROS OVERLAY ALIGNÉS SUR /secteurs (`f6f0aed`, déployé)
 
 ### Demande
 
@@ -2478,6 +2576,16 @@ banc h_hero_align.php   52 assertions — le VRAI script tourne dans un processu
      voile ajoute aux cles copiees · accueil cible sans garde-fou · drapeau non pose
 h_hero_cards.js 197 · h_hero_render.php 32 · check_views 0 faute
 ```
+
+**Vérifié en production le 2026-10-15** (run GitHub Actions `34478333990` : succès).
+`curl` sur les 7 pages overlay, attribut `style` de `section.hero-mc-overlay` :
+
+| Page | `--hero-overlay-minh` | `.hero-ov-full` | `--hero-media-radius` | voile |
+|---|---|---|---|---|
+| /secteurs (réf.) · /realisations · /a-propos | 560px | présent | 0px | 0.62 |
+| /solutions · /insights · /labs · /contact | 560px | présent | 0px | 0.64 |
+
+Géométrie alignée sur les 7 pages ; voile inchangé, comme prévu.
 
 ### Reste à faire
 
