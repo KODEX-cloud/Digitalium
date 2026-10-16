@@ -594,7 +594,7 @@ class PageController extends Controller {
             'contact_details' => [
                 ['title', 'subtitle', 'show_form', 'coordonnees_title',
                  'cta_label', 'whatsapp_btn_label', 'hours_title', 'hours_desc',
-                 'map_office_label', 'social_section_title', 'social_section_subtitle'],
+                 'map_office_label', 'map_image', 'social_section_title', 'social_section_subtitle'],
                 [],
                 0,
             ],

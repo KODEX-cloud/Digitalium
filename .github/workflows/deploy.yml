@@ -509,6 +509,15 @@ jobs:
                 echo "  ATTENTION Cas types anonymises (non-bloquant)"
               fi
             fi
+            # Visuels generes : heros /insights /labs /contact, couvertures des
+            # articles, fond de carte. Champs vides uniquement (drapeau en base).
+            if [ -f "database/seed_generated_visuals.php" ]; then
+              if $PHP database/seed_generated_visuals.php 2>&1; then
+                echo "  OK Visuels generes"
+              else
+                echo "  ATTENTION Visuels generes (non-bloquant)"
+              fi
+            fi
 
             # ─────────────────────────────────────────────────────────────────
             # ÉTAPE 4 — Cache Clear

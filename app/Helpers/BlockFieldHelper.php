@@ -95,6 +95,7 @@ class BlockFieldHelper {
         'cta2_icon'      => ['Bouton secondaire — icône', "Nom d'icône Lucide."],
         'image'          => ['Visuel', "Choisi dans la Bibliothèque Média."],
         'image_alt'      => ['Texte alternatif du visuel', "Décrit l'image pour l'accessibilité et le référencement."],
+        'map_image'      => ['Fond de la carte', "Visuel affiché derrière l'adresse (Bibliothèque Média). Vide : dégradé neutre."],
         'decor'          => ['Décors du fond', "Cercle, courbe et trame de points derrière le hero."],
         'layout'         => ['Disposition', "Change la mise en page de la section sans toucher au contenu."],
         'image_max_width'=> ['Largeur du visuel', "En pixels sans unité (exemple : 1300), ou le mot « full » pour un visuel bord à bord sur toute la largeur de l'écran."],

@@ -1,5 +1,61 @@
 # PROJECT_STATE — Digitalium Group CMS
-> Dernière mise à jour : 2026-10-16 — Harmonisation : menu à 4 rubriques, palette unique, heros, structure des pages
+> Dernière mise à jour : 2026-10-16 — Visuels générés pour les emplacements d'image vides
+
+---
+
+### 2026-10-16 (suite 2) — Visuels générés : heros, couvertures d'articles, fond de carte
+
+Demande : « visite tout le site, il y a des espaces et des vignettes qui ont besoin d'images,
+génère des images pour les combler ».
+
+**TECHNICAL_AUDIT** — parcours complet de la production (puppeteer, sitemap + liens internes,
+53 adresses, 1440 px) : relevé des `<img>` cassées et des conteneurs visuels sans image.
+
+| Emplacement vide | Où | Cause |
+|---|---|---|
+| Hero sans visuel (fond composé de repli) | /insights, /labs, /contact | bloc `image` vide |
+| Vignette « À la une », grille, figure d'article, « Articles similaires » | /insights, 3 articles | `blog_posts.featured_image` vide ×3 |
+| Carte d'adresse : dégradé uni de 160 px | /contact | aucun champ image dans `contact_details.php` |
+| Avatar de membre d'équipe | accueil | **non comblé** : portrait d'une personne réelle |
+
+0 image cassée sur le site.
+
+**Images** — 7 illustrations aux couleurs du logo, composées en HTML/SVG puis rendues en WebP par
+Chrome headless (aucun générateur photo disponible) : `public/assets/uploads/visuel-*.webp`
+(23 à 59 Ko). Aucune personne, aucun client, aucun chiffre présenté comme un résultat. Cadrages
+vérifiés en situation (injection dans les pages de production à 1440 et 390 px) : contenu hors de
+la zone du titre, de l'en-tête fixe et des cartes du hero.
+
+**IMPLEMENTATION_PLAN — réalisé**
+1. `database/seed_generated_visuals.php` (nouveau, drapeau `generated_visuals_v1`, étape non
+   bloquante de `deploy.yml` après `anonymize_demo_projects`) : inscrit les 7 fichiers dans `media`
+   (une fois), pose les heros, les couvertures et le fond de carte **uniquement si le champ est vide**.
+2. Nouveau champ administrable **`map_image`** (« Fond de la carte ») sur `contact_details` :
+   `PageController::sectionSkeletons()`, `BlockFieldHelper` (type image déduit de la clé),
+   `contact_details.php` (fond `cover`, pastille d'adresse lisible ; vide → dégradé d'origine).
+
+**Preuve (Règle #5)** — MySQL 8.4 jetable (port 3317), pipeline `deploy.yml` rejoué dans l'ordre,
+3 articles insérés avec les slugs de production, rendu par le serveur PHP intégré.
+
+| Vérification | Résultat |
+|---|---|
+| 1er passage | 7 médias inscrits · 3 heros · 3 couvertures · 1 fond de carte |
+| 2e passage | « Déjà appliqué » (drapeau) |
+| Contrôle de non-écrasement (hero /labs et couverture SEO pré-remplis) | « conservé » ×2 · 7 médias, aucun doublon |
+| /insights, /labs, /contact, article — 1440 et 390 px | **0** emplacement vide · **0** image cassée · 0 débordement horizontal |
+| `php -l` (4 fichiers) · `bin/check_views.php` | 0 erreur · OK |
+| `BlockFieldHelper::type('map_image')` | `image` (sélecteur Médiathèque en admin) |
+
+Limites du banc : `/` en 404 et adresse absente — la page `home` et `contact_address` n'existent
+qu'en production (saisies en admin), aucun script ne les crée.
+
+**Reste à faire**
+- **[USER]** Avatar sans photo dans la section Équipe de l'accueil : à remplir depuis l'admin avec
+  une vraie photo.
+- **[USER]** Les visuels sont des illustrations : remplaçables par des photos depuis l'admin
+  (Hero → Visuel, article → Image à la une, Contact → Fond de la carte).
+- Relevé annexe du parcours : des liens produisent des adresses en `/public/…` (servies en 200 —
+  contenu dupliqué) et `/mentions-legales` répond **404** depuis le pied de page. Non traités ici.
 
 ---
 

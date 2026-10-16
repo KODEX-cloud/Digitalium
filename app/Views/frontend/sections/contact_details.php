@@ -235,13 +235,19 @@ $afficherFormulaire = (($single['show_form'] ?? '1') !== '0');
                 <?php endif; ?>
 
                 <!-- Map card -->
-                <?php if (!empty($single['contact_address'] ?? $settings['contact_address'] ?? '')): ?>
+                <?php if (!empty($single['contact_address'] ?? $settings['contact_address'] ?? '')):
+                    // Visuel de fond facultatif (Bibliothèque Média) ; à défaut, le dégradé d'origine.
+                    $mapImage = trim((string)($single['map_image'] ?? ''));
+                    $mapFond  = $mapImage !== ''
+                        ? "url('" . htmlspecialchars(url($mapImage), ENT_QUOTES) . "') center / cover no-repeat"
+                        : 'linear-gradient(135deg, var(--bg-surface-alt), var(--bg-surface))';
+                ?>
                 <div class="map-card reveal" style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; display: flex; flex-direction: column;">
-                    <div class="map-placeholder" style="height: 160px; background: linear-gradient(135deg, var(--bg-surface-alt), var(--bg-surface)); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; border-bottom: 1px solid var(--border);">
+                    <div class="map-placeholder<?= $mapImage !== '' ? ' has-map-image' : '' ?>" style="height: 160px; background: <?= $mapFond ?>; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; border-bottom: 1px solid var(--border);">
                         <div class="map-pin" style="width: 36px; height: 36px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); background: var(--primary); display: flex; align-items: center; justify-content: center;">
                             <i data-lucide="map-pin" style="width: 16px; height: 16px; color: white; transform: rotate(45deg);"></i>
                         </div>
-                        <span class="map-label" style="font-size: 0.78rem; color: var(--text-muted);"><?= htmlspecialchars($single['contact_address'] ?? $settings['contact_address'] ?? '') ?></span>
+                        <span class="map-label" style="font-size: 0.78rem; color: var(--text-muted);<?= $mapImage !== '' ? ' background: rgba(255,255,255,0.92); padding: 3px 10px; border-radius: 999px; color: var(--text-main); font-weight: 600;' : '' ?>"><?= htmlspecialchars($single['contact_address'] ?? $settings['contact_address'] ?? '') ?></span>
                     </div>
                     <div class="map-addr" style="padding: 1rem 1.2rem; font-size: 0.85rem; color: var(--text-main); font-weight: 700; display: flex; align-items: center; gap: 8px; font-family: var(--font-heading);">
                         <i data-lucide="building-2" style="width: 16px; height: 16px; color: var(--primary);"></i>
