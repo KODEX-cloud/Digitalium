@@ -3,6 +3,38 @@
 
 ---
 
+### 2026-10-16 (suite) — Mot « Démo » retiré du site · « Accueil » rétabli dans le menu
+
+**« Démo » sur le site** — recensement en production (22 pages, fiches de réalisation comprises) :
+une seule source, le champ `client` des 6 réalisations semées par `seed_demo_content.php`
+(« Démo — Assurance Horizon »…), visible sur /realisations, /solutions et les 6 fiches détaillées.
+Retirer le seul mot aurait fait passer des clients inventés pour de vraies références ; décision
+utilisateur : **garder les pages comme cas types anonymes**.
+
+`database/anonymize_demo_projects.php` (nouveau, pipeline, drapeau `demo_projects_anonymized_v1`,
+sauvegarde JSON `demo_projects_backup_v1`) — uniquement les lignes dont le client commence encore
+par « Démo » : client → type d'organisation (« Compagnie d'assurance », « Clinique privée »,
+« Entreprise de logistique », « Établissement d'enseignement supérieur », « Groupe immobilier
+multi-entités », « Fondation ») ; année → NULL ; 2 résultats chiffrés retirés (« divisé par deux »,
+« d'une semaine à une nuit ») ; témoignages vidés. `seed_demo_content.php` aligné pour une
+installation neuve.
+
+**« Accueil »** — demande utilisateur : le lien ne doit pas disparaître. Étape 4 de
+`harmonize_site_v1.php` (drapeau `primary_menu_home_v1`) : AJOUT en tête du menu, position
+`MIN(sort_order) − 1`, aucun autre lien modifié ; rien si un lien vers « / » existe déjà. Le plan
+de l'étape 1 et `MenuMigration` (secours) incluent désormais Accueil.
+Menu : **Accueil · Solutions ▾ · Réalisations · Insights · À propos ▾**.
+
+**Preuve** — base MySQL jetable, pipeline réel :
+- cas types : 6 fiches converties, faux témoignage injecté → vidé ; fiche réelle de contrôle portant
+  la même ligne chiffrée → **intacte** ; 2e passage → drapeau, 0 écriture ; parcours du rendu local
+  (20 pages) → **0 occurrence** de « Démo ».
+- Accueil : état de production (menu v3 en place) → ajouté une fois en tête, 2e passage sans effet ;
+  installation neuve (étape 1 avec Accueil) → étape 4 ne double pas (1 seul lien vers « / ») ;
+  rendu : Accueil actif sur /, Solutions sur une sous-page, À propos sur /labs.
+
+---
+
 ### 2026-10-16 — Harmonisation du site : menu, palette, heros, structure, contenus de démonstration
 
 Demande : « diminue le nombre de menu · ajuste les hero · structure et harmonise les différentes
@@ -100,7 +132,7 @@ identique au banc. Pages servies : 9 pages + sitemap en **200** ; `--primary` `#
 /a-propos et /contact, 0 débordement horizontal à 390 px.
 
 **Reste à faire**
-- **[USER]** /realisations et /solutions affichent toujours **6 réalisations « Démo — … »** (clients,
+- ~~**[USER]** /realisations et /solutions affichent toujours **6 réalisations « Démo — … »** (clients,
   chiffres et témoignages inventés, `seed_demo_content.php`). Non touchées : elles avaient été demandées
   explicitement. À dépublier depuis /admin/projects dès que de vraies réalisations existent.
 - **[USER]** Visuels : /insights, /labs et /contact n'ont pas de photo (fond composé en attendant) ; la

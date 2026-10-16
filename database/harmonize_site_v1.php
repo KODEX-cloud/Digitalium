@@ -6,12 +6,13 @@
  * un échec de l'une n'empêche pas les autres, et chacune ne s'exécute qu'une
  * fois. Ce qui est réglé ensuite en admin n'est donc jamais réécrit.
  *
- * ── 1. MENU PRINCIPAL : 8 liens -> 4 rubriques ──────────────────────────────
+ * ── 1. MENU PRINCIPAL : 8 liens -> Accueil + 4 rubriques ────────────────────
+ *   Accueil
  *   Solutions ▾     Toutes nos solutions · les 5 sous-pages · Par secteur d'activité
  *   Réalisations
  *   Insights
  *   À propos ▾      Digitalium Group · Digitalium Labs · Contact
- * « Accueil » disparaît (le logo y mène) et « Contact » quitte le premier
+ * « Accueil » reste en tête (demande utilisateur) ; « Contact » quitte le premier
  * niveau (le bouton d'action de l'en-tête y mène déjà). Un lien n'est créé que
  * si sa page existe et est publiée : jamais de lien vers une page absente.
  * L'ancien menu est sauvegardé en JSON dans `primary_menu_backup_v2`.
@@ -118,6 +119,7 @@ if ($etat === true) {
 
         // [référence, chemin, libellé (null = titre de la page), parent]
         $plan = [
+            ['home',     'home',                                       'Accueil',                null],
             ['sol',      'solutions',                                  'Solutions',              null],
             ['sol-all',  'solutions',                                  'Toutes nos solutions',   'sol'],
             ['sol-sw',   'solutions/software-platforms',               null,                     'sol'],
@@ -149,7 +151,7 @@ if ($etat === true) {
             $items[] = [
                 'id'         => 'new_' . $ref,
                 'label'      => $libelle ?? $p['title'],
-                'url'        => '/' . $chemin,
+                'url'        => $chemin === 'home' ? '/' : '/' . $chemin,
                 'page_id'    => (int)$p['id'],
                 'target'     => '_self',
                 'icon'       => '',
@@ -160,8 +162,8 @@ if ($etat === true) {
             $presents[$ref] = true;
         }
 
-        if (count($items) < 4) {
-            throw new \RuntimeException('moins de 4 liens constructibles — menu actuel conservé');
+        if (count($items) < 5) {
+            throw new \RuntimeException('moins de 5 liens constructibles — menu actuel conservé');
         }
 
         // Sauvegarde de l'existant AVANT toute écriture.
@@ -331,6 +333,60 @@ if ($etat === true) {
         $modifie = true;
     } catch (\Throwable $e) {
         echo "  ERREUR heros : " . $e->getMessage() . "\n";
+        echo "  Drapeau NON posé — l'étape sera rejouée au prochain déploiement.\n";
+    }
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  4. « ACCUEIL » EN TÊTE DU MENU — ajout, sans rien retirer
+// ════════════════════════════════════════════════════════════════════════════
+// Demande utilisateur après la mise en ligne : « Accueil » ne doit pas
+// disparaître. Il est AJOUTÉ devant les rubriques existantes ; aucun autre
+// lien n'est modifié, déplacé ou supprimé. Si un lien vers l'accueil existe
+// déjà (étape 1 jouée avec le plan à jour, ou ajout manuel), rien n'est fait.
+echo "\n[4/4] Lien « Accueil »\n";
+const DRAPEAU_ACCUEIL = 'primary_menu_home_v1';
+
+$etat = $drapeau(DRAPEAU_ACCUEIL);
+if ($etat === true) {
+    echo "  Drapeau " . DRAPEAU_ACCUEIL . " déjà posé — menu laissé tel quel.\n";
+} elseif ($etat === null) {
+    echo "  Étape abandonnée.\n";
+} else {
+    try {
+        $menu = Menu::findByLocation('primary');
+        if (!$menu) {
+            throw new \RuntimeException("aucun menu à l'emplacement « primary »");
+        }
+        $menuId = (int)$menu['id'];
+        $home   = Database::fetch("SELECT id FROM pages WHERE slug = 'home' LIMIT 1");
+        $homeId = $home ? (int)$home['id'] : 0;
+
+        $existe = Database::fetch(
+            "SELECT id FROM menu_items
+              WHERE menu_id = :m AND (url = '/' OR (page_id = :p AND (url IS NULL OR url = '')))
+              LIMIT 1",
+            ['m' => $menuId, 'p' => $homeId]
+        );
+        if ($existe) {
+            echo "  Un lien vers l'accueil existe déjà (#{$existe['id']}) — rien à ajouter.\n";
+        } else {
+            // Juste avant la première rubrique : aucun renumérotage des autres liens.
+            $premier = (int)(Database::fetch(
+                "SELECT COALESCE(MIN(sort_order), 0) AS o FROM menu_items
+                  WHERE menu_id = :m AND parent_id IS NULL", ['m' => $menuId]
+            )['o'] ?? 0);
+            $id = Database::insert(
+                "INSERT INTO menu_items (menu_id, parent_id, page_id, label, url, target, icon, sort_order, is_active)
+                 VALUES (:m, NULL, :p, 'Accueil', '/', '_self', '', :o, 1)",
+                ['m' => $menuId, 'p' => $homeId ?: null, 'o' => $premier - 1]
+            );
+            echo "  « Accueil » ajouté en tête du menu (#$id, position " . ($premier - 1) . ").\n";
+            $modifie = true;
+        }
+        $poserDrapeau(DRAPEAU_ACCUEIL);
+    } catch (\Throwable $e) {
+        echo "  ERREUR accueil : " . $e->getMessage() . "\n";
         echo "  Drapeau NON posé — l'étape sera rejouée au prochain déploiement.\n";
     }
 }

@@ -500,6 +500,15 @@ jobs:
                 echo "  ATTENTION Harmonisation du site (non-bloquant)"
               fi
             fi
+            # Realisations de demonstration -> cas types sans nom de client,
+            # sans annee ni chiffre invente (operation unique, drapeau en base).
+            if [ -f "database/anonymize_demo_projects.php" ]; then
+              if $PHP database/anonymize_demo_projects.php 2>&1; then
+                echo "  OK Cas types anonymises"
+              else
+                echo "  ATTENTION Cas types anonymises (non-bloquant)"
+              fi
+            fi
 
             # ─────────────────────────────────────────────────────────────────
             # ÉTAPE 4 — Cache Clear

@@ -4,18 +4,17 @@
  *
  * ⚠ CONTENU DE DÉMONSTRATION, À RELIRE AVANT TOUTE COMMUNICATION ⚠
  *
- * Les six réalisations semées ici — noms de clients, résultats chiffrés et
- * témoignages — sont INVENTÉES. Elles ont été demandées explicitement pour que
- * les pages ne soient pas vides en attendant les vraies, et sont modifiables
- * depuis /admin/projects sans toucher au code.
+ * Les six réalisations semées ici sont des CAS TYPES, pas des références : elles
+ * ont été demandées pour que les pages ne soient pas vides en attendant les
+ * vraies, et sont modifiables depuis /admin/projects sans toucher au code.
  *
- * Ce que cela implique, écrit ici pour que la prochaine personne qui lit ce
- * fichier le sache : tant qu'elles sont en ligne, le site affirme publiquement
- * avoir livré des projets à des clients qui n'existent pas. Les témoignages
- * signés d'un nom et les pourcentages de résultat sont les éléments les plus
- * exposés. Le champ `client` de chaque réalisation commence par « Démo — »
- * pour qu'aucune de ces lignes ne puisse être prise pour une référence réelle
- * par mégarde, ni en admin ni en base.
+ * Elles ne nomment donc aucun client (le champ `client` porte un type
+ * d'organisation), ne portent ni année ni résultat chiffré, et aucun
+ * témoignage. Elles portaient à l'origine des noms de clients inventés
+ * préfixés « Démo — » ; à la demande de l'utilisateur, ce mot a été retiré du
+ * site et les fiches déjà en ligne ont été anonymisées par
+ * database/anonymize_demo_projects.php. Ne pas réintroduire de nom de client,
+ * de date ni de chiffre : le site affirmerait des références qui n'existent pas.
  *
  * ── Garde-fous ──────────────────────────────────────────────────────────────
  *  1. Drapeau `demo_content_seeded_v1` dans `settings` : le script ne sème
@@ -27,7 +26,7 @@
  *     Un choix fait en admin n'est jamais écrasé.
  *
  * ── Suppression ─────────────────────────────────────────────────────────────
- *     /admin/projects → supprimer les six lignes « Démo — … ».
+ *     /admin/projects → supprimer ou dépublier les six cas types.
  *     Rien d'autre à défaire : le reste (visuels, activation de section) est du
  *     réglage, pas du contenu inventé.
  */
@@ -95,8 +94,8 @@ try {
                 'slug'  => 'plateforme-gestion-sinistres',
                 'category' => 'Software',
                 'sector' => 'Finance & Assurance',
-                'client' => 'Démo — Assurance Horizon',
-                'year' => '2025',
+                'client' => "Compagnie d'assurance",
+                'year' => '',
                 'main_image' => $IMG_FINANCE,
                 'description' => "Une application métier qui suit chaque dossier de sinistre de la déclaration au règlement, avec un délai de traitement visible à tout moment.",
                 'context' => "Les déclarations arrivaient par téléphone, par courriel et au guichet, puis étaient reprises à la main dans trois classeurs différents. Personne ne savait dire, à un instant donné, combien de dossiers étaient en attente ni depuis combien de temps.",
@@ -104,7 +103,7 @@ try {
                 'solution' => "Une application web unique où chaque déclaration devient un dossier suivi par étapes. Les gestionnaires voient leur file d'attente triée par ancienneté ; la direction voit les délais moyens par type de sinistre. Les états mensuels se génèrent à date fixe.",
                 'technologies' => "PHP 8\nMySQL\nAPI REST\nTableaux de bord",
                 'features' => "Saisie unifiée multicanal\nSuivi par étapes avec historique\nAlerte sur les dossiers dormants\nExport réglementaire automatisé",
-                'impact' => "Délai moyen de traitement divisé par deux\nPlus aucune ressaisie entre le guichet et la gestion\nÉtats mensuels produits automatiquement",
+                'impact' => "Plus aucune ressaisie entre le guichet et la gestion\nÉtats mensuels produits automatiquement",
                 'sort_order' => 1, 'is_featured' => 1,
             ],
             [
@@ -112,8 +111,8 @@ try {
                 'slug'  => 'dossier-patient-rendez-vous',
                 'category' => 'Software',
                 'sector' => 'Santé',
-                'client' => 'Démo — Polyclinique Les Palmiers',
-                'year' => '2025',
+                'client' => 'Clinique privée',
+                'year' => '',
                 'main_image' => $IMG_SANTE,
                 'description' => "Un dossier patient consultable au lit du malade et une prise de rendez-vous qui tient compte des disponibilités réelles des praticiens.",
                 'context' => "Le dossier papier suivait mal le patient d'un service à l'autre, et les rendez-vous se prenaient sur un registre unique tenu à l'accueil — invisible depuis les cabinets.",
@@ -129,8 +128,8 @@ try {
                 'slug'  => 'suivi-flotte-tournees-livraison',
                 'category' => 'Infrastructure',
                 'sector' => 'Commerce & Distribution',
-                'client' => 'Démo — TransLogis',
-                'year' => '2024',
+                'client' => 'Entreprise de logistique',
+                'year' => '',
                 'main_image' => $IMG_LOGISTIQUE,
                 'description' => "Une vue unique sur les véhicules, les tournées du jour et les livraisons effectuées, consultable depuis le dépôt comme depuis la route.",
                 'context' => "Les tournées se préparaient la veille sur tableur et se corrigeaient par téléphone toute la journée. Le décompte des livraisons effectuées ne se faisait que le lendemain.",
@@ -146,8 +145,8 @@ try {
                 'slug'  => 'portail-scolarite-paiements',
                 'category' => 'Web & Digital',
                 'sector' => 'Éducation & Formation',
-                'client' => 'Démo — Institut Supérieur Ahoua',
-                'year' => '2024',
+                'client' => "Établissement d'enseignement supérieur",
+                'year' => '',
                 'main_image' => $IMG_DASHBOARD,
                 'description' => "Un espace où étudiants et familles consultent inscriptions, notes et échéances, et règlent la scolarité sans se déplacer.",
                 'context' => "Chaque échéance provoquait une file d'attente au service scolarité, et les demandes de relevé se traitaient une par une au guichet.",
@@ -163,8 +162,8 @@ try {
                 'slug'  => 'tableau-bord-pilotage-financier',
                 'category' => 'Data & BI',
                 'sector' => 'Immobilier',
-                'client' => 'Démo — Groupe Bâtir',
-                'year' => '2025',
+                'client' => 'Groupe immobilier multi-entités',
+                'year' => '',
                 'main_image' => $IMG_FINANCE,
                 'description' => "Les données de gestion de plusieurs entités rassemblées dans un tableau de bord unique, actualisé chaque nuit.",
                 'context' => "Chaque entité produisait son propre reporting, dans son propre format. La consolidation prenait une semaine et arrivait trop tard pour servir aux arbitrages.",
@@ -172,7 +171,7 @@ try {
                 'solution' => "Une collecte automatique des données de chaque entité, un jeu d'indicateurs commun défini avec la direction, et un tableau de bord actualisé chaque nuit.",
                 'technologies' => "PHP 8\nMySQL\nETL planifié\nVisualisation de données",
                 'features' => "Collecte automatique par entité\nIndicateurs communs\nComparaison entre entités\nExport pour le conseil",
-                'impact' => "Consolidation ramenée d'une semaine à une nuit\nIndicateurs identiques pour toutes les entités\nArbitrages appuyés sur des données du jour",
+                'impact' => "Indicateurs identiques pour toutes les entités\nArbitrages appuyés sur des données du jour",
                 'sort_order' => 5, 'is_featured' => 1,
             ],
             [
@@ -180,8 +179,8 @@ try {
                 'slug'  => 'automatisation-traitement-demandes',
                 'category' => 'IA & Automatisation',
                 'sector' => 'Associations & Organisations',
-                'client' => 'Démo — Fondation Espoir Jeunesse',
-                'year' => '2023',
+                'client' => 'Fondation',
+                'year' => '',
                 'main_image' => $IMG_EQUIPE,
                 'description' => "Le tri et la préparation des dossiers de demande d'aide, automatisés pour rendre du temps aux équipes de terrain.",
                 'context' => "Les demandes arrivaient sous toutes les formes et étaient triées à la main. Le temps passé au tri était pris sur l'accompagnement.",
@@ -290,7 +289,7 @@ try {
     Setting::setVal('demo_content_seeded_v1', '1');
     \App\Services\Cache::clear();
 
-    echo "\n⚠ Les réalisations « Démo — … » sont inventées. À remplacer par de vraies\n";
+    echo "\n⚠ Les six réalisations semées sont des cas types, pas des références. À remplacer par de vraies\n";
     echo "  études de cas depuis /admin/projects avant toute communication.\n";
     echo "=== TERMINÉ ===\n";
 } catch (\Throwable $e) {

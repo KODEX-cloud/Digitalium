@@ -33,15 +33,16 @@ class MenuMigration implements MigrationInterface {
                    réparer — et aurait ici ressuscité l'entrée « Blog » tout
                    juste retirée (Règle #8).
 
-                   Aligné sur le menu resserré à quatre rubriques : l'accueil est
-                   atteint par le logo et le contact par le bouton d'action de
-                   l'en-tête. Le secours reste à plat — les sous-menus se
-                   rétablissent depuis /admin/menus. */
+                   Aligné sur le menu resserré : Accueil puis quatre rubriques,
+                   le contact étant atteint par le bouton d'action de l'en-tête.
+                   Le secours reste à plat — les sous-menus se rétablissent
+                   depuis /admin/menus. */
                 $items = [
-                    ['Solutions',    '/solutions',    1],
-                    ['Réalisations', '/realisations', 2],
-                    ['Insights',     '/insights',     3],
-                    ['À propos',     '/a-propos',     4],
+                    ['Accueil',      '/',             1],
+                    ['Solutions',    '/solutions',    2],
+                    ['Réalisations', '/realisations', 3],
+                    ['Insights',     '/insights',     4],
+                    ['À propos',     '/a-propos',     5],
                 ];
 
                 foreach ($items as [$label, $url, $order]) {
