@@ -286,10 +286,8 @@
             transition: var(--transition);
         }
 
-        /* Navigation links — light theme */
-        #siteHeader .nav-link { color: var(--text-main) !important; }
-        #siteHeader .nav-link:hover { color: #111827 !important; background: rgba(0,0,0,0.04) !important; }
-        #siteHeader .nav-link.active { color: var(--primary) !important; background: color-mix(in srgb, var(--primary) 8%, transparent) !important; }
+        /* Les liens du menu sont stylés dans index.css (section 5) : des
+           règles `!important` ici écrasaient leurs états survol et actif. */
         #siteHeader .menu-toggle { color: #111827 !important; }
 
         /* Responsive Breakpoint styling overrides */
@@ -390,7 +388,7 @@
                 <?php endif; ?>
             </a>
 
-            <nav>
+            <nav class="nav-main">
                 <ul class="nav-menu" id="navMenu">
                     <?php
                     // Load primary menu from DB; fallback to pages with in_navigation=1
@@ -451,13 +449,15 @@
                         <li class="<?= $hasChildren ? 'has-dropdown' : '' ?>">
                             <a href="<?= htmlspecialchars($itemUrl) ?>"
                                class="nav-link <?= $isActive ?>"
+                               <?= $estCourant ? 'aria-current="page"' : '' ?>
+                               <?= $hasChildren ? 'aria-haspopup="true"' : '' ?>
                                <?= ($navItem['target'] ?? '_self') === '_blank' ? 'target="_blank" rel="noopener"' : '' ?>>
                                 <?php if (!empty($navItem['icon'])): ?>
                                     <i data-lucide="<?= htmlspecialchars($navItem['icon']) ?>" style="width:15px;height:15px;vertical-align:middle;margin-right:4px;"></i>
                                 <?php endif; ?>
                                 <?= htmlspecialchars($navItem['label']) ?>
                                 <?php if ($hasChildren): ?>
-                                    <i data-lucide="chevron-down" style="width:13px;height:13px;vertical-align:middle;margin-left:2px;opacity:.7;"></i>
+                                    <i data-lucide="chevron-down" class="nav-chevron"></i>
                                 <?php endif; ?>
                             </a>
                             <?php if ($hasChildren): ?>
@@ -470,6 +470,9 @@
                                        class="nav-link<?= $navIsCurrent($child) ? ' active' : '' ?>"
                                        <?= $navIsCurrent($child) ? 'aria-current="page"' : '' ?>
                                        <?= ($child['target'] ?? '_self') === '_blank' ? 'target="_blank" rel="noopener"' : '' ?>>
+                                        <?php if (!empty($child['icon'])): ?>
+                                            <i data-lucide="<?= htmlspecialchars($child['icon']) ?>" class="nav-dd-icon"></i>
+                                        <?php endif; ?>
                                         <?= htmlspecialchars($child['label']) ?>
                                     </a>
                                 </li>
@@ -478,9 +481,10 @@
                             <?php endif; ?>
                         </li>
                     <?php endforeach; ?>
-                    <li>
+                    <li class="nav-cta-item">
                         <a href="<?= htmlspecialchars(url($settings['header_cta_link'] ?? '/contact')) ?>" class="btn-cta-nav">
                             <?= htmlspecialchars($settings['header_cta_text'] ?? 'Discuter de mon projet') ?>
+                            <i data-lucide="arrow-right" class="nav-cta-arrow"></i>
                         </a>
                     </li>
                 </ul>

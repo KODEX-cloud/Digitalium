@@ -1,5 +1,36 @@
 # PROJECT_STATE — Digitalium Group CMS
-> Dernière mise à jour : 2026-10-16 — Couleurs de texte sur fond sombre administrables
+> Dernière mise à jour : 2026-10-18 — Barre de menu redessinée
+
+---
+
+### 2026-10-18 — Barre de menu redessinée
+
+Demande : « améliore cette barre de menu pour un beau design ». Constat en production : liens tassés
+contre le bouton avec un vide au milieu, élément actif en boîte teintée, sous-menu en liste plate
+qui apparaissait sans transition.
+
+**Réalisé** (`public/assets/css/index.css` §5 et §18, `app/Views/frontend/layout.php`)
+- Bureau : liens centrés entre le logo et le bouton (marges automatiques, ≥ 992 px), en pilule au
+  survol ; page en cours marquée par un trait de la couleur du thème sous le lien.
+- Sous-menu : panneau centré sous son lien, ouvert en fondu (`visibility`/`opacity`), avec une pointe ;
+  chevron du parent qui pivote ; chevron qui glisse sur l'élément survolé. Icône d'un sous-lien
+  affichée si elle est renseignée dans le menu (champ `icon` déjà existant).
+- Bouton d'action : flèche animée ; couleurs toujours celles du thème (`--btn-primary-*`).
+- Tiroir mobile : séparateurs fins, chevrons dans une pastille, page active en pastille teintée.
+- Trois règles `#siteHeader .nav-link … !important` retirées de `layout.php` : elles écrasaient les
+  états survol et actif. Ajout de `aria-current` et `aria-haspopup` sur les liens de premier niveau.
+- Aucun texte, lien ni couleur ajouté en dur : le menu reste entièrement piloté par `/admin/menus`.
+
+**Preuve** — banc local (MySQL 8.4 + serveur PHP, puppeteer) :
+
+| Vérification | Résultat |
+|---|---|
+| Hauteur de l'en-tête 992 → 1920 px | 72 px partout, bouton sur une ligne, aucun débordement |
+| Survol puis descente dans le sous-menu | ouvert, opaque, reste ouvert sur l'élément visé |
+| Clavier (Tab) sur « Solutions » | sous-menu visible |
+| Actif parent / enfant sur `/solutions/ia-automatisation` | « Solutions » + « IA & Automatisation » |
+| Tiroir mobile 390 px | s'ouvre, dépliage au toucher, actif « À propos » sur `/a-propos` |
+| `php -l layout.php` | aucune erreur |
 
 ---
 
