@@ -1,5 +1,38 @@
 # PROJECT_STATE — Digitalium Group CMS
-> Dernière mise à jour : 2026-10-18 — Barre de menu redessinée
+> Dernière mise à jour : 2026-10-18 — Animations du logo et du menu
+
+---
+
+### 2026-10-18 (suite) — Animations du logo et du clic dans le menu
+
+Demande : « je veux des animations sur le logo et lorsqu'on clique sur un élément du menu ».
+
+**Réalisé** (`public/assets/css/index.css` §5 et nouvelle §5b, `app/Views/frontend/layout.php`)
+- Logo — entrée à la première page de la visite seulement (`sessionStorage`, classe `logo-intro`
+  posée dans `<head>`) : le monogramme pivote avec un rebond, le nom glisse, « GROUP » se resserre,
+  puis le trait de la page en cours se trace. Survol : le monogramme bascule sur un ressort, un reflet
+  balaie le nom (dégradé construit sur `--primary`), « GROUP » s'espace. Appui : le logo s'enfonce.
+- Clic dans le menu — onde partant du point d'appui (liens et bouton d'action) et léger enfoncement.
+- Changement de page — `@view-transition` (Chrome, Edge, Safari récents) : la page se fond dans la
+  suivante, l'en-tête reste fixe, et le trait de la page en cours glisse de l'ancien lien au nouveau.
+  Le trait est devenu un vrai élément (`.nav-underline`, seul `.is-current` porte le nom de transition).
+  Sans cette API (Firefox) : repli en JS, l'ancien trait se retire et le nouveau se trace pendant le
+  chargement ; remis d'aplomb au retour arrière depuis le cache (`pageshow`).
+- `prefers-reduced-motion: reduce` : aucune de ces animations, ni transition entre pages, ni onde.
+
+**Preuve** — banc local (MySQL 8.4 + serveur PHP, puppeteer, logo de production) :
+
+| Vérification | Résultat |
+|---|---|
+| 1re page / 2e page de la visite | entrée `logoMarkIn` jouée / non rejouée |
+| Entrée au ralenti ×0,1 (6 images) | monogramme → nom → « GROUP » → trait, dans l'ordre |
+| Survol du logo | rotation −8° ×1,08 · reflet passé · « GROUP » 0,36 em |
+| Appui sur « Insights » | 1 onde créée |
+| Navigation /realisations → /insights | `pagereveal.viewTransition` présent, 1 seul trait nommé |
+| Repli sans `onpageswap` | trait sous « Insights », ancien lien repassé au noir |
+| Tiroir mobile, appui sur « Solutions » | se déplie, aucune animation de navigation déclenchée |
+| Réduction des animations | 0 onde, pas de transition, pas d'animation du logo |
+| Banc du menu (survol, actifs, tiroir) | inchangé, vert |
 
 ---
 

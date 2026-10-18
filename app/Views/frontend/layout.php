@@ -3,6 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+    /* Animation d'entrée du logo : jouée sur la première page de la visite
+       seulement (index.css, section 5b), pas à chaque changement de page.
+       Posée dans <head> pour que la classe existe avant le premier affichage. */
+    try {
+        if (!sessionStorage.getItem('dg_logo_intro')) {
+            document.documentElement.classList.add('logo-intro');
+            sessionStorage.setItem('dg_logo_intro', '1');
+        }
+    } catch (e) {}
+    </script>
     <?php
     /**
      * Adresse canonique de la page courante.
@@ -283,7 +294,8 @@
             height: <?= $logoSize ?>px !important;
             width: auto;
             object-fit: contain;
-            transition: var(--transition);
+            /* `transform` a son propre ressort : bascule du logo au survol (index.css §5b). */
+            transition: height .38s cubic-bezier(0.16,1,0.3,1), transform .55s cubic-bezier(.34,1.56,.64,1);
         }
 
         /* Les liens du menu sont stylés dans index.css (section 5) : des
@@ -459,6 +471,7 @@
                                 <?php if ($hasChildren): ?>
                                     <i data-lucide="chevron-down" class="nav-chevron"></i>
                                 <?php endif; ?>
+                                <span class="nav-underline<?= $estCourant ? ' is-current' : '' ?>" aria-hidden="true"></span>
                             </a>
                             <?php if ($hasChildren): ?>
                             <ul class="nav-dropdown">
@@ -896,6 +909,50 @@
                 if (cible.closest('#siteHeader')) { return; }
                 fermer();
             });
+        }
+
+        /* ── Animations au clic dans le menu ───────────────────────────────
+           1. Onde partant du point d'appui, sur les liens et le bouton d'action.
+           2. Trait de la page en cours : dans les navigateurs qui gèrent les
+              transitions entre pages (@view-transition, index.css §5b), il
+              glisse tout seul de l'ancien lien vers le nouveau. Ailleurs, on
+              l'anime ici : il se retire de l'ancien lien et se trace sous le
+              nouveau pendant le chargement. Le faire aussi dans le premier cas
+              fausserait la transition, qui partirait déjà du nouveau lien. */
+        if (navMenu && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            navMenu.addEventListener('pointerdown', (e) => {
+                const lien = e.target.closest('.nav-link, .btn-cta-nav');
+                if (!lien || e.button !== 0) { return; }
+                const r = lien.getBoundingClientRect();
+                const d = Math.max(r.width, r.height) * 2.2;
+                const onde = document.createElement('span');
+                onde.className = 'nav-ripple';
+                onde.style.cssText = `width:${d}px;height:${d}px;left:${e.clientX - r.left - d / 2}px;top:${e.clientY - r.top - d / 2}px`;
+                lien.appendChild(onde);
+                onde.addEventListener('animationend', () => onde.remove());
+            });
+
+            const transitionEntrePages = 'onpageswap' in window && CSS.supports('view-transition-name', 'x');
+            if (!transitionEntrePages) {
+                navMenu.addEventListener('click', (e) => {
+                    const lien = e.target.closest('a.nav-link');
+                    // Clic déjà annulé (sous-menu mobile qui se déploie), nouvel
+                    // onglet ou touche de modification : aucune navigation ici.
+                    if (!lien || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey
+                        || lien.target === '_blank') { return; }
+                    const racine = lien.closest('.nav-menu > li').querySelector(':scope > .nav-link');
+                    if (racine.classList.contains('active')) { return; }
+                    navMenu.classList.add('nav-switching');
+                    racine.classList.add('nav-target');
+                });
+                // Retour arrière depuis le cache : la page revient telle qu'on
+                // l'a quittée, trait déplacé compris. On la remet d'aplomb.
+                window.addEventListener('pageshow', (e) => {
+                    if (!e.persisted) { return; }
+                    navMenu.classList.remove('nav-switching');
+                    navMenu.querySelectorAll('.nav-target').forEach(a => a.classList.remove('nav-target'));
+                });
+            }
         }
 
         window.addEventListener('scroll', () => {

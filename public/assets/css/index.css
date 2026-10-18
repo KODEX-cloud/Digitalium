@@ -262,17 +262,40 @@ img { max-width: 100%; display: block; }
     padding: 9px 15px; border-radius: 999px;
     transition: color .2s ease, background-color .2s ease;
     letter-spacing: 0.005em; position: relative; white-space: nowrap;
+    overflow: hidden; isolation: isolate;   /* contient l'onde du clic, sous le texte */
 }
 .nav-link:hover  { color: var(--primary); background: color-mix(in srgb, var(--primary) 7%, transparent); }
-.nav-link.active { color: var(--primary); font-weight: 600; }
+.nav-link:active { transform: scale(.96); }
+.nav-link.active,
+.nav-link.nav-target { color: var(--primary); font-weight: 600; }
 /* Page en cours : un trait de la couleur du thème sous le lien de premier
-   niveau, plutôt qu'une boîte teintée qui alourdissait la barre. */
-.nav-menu > li > .nav-link::after {
-    content: ''; position: absolute; left: 50%; bottom: 1px;
+   niveau, plutôt qu'une boîte teintée qui alourdissait la barre. C'est un
+   vrai élément et non un `::after` : il porte un nom de transition entre
+   pages (§5b) qui le fait glisser d'un lien à l'autre. */
+.nav-underline {
+    position: absolute; left: 50%; bottom: 1px;
     width: 18px; height: 3px; border-radius: 3px; background: var(--primary);
-    transform: translateX(-50%) scaleX(0); transition: transform .25s ease;
+    transform: translateX(-50%) scaleX(0); pointer-events: none;
+    transition: transform .35s cubic-bezier(.65,0,.35,1);
 }
-.nav-menu > li > .nav-link.active::after { transform: translateX(-50%) scaleX(1); }
+.nav-link.active > .nav-underline,
+.nav-link.nav-target > .nav-underline { transform: translateX(-50%) scaleX(1); }
+/* Repli sans transition entre pages : l'ancien trait se retire pendant que
+   le nouveau se trace (classes posées au clic, layout.php). */
+.nav-switching .nav-link.active:not(.nav-target) > .nav-underline { transform: translateX(-50%) scaleX(0); }
+.nav-switching .nav-link.active:not(.nav-target) { color: var(--text-main); }
+
+/* Onde du clic (créée par layout.php au point d'appui). */
+.nav-ripple {
+    position: absolute; z-index: -1; border-radius: 50%; pointer-events: none;
+    background: currentColor; opacity: 0; transform: scale(0);
+    animation: navRipple .6s cubic-bezier(.2,.8,.2,1);
+}
+@keyframes navRipple {
+    0%   { transform: scale(0);  opacity: .22; }
+    100% { transform: scale(1);  opacity: 0; }
+}
+.btn-cta-nav .nav-ripple { background: var(--btn-primary-text); }
 .nav-chevron { width: 14px; height: 14px; opacity: .65; transition: transform .25s ease, opacity .2s ease; }
 
 .btn-cta-nav {
@@ -283,8 +306,10 @@ img { max-width: 100%; display: block; }
     font-weight: 600; font-size: 0.875rem; white-space: nowrap;
     box-shadow: var(--shadow-btn);
     transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;
+    position: relative; overflow: hidden; isolation: isolate;
 }
 .btn-cta-nav:hover { transform: translateY(-1px); box-shadow: var(--shadow-btn-hover); filter: brightness(1.08); }
+.btn-cta-nav:active { transform: translateY(0) scale(.97); }
 .nav-cta-arrow { width: 16px; height: 16px; transition: transform .2s ease; }
 .btn-cta-nav:hover .nav-cta-arrow { transform: translateX(3px); }
 
@@ -295,6 +320,68 @@ img { max-width: 100%; display: block; }
     .nav-main .nav-menu { flex: 1; }
     .nav-menu > li:first-child { margin-left: auto; }
     .nav-menu > .nav-cta-item  { margin-left: auto; padding-left: 12px; }
+}
+
+/* ============================================================
+   5b. ANIMATIONS — LOGO ET CHANGEMENT DE PAGE
+   ============================================================ */
+/* Logo — survol : le monogramme bascule sur un ressort (la transition de
+   `transform` est déclarée avec la taille dans layout.php, `#siteHeader img`),
+   un reflet balaie le nom, « GROUP » s'espace. Appui : le logo s'enfonce.
+   Le reflet est un dégradé découpé au texte, construit sur `--primary` : il
+   suit la couleur du thème. Au repos, seule la partie unie est visible. */
+.logo-wrap:hover img  { transform: rotate(-8deg) scale(1.08); }
+.logo-wrap:active img { transform: scale(.92); }
+.logo-wrap .logo-text-col strong {
+    background: linear-gradient(110deg, var(--primary) 0 42%,
+                color-mix(in srgb, var(--primary) 35%, #fff) 50%, var(--primary) 58% 100%);
+    background-size: 300% 100%; background-position: 100% 0;
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+    transition: background-position 0s;
+}
+.logo-wrap:hover .logo-text-col strong { background-position: 0 0; transition: background-position .9s ease; }
+.logo-text-col span { transition: letter-spacing .45s cubic-bezier(.2,.8,.2,1); }
+.logo-wrap:hover .logo-text-col span { letter-spacing: .36em !important; }
+
+/* Logo — entrée, sur la première page de la visite (classe posée dans <head>).
+   Remplissage `backwards` seulement : une fois l'animation finie, le survol
+   reprend la main sur les mêmes propriétés. */
+html.logo-intro .logo-wrap img { animation: logoMarkIn .9s cubic-bezier(.34,1.56,.64,1) .05s backwards; }
+html.logo-intro .logo-text-col strong { animation: logoTextIn .6s cubic-bezier(.2,.8,.2,1) .25s backwards, logoShine 1.1s ease-in-out .7s backwards; }
+html.logo-intro .logo-text-col span { animation: logoSubIn .9s cubic-bezier(.2,.8,.2,1) .4s backwards; }
+html.logo-intro .nav-link.active > .nav-underline { animation: navUnderlineIn .5s cubic-bezier(.65,0,.35,1) .6s backwards; }
+@keyframes logoMarkIn {
+    0%   { opacity: 0; transform: scale(.4) rotate(-30deg); }
+    60%  { opacity: 1; transform: scale(1.1) rotate(6deg); }
+    100% { opacity: 1; transform: none; }
+}
+@keyframes logoTextIn { from { opacity: 0; transform: translateX(-12px); } to { opacity: 1; transform: none; } }
+@keyframes logoShine  { from { background-position: 100% 0; } to { background-position: 0 0; } }
+@keyframes logoSubIn  { from { opacity: 0; letter-spacing: .9em; } to { opacity: 1; letter-spacing: .25em; } }
+@keyframes navUnderlineIn { from { transform: translateX(-50%) scaleX(0); } to { transform: translateX(-50%) scaleX(1); } }
+
+/* Changement de page (Chrome, Edge, Safari récents ; ignoré ailleurs) :
+   la page se fond dans la suivante, l'en-tête reste en place au lieu de
+   clignoter, et le trait de la page en cours glisse de l'ancien lien vers le
+   nouveau — un seul élément porte ce nom par page (`.is-current`). */
+@view-transition { navigation: auto; }
+.site-header { view-transition-name: site-header; }
+.nav-underline.is-current { view-transition-name: nav-underline; }
+::view-transition-old(root),
+::view-transition-new(root) { animation-duration: .28s; }
+::view-transition-group(nav-underline) { animation-duration: .5s; animation-timing-function: cubic-bezier(.65,0,.35,1); }
+::view-transition-group(site-header) { animation-duration: .28s; }
+
+@media (prefers-reduced-motion: reduce) {
+    @view-transition { navigation: none; }
+    .logo-wrap:hover img, .logo-wrap:active img { transform: none; }
+    html.logo-intro .logo-wrap img,
+    html.logo-intro .logo-text-col strong,
+    html.logo-intro .logo-text-col span,
+    html.logo-intro .nav-link.active > .nav-underline { animation: none; }
+    .logo-wrap:hover .logo-text-col strong { transition: none; }
+    .nav-underline, .logo-text-col span { transition: none; }
 }
 
 .menu-toggle {
@@ -897,7 +984,7 @@ input:focus, textarea:focus, select:focus {
     }
     /* Dans le tiroir, la page en cours se repère par une pastille teintée :
        le trait sous le lien est réservé à la barre de bureau. */
-    .nav-menu.open > li > .nav-link::after { display: none; }
+    .nav-menu.open .nav-underline { display: none; }
     .nav-menu.open .nav-link.active { background: color-mix(in srgb, var(--primary) 8%, transparent); }
     .nav-menu.open > li:not(.nav-cta-item) + li:not(.nav-cta-item) { border-top: 1px solid var(--border); padding-top: 2px; }
     .nav-menu.open .nav-chevron {
