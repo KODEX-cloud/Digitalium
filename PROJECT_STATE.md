@@ -1,5 +1,5 @@
 # PROJECT_STATE — Digitalium Group CMS
-> Dernière mise à jour : 2026-11-05 — Refonte visuelle « studio » : jetons de design, mouvement, finitions
+> Dernière mise à jour : 2026-11-05 — Refonte visuelle « studio » en production ; LCP accueil rétabli, rendu différé des sections
 
 ---
 
@@ -7,8 +7,9 @@
 
 Demande : rendu haut de gamme sans toucher aux textes, à la structure, aux URLs ni à `/admin` ; tout
 passe par des jetons CSS globaux ; animations sur transform/opacity uniquement ; prefers-reduced-motion ;
-375/768/1280/1920 px ; Lighthouse mobile ≥ 90. Commits locaux (non poussés, voir plus bas) :
-`4b70857`, `13fd224`, `245d027`, `fa15b78`, `1a6b60c`, `10a2461`, `e3171c0`.
+375/768/1280/1920 px ; Lighthouse mobile ≥ 90. En production (rebasés sur `c1d9d1f`) : `a518c05`,
+`30745a3`, `24f1389`, `8daa49b`, `fbf29c1`, `9f6bc5d`, `b87aabe` (run 42069322744), puis les
+correctifs `f014085` (run 42075353247) et `18d1f1f` (run 42084395700) — voir **Production** plus bas.
 
 **Jetons (`public/assets/css/index.css` §1–2)** — grille 8 px (`--space-0-5` … `--space-16`, rythme de
 section 96/64/40) ; échelle typographique `--fs-xs` (12) → `--fs-4xl` en `clamp()`, une seule famille
@@ -59,8 +60,27 @@ alt redondant du logo.
 160–560 ms selon le passage (bruit de la machine de test). Aucune erreur JS sur 9 pages ; captures
 avant/après 375/768/1280/1920.
 
-**Non fait / limites** — accueil local non représentatif (contenu de prod différent ; LCP ~9 s dû à son
-image de hero) : à mesurer après déploiement ; une seule carte de verre seulement là où le hero porte
+**Production (Lighthouse mobile, machine locale, médianes)** — avant = `c1d9d1f` (3 passages) ; après =
+`18d1f1f` (12 passages). Accueil : NO_LCP (aucun score) → 91 ; /contact 72 → 86 ; /solutions 76 → 93 ;
+/solutions/ia-automatisation 77 → 93 ; /solutions/software-platforms 75 → 92. Partout : FCP ~4,0 → 1,0 s,
+LCP 4,0–4,4 → 2,0 s, CLS jusqu'à 0,018 → 0, accessibilité 98 → 100, SEO 100. Bruit : la machine de
+mesure (4 cœurs, IDE, Docker, autres serveurs) fait varier un même code de 70 à 95 ; le TBT
+(250–500 ms médian) porte tout l'écart. /contact reste sous 90 (3 passages sur 12 ≥ 90).
+- `f014085` — accueil en NO_LCP : la piste du carrousel de témoignages (`scroll-snap-type: x mandatory`,
+  padding 2 px) était recalée de 2 px au chargement ; Chrome compte ce défilement comme une interaction
+  et arrête la mesure du LCP (`PaintTiming::NotifyScroll` dans la trace). `scroll-padding-inline: 2px`
+  dans `sections/testimonials_carousel.php` : plus aucun défilement initial (375/412/768/1280 px).
+- `18d1f1f` — `content-visibility: auto` sur les sections après la première (index.css §17b) ;
+  `.cv-off` posée dans `<head>` (layout.php) avant un saut d'ancre, sinon l'arrivée sur `#services-grid`
+  (accueil, 375 px) tombait 547 px trop loin. Banc /contact, 5 passages alternés : TBT 456 → 213 ms,
+  performance 87 → 95. Aucune section ne déborde (11 pages × 2 largeurs), rendu identique au pixel hors
+  lissage du texte, apparitions au défilement complètes, CLS 0 en défilant.
+- Préexistant, non corrigé (contenu) : `#piliers` (bouton du hero de /solutions) sans cible dans la
+  page ; icônes linkedin/twitter/github vides — Lucide ne fournit plus d'icônes de marques.
+
+**Non fait / limites** — /contact sous 90 en médiane (86) : sa première mise en page coûte 250–300 ms
+sous bridage ×4 (dont ~1/3 de mise en forme du texte) ; PageSpeed Insights (mesure neutre) indisponible,
+quota anonyme épuisé ; une seule carte de verre seulement là où le hero porte
 des indicateurs (aucune ajoutée ailleurs : ce serait du contenu) ; transitions de couleur/ombre au survol
 conservées (propriétés de peinture, 200–300 ms) ; favicon 50 × 50 px : fournir en admin une icône carrée
 ≥ 512 px pour un rendu net sur écran Retina et écran d'accueil.
