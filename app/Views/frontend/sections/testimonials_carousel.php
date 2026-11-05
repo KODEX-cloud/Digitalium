@@ -73,6 +73,11 @@ $tcId = 'testi-carousel-' . $sectionId;
     scroll-behavior: smooth;
     flex: 1;
     padding: 6px 2px 14px;
+    /* Même retrait que le padding : la 1re carte est déjà calée à scrollLeft 0.
+       Sans lui, le navigateur recale la piste de 2 px au chargement ; Chrome
+       compte ce défilement comme une interaction et cesse de mesurer le LCP
+       (accueil en NO_LCP dans Lighthouse). */
+    scroll-padding-inline: 2px;
     scrollbar-width: none;
 }
 .testi-carousel-track::-webkit-scrollbar { display: none; }
