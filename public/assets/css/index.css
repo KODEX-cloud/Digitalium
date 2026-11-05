@@ -740,6 +740,51 @@ html.logo-intro .nav-link.active > .nav-underline { animation: navUnderlineIn .5
 /* Hero aglow variant */
 .hero-aglow-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
 
+/* ── 6b. Carte en verre du hero ───────────────────────────────────────
+   Une seule carte de verre par hero : la colonne d'indicateurs devient un
+   panneau translucide (bordure 1 px, flou léger) et ses cartes en sont les
+   lignes. Le texte passe en clair, lisible sur la photo assombrie.
+   `:root` prime sur les styles de la section (déclarés plus bas). */
+:root .hero-ov-cards {
+    gap: 0;
+    padding: var(--space-1);
+    background: rgba(255, 255, 255, 0.10);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: var(--radius-lg);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    backdrop-filter: blur(14px) saturate(140%);
+    box-shadow: 0 24px 48px -16px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    :root .hero-ov-cards { background: rgba(12, 22, 35, 0.62); }
+}
+:root .hero-ov-cards .hero-mc-card {
+    background: transparent;
+    box-shadow: none;
+    border-radius: var(--radius-md);
+    padding: var(--space-2);
+}
+:root .hero-ov-cards .hero-mc-card + .hero-mc-card { border-top: 1px solid rgba(255, 255, 255, 0.16); border-radius: 0; }
+:root .hero-ov-cards .hero-mc-card-label { color: rgba(255, 255, 255, 0.82); font-size: var(--fs-xs); letter-spacing: var(--tracking-label); }
+:root .hero-ov-cards :is(.hero-mc-card-value, .hero-mc-card-title) { color: #fff; }
+:root .hero-ov-cards :is(.hero-mc-card-meta, .hero-mc-card-unit) { color: rgba(255, 255, 255, 0.82); font-size: var(--fs-sm); }
+:root .hero-ov-cards .hero-mc-card-icon { background: rgba(255, 255, 255, 0.14); color: #fff; }
+:root .hero-ov-cards .hero-mc-card-badge { background: rgba(255, 255, 255, 0.16); color: #fff; font-size: var(--fs-xs); }
+:root .hero-ov-cards .hero-mc-card-bar { background: rgba(255, 255, 255, 0.18); }
+:root .hero-ov-cards .hero-mc-card-bar > span { background: #fff; }
+/* Sous 900 px les cartes passent côte à côte : le filet devient vertical. */
+@media (max-width: 900px) {
+    :root .hero-ov-cards .hero-mc-card + .hero-mc-card { border-top: 0; border-left: 1px solid rgba(255, 255, 255, 0.16); }
+}
+@media (max-width: 560px) {
+    :root .hero-ov-cards { gap: 0; padding: var(--space-0-5); }
+    :root .hero-ov-cards .hero-mc-card { padding: var(--space-1-5); }
+    :root .hero-ov-cards .hero-mc-card-title { font-size: var(--fs-sm); }
+    :root .hero-ov-cards .hero-mc-card-meta  { font-size: var(--fs-xs); }
+}
+/* Sur-titres du hero : 12 px minimum, quel que soit l'écran. */
+:root .hero-ov-badge { font-size: var(--fs-xs); letter-spacing: var(--tracking-label); }
+
 /* ============================================================
    7. BUTTONS — Pill shape, all CMS-overridable radius
    ============================================================ */
