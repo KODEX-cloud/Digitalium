@@ -7,6 +7,17 @@
     /* `js` : les éléments à faire apparaître au défilement ne sont masqués que
        si le script qui les révèle peut s'exécuter (index.css §17). */
     document.documentElement.classList.add('js');
+    /* Sections hors écran rendues en différé (index.css §17b) : avant un saut
+       d'ancre — page ouverte sur #fragment, ou clic vers une ancre de la même
+       page — tout est rendu pour que la position d'arrivée soit exacte. La
+       phase de capture passe avant le défilement natif. */
+    if (location.hash) { document.documentElement.classList.add('cv-off'); }
+    document.addEventListener('click', function (e) {
+        var a = e.target.closest && e.target.closest('a[href*="#"]');
+        if (a && a.hash && a.pathname === location.pathname && a.search === location.search) {
+            document.documentElement.classList.add('cv-off');
+        }
+    }, true);
     /* Animation d'entrée du logo : jouée sur la première page de la visite
        seulement (index.css, section 5b), pas à chaque changement de page.
        Posée dans <head> pour que la classe existe avant le premier affichage. */

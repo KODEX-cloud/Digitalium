@@ -1304,7 +1304,23 @@ select:not([multiple]) {
     .js .reveal:not(.visible) { opacity: 1; transform: none; }
 }
 
-@keyframes fadeInUp    { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:none} }
+/* 17b. Rendu différé des sections hors écran. Toutes les sections sauf la
+   première (le hero) ne sont mises en page qu'en approchant de l'écran : la
+   première mise en page ne couvre plus toute la page (TBT mobile divisé par
+   deux environ sur /contact). Hauteur de réserve proche des hauteurs réelles,
+   puis mémorisée (`auto`) une fois la section rendue. Aucune section ne
+   déborde de sa boîte (vérifié sur les 11 pages, 375 et 1280 px), donc rien
+   n'est rogné par le confinement.
+   .cv-off (posée dans <head> par layout.php) rétablit le rendu complet avant
+   un saut d'ancre : sans cela, le défilement vers #ancre se calcule sur des
+   hauteurs estimées et s'arrête trop loin. */
+main > section ~ section { content-visibility: auto; contain-intrinsic-size: auto 1400px; }
+@media (min-width: 768px) {
+    main > section ~ section { contain-intrinsic-size: auto 900px; }
+}
+.cv-off main > section ~ section { content-visibility: visible; }
+
+@keyframes fadeInUp   { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:none} }
 @keyframes fadeIn      { from{opacity:0} to{opacity:1} }
 @keyframes slideInLeft { from{opacity:0;transform:translateX(-30px)} to{opacity:1;transform:none} }
 @keyframes heroFadeIn  { from{opacity:0;transform:translateY(22px)} to{opacity:1;transform:none} }
