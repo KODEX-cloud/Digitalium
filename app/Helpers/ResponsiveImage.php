@@ -145,7 +145,7 @@ class ResponsiveImage {
             $created = 0;
             foreach ($todo as $w => $dest) {
                 $h = max(1, (int)round($dims[1] * $w / $dims[0]));
-                $res = ($w === $dims[0]) ? $img : imagescale($img, $w, $h, IMG_BICUBIC);
+                $res = ($w === $dims[0]) ? $img : self::resize($img, $dims[0], $dims[1], $w, $h);
                 if (!$res) { continue; }
                 imagealphablending($res, false);
                 imagesavealpha($res, true);
@@ -160,6 +160,25 @@ class ResponsiveImage {
         } catch (\Throwable $e) {
             return 0;
         }
+    }
+
+    /**
+     * Redimensionnement par imagecopyresampled, présent dans toutes les
+     * versions de GD. imagescale() renvoie false sur l'hébergement de
+     * production (constaté au déploiement du 2026-11-05 : seules les
+     * variantes pleine taille, non redimensionnées, avaient été créées).
+     */
+    private static function resize($src, int $sw, int $sh, int $dw, int $dh) {
+        $dst = imagecreatetruecolor($dw, $dh);
+        if (!$dst) { return null; }
+        imagealphablending($dst, false);
+        imagesavealpha($dst, true);
+        imagefill($dst, 0, 0, imagecolorallocatealpha($dst, 0, 0, 0, 127));
+        if (!imagecopyresampled($dst, $src, 0, 0, 0, 0, $dw, $dh, $sw, $sh)) {
+            imagedestroy($dst);
+            return null;
+        }
+        return $dst;
     }
 
     /**
