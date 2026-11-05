@@ -1,7 +1,70 @@
 # PROJECT_STATE — Digitalium Group CMS
-> Dernière mise à jour : 2026-11-05 — Visuels : images responsives et alt administrables
+> Dernière mise à jour : 2026-11-05 — Refonte visuelle « studio » : jetons de design, mouvement, finitions
 
 ---
+
+### 2026-11-05 (suite 2) — Refonte visuelle : système de jetons, profondeur, mouvement, finitions
+
+Demande : rendu haut de gamme sans toucher aux textes, à la structure, aux URLs ni à `/admin` ; tout
+passe par des jetons CSS globaux ; animations sur transform/opacity uniquement ; prefers-reduced-motion ;
+375/768/1280/1920 px ; Lighthouse mobile ≥ 90. Commits locaux (non poussés, voir plus bas) :
+`4b70857`, `13fd224`, `245d027`, `fa15b78`, `1a6b60c`, `10a2461`, `e3171c0`.
+
+**Jetons (`public/assets/css/index.css` §1–2)** — grille 8 px (`--space-0-5` … `--space-16`, rythme de
+section 96/64/40) ; échelle typographique `--fs-xs` (12) → `--fs-4xl` en `clamp()`, une seule famille
+(Plus Jakarta Sans, auto-hébergée) ; interlettrage serré des titres ; 3 ombres superposées
+(`--shadow-1/2/3`) ; rayons 6/8/12/20/28 ; durées 200/300/400/600 ms et 3 courbes ; nuances de marque
+`--brand-25…800` dérivées de `--primary` ; états `--success`/`--danger` (AA) ; `--border-input` (≥ 3:1) ;
+fonds de section `--section-light/tint/navy`. Sélection et barre de défilement aux couleurs de la marque.
+Les réglages Thème en base l'emportent toujours : `database/design_tokens_v1.php` (drapeau
+`design_tokens_v1`, sauvegarde JSON `design_tokens_backup_v1`, branché dans `deploy.yml`) les aligne une
+fois sur la grille (92 → 96 px, rayons 9/10/14 → 8/12, interligne 1,6, ombres superposées).
+
+**Composants** — cartes : niveau 1 au repos, niveau 2 + `translateY(-4px)` au survol et au focus clavier ;
+boutons 48 px : survol −2 px, appui, focus, chargement (`.is-loading` / `aria-busy`), désactivé ; survols
+des boutons de section homogénéisés (§7b — les flèches animaient `gap`/`padding`, désormais transform) ;
+formulaires : socle à spécificité nulle (`:where`), champs 16 px, survol, focus, erreur (`:user-invalid`,
+`aria-invalid`), messages `.form-status.is-success/.is-error`, chevron des `select` rétabli ; en-têtes de
+section (sur-titre 12 px capitales, sous-titre bleu soutenu `--brand-700`) ; alternance des fonds selon le
+rang (pair = dégradé léger, impair = clair, CTA navy) ; texte courant des cartes ≥ 16 px (§7c).
+
+**Mouvement (`layout.php`)** — apparition au défilement : fondu + 16 px, 400 ms, une fois, cascade de
+60 ms dans les grilles, masquage conditionné à la classe `js`, coupé si mouvement réduit. Onde du menu
+étendue par délégation aux boutons et cartes cliquables (souris, tactile, clavier), dans un cadre posé
+par-dessus l'élément (aucune modification de mise en page), navigation jamais retardée.
+
+**Hero** — la colonne d'indicateurs devient une carte de verre unique (bordure 1 px translucide, flou,
+repli opaque) ; étiquettes et sur-titres ≥ 12 px.
+
+**Finitions** — page 404 aux couleurs de la marque (mêmes textes) ; formulaire de demande (`lead_form`) et
+formulaire secondaire (`contact_details`) : tous les états ; image OG : repli sur la 1re image de la page
+puis le logo (le fichier par défaut `og-image.jpg` n'existe pas : 404 en production) ; favicon : type MIME
+réel, `apple-touch-icon`, `theme-color`.
+
+**Performance** — police auto-hébergée + préchargée, `font-display: optional` (la bascule `swap`
+provoquait une remise en page complète de ~600 ms sur mobile moyen, mesurée par trace) ; Lucide complet
+(480 Ko, unpkg) remplacé par un jeu réduit hébergé `public/assets/js/icons.js` (23 Ko, 105 icônes) généré
+par `bin/build-icons.js` — même API, secours automatique vers la bibliothèque complète pour une icône
+inconnue du jeu. **À relancer** (`node bin/build-icons.js https://digitaliumgroup.com`) quand une
+nouvelle icône est choisie en admin, sinon la page concernée charge les 480 Ko.
+
+**Bugs corrigés en route** — FAQ (`faq.php`) : la réponse ne s'ouvrait jamais (règle `.open` contre classe
+`.active`) et les questions étaient des boutons natifs gris ; champ newsletter du pied de page : texte
+sombre sur la pilule bleue (sélecteur global trop spécifique) ; ordre des titres du pied de page (h4 → h2) ;
+alt redondant du logo.
+
+**Preuves (banc local)** — Lighthouse mobile, avant → après : /contact perf 82 → 80–95, LCP 3,6 → 1,9 s ;
+/solutions/ia-automatisation perf 84 → 88–95, LCP 3,6 → 2,0 s ; accessibilité 98 → 100 ; SEO 100 ;
+CLS ≤ 0,016. Aucune erreur JS sur 9 pages ; captures avant/après 375/768/1280/1920.
+
+**Non fait / limites** — accueil local non représentatif (contenu de prod différent ; LCP ~9 s dû à son
+image de hero) : à mesurer après déploiement ; une seule carte de verre seulement là où le hero porte
+des indicateurs (aucune ajoutée ailleurs : ce serait du contenu) ; transitions de couleur/ombre au survol
+conservées (propriétés de peinture, 200–300 ms) ; favicon 50 × 50 px : fournir en admin une icône carrée
+≥ 512 px pour un rendu net sur écran Retina et écran d'accueil.
+
+**Dette** — DT-UI-01 : nombreux styles en ligne dans les sections (`contact_details`, cartes) que seuls
+des sélecteurs `:root …`/`!important` peuvent atteindre ; à migrer en classes au fil des évolutions.
 
 ### 2026-11-05 (suite) — Visuels : images responsives, alt et image mobile administrables
 
@@ -41,6 +104,14 @@ différents ; test admin bout en bout 20/20 ; migration idempotente ; `--rollbac
 **Signalé, non modifié** — l'image mobile du hero de page (`hero_image_mobile`) n'est pas lue par la
 variante `hero_ambient_glow` de l'accueil (la brancher pourrait changer le rendu si une valeur traîne en
 base) ; vignettes `sectors_grid` sans image (icônes) ; fond de carte `contact_details` (CSS, décoratif, 23 Ko).
+
+**Production** — point de retour : tag `prod-2026-11-05-avant-visuels` (0343954). Déployé par les runs
+42057612851 (43461de + 13e485a) puis 42058842454 (c1d9d1f). Le premier n'avait créé que 6 variantes
+pleine taille : `imagescale()` renvoie false sur l'hébergeur → remplacé par `imagecopyresampled`
+(c1d9d1f) ; le second a créé 131 variantes (34 images). Santé 10/10, tests HTTP au vert, aucun
+`design_tokens` dans le journal. Mesure production, 15 pages, poids réels des images chargées :
+4 968 → 1 263 Ko à 1920 px (−75 %), 4 878 → 1 038 Ko à 1440 px (−79 %), 4 736 → 897 Ko à 390 px
+(−81 %) ; 111 boîtes d'image comparées, 0 différence de taille.
 
 ### 2026-11-05 — Heroes Solutions & Secteurs administrables
 
