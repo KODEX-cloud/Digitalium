@@ -17,7 +17,7 @@
                     <<?= $cardTag ?> <?= $cardAttr ?> class="service-card">
                         <div class="service-icon-box" style="overflow: hidden; display: flex; align-items: center; justify-content: center;">
                             <?php if (!empty($service['card_image'])): ?>
-                                <img src="<?= htmlspecialchars(url($service['card_image'])) ?>" alt="<?= htmlspecialchars($service['card_title'] ?? '') ?>" style="width: 100%; height: 100%; object-fit: cover;">
+                                <img loading="lazy" decoding="async" src="<?= htmlspecialchars(url($service['card_image'])) ?>" alt="<?= htmlspecialchars($service['card_title'] ?? '') ?>" style="width: 100%; height: 100%; object-fit: cover;">
                             <?php else: ?>
                                 <i data-lucide="<?= htmlspecialchars($service['card_icon'] ?? 'laptop') ?>" style="width: 28px; height: 28px;"></i>
                             <?php endif; ?>

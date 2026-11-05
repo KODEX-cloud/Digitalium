@@ -56,7 +56,7 @@ if (isset($project)):
         
         <!-- Intersecting Client Brand Logo (overlaps bottom-left) -->
         <div class="project-client-logo-wrapper" style="position: absolute; bottom: -18px; left: 16px; z-index: 15; width: 56px; height: 56px; border-radius: 14px; background: white; border: 1.5px solid rgba(255,255,255,0.85); box-shadow: 0 10px 20px -5px rgba(30, 58, 138, 0.15); display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 4px; transition: var(--transition);">
-            <img src="<?= $logo ?>" alt="Logo <?= $title ?>" style="max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 8px;">
+            <img loading="lazy" decoding="async" src="<?= $logo ?>" alt="Logo <?= $title ?>" style="max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 8px;">
         </div>
 
     </div>

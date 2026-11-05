@@ -5,7 +5,30 @@
  * ⚠ Les tokens :root sont des DÉFAUTS — le CMS les écrase via <style id="cms-theme">
  */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+/* Police unique, hébergée sur le site (fichier variable 400→800).
+   L'ancien `@import` Google Fonts était chaîné derrière cette feuille :
+   deux allers-retours vers des domaines tiers avant le premier texte.
+   Inter, chargée aussi, n'était utilisée nulle part sur le site public.
+   Le sous-ensemble latin est préchargé dans <head> (layout.php). */
+@font-face {
+    font-family: 'Plus Jakarta Sans';
+    font-style: normal; font-weight: 400 800; font-display: swap;
+    src: url('../fonts/plus-jakarta-sans-latin.woff2') format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+    font-family: 'Plus Jakarta Sans';
+    font-style: normal; font-weight: 400 800; font-display: swap;
+    src: url('../fonts/plus-jakarta-sans-latin-ext.woff2') format('woff2');
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* Police de repli aux métriques rapprochées : le texte affiché avant le
+   chargement occupe déjà la bonne place, la bascule ne décale rien. */
+@font-face {
+    font-family: 'Plus Jakarta Sans Fallback';
+    src: local('Arial');
+    size-adjust: 104%; ascent-override: 98%; descent-override: 21%; line-gap-override: 0%;
+}
 
 /* ============================================================
    1. DESIGN TOKENS — ALL overridable by CMS Theme Builder
@@ -45,8 +68,8 @@
     --border-glow:      color-mix(in srgb, var(--primary) 25%, transparent);
 
     /* ── Typography tokens (CMS-overridable) ── */
-    --font-main:                'Plus Jakarta Sans', sans-serif;
-    --font-heading:             'Plus Jakarta Sans', sans-serif;
+    --font-main:                'Plus Jakarta Sans', 'Plus Jakarta Sans Fallback', system-ui, sans-serif;
+    --font-heading:             'Plus Jakarta Sans', 'Plus Jakarta Sans Fallback', system-ui, sans-serif;
     --font-size-h1:             clamp(2.4rem, 5vw, 4.2rem);
     --font-size-h2:             clamp(1.7rem, 3.5vw, 2.8rem);
     --font-size-h3:             1.08rem;

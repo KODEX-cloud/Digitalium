@@ -68,8 +68,15 @@
     <meta property="twitter:description" content="<?= htmlspecialchars($_metaDsc) ?>">
     <meta property="twitter:image" content="<?= htmlspecialchars($_ogImage) ?>">
 
+    <link rel="preload" href="<?= url('/assets/fonts/plus-jakarta-sans-latin.woff2') ?>" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="<?= url('/assets/css/index.css') ?>?v=<?= filemtime(ROOT_PATH . '/public/assets/css/index.css') ?>">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <?php
+    /* Font Awesome (19 Ko, domaine tiers) ne sert qu'aux icônes « fa-… » qu'un
+       administrateur peut choisir (IconHelper). Chargé seulement si la page en
+       contient, et sans bloquer l'affichage. */
+    if (str_contains($content ?? '', 'fa-')): ?>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
+    <?php endif; ?>
     <?php
     // ─── CMS Theme Builder — Inject design tokens from settings ──────────────
     $_thP    = htmlspecialchars($settings['theme_primary']                ?? 'var(--primary)', ENT_QUOTES);
@@ -155,7 +162,11 @@
     <?php else: ?>
         <link rel="icon" href="<?= url('/assets/images/favicon.png') ?>" type="image/x-icon">
     <?php endif; ?>
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <?php
+    /* Les icônes Lucide (111 Ko) étaient chargées ici, dans <head>, en
+       bloquant tout l'affichage. Le script est désormais en fin de <body>,
+       juste avant le code qui crée les icônes. */
+    ?>
     <?php
     // Prepare visual style settings from current page configuration
     $headerBgMode = $page['header_bg_mode'] ?? 'glass';
@@ -588,7 +599,7 @@
             <div class="footer-brand">
                 <a href="<?= url('/') ?>" class="logo-wrap">
                     <?php if (!empty($settings['site_logo'])): ?>
-                        <img src="<?= htmlspecialchars(url($settings['site_logo'])) ?>" alt="<?= htmlspecialchars($settings['site_name'] ?? '') ?>" style="height: 40px; width: auto; object-fit: contain;">
+                        <img loading="lazy" decoding="async" src="<?= htmlspecialchars(url($settings['site_logo'])) ?>" alt="<?= htmlspecialchars($settings['site_name'] ?? '') ?>" style="height: 40px; width: auto; object-fit: contain;">
                     <?php endif; ?>
                     <?php if (!empty($settings['site_logo_text'])): ?>
                         <div class="logo-text-col" style="margin-left: 6px;">
@@ -790,8 +801,10 @@
         </div>
     </footer>
 
+    <?php /* Version figée : `@latest` coûtait une redirection à chaque visite. */ ?>
+    <script src="https://unpkg.com/lucide@1.69.0/dist/umd/lucide.min.js"></script>
     <script>
-        lucide.createIcons();
+        if (window.lucide) { lucide.createIcons(); }
 
         // Scroll Reveal Animation (Intersection Observer)
         const observer = new IntersectionObserver(entries => {
