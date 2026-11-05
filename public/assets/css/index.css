@@ -12,18 +12,23 @@
    Le sous-ensemble latin est préchargé dans <head> (layout.php). */
 @font-face {
     font-family: 'Plus Jakarta Sans';
-    font-style: normal; font-weight: 400 800; font-display: swap;
+    font-style: normal; font-weight: 400 800; font-display: optional;
     src: url('../fonts/plus-jakarta-sans-latin.woff2') format('woff2');
     unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 @font-face {
     font-family: 'Plus Jakarta Sans';
-    font-style: normal; font-weight: 400 800; font-display: swap;
+    font-style: normal; font-weight: 400 800; font-display: optional;
     src: url('../fonts/plus-jakarta-sans-latin-ext.woff2') format('woff2');
     unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
-/* Police de repli aux métriques rapprochées : le texte affiché avant le
-   chargement occupe déjà la bonne place, la bascule ne décale rien. */
+/* font-display: optional — la police (préchargée dans layout.php, 27 Ko)
+   est utilisée si elle arrive avant le premier affichage, ce qui est le cas
+   général : elle se télécharge en même temps que cette feuille. Sinon la page
+   garde la police de repli ci-dessous, sans bascule tardive : avec swap,
+   l'arrivée de la police forçait la remise en page complète du document
+   (≈ 600 ms de calcul sur mobile moyen, mesuré). Pages suivantes : en cache.
+   Police de repli aux métriques rapprochées : même encombrement du texte. */
 @font-face {
     font-family: 'Plus Jakarta Sans Fallback';
     src: local('Arial');
@@ -1227,8 +1232,9 @@ select:not([multiple]) {
     margin: 18px 0 26px;
     max-width: 330px;
 }
+/* h2 (ordre des titres) : taille et interligne propres au pied de page. */
 .footer-col-title {
-    font-size: 1.22rem;
+    font-size: 1.22rem; line-height: 1.3; text-wrap: wrap;
     font-weight: 700;
     color: var(--text-main);
     margin-bottom: 26px;

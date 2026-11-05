@@ -414,7 +414,7 @@
                         <source srcset="<?= htmlspecialchars(url($settings['site_logo_mobile'])) ?>" media="(max-width: 768px)">
                     <?php endif; ?>
                     <?php if (!empty($selectedLogo)): ?>
-                        <img src="<?= htmlspecialchars(url($selectedLogo)) ?>" alt="<?= htmlspecialchars($settings['site_name'] ?? 'Digitalium Group') ?>" style="height: 38px; width: auto; object-fit: contain;">
+                        <img src="<?= htmlspecialchars(url($selectedLogo)) ?>" alt="<?= !empty($settings['site_logo_text']) ? '' : htmlspecialchars($settings['site_name'] ?? 'Digitalium Group') ?>" style="height: 38px; width: auto; object-fit: contain;">
                     <?php endif; ?>
                 </picture>
 
@@ -621,7 +621,7 @@
             <div class="footer-brand">
                 <a href="<?= url('/') ?>" class="logo-wrap">
                     <?php if (!empty($settings['site_logo'])): ?>
-                        <img loading="lazy" decoding="async" src="<?= htmlspecialchars(url($settings['site_logo'])) ?>" alt="<?= htmlspecialchars($settings['site_name'] ?? '') ?>" style="height: 40px; width: auto; object-fit: contain;">
+                        <img loading="lazy" decoding="async" src="<?= htmlspecialchars(url($settings['site_logo'])) ?>" alt="<?= !empty($settings['site_logo_text']) ? '' : htmlspecialchars($settings['site_name'] ?? '') ?>" style="height: 40px; width: auto; object-fit: contain;">
                     <?php endif; ?>
                     <?php if (!empty($settings['site_logo_text'])): ?>
                         <div class="logo-text-col" style="margin-left: 6px;">
@@ -664,7 +664,7 @@
 
             <div>
                 <?php if (!empty($settings['footer_nav_title'])): ?>
-                    <h4 class="footer-col-title"><?= htmlspecialchars($settings['footer_nav_title']) ?></h4>
+                    <h2 class="footer-col-title"><?= htmlspecialchars($settings['footer_nav_title']) ?></h2>
                 <?php endif; ?>
                 <ul class="footer-links">
                     <?php
@@ -703,7 +703,7 @@
 
             <div>
                 <?php if (!empty($settings['footer_services_title'])): ?>
-                    <h4 class="footer-col-title"><?= htmlspecialchars($settings['footer_services_title']) ?></h4>
+                    <h2 class="footer-col-title"><?= htmlspecialchars($settings['footer_services_title']) ?></h2>
                 <?php endif; ?>
                 <ul class="footer-links">
                     <?php
@@ -755,7 +755,7 @@
 
             <div>
                 <?php if (!empty($settings['footer_contact_title'])): ?>
-                    <h4 class="footer-col-title"><?= htmlspecialchars($settings['footer_contact_title']) ?></h4>
+                    <h2 class="footer-col-title"><?= htmlspecialchars($settings['footer_contact_title']) ?></h2>
                 <?php endif; ?>
 
                 <?php if (!empty($settings['contact_phone'])): ?>
@@ -823,10 +823,11 @@
         </div>
     </footer>
 
-    <?php /* Version figée : `@latest` coûtait une redirection à chaque visite.
-             `defer` : le téléchargement ne bloque plus la lecture de la page ;
-             les icônes sont créées dès que le script est prêt (onload). */ ?>
-    <script defer src="https://unpkg.com/lucide@1.69.0/dist/umd/lucide.min.js" onload="lucide.createIcons()"></script>
+    <?php /* Icônes : jeu réduit hébergé (23 Ko, généré par bin/build-icons.js)
+             au lieu de la bibliothèque complète (480 Ko depuis unpkg), dont
+             l'exécution retardait l'affichage du hero sur mobile. Même API ;
+             une icône absente du jeu charge la bibliothèque complète. */ ?>
+    <script src="<?= url('/assets/js/icons.js') ?>?v=<?= @filemtime(ROOT_PATH . '/public/assets/js/icons.js') ?>"></script>
     <script>
         if (window.lucide) { lucide.createIcons(); }
 
