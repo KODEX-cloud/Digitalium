@@ -904,6 +904,19 @@ html.logo-intro .nav-link.active > .nav-underline { animation: navUnderlineIn .5
 }
 
 
+/* ── 7c. Texte courant à 16 px minimum ───────────────────────────────
+   Les descriptions des cartes de section étaient fixées entre 14 et
+   14,7 px dans chaque section. Le texte courant suit désormais le jeton
+   --fs-base ; seules les mentions (notes de bas de formulaire, légendes)
+   restent à --fs-sm. `:root` prime sur les styles propres aux sections. */
+:root :is(.sector-card-desc, .proc-desc, .cta-band-sub, .cap-desc, .pj-desc, .related-page-desc,
+          .ps-detail, .proc-timeline-desc, .vcard-text, .about-val-text, .mission-card-desc,
+          .tm-pole-desc, .need-solution, .lp-desc, .insg-excerpt, .insf-excerpt) {
+    font-size: var(--fs-base);
+    line-height: var(--line-height-body);
+}
+:root :is(.footer-promo-note, .insn-note, .fc-note, .lf-privacy, .form-legal) { font-size: var(--fs-sm); line-height: 1.55; }
+
 /* ============================================================
    8. FEATURES — Forced 3-column desktop
    ============================================================ */
