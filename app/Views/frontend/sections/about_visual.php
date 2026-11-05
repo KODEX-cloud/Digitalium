@@ -13,7 +13,15 @@
             <!-- ── LEFT — Image + badge flottant ────────────────────── -->
             <div class="about-visual-media reveal">
                 <?php if (!empty($single['image'])): ?>
-                    <img src="<?= htmlspecialchars(url($single['image'])) ?>" alt="<?= htmlspecialchars($single['title'] ?? '') ?>" loading="lazy">
+                    <?= \App\Helpers\ResponsiveImage::img($single['image'], [
+                        'alt'   => trim((string)($single['image_alt'] ?? '')) !== '' ? $single['image_alt'] : ($single['title'] ?? ''),
+                        // La feuille fixe le ratio (aspect-ratio: 4/3) sans hauteur :
+                        // sans ce height:auto, l'attribut height de la balise
+                        // l'emporterait et étirerait le visuel (mesuré : 411 → 793 px).
+                        'style' => 'height:auto;',
+                        // Boîte 4:3 : 548 px (ordinateur), ~45vw (tablette), ~92vw (mobile).
+                        'rules' => [['(max-width: 768px)', 92, 'vw', 0.75], ['(max-width: 1200px)', 45, 'vw', 0.75], [null, 548, 'px', 0.75]],
+                    ]) ?>
                 <?php else: ?>
                     <div class="about-visual-placeholder">
                         <i data-lucide="image" style="width:48px;height:48px;color:color-mix(in srgb, var(--primary) 30%, transparent);"></i>

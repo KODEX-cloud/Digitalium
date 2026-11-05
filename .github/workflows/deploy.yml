@@ -534,6 +534,15 @@ jobs:
                 echo "  ATTENTION Heroes Solutions & Secteurs (non-bloquant)"
               fi
             fi
+            # Visuels : champs alt / image mobile (drapeau en base), puis variantes
+            # WebP manquantes a chaque deploiement (rien n'est recree si tout existe).
+            if [ -f "database/images_v1.php" ]; then
+              if $PHP database/images_v1.php 2>&1; then
+                echo "  OK Visuels responsives"
+              else
+                echo "  ATTENTION Visuels responsives (non-bloquant)"
+              fi
+            fi
 
             # ─────────────────────────────────────────────────────────────────
             # ÉTAPE 4 — Cache Clear

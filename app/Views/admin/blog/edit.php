@@ -41,7 +41,6 @@
 <form id="blog-form" method="POST" action="<?= url('/admin/blog/edit/' . $post['id']) ?>">
     <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
     <input type="hidden" name="content" id="content-input">
-    <input type="hidden" name="featured_image" id="featured-image-input" value="<?= htmlspecialchars($post['featured_image'] ?? '') ?>">
     <input type="hidden" name="og_image" id="og-image-input" value="<?= htmlspecialchars($post['og_image'] ?? '') ?>">
 
     <div class="blog-editor-grid">
@@ -168,23 +167,14 @@
 
             <div class="card" style="background:var(--bg-surface);border:1px solid var(--border);border-radius:16px;padding:20px;">
                 <h3 style="font-size:0.88rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin-bottom:16px;">Image de couverture</h3>
-                <div class="image-field-wrapper">
-                    <div class="image-field-preview" id="featured-image-preview">
-                        <?php if (!empty($post['featured_image'])): ?>
-                            <img src="<?= htmlspecialchars(url($post['featured_image'])) ?>" style="width:100%;height:100%;object-fit:cover;">
-                        <?php else: ?>
-                            <i data-lucide="image" style="width:24px;height:24px;opacity:0.3;"></i>
-                        <?php endif; ?>
-                    </div>
-                    <div style="flex:1;">
-                        <button type="button" class="btn-secondary" onclick="openMediaModal('featured-image-input','featured-image-preview')" style="width:100%;padding:8px;font-size:0.82rem;border-radius:8px;">
-                            Choisir une image
-                        </button>
-                        <button type="button" onclick="clearImage('featured-image-input','featured-image-preview')" style="margin-top:6px;width:100%;padding:6px;font-size:0.78rem;border-radius:8px;background:none;border:1px solid var(--border);color:var(--text-muted);cursor:pointer;">
-                            Supprimer
-                        </button>
-                    </div>
-                </div>
+                <?php /* Même sélecteur que les heroes : Bibliothèque Média,
+                         téléversement converti en WebP, variantes responsives. */ ?>
+                <?= \App\Helpers\MediaHelper::renderField('featured_image', $post['featured_image'] ?? '', 'featured-image-input') ?>
+                <p style="font-size:0.75rem;color:var(--text-muted);margin:8px 0 14px;line-height:1.5;">Vignette (16:9), « à la une » (≈ 4:3) et en-tête d'article (16:7) : 1600 × 900 px recommandés, sujet centré.</p>
+                <label class="field-label" for="featured_image_alt">Texte alternatif</label>
+                <input type="text" id="featured_image_alt" name="featured_image_alt" class="field-input" maxlength="180"
+                       value="<?= htmlspecialchars($post['featured_image_alt'] ?? '') ?>"
+                       placeholder="Vide : le titre de l'article">
             </div>
 
             <div class="card" style="background:var(--bg-surface);border:1px solid var(--border);border-radius:16px;padding:20px;">

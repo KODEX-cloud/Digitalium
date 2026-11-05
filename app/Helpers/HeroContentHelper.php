@@ -33,6 +33,7 @@ class HeroContentHelper {
         'text'         => 500,
         'image'        => 0,
         'image_alt'    => 180,
+        'image_mobile' => 0,   // facultatif, sans valeur d'origine : vide = même visuel sur mobile
         'cta1_text'    => 40,
         'cta1_url'     => 255,
         'cta2_text'    => 40,
@@ -73,7 +74,7 @@ class HeroContentHelper {
                 $errors[] = "« $label » : lien invalide. Attendu : chemin interne (/contact), ancre (#section) ou adresse https://…";
                 continue;
             }
-            if ($key === 'image') {
+            if ($key === 'image' || $key === 'image_mobile') {
                 $imageError = self::imageError($value);
                 if ($imageError !== null) { $errors[] = "« $label » : $imageError"; }
             }

@@ -60,9 +60,11 @@ $ctaText    = trim((string)($single['cta_text'] ?? '')) ?: 'Lire l’analyse';
             <a class="insf-media" href="<?= htmlspecialchars($lien) ?>"
                aria-label="<?= htmlspecialchars($aLaUne['title'] ?? '') ?>">
                 <?php if (!empty($aLaUne['featured_image'])): ?>
-                    <img src="<?= htmlspecialchars(url($aLaUne['featured_image'])) ?>"
-                         alt="<?= htmlspecialchars($aLaUne['title'] ?? '') ?>"
-                         loading="lazy" decoding="async">
+                    <?= \App\Helpers\ResponsiveImage::img($aLaUne['featured_image'], [
+                        'alt'   => trim((string)($aLaUne['featured_image_alt'] ?? '')) !== '' ? $aLaUne['featured_image_alt'] : ($aLaUne['title'] ?? ''),
+                        // Boîte 608 × 442 (ordinateur), ~93vw (tablette), plein écran 16:9 (mobile).
+                        'rules' => [['(max-width: 768px)', 100, 'vw', 0.56], ['(max-width: 1200px)', 93, 'vw', 0.67], [null, 608, 'px', 0.73]],
+                    ]) ?>
                 <?php else: ?>
                     <span class="insf-placeholder" aria-hidden="true">
                         <i data-lucide="newspaper" style="width:34px;height:34px;"></i>

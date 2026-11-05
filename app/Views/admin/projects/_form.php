@@ -207,6 +207,17 @@ $v = static fn(string $k, string $default = ''): string => htmlspecialchars((str
                 <div class="admin-form-group">
                     <label>Image principale *</label>
                     <?= \App\Helpers\MediaHelper::renderField('main_image', $p['main_image'] ?? '', 'main_image') ?>
+                    <p class="field-help">
+                        Bibliothèque Média ou téléversement (converti en WebP). Sert à la fois de vignette (16:10)
+                        et de bandeau de la fiche projet (très large sur ordinateur) : 2400 × 1350 px recommandés (16:9),
+                        sujet centré dans la bande horizontale du milieu.
+                    </p>
+                </div>
+
+                <div class="admin-form-group">
+                    <label for="main_image_alt">Texte alternatif de l'image principale</label>
+                    <input type="text" id="main_image_alt" name="main_image_alt" class="admin-input" maxlength="180" value="<?= $v('main_image_alt') ?>" placeholder="Ex : Tableau de bord de suivi des sinistres sur ordinateur">
+                    <p class="field-help">Décrit l'image pour l'accessibilité et le référencement. Vide : le titre du projet sert de texte alternatif. 180 caractères max.</p>
                 </div>
 
                 <div class="admin-form-group">
@@ -218,9 +229,30 @@ $v = static fn(string $k, string $default = ''): string => htmlspecialchars((str
                     <label for="gallery">Galerie d'images</label>
                     <textarea id="gallery" name="gallery" class="admin-textarea" rows="4"><?= $v('gallery') ?></textarea>
                     <p class="field-help">
-                        Un chemin d'image par ligne. Copiez les chemins depuis la
-                        <a href="<?= htmlspecialchars(url('/admin/media')) ?>" target="_blank" rel="noopener">Bibliothèque Média</a>.
+                        Un chemin d'image par ligne. Le bouton ci-dessous ajoute une image de la
+                        Bibliothèque Média (ou téléversée) en fin de liste. 1600 × 1000 px recommandés.
                     </p>
+                    <?php /* Champ d'appoint : son nom n'est pas lu par le contrôleur.
+                             Le sélecteur y dépose le chemin choisi, puis le script
+                             l'ajoute à la galerie et remet le champ à zéro. */ ?>
+                    <?= \App\Helpers\MediaHelper::renderField('_gallery_add', '', 'gallery_add') ?>
+                    <script>
+                    (function () {
+                        var add = document.getElementById('gallery_add');
+                        var area = document.getElementById('gallery');
+                        if (!add || !area) { return; }
+                        add.addEventListener('change', function () {
+                            var path = add.value.trim();
+                            if (!path) { return; }
+                            var lines = area.value.split(/\r?\n/).map(function (l) { return l.trim(); }).filter(Boolean);
+                            if (lines.indexOf(path) === -1) { lines.push(path); }
+                            area.value = lines.join('\n');
+                            var box = add.closest('.media-picker-component');
+                            var remove = box ? box.querySelector('.remove-media-btn') : null;
+                            if (remove) { remove.click(); }
+                        });
+                    })();
+                    </script>
                 </div>
             </div>
 

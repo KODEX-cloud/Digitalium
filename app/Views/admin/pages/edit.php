@@ -779,6 +779,13 @@ if (empty($selectedLogo)) {
                         <div class="admin-form-group">
                             <label>Illustration principale</label>
                             <?= \App\Helpers\MediaHelper::renderField('hero_image', $page['hero_image'] ?? '', 'hero_image') ?>
+                            <small class="field-help" style="display:block;margin-top:6px;font-size:0.72rem;color:var(--text-muted);">Bibliothèque Média ou téléversement (converti en WebP). En fond plein écran (accueil) : 2560 × 1440 px recommandés (16:9).</small>
+                        </div>
+
+                        <div class="admin-form-group">
+                            <label for="hero_image_alt">Texte alternatif de l'illustration</label>
+                            <input type="text" id="hero_image_alt" name="hero_image_alt" class="admin-input" maxlength="180" value="<?= htmlspecialchars($page['hero_image_alt'] ?? '') ?>" placeholder="Ex : L'équipe Digitalium en atelier">
+                            <small class="field-help" style="display:block;margin-top:6px;font-size:0.72rem;color:var(--text-muted);">Décrit l'image pour l'accessibilité et le référencement. Vide : image décorative (comportement actuel). 180 caractères max.</small>
                         </div>
 
                         <div class="admin-form-group">

@@ -163,6 +163,13 @@ try { addColumnIfNotExists($pdo, 'projects', 'project_date', "DATE NULL AFTER `c
 try { addColumnIfNotExists($pdo, 'projects', 'description',  "TEXT NULL AFTER `project_date`"); } catch (\PDOException $e) { $errors[] = $e->getMessage(); }
 try { addColumnIfNotExists($pdo, 'pages', 'hero_title_size', "VARCHAR(50) NULL DEFAULT 'large' AFTER `hero_overlay_opacity`"); } catch (\PDOException $e) { $errors[] = $e->getMessage(); }
 
+// ─── 9b. Textes alternatifs des images (2026-11-05) ─────────────────────────
+// Ajout pur, NULL par défaut : vide, chaque gabarit garde son texte actuel
+// (titre de la page, du projet ou de l'article). Retrait : DROP COLUMN.
+try { addColumnIfNotExists($pdo, 'pages', 'hero_image_alt', "VARCHAR(180) NULL AFTER `hero_image`"); } catch (\PDOException $e) { $errors[] = $e->getMessage(); }
+try { addColumnIfNotExists($pdo, 'projects', 'main_image_alt', "VARCHAR(180) NULL AFTER `main_image`"); } catch (\PDOException $e) { $errors[] = $e->getMessage(); }
+try { addColumnIfNotExists($pdo, 'blog_posts', 'featured_image_alt', "VARCHAR(180) NULL AFTER `featured_image`"); } catch (\PDOException $e) { $errors[] = $e->getMessage(); }
+
 // ─── 10. Seed default data ─────────────────────────────────────────────────
 
 // Seed blog categories if empty

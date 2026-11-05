@@ -227,6 +227,7 @@ class PageController extends Controller {
             'hero_overlay_opacity' => (float)($_POST['hero_overlay_opacity'] ?? 0.45),
             'hero_shadow_strength' => trim($_POST['hero_shadow_strength'] ?? 'moyen'),
             'hero_image_mobile' => trim($_POST['hero_image_mobile'] ?? ''),
+            'hero_image_alt' => mb_substr(trim((string)($_POST['hero_image_alt'] ?? '')), 0, 180, 'UTF-8'),
             'responsive_settings' => trim($_POST['responsive_settings'] ?? ''),
             'hero_features' => trim($_POST['hero_features'] ?? ''),
             'hero_articles' => trim($_POST['hero_articles'] ?? '')

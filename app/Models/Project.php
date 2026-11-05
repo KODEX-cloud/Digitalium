@@ -77,6 +77,7 @@ class Project extends Model {
         'description'        => null,
         'logo'               => null,
         'main_image'         => null,
+        'main_image_alt'     => null,
         'gallery'            => null,
         'context'            => null,   // Le problème
         'objectives'         => null,

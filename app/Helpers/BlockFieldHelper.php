@@ -300,12 +300,21 @@ class BlockFieldHelper {
             'title'        => ['Titre H1 — début', "Seul H1 de la page. 150 caractères max."],
             'title_accent' => ['Titre H1 — fin en couleur', "Suite du H1, en couleur d'accent. Facultatif : peut rester vide."],
             'text'         => ['Sous-titre', "Paragraphe sous le H1. 500 caractères max."],
-            'image'        => ['Image du hero', "Bibliothèque Média ou téléversement (bouton « Choisir… »). JPG, PNG ou WebP, 5 Mo max."],
+            'image'        => ['Image du hero', "Bibliothèque Média ou téléversement (bouton « Choisir… »). JPG, PNG ou WebP, 5 Mo max. Recommandé : 2560 × 1120 px (ratio 16:7), sujet centré."],
             'image_alt'    => ['Texte alternatif de l\'image', "Décrit l'image pour l'accessibilité et le référencement. 180 caractères max."],
+            'image_mobile' => ['Image du hero — version mobile', "Facultatif. Remplace l'image sur les écrans de 768 px et moins, où le bandeau est vertical. Recommandé : 1080 × 1620 px (ratio 2:3). Vide : même image que sur ordinateur."],
             'cta1_text'    => ['Bouton 1 — libellé', "40 caractères max."],
             'cta1_url'     => ['Bouton 1 — lien', "Chemin interne (/contact), ancre (#piliers) ou adresse https://."],
             'cta2_text'    => ['Bouton 2 — libellé', "40 caractères max."],
             'cta2_url'     => ['Bouton 2 — lien', "Chemin interne (/solutions), ancre ou adresse https://."],
+        ],
+        'about_visual' => [
+            'image'     => ['Visuel', "Bibliothèque Média ou téléversement. Recommandé : 1200 × 900 px (ratio 4:3)."],
+            'image_alt' => ['Texte alternatif du visuel', "Décrit l'image. Vide : le titre de la section sert de texte alternatif. 180 caractères max."],
+        ],
+        'projects_showcase' => [
+            'proj_image'     => ['Visuel du projet', "Bibliothèque Média ou téléversement. Recommandé : 1200 × 675 px (ratio 16:9)."],
+            'proj_image_alt' => ['Texte alternatif du visuel', "Décrit l'image. Vide : le titre du projet sert de texte alternatif. 180 caractères max."],
         ],
     ];
 

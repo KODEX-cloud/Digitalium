@@ -39,8 +39,12 @@ $facts = array_filter([
 <section class="cs-hero">
     <?php if (!empty($project['main_image'])): ?>
         <div class="cs-hero-media">
-            <img src="<?= htmlspecialchars(url($project['main_image'])) ?>"
-                 alt="<?= htmlspecialchars($project['title'] ?? '') ?>" decoding="async">
+            <?= \App\Helpers\ResponsiveImage::img($project['main_image'], [
+                'alt'      => trim((string)($project['main_image_alt'] ?? '')) !== '' ? $project['main_image_alt'] : ($project['title'] ?? ''),
+                'priority' => true,
+                // Bandeau plein écran : ~507 px de haut (ordinateur), vertical sur mobile.
+                'rules'    => [['(max-width: 768px)', 100, 'vw', 1.45], ['(max-width: 1200px)', 100, 'vw', 0.54], [null, 100, 'vw', 0.36]],
+            ]) ?>
         </div>
     <?php endif; ?>
 
@@ -125,9 +129,11 @@ $facts = array_filter([
                     <div class="cs-gallery">
                         <?php foreach ($gallery as $g): ?>
                             <figure>
-                                <img src="<?= htmlspecialchars(url($g)) ?>"
-                                     alt="<?= htmlspecialchars($project['title'] ?? '') ?>"
-                                     loading="lazy" decoding="async">
+                                <?= \App\Helpers\ResponsiveImage::img($g, [
+                                    'alt'   => $project['title'] ?? '',
+                                    // Deux colonnes dans la colonne de lecture, une seule sur mobile.
+                                    'rules' => [['(max-width: 768px)', 92, 'vw', 0], [null, 370, 'px', 0]],
+                                ]) ?>
                             </figure>
                         <?php endforeach; ?>
                     </div>
@@ -211,8 +217,11 @@ $facts = array_filter([
                     <a class="cs-related-card" href="<?= htmlspecialchars(url('/realisations/' . $r['slug'])) ?>">
                         <?php if (!empty($r['main_image'])): ?>
                             <span class="cs-related-media">
-                                <img src="<?= htmlspecialchars(url($r['main_image'])) ?>"
-                                     alt="<?= htmlspecialchars($r['title']) ?>" loading="lazy" decoding="async">
+                                <?= \App\Helpers\ResponsiveImage::img($r['main_image'], [
+                                    'alt'   => trim((string)($r['main_image_alt'] ?? '')) !== '' ? $r['main_image_alt'] : $r['title'],
+                                    // Boîte 16:10 : 370 px (ordinateur), ~46vw (tablette), ~92vw (mobile).
+                                    'rules' => [['(max-width: 768px)', 92, 'vw', 0.625], ['(max-width: 1200px)', 46, 'vw', 0.625], [null, 370, 'px', 0.625]],
+                                ]) ?>
                             </span>
                         <?php endif; ?>
                         <span class="cs-related-body">

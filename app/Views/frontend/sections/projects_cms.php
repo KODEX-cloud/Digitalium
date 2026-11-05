@@ -115,9 +115,11 @@ $moreText    = trim((string)($single['more_text'] ?? ''));
 
                         <?php if (!empty($p['main_image'])): ?>
                             <a class="pj-media" href="<?= htmlspecialchars($url) ?>">
-                                <img src="<?= htmlspecialchars(url($p['main_image'])) ?>"
-                                     alt="<?= htmlspecialchars($p['title'] ?? '') ?>"
-                                     loading="lazy" decoding="async">
+                                <?= \App\Helpers\ResponsiveImage::img($p['main_image'], [
+                                    'alt'   => trim((string)($p['main_image_alt'] ?? '')) !== '' ? $p['main_image_alt'] : ($p['title'] ?? ''),
+                                    // Boîte 16:10 : 368 px (ordinateur), ~46vw (tablette), ~92vw (mobile).
+                                    'rules' => [['(max-width: 768px)', 92, 'vw', 0.625], ['(max-width: 1200px)', 46, 'vw', 0.625], [null, 368, 'px', 0.625]],
+                                ]) ?>
                                 <?php if (!empty($p['category'])): ?>
                                     <span class="pj-cat"><?= htmlspecialchars($p['category']) ?></span>
                                 <?php endif; ?>

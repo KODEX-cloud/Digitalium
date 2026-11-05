@@ -59,7 +59,7 @@ class ProjectController extends Controller {
     private function collectPostData(): array {
         $text = [
             'title', 'slug', 'category', 'sector', 'client', 'year', 'project_date',
-            'description', 'logo', 'main_image', 'gallery', 'context', 'objectives',
+            'description', 'logo', 'main_image', 'main_image_alt', 'gallery', 'context', 'objectives',
             'solution', 'technologies', 'features', 'impact',
             'testimonial_quote', 'testimonial_author', 'testimonial_role',
             'external_link', 'meta_title', 'meta_description',
@@ -69,6 +69,7 @@ class ProjectController extends Controller {
         foreach ($text as $field) {
             $data[$field] = trim((string)($_POST[$field] ?? ''));
         }
+        $data['main_image_alt'] = mb_substr($data['main_image_alt'], 0, 180, 'UTF-8');
 
         $data['status']      = ($_POST['status'] ?? '') === 'published' ? 'published' : 'draft';
         $data['sort_order']  = (int)($_POST['sort_order'] ?? 0);

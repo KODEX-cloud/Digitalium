@@ -32,6 +32,7 @@ class Post extends Model {
         'author', 'status', 'is_featured', 'meta_title', 'meta_description', 'tags',
         'reading_time', 'sort_order', 'og_image',
         'resource_type', 'resource_file', 'resource_cta',
+        'featured_image_alt',
     ];
 
     /** Colonnes réellement présentes en base — interrogé une fois par requête HTTP. */

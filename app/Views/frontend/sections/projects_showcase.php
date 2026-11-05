@@ -31,7 +31,11 @@ $projAccents = ['var(--primary)', 'var(--secondary)', 'var(--accent)'];
                     <div class="card project-showcase-card reveal" style="transition-delay:<?= $i * 0.08 ?>s;">
                         <div class="project-showcase-media">
                             <?php if (!empty($proj['proj_image'])): ?>
-                                <img src="<?= htmlspecialchars(url($proj['proj_image'])) ?>" alt="<?= htmlspecialchars($proj['proj_title'] ?? '') ?>" loading="lazy">
+                                <?= \App\Helpers\ResponsiveImage::img($proj['proj_image'], [
+                                    'alt'   => trim((string)($proj['proj_image_alt'] ?? '')) !== '' ? $proj['proj_image_alt'] : ($proj['proj_title'] ?? ''),
+                                    // Boîte 366 × 190 (ordinateur), ~46vw (tablette), ~92vw × 190 (mobile).
+                                    'rules' => [['(max-width: 768px)', 92, 'vw', 0.53], ['(max-width: 1200px)', 46, 'vw', 0.63], [null, 366, 'px', 0.52]],
+                                ]) ?>
                             <?php else: ?>
                                 <div class="project-showcase-media-fallback">
                                     <i data-lucide="layout-dashboard" style="width:36px;height:36px;color:color-mix(in srgb, var(--primary) 30%, transparent);"></i>

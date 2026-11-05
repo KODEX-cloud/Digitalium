@@ -1,7 +1,46 @@
 # PROJECT_STATE — Digitalium Group CMS
-> Dernière mise à jour : 2026-11-05 — Heroes Solutions & Secteurs administrables
+> Dernière mise à jour : 2026-11-05 — Visuels : images responsives et alt administrables
 
 ---
+
+### 2026-11-05 (suite) — Visuels : images responsives, alt et image mobile administrables
+
+Demande : unifier les visuels du site public sans toucher aux textes, à la structure, aux URLs ni au CSS
+(un autre agent travaille sur `index.css` / `layout.php`).
+
+**Audit** (production crawlée, 22 pages, boîtes mesurées à 1920/1440/1024/800/390 px) — doublons et
+réemplois relevés : `proj-finance-dashboard-1893001.jpg` (hero Data & BI + 2 réalisations + 2 vitrines),
+`proj-health-tablet` (hero Managed Operations + réalisation + vitrine), `digitalium-hero-team.png`
+(hero accueil + hero À propos ; PNG 1280×720 de 1,5 Mo affiché en 1920×1099), `digitalium-5`
+(542×360 étiré en 1920×632 sur Infrastructure & Security). `hero-pro-dashboard` n'est plus sur Software &
+Platforms ni Secteurs en production (déjà remplacé en admin) : seulement sur « Portail scolarité ».
+
+**Fait**
+- `app/Helpers/ResponsiveImage.php` (nouveau) : balise `<img>` complète — width/height réels, srcset WebP
+  (480 → 2560), `sizes` calculé depuis la boîte mesurée ET le ratio de l'image (cadrage cover), lazy sauf
+  visuel prioritaire. L'affichage ne génère rien ; une variante absente est omise.
+- Variantes dans `public/assets/uploads/_rs/` (non versionné) : créées au téléversement (`MediaManager`)
+  et à chaque déploiement par `database/images_v1.php` (budget 150 s, reprise au déploiement suivant).
+- Gabarits : hero_media_cards (overlay + split), hero d'accueil `hero_ambient_glow` (fond CSS → `<img>`
+  absolue, même cadrage), about_visual, projects_showcase, projects_cms, portfolio_show (bandeau, galerie,
+  liés), insights_featured, insights_grid, blog_post (couverture, liés).
+- Alt éditables : `pages.hero_image_alt`, `projects.main_image_alt`, `blog_posts.featured_image_alt`
+  (master_migration) ; blocs `image_alt` (about_visual), `proj_image_alt` (vitrine), `image_mobile`
+  (hero_media_cards, `<picture>` ≤ 768 px, validé comme l'image principale). Vides = rendu inchangé.
+- Admin : blog passé au sélecteur partagé (médiathèque + téléversement WebP) ; galerie des réalisations
+  alimentable par le sélecteur ; dimensions recommandées dans l'aide de chaque champ image.
+- `public/index.php` : l'adresse « / » passait par `public/index.php` (règle `-d` du .htaccess racine) et
+  tous les liens de l'accueil sortaient en `/public/…` (61 en production, chacun suivi d'un 301).
+
+**Preuves (banc local, base jetable)** — 58 boîtes d'image et hauteurs de 20 pages identiques avant/après ;
+poids des images 8,7 Mo → 1,6 Mo sur ces pages ; ancien/nouveau hero d'accueil : 0,01 % de pixels
+différents ; test admin bout en bout 20/20 ; migration idempotente ; `--rollback` retire 16 champs et
+73 variantes, originaux intacts. Bug corrigé en route : `about_visual` (aspect-ratio sans hauteur) étiré
+411 → 793 px par l'attribut height → `height:auto` en ligne.
+
+**Signalé, non modifié** — l'image mobile du hero de page (`hero_image_mobile`) n'est pas lue par la
+variante `hero_ambient_glow` de l'accueil (la brancher pourrait changer le rendu si une valeur traîne en
+base) ; vignettes `sectors_grid` sans image (icônes) ; fond de carte `contact_details` (CSS, décoratif, 23 Ko).
 
 ### 2026-11-05 — Heroes Solutions & Secteurs administrables
 

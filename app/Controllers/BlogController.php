@@ -155,6 +155,7 @@ class BlogController extends Controller {
             'excerpt'          => trim($p['excerpt'] ?? ''),
             'content'          => $p['content'] ?? '',
             'featured_image'   => trim($p['featured_image'] ?? ''),
+            'featured_image_alt' => mb_substr(trim((string)($p['featured_image_alt'] ?? '')), 0, 180, 'UTF-8'),
             'category'         => trim($p['category'] ?? ''),
             'author'           => trim($p['author'] ?? ''),
             'status'           => ($p['status'] ?? '') === 'published' ? 'published' : 'draft',

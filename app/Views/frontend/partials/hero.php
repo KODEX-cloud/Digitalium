@@ -704,10 +704,10 @@ if (!empty($page['hero_title'])):
 
 <?php elseif ($variant === 'hero_ambient_glow'): ?>
     <?php
-    // Background: photo ou fallback dark
-    $heroBg = !empty($page['hero_image'])
-        ? "background:url('" . htmlspecialchars(url($page['hero_image'])) . "') center center/cover no-repeat;"
-        : "background:var(--surface-dark);";
+    // Fond : photo ou aplat sombre. La photo est une vraie balise <img> en
+    // position absolue (même cadrage que l'ancien « center / cover ») : elle
+    // reçoit ainsi srcset WebP, priorité de chargement et texte alternatif.
+    $heroBg = !empty($page['hero_image']) ? '' : "background:var(--surface-dark);";
 
     // Overlay opacity — depuis DB (admin-configurable)
     $overlayOp = isset($page['hero_overlay_opacity']) ? (float)$page['hero_overlay_opacity'] : 0.78;
@@ -728,6 +728,17 @@ if (!empty($page['hero_title'])):
     ?>
     <!-- Variant 6 — Photo Hero (fond plein écran + overlay + texte gauche) -->
     <section id="hero-section-<?= $page['id'] ?>" style="position:relative;overflow:hidden;min-height:100vh;display:flex;align-items:center;<?= $heroBg ?>">
+
+        <?php if (!empty($page['hero_image'])): ?>
+        <?= \App\Helpers\ResponsiveImage::img($page['hero_image'], [
+            // Vide = image décorative, comme l'ancien fond CSS.
+            'alt'      => (string)($page['hero_image_alt'] ?? ''),
+            'priority' => true,
+            'style'    => 'position:absolute;inset:0;width:100%;height:100%;max-width:none;object-fit:cover;object-position:center center;z-index:0;',
+            // Boîte : plein écran, au moins 100vh (1440 × 1099, 390 × 1125 mesurés).
+            'rules'    => [['(max-width: 768px)', 100, 'vw', 2.9], ['(max-width: 1200px)', 100, 'vw', 1.13], [null, 100, 'vw', 0.76]],
+        ]) ?>
+        <?php endif; ?>
 
         <!-- Overlay gradient dynamique (admin-configurable) -->
         <div style="position:absolute;inset:0;background:<?= $overlayGrad ?>;z-index:1;pointer-events:none;"></div>

@@ -110,8 +110,12 @@ $partages = [
     <?php if (!empty($post['featured_image'])): ?>
         <div class="container art-col">
             <figure class="art-figure">
-                <img src="<?= htmlspecialchars(url($post['featured_image'])) ?>"
-                     alt="<?= htmlspecialchars($post['title'] ?? '') ?>" decoding="async">
+                <?= \App\Helpers\ResponsiveImage::img($post['featured_image'], [
+                    'alt'      => trim((string)($post['featured_image_alt'] ?? '')) !== '' ? $post['featured_image_alt'] : ($post['title'] ?? ''),
+                    'priority' => true,
+                    // Colonne de lecture : 740 px de large, ratio 16:7.
+                    'rules'    => [['(max-width: 768px)', 95, 'vw', 0.44], [null, 764, 'px', 0.44]],
+                ]) ?>
             </figure>
         </div>
     <?php endif; ?>
@@ -247,7 +251,10 @@ $partages = [
                         <a class="art-related-card" href="<?= htmlspecialchars(url('/insights/' . $r['slug'])) ?>">
                             <?php if (!empty($r['featured_image'])): ?>
                                 <span class="art-related-media">
-                                    <img src="<?= htmlspecialchars(url($r['featured_image'])) ?>" alt="" loading="lazy" decoding="async">
+                                    <?= \App\Helpers\ResponsiveImage::img($r['featured_image'], [
+                                        'alt'   => '',   // le titre de la carte, juste dessous, décrit déjà le lien
+                                        'rules' => [['(max-width: 768px)', 92, 'vw', 0.5625], ['(max-width: 1200px)', 46, 'vw', 0.5625], [null, 370, 'px', 0.5625]],
+                                    ]) ?>
                                 </span>
                             <?php endif; ?>
                             <span class="art-related-body">

@@ -176,6 +176,7 @@ $slides = [];
 if ($isOverlay) {
     $slides[] = [
         'image' => trim((string)($single['image'] ?? '')),
+        'mobile'=> trim((string)($single['image_mobile'] ?? '')),
         'alt'   => trim((string)($single['image_alt'] ?? ($single['title'] ?? ''))),
         'badge' => trim((string)($single['badge'] ?? '')),
         'title' => trim((string)($single['title'] ?? '')),
@@ -189,6 +190,7 @@ if ($isOverlay) {
         if (!$hasSlide) { continue; }
         $slides[] = [
             'image' => trim((string)($g['slide_image'] ?? '')),
+            'mobile'=> '',
             'alt'   => trim((string)($g['slide_alt']   ?? ($g['slide_title'] ?? ''))),
             'badge' => trim((string)($g['slide_badge'] ?? '')),
             'title' => trim((string)($g['slide_title'] ?? '')),
@@ -275,10 +277,19 @@ $bannerVars = $isWide
                              trame) plutôt qu'un aplat : la moitié droite, vide de
                              texte, ne paraît plus inachevée. */ ?>
                     <div class="hero-ov-media<?= $s['image'] === '' ? ' hero-ov-media-empty' : '' ?>">
-                        <?php if ($s['image'] !== ''): ?>
-                            <img src="<?= htmlspecialchars(url($s['image'])) ?>"
-                                 alt="<?= htmlspecialchars($s['alt']) ?>"
-                                 <?= $i === 0 ? 'fetchpriority="high"' : 'loading="lazy"' ?> decoding="async">
+                        <?php if ($s['image'] !== ''):
+                            /* Boîte mesurée : plein écran, 632 px de haut sur
+                               ordinateur, verticale (≈ 390 × 630) sur mobile. */
+                            $imgTag = \App\Helpers\ResponsiveImage::img($s['image'], [
+                                'alt'      => $s['alt'],
+                                'priority' => $i === 0,
+                                'rules'    => [['(max-width: 768px)', 100, 'vw', 1.7], ['(max-width: 1200px)', 100, 'vw', 0.8], [null, 100, 'vw', 0.44]],
+                            ]);
+                            if ($s['mobile'] !== ''): ?>
+                            <picture><?= \App\Helpers\ResponsiveImage::source($s['mobile'], '(max-width: 768px)', [[null, 100, 'vw', 1.7]]) ?><?= $imgTag ?></picture>
+                            <?php else: ?>
+                            <?= $imgTag ?>
+                            <?php endif; ?>
                         <?php endif; ?>
                     </div>
 
@@ -413,10 +424,18 @@ $bannerVars = $isWide
                seule la balise <img> est conditionnelle. */
             if ($isOverlay || !empty($single['image'])): ?>
                 <div class="hero-mc-media">
-                    <?php if (!empty($single['image'])): ?>
-                        <img src="<?= htmlspecialchars(url($single['image'])) ?>"
-                             alt="<?= htmlspecialchars($single['image_alt'] ?? ($single['title'] ?? '')) ?>"
-                             class="hero-mc-img">
+                    <?php if (!empty($single['image'])):
+                        $imgTag = \App\Helpers\ResponsiveImage::img($single['image'], [
+                            'alt'      => $single['image_alt'] ?? ($single['title'] ?? ''),
+                            'class'    => 'hero-mc-img',
+                            'priority' => true,
+                            'rules'    => [['(max-width: 768px)', 100, 'vw', 0.8], [null, 50, 'vw', 0.9]],
+                        ]);
+                        if (trim((string)($single['image_mobile'] ?? '')) !== ''): ?>
+                        <picture><?= \App\Helpers\ResponsiveImage::source($single['image_mobile'], '(max-width: 768px)', [[null, 100, 'vw', 0.8]]) ?><?= $imgTag ?></picture>
+                        <?php else: ?>
+                        <?= $imgTag ?>
+                        <?php endif; ?>
                     <?php endif; ?>
                 </div>
             <?php endif; ?>

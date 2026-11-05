@@ -81,6 +81,11 @@ class MediaManager {
             $finalSize = $file['size'];
         }
 
+        // Variantes responsives (WebP, 480 → 2560 px) pour le srcset du site.
+        // generate() ne lève jamais d'exception : un échec laisse simplement
+        // le site servir l'original, le téléversement reste valide.
+        \App\Helpers\ResponsiveImage::generate(UPLOAD_URL . '/' . $finalFilename);
+
         return [
             'filename'      => $finalFilename,
             'filepath'      => UPLOAD_URL . '/' . $finalFilename,

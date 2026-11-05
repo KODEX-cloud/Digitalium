@@ -161,8 +161,14 @@ $readSuffix  = trim((string)($single['read_suffix'] ?? '')) ?: 'min';
                     <article class="insg-card reveal" style="transition-delay:<?= min($i * 55, 330) ?>ms;">
                         <a class="insg-media" href="<?= htmlspecialchars($lien) ?>" tabindex="-1" aria-hidden="true">
                             <?php if (!empty($a['featured_image'])): ?>
-                                <img src="<?= htmlspecialchars(url($a['featured_image'])) ?>"
-                                     alt="" loading="lazy" decoding="async">
+                                <?php /* alt vide volontaire : ce lien image est masqué aux
+                                         lecteurs d'écran (aria-hidden), le titre juste
+                                         dessous porte déjà le même lien. */ ?>
+                                <?= \App\Helpers\ResponsiveImage::img($a['featured_image'], [
+                                    'alt'   => '',
+                                    // Boîte 16:9 : 367 px (ordinateur), ~46vw (tablette), ~92vw (mobile).
+                                    'rules' => [['(max-width: 768px)', 92, 'vw', 0.5625], ['(max-width: 1200px)', 46, 'vw', 0.5625], [null, 368, 'px', 0.5625]],
+                                ]) ?>
                             <?php else: ?>
                                 <span class="insg-placeholder">
                                     <i data-lucide="file-text" style="width:26px;height:26px;"></i>
