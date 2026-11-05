@@ -462,17 +462,23 @@ a.mcard:active, a.svc-card:active, a.bcard:active {
 .nav-switching .nav-link.active:not(.nav-target) > .nav-underline { transform: translateX(-50%) scaleX(0); }
 .nav-switching .nav-link.active:not(.nav-target) { color: var(--text-main); }
 
-/* Onde du clic (créée par layout.php au point d'appui). */
+/* Onde du clic — menu, boutons et cartes (créée par layout.php au point
+   d'appui). Le cadre recouvre l'élément cliqué sans le modifier : position
+   fixe, mêmes coins, débordement masqué, aucun événement capté. */
+.ripple-frame {
+    position: fixed; z-index: 2147483000; overflow: hidden; pointer-events: none;
+    contain: strict;
+}
 .nav-ripple {
-    position: absolute; z-index: -1; border-radius: 50%; pointer-events: none;
+    position: absolute; border-radius: 50%; pointer-events: none;
     background: currentColor; opacity: 0; transform: scale(0);
-    animation: navRipple .6s cubic-bezier(.2,.8,.2,1);
+    animation: navRipple var(--dur-4) cubic-bezier(.2,.8,.2,1);
 }
 @keyframes navRipple {
-    0%   { transform: scale(0);  opacity: .22; }
+    0%   { transform: scale(0);  opacity: .18; }
     100% { transform: scale(1);  opacity: 0; }
 }
-.btn-cta-nav .nav-ripple { background: var(--btn-primary-text); }
+@media (prefers-reduced-motion: reduce) { .ripple-frame { display: none; } }
 .nav-chevron { width: 14px; height: 14px; opacity: .65; transition: transform .25s ease, opacity .2s ease; }
 
 .btn-cta-nav {
@@ -800,6 +806,55 @@ html.logo-intro .nav-link.active > .nav-underline { animation: navUnderlineIn .5
 .btn-secondary:is(.is-loading, [aria-busy="true"])::after,
 .btn-cta-secondary:is(.is-loading, [aria-busy="true"])::after { border-color: var(--primary); border-right-color: transparent; }
 @keyframes btn-spin { to { transform: rotate(360deg); } }
+/* ── 7b. Survol homogène des boutons et liens de section ──────────────
+   Plusieurs sections écartaient leur flèche en animant `gap`, ou décalaient
+   une ligne en animant `padding` : des propriétés de mise en page, qui ne
+   sont plus transitionnées depuis les jetons (saut sec). L'écart reste fixe
+   et c'est la flèche qui glisse, par transform. `:root` donne la priorité
+   sur les styles propres aux sections, déclarés plus bas dans la page. */
+:root :is(.caps-cta-btn, .sec-more-btn, .lp-more-btn, .pj-more-btn, .insf-btn):hover { gap: 9px; }
+:root :is(.insr-btn, .pj-empty-btn):hover { gap: 8px; }
+:root :is(.pj-link, .lp-link, .insg-link, .sector-card-link):hover { gap: 7px; }
+:root :is(.caps-cta-btn, .sec-more-btn, .lp-more-btn, .pj-more-btn, .insf-btn, .insr-btn, .pj-empty-btn,
+          .pj-link, .lp-link, .insg-link, .sector-card-link, .cta-band-btn, .hero-ov-btn, .lf-btn,
+          .btn-primary, .btn-cta-primary, .btn-secondary, .btn-cta-secondary, .btn-hero-primary,
+          .btn-hero-secondary, .related-pages-btn) > svg:last-child {
+    transition: transform var(--dur-1) var(--ease-out);
+}
+:root :is(.caps-cta-btn, .sec-more-btn, .lp-more-btn, .pj-more-btn, .insf-btn, .insr-btn, .pj-empty-btn,
+          .pj-link, .lp-link, .insg-link, .sector-card-link, .cta-band-btn, .hero-ov-btn, .lf-btn,
+          .btn-primary, .btn-cta-primary, .btn-secondary, .btn-cta-secondary, .btn-hero-primary,
+          .btn-hero-secondary, .related-pages-btn):hover > svg:last-child:not(:first-child) {
+    transform: translateX(3px);
+}
+/* Même soulèvement (-2 px) et même ombre pour tous les boutons pleins. */
+:root :is(.caps-cta-btn, .sec-more-btn, .lp-more-btn, .pj-more-btn, .insf-btn, .pj-empty-btn,
+          .cta-band-btn, .hero-ov-btn, .lf-btn-primary, .related-pages-btn) {
+    transition: var(--transition);
+}
+:root :is(.caps-cta-btn, .sec-more-btn, .lp-more-btn, .pj-more-btn, .insf-btn, .pj-empty-btn,
+          .cta-band-btn, .hero-ov-btn, .lf-btn-primary, .related-pages-btn):hover {
+    transform: translateY(var(--lift-btn));
+    box-shadow: var(--shadow-btn-hover);
+}
+:root :is(.caps-cta-btn, .sec-more-btn, .lp-more-btn, .pj-more-btn, .insf-btn, .insr-btn, .pj-empty-btn,
+          .cta-band-btn, .hero-ov-btn, .lf-btn, .related-pages-btn):active {
+    transform: translateY(0) scale(0.98);
+    transition-duration: 80ms;
+}
+:root :is(.caps-cta-btn, .sec-more-btn, .lp-more-btn, .pj-more-btn, .insf-btn, .insr-btn, .pj-empty-btn,
+          .cta-band-btn, .hero-ov-btn, .lf-btn, .related-pages-btn, .pj-filter, .insg-filter):focus-visible {
+    outline: 2px solid var(--primary); outline-offset: 3px;
+}
+/* Ligne « besoin » : le contenu glisse au lieu d'élargir les marges. */
+:root a.need-row:hover { padding-left: 4px; padding-right: 4px; }
+:root .need-row > :is(.need-icon, .need-body) { transition: transform var(--dur-2) var(--ease-out); }
+:root a.need-row:hover > :is(.need-icon, .need-body) { transform: translateX(10px); }
+@media (max-width: 560px) {
+    :root a.need-row:hover { padding-left: 2px; padding-right: 2px; }
+    :root a.need-row:hover > :is(.need-icon, .need-body) { transform: none; }
+}
+
 
 /* ============================================================
    8. FEATURES — Forced 3-column desktop
@@ -957,38 +1012,37 @@ html.logo-intro .nav-link.active > .nav-underline { animation: navUnderlineIn .5
 .contact-form-group { display: flex; flex-direction: column; gap: var(--space-1); margin-bottom: var(--space-3); }
 .contact-form-group label { font-size: var(--fs-sm); font-weight: 600; color: var(--text-sub); letter-spacing: 0.01em; }
 
-/* Champs : 16 px (pas de zoom forcé sur iOS), 48 px de haut, bordure 1 px. */
-.contact-input, .contact-textarea,
+/* Champs : 16 px (pas de zoom forcé sur iOS), 48 px de haut, bordure 1 px.
+   :where() = spécificité nulle : le style propre d'un formulaire (pied de
+   page, newsletter…) l'emporte toujours sur ce socle commun. */
+:where(.contact-input, .contact-textarea,
 input[type="text"], input[type="email"], input[type="tel"], input[type="url"],
-input[type="search"], input[type="number"], input[type="password"], textarea, select {
+input[type="search"], input[type="number"], input[type="password"], textarea, select) {
     width: 100%; min-height: 48px; padding: var(--space-1-5) var(--space-2);
     background: var(--bg-card); border: 1px solid var(--border-strong);
     border-radius: var(--radius-md); color: var(--text-main);
     font-family: var(--font-main); font-size: var(--fs-base); line-height: 1.5;
     transition: var(--transition-fast); appearance: none;
 }
-textarea { min-height: 128px; }
-select {
+:where(textarea) { min-height: 128px; }
+:where(select) {
     padding-right: var(--space-5);
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m4 6 4 4 4-4'/%3E%3C/svg%3E");
     background-repeat: no-repeat; background-position: right var(--space-2) center;
 }
-.contact-input::placeholder, .contact-textarea::placeholder,
-input::placeholder, textarea::placeholder { color: var(--text-muted); opacity: 0.8; }
-.contact-input:hover, .contact-textarea:hover,
-input:hover:not(:focus), textarea:hover:not(:focus), select:hover:not(:focus) { border-color: color-mix(in srgb, var(--primary) 45%, var(--border-strong)); }
-.contact-input:focus, .contact-textarea:focus,
-input:focus, textarea:focus, select:focus {
+:where(.contact-input, .contact-textarea, input, textarea)::placeholder { color: var(--text-muted); opacity: 0.8; }
+:where(.contact-input, .contact-textarea, input, textarea, select):hover:not(:focus) { border-color: color-mix(in srgb, var(--primary) 45%, var(--border-strong)); }
+:where(.contact-input, .contact-textarea, input, textarea, select):focus {
     outline: none; border-color: var(--primary); background: var(--bg-card);
     box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary) 14%, transparent);
 }
 /* Erreur : seulement après interaction (:user-invalid) ou signalée par le serveur. */
-input:user-invalid, textarea:user-invalid, select:user-invalid,
-[aria-invalid="true"] {
+:where(input, textarea, select):user-invalid,
+:where([aria-invalid="true"]) {
     border-color: var(--danger) !important;
     box-shadow: 0 0 0 4px color-mix(in srgb, var(--danger) 12%, transparent);
 }
-input[type="checkbox"], input[type="radio"] { accent-color: var(--primary); width: 18px; height: 18px; min-height: 0; }
+:where(input[type="checkbox"], input[type="radio"]) { accent-color: var(--primary); width: 18px; height: 18px; min-height: 0; }
 
 /* Messages d'état de formulaire, partagés par tous les formulaires du site. */
 .form-status, .form-status.is-success, .form-status.is-error {
@@ -1077,7 +1131,10 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--primary); widt
     padding: 12px 0;
 }
 .footer-promo-input::placeholder { color: var(--text-on-dark-muted); }
-.footer-promo-input:focus { outline: none; }
+.footer-promo-input:focus { outline: none; box-shadow: none; background: transparent; }
+/* Le focus se lit sur la pilule entière plutôt que sur le champ nu. */
+.footer-promo-form { transition: box-shadow var(--dur-1) var(--ease-out); }
+.footer-promo-form:focus-within { box-shadow: 0 0 0 2px rgba(255,255,255,0.6); }
 .footer-promo-btn {
     flex-shrink: 0;
     padding: 13px 28px;
@@ -1162,8 +1219,19 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--primary); widt
 /* ============================================================
    17. SCROLL REVEAL
    ============================================================ */
-.reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.75s cubic-bezier(0.16,1,0.3,1), transform 0.75s cubic-bezier(0.16,1,0.3,1); }
-.reveal.visible { opacity: 1; transform: none; }
+/* Masqué seulement si le script de révélation tourne (classe js posée dans
+   <head>). Montée de 16 px et fondu en 400 ms, une seule fois ; le décalage
+   en cascade vient de --reveal-delay (layout.php). La transition n'existe que
+   pendant l'apparition (.revealing) : ensuite, l'élément garde ses propres
+   transitions (survol des cartes). */
+.js .reveal:not(.visible) { opacity: 0; transform: translate3d(0, 16px, 0); }
+.js .reveal.revealing {
+    transition: opacity var(--dur-3) var(--ease-out), transform var(--dur-3) var(--ease-out) !important;
+    transition-delay: var(--reveal-delay, 0ms) !important;
+}
+@media (prefers-reduced-motion: reduce) {
+    .js .reveal:not(.visible) { opacity: 1; transform: none; }
+}
 
 @keyframes fadeInUp    { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:none} }
 @keyframes fadeIn      { from{opacity:0} to{opacity:1} }

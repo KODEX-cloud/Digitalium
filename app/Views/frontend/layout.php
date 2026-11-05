@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script>
+    /* `js` : les éléments à faire apparaître au défilement ne sont masqués que
+       si le script qui les révèle peut s'exécuter (index.css §17). */
+    document.documentElement.classList.add('js');
     /* Animation d'entrée du logo : jouée sur la première page de la visite
        seulement (index.css, section 5b), pas à chaque changement de page.
        Posée dans <head> pour que la classe existe avant le premier affichage. */
@@ -808,17 +811,37 @@
     <script>
         if (window.lucide) { lucide.createIcons(); }
 
-        // Scroll Reveal Animation (Intersection Observer)
-        const observer = new IntersectionObserver(entries => {
-            entries.forEach(e => {
-                if (e.isIntersecting) {
-                    e.target.classList.add('visible');
-                    e.target.classList.add('vis');
-                }
-            });
-        }, { threshold: 0.08 });
-        
-        document.querySelectorAll('.reveal, .rev, .svc-card, .sc, .pc, .feat-item').forEach(el => observer.observe(el));
+        /* ── Apparition au défilement ────────────────────────────────────────
+           Une seule fois par élément (unobserve). Les éléments d'une même
+           grille qui entrent ensemble se décalent de 60 ms chacun (au plus
+           5 crans), pour une lecture en cascade sans attente perceptible.
+           `revealing` porte la transition le temps de l'apparition puis
+           s'efface : la carte retrouve ses propres transitions de survol. */
+        const revelerTout = !('IntersectionObserver' in window)
+            || window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const reveler = (el, delai) => {
+            el.style.setProperty('--reveal-delay', delai + 'ms');
+            el.classList.add('revealing', 'visible', 'vis');
+            setTimeout(() => { el.classList.remove('revealing'); el.style.removeProperty('--reveal-delay'); }, 460 + delai);
+        };
+        const ciblesReveal = document.querySelectorAll('.reveal, .rev, .svc-card, .sc, .pc, .feat-item');
+        if (revelerTout) {
+            ciblesReveal.forEach(el => el.classList.add('visible', 'vis'));
+        } else {
+            const observer = new IntersectionObserver(entries => {
+                const rang = new Map();
+                entries.filter(e => e.isIntersecting)
+                    .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top || a.boundingClientRect.left - b.boundingClientRect.left)
+                    .forEach(e => {
+                        const parent = e.target.parentElement;
+                        const i = rang.get(parent) || 0;
+                        rang.set(parent, i + 1);
+                        reveler(e.target, Math.min(i, 5) * 60);
+                        observer.unobserve(e.target);
+                    });
+            }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+            ciblesReveal.forEach(el => observer.observe(el));
+        }
 
         /* ── Menu mobile ────────────────────────────────────────────────────
            Le tiroir est la MEME liste que le menu de bureau : un second
@@ -934,18 +957,51 @@
               l'anime ici : il se retire de l'ancien lien et se trace sous le
               nouveau pendant le chargement. Le faire aussi dans le premier cas
               fausserait la transition, qui partirait déjà du nouveau lien. */
-        if (navMenu && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-            navMenu.addEventListener('pointerdown', (e) => {
-                const lien = e.target.closest('.nav-link, .btn-cta-nav');
-                if (!lien || e.button !== 0) { return; }
-                const r = lien.getBoundingClientRect();
+        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            /* Onde unique, déléguée sur le document : menu, boutons et cartes
+               cliquables. Un lien texte (sans fond, bordure ni ombre) n'en a
+               pas. L'onde est dessinée dans un cadre posé PAR-DESSUS l'élément
+               (position fixe, mêmes coins arrondis) : l'élément lui-même n'est
+               jamais modifié, ni sa mise en page ni son débordement. Rien n'est
+               annulé ni retardé : la navigation part immédiatement. */
+            const surface = (el) => {
+                if (el.matches('.nav-link, .faq-question-btn')) { return true; }
+                const cs = getComputedStyle(el);
+                return cs.backgroundColor !== 'rgba(0, 0, 0, 0)' || cs.backgroundImage !== 'none'
+                    || parseFloat(cs.borderTopWidth) > 0 || cs.boxShadow !== 'none';
+            };
+            const onde = (el, x, y) => {
+                const r = el.getBoundingClientRect();
+                if (!r.width || !r.height) { return; }
+                const cs = getComputedStyle(el);
+                const cadre = document.createElement('span');
+                cadre.className = 'ripple-frame';
+                cadre.style.cssText = `left:${r.left}px;top:${r.top}px;width:${r.width}px;height:${r.height}px;border-radius:${cs.borderRadius};color:${cs.color}`;
                 const d = Math.max(r.width, r.height) * 2.2;
-                const onde = document.createElement('span');
-                onde.className = 'nav-ripple';
-                onde.style.cssText = `width:${d}px;height:${d}px;left:${e.clientX - r.left - d / 2}px;top:${e.clientY - r.top - d / 2}px`;
-                lien.appendChild(onde);
-                onde.addEventListener('animationend', () => onde.remove());
+                const o = document.createElement('span');
+                o.className = 'nav-ripple';
+                o.style.cssText = `width:${d}px;height:${d}px;left:${x - r.left - d / 2}px;top:${y - r.top - d / 2}px`;
+                cadre.appendChild(o);
+                document.body.appendChild(cadre);
+                o.addEventListener('animationend', () => cadre.remove());
+            };
+            const CIBLES_ONDE = 'a[href], button:not(:disabled), [role="button"], input[type="submit"]:not(:disabled)';
+            document.addEventListener('pointerdown', (e) => {
+                if (e.button !== 0) { return; }
+                const el = e.target.closest && e.target.closest(CIBLES_ONDE);
+                if (el && surface(el)) { onde(el, e.clientX, e.clientY); }
+            }, { passive: true });
+            // Clavier : Entrée (liens, boutons) ou Espace (boutons) — l'onde part du centre.
+            document.addEventListener('keydown', (e) => {
+                if (e.repeat || (e.key !== 'Enter' && e.key !== ' ')) { return; }
+                const el = e.target.closest && e.target.closest(CIBLES_ONDE);
+                if (!el || (e.key === ' ' && el.tagName === 'A') || !surface(el)) { return; }
+                const r = el.getBoundingClientRect();
+                onde(el, r.left + r.width / 2, r.top + r.height / 2);
             });
+        }
+
+        if (navMenu && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
 
             const transitionEntrePages = 'onpageswap' in window && CSS.supports('view-transition-name', 'x');
             if (!transitionEntrePages) {
