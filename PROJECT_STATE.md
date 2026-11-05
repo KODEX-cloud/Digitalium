@@ -53,9 +53,11 @@ nouvelle icône est choisie en admin, sinon la page concernée charge les 480 Ko
 sombre sur la pilule bleue (sélecteur global trop spécifique) ; ordre des titres du pied de page (h4 → h2) ;
 alt redondant du logo.
 
-**Preuves (banc local)** — Lighthouse mobile, avant → après : /contact perf 82 → 80–95, LCP 3,6 → 1,9 s ;
-/solutions/ia-automatisation perf 84 → 88–95, LCP 3,6 → 2,0 s ; accessibilité 98 → 100 ; SEO 100 ;
-CLS ≤ 0,016. Aucune erreur JS sur 9 pages ; captures avant/après 375/768/1280/1920.
+**Preuves (banc local, Lighthouse mobile, 3 passages, médiane)** — avant → après :
+/contact perf 82 → 89 (84–94), LCP 3,6 → 1,9 s, CLS 0,017 → 0 ; /solutions/ia-automatisation perf 84 →
+93 (86–97), LCP 3,6 → 2,0 s, CLS 0 ; accessibilité 98 → 100 ; SEO 100 → 100. Écart restant : TBT
+160–560 ms selon le passage (bruit de la machine de test). Aucune erreur JS sur 9 pages ; captures
+avant/après 375/768/1280/1920.
 
 **Non fait / limites** — accueil local non représentatif (contenu de prod différent ; LCP ~9 s dû à son
 image de hero) : à mesurer après déploiement ; une seule carte de verre seulement là où le hero porte
