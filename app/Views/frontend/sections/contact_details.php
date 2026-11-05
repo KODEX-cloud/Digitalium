@@ -23,39 +23,39 @@ $afficherFormulaire = (($single['show_form'] ?? '1') !== '0');
                 <form id="mainContactForm" onsubmit="handleMainContactSubmit(event)">
                     <?= \App\Services\CSRF::field() ?>
 
-                    <div id="mainContactStatus" style="display: none; padding: 12px 16px; border-radius: 8px; margin-bottom: 20px; font-weight: 500; font-size: 0.95rem;"></div>
+                    <div id="mainContactStatus" class="form-status" role="status" aria-live="polite" style="display: none; margin-bottom: 20px;"></div>
 
                     <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 1rem;">
                         <div class="form-group" style="display: flex; flex-direction: column; gap: 6px;">
                             <label style="font-size: var(--fs-caption); letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); font-weight: 600;">Prénom *</label>
-                            <input type="text" name="firstname" class="contact-input" placeholder="Jean" required style="width: 100%; padding: 0.75rem 1rem; background: var(--bg-surface-alt); border: 1px solid var(--border); border-radius: 7px; color: var(--text-main); font-size: 0.88rem; outline: none;">
+                            <input type="text" name="firstname" class="contact-input" placeholder="Jean" required style="width: 100%; padding: 0.75rem 1rem; background: var(--bg-surface-alt); border: 1px solid var(--border-input); border-radius: var(--radius-md); color: var(--text-main); font-size: var(--fs-base); min-height: 48px;">
                         </div>
                         <div class="form-group" style="display: flex; flex-direction: column; gap: 6px;">
                             <label style="font-size: var(--fs-caption); letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); font-weight: 600;">Nom *</label>
-                            <input type="text" name="lastname" class="contact-input" placeholder="Kouassi" required style="width: 100%; padding: 0.75rem 1rem; background: var(--bg-surface-alt); border: 1px solid var(--border); border-radius: 7px; color: var(--text-main); font-size: 0.88rem; outline: none;">
+                            <input type="text" name="lastname" class="contact-input" placeholder="Kouassi" required style="width: 100%; padding: 0.75rem 1rem; background: var(--bg-surface-alt); border: 1px solid var(--border-input); border-radius: var(--radius-md); color: var(--text-main); font-size: var(--fs-base); min-height: 48px;">
                         </div>
                     </div>
 
                     <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 1rem;">
                         <div class="form-group" style="display: flex; flex-direction: column; gap: 6px;">
                             <label style="font-size: var(--fs-caption); letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); font-weight: 600;">Email *</label>
-                            <input type="email" name="email" class="contact-input" placeholder="jean@entreprise.com" required style="width: 100%; padding: 0.75rem 1rem; background: var(--bg-surface-alt); border: 1px solid var(--border); border-radius: 7px; color: var(--text-main); font-size: 0.88rem; outline: none;">
+                            <input type="email" name="email" class="contact-input" placeholder="jean@entreprise.com" required style="width: 100%; padding: 0.75rem 1rem; background: var(--bg-surface-alt); border: 1px solid var(--border-input); border-radius: var(--radius-md); color: var(--text-main); font-size: var(--fs-base); min-height: 48px;">
                             <div class="error-msg" id="err-main-email" style="color: #f87171; font-size: var(--fs-meta); margin-top: 4px; display: none;"></div>
                         </div>
                         <div class="form-group" style="display: flex; flex-direction: column; gap: 6px;">
                             <label style="font-size: var(--fs-caption); letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); font-weight: 600;">Téléphone / WhatsApp</label>
-                            <input type="tel" name="phone" class="contact-input" placeholder="+225 07 00 00 00" style="width: 100%; padding: 0.75rem 1rem; background: var(--bg-surface-alt); border: 1px solid var(--border); border-radius: 7px; color: var(--text-main); font-size: 0.88rem; outline: none;">
+                            <input type="tel" name="phone" class="contact-input" placeholder="+225 07 00 00 00" style="width: 100%; padding: 0.75rem 1rem; background: var(--bg-surface-alt); border: 1px solid var(--border-input); border-radius: var(--radius-md); color: var(--text-main); font-size: var(--fs-base); min-height: 48px;">
                         </div>
                     </div>
 
                     <div class="form-group" style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 1rem;">
                         <label style="font-size: var(--fs-caption); letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); font-weight: 600;">Société / Organisation</label>
-                        <input type="text" name="company" class="contact-input" placeholder="Nom de votre entreprise" style="width: 100%; padding: 0.75rem 1rem; background: var(--bg-surface-alt); border: 1px solid var(--border); border-radius: 7px; color: var(--text-main); font-size: 0.88rem; outline: none;">
+                        <input type="text" name="company" class="contact-input" placeholder="Nom de votre entreprise" style="width: 100%; padding: 0.75rem 1rem; background: var(--bg-surface-alt); border: 1px solid var(--border-input); border-radius: var(--radius-md); color: var(--text-main); font-size: var(--fs-base); min-height: 48px;">
                     </div>
 
                     <div class="form-group" style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 1.5rem;">
                         <label style="font-size: var(--fs-caption); letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); font-weight: 600;">Service principal souhaité *</label>
-                        <select name="service_primary" style="width: 100%; padding: 0.75rem 1rem; background: var(--bg-surface-alt); border: 1px solid var(--border); border-radius: 7px; color: var(--text-main); font-size: 0.88rem; outline: none; cursor: pointer;">
+                        <select name="service_primary" style="width: 100%; padding: 0.75rem 1rem; background: var(--bg-surface-alt); border: 1px solid var(--border-input); border-radius: var(--radius-md); color: var(--text-main); font-size: var(--fs-base); min-height: 48px; cursor: pointer;">
                             <?php
                             $defaultPrimary = 'Web Design & Développement|Maintenance Informatique|Câblage Réseaux|Montage Vidéo TikTok / YouTube|Création de Contenu Digital|Intelligence Artificielle & Stratégie|Autre / Plusieurs services';
                             $primaryServices = array_filter(array_map('trim', explode('|', $single['services_primary_list'] ?? $defaultPrimary)));
@@ -84,7 +84,7 @@ $afficherFormulaire = (($single['show_form'] ?? '1') !== '0');
 
                     <div class="form-group" style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 1.5rem;">
                         <label style="font-size: var(--fs-caption); letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); font-weight: 600;">Message *</label>
-                        <textarea name="message" rows="5" class="contact-textarea" placeholder="Décrivez votre projet, vos objectifs ou vos questions..." required style="width: 100%; padding: 0.75rem 1rem; background: var(--bg-surface-alt); border: 1px solid var(--border); border-radius: 7px; color: var(--text-main); font-size: 0.88rem; outline: none; resize: vertical; min-height: 110px;"></textarea>
+                        <textarea name="message" rows="5" class="contact-textarea" placeholder="Décrivez votre projet, vos objectifs ou vos questions..." required style="width: 100%; padding: 0.75rem 1rem; background: var(--bg-surface-alt); border: 1px solid var(--border-input); border-radius: var(--radius-md); color: var(--text-main); font-size: var(--fs-base); min-height: 48px; resize: vertical; min-height: 110px;"></textarea>
                         <div class="error-msg" id="err-main-message" style="color: #f87171; font-size: var(--fs-meta); margin-top: 4px; display: none;"></div>
                     </div>
 
@@ -271,13 +271,14 @@ async function handleMainContactSubmit(event) {
     const statusDiv = document.getElementById('mainContactStatus');
     const submitBtn = document.getElementById('mainSubmitBtn');
 
+    form.querySelectorAll('[aria-invalid]').forEach(c => c.removeAttribute('aria-invalid'));
     document.querySelectorAll('.error-msg').forEach(el => {
         el.style.display = 'none';
         el.textContent = '';
     });
 
     statusDiv.style.display = 'none';
-    statusDiv.className = '';
+    statusDiv.className = 'form-status';
     statusDiv.textContent = '';
 
     const formData = new FormData(form);
@@ -304,7 +305,7 @@ async function handleMainContactSubmit(event) {
 
     const originalLabel = submitBtn.innerHTML;
     submitBtn.disabled = true;
-    submitBtn.style.opacity = '0.7';
+    submitBtn.setAttribute('aria-busy', 'true');
     submitBtn.textContent = 'Transmission en cours...';
 
     try {
@@ -317,17 +318,13 @@ async function handleMainContactSubmit(event) {
         const result = await response.json();
 
         if (response.ok && result.success) {
-            statusDiv.style.display = 'block';
-            statusDiv.style.backgroundColor = 'rgba(16, 185, 129, 0.15)';
-            statusDiv.style.border = '1px solid rgba(16, 185, 129, 0.3)';
-            statusDiv.style.color = '#34d399';
+            statusDiv.style.display = '';
+            statusDiv.className = 'form-status is-success';
             statusDiv.textContent = result.message;
             form.reset();
         } else {
-            statusDiv.style.display = 'block';
-            statusDiv.style.backgroundColor = 'rgba(239, 68, 68, 0.15)';
-            statusDiv.style.border = '1px solid rgba(239, 68, 68, 0.3)';
-            statusDiv.style.color = '#f87171';
+            statusDiv.style.display = '';
+            statusDiv.className = 'form-status is-error';
             statusDiv.textContent = result.message || 'Erreur lors de la validation des données.';
 
             if (result.errors) {
@@ -336,21 +333,21 @@ async function handleMainContactSubmit(event) {
                     if (errEl) {
                         errEl.textContent = msg;
                         errEl.style.display = 'block';
+                        const champ = form.querySelector('[name="' + field + '"]');
+                        if (champ) { champ.setAttribute('aria-invalid', 'true'); }
                     }
                 }
             }
         }
     } catch (error) {
-        statusDiv.style.display = 'block';
-        statusDiv.style.backgroundColor = 'rgba(239, 68, 68, 0.15)';
-        statusDiv.style.border = '1px solid rgba(239, 68, 68, 0.3)';
-        statusDiv.style.color = '#f87171';
+        statusDiv.style.display = '';
+        statusDiv.className = 'form-status is-error';
         statusDiv.textContent = 'Une erreur réseau est survenue. Veuillez réessayer ultérieurement.';
     } finally {
         submitBtn.disabled = false;
-        submitBtn.style.opacity = '1';
+        submitBtn.removeAttribute('aria-busy');
         submitBtn.innerHTML = originalLabel;
-        lucide.createIcons();
+        if (window.lucide) { lucide.createIcons(); }
     }
 }
 </script>

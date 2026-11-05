@@ -96,6 +96,7 @@
     --border:           color-mix(in srgb, var(--navy-900) 9%, transparent);
     --border-md:        color-mix(in srgb, var(--navy-900) 15%, transparent);
     --border-strong:    color-mix(in srgb, var(--navy-900) 26%, transparent);
+    --border-input:     color-mix(in srgb, var(--navy-900) 46%, transparent);  /* bord de champ : contraste ≥ 3:1 (WCAG 1.4.11) */
     --border-hover:     color-mix(in srgb, var(--primary) 32%, transparent);
     --border-glow:      color-mix(in srgb, var(--primary) 25%, transparent);
     --border-glass:     rgba(255,255,255,0.18);
@@ -851,6 +852,8 @@ html.logo-intro .nav-link.active > .nav-underline { animation: navUnderlineIn .5
 .btn-secondary:is(.is-loading, [aria-busy="true"])::after,
 .btn-cta-secondary:is(.is-loading, [aria-busy="true"])::after { border-color: var(--primary); border-right-color: transparent; }
 @keyframes btn-spin { to { transform: rotate(360deg); } }
+/* Un bouton en cours d'envoi est aussi désactivé : il reste lisible (pas 50 %). */
+[aria-busy="true"]:disabled { opacity: 0.85 !important; cursor: progress !important; }
 /* ── 7b. Survol homogène des boutons et liens de section ──────────────
    Plusieurs sections écartaient leur flèche en animant `gap`, ou décalaient
    une ligne en animant `padding` : des propriétés de mise en page, qui ne
@@ -1064,19 +1067,23 @@ html.logo-intro .nav-link.active > .nav-underline { animation: navUnderlineIn .5
 input[type="text"], input[type="email"], input[type="tel"], input[type="url"],
 input[type="search"], input[type="number"], input[type="password"], textarea, select) {
     width: 100%; min-height: 48px; padding: var(--space-1-5) var(--space-2);
-    background: var(--bg-card); border: 1px solid var(--border-strong);
+    background: var(--bg-card); border: 1px solid var(--border-input);
     border-radius: var(--radius-md); color: var(--text-main);
     font-family: var(--font-main); font-size: var(--fs-base); line-height: 1.5;
     transition: var(--transition-fast); appearance: none;
 }
 :where(textarea) { min-height: 128px; }
-:where(select) {
-    padding-right: var(--space-5);
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m4 6 4 4 4-4'/%3E%3C/svg%3E");
-    background-repeat: no-repeat; background-position: right var(--space-2) center;
+/* Liste déroulante : le socle retire la flèche native (appearance: none) ;
+   le chevron doit donc toujours revenir, même quand un formulaire redéfinit
+   `background` en raccourci — d'où !important sur ces seules propriétés. */
+select:not([multiple]) {
+    padding-right: var(--space-5) !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m4 6 4 4 4-4'/%3E%3C/svg%3E") !important;
+    background-repeat: no-repeat !important; background-position: right var(--space-2) center !important;
+    background-size: 16px 16px !important;
 }
 :where(.contact-input, .contact-textarea, input, textarea)::placeholder { color: var(--text-muted); opacity: 0.8; }
-:where(.contact-input, .contact-textarea, input, textarea, select):hover:not(:focus) { border-color: color-mix(in srgb, var(--primary) 45%, var(--border-strong)); }
+:where(.contact-input, .contact-textarea, input, textarea, select):hover:not(:focus) { border-color: color-mix(in srgb, var(--primary) 55%, var(--border-input)); }
 :where(.contact-input, .contact-textarea, input, textarea, select):focus {
     outline: none; border-color: var(--primary); background: var(--bg-card);
     box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary) 14%, transparent);

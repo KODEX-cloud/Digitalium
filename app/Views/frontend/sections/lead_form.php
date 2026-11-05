@@ -261,7 +261,7 @@ $err = static function (string $k) use ($erreurs): string {
     display: flex; align-items: center; gap: 9px;
     padding: 9px 15px; border-radius: 999px;
     background: var(--bg-card); border: 1px solid var(--border);
-    font-size: 0.82rem; color: var(--text-muted);
+    font-size: var(--fs-sm); color: var(--text-muted);
     transition: var(--transition);
 }
 .lf-step.active { border-color: var(--primary); color: var(--text-main); }
@@ -278,13 +278,14 @@ $err = static function (string $k) use ($erreurs): string {
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
     background: var(--bg-card);
-    padding: 28px 26px;
-    margin: 0 0 18px;
+    padding: var(--space-4);
+    margin: 0 0 var(--space-2);
+    box-shadow: var(--shadow-1);
 }
 .lf-panel legend {
     padding: 0 10px;
     font-family: var(--font-heading);
-    font-weight: 700; font-size: 1.02rem; color: var(--text-main);
+    font-weight: 700; font-size: var(--fs-md); color: var(--text-main);
 }
 
 .lf-choices { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
@@ -294,9 +295,10 @@ $err = static function (string $k) use ($erreurs): string {
     padding: 15px 16px;
     border: 1px solid var(--border); border-radius: var(--radius-lg);
     cursor: pointer; transition: var(--transition);
-    font-size: 0.92rem; color: var(--text-main); line-height: 1.35;
+    font-size: var(--fs-base); color: var(--text-main); line-height: 1.35;
 }
-.lf-choice-box:hover { border-color: color-mix(in srgb, var(--primary) 40%, transparent); }
+.lf-choice-box:hover { border-color: color-mix(in srgb, var(--primary) 40%, transparent); background: var(--brand-25); transform: translateY(-1px); }
+.lf-choice-box:active { transform: none; }
 .lf-choice input:checked + .lf-choice-box {
     border-color: var(--primary);
     background: color-mix(in srgb, var(--primary) 7%, transparent);
@@ -309,66 +311,83 @@ $err = static function (string $k) use ($erreurs): string {
 .lf-field { display: block; margin-bottom: 16px; }
 .lf-field > span {
     display: block; margin-bottom: 7px;
-    font-size: 0.83rem; font-weight: 600; color: var(--text-main);
+    font-size: var(--fs-sm); font-weight: 600; color: var(--text-main);
 }
 .lf-field > span em { color: var(--primary); font-style: normal; }
 .lf-field > span small { font-weight: 400; color: var(--text-muted); }
 .lf-field input[type="text"], .lf-field input[type="email"], .lf-field input[type="tel"],
 .lf-field select, .lf-field textarea, .lf-field input[type="file"] {
     width: 100%; box-sizing: border-box;
-    padding: 12px 14px;
-    border: 1px solid var(--border); border-radius: 10px;
-    background: var(--bg-base); color: var(--text-main);
-    font-family: inherit; font-size: 0.92rem;
-    transition: var(--transition);
+    min-height: 48px; padding: var(--space-1-5) var(--space-2);
+    border: 1px solid var(--border-input); border-radius: var(--radius-md);
+    background: var(--bg-card); color: var(--text-main);
+    font-family: inherit; font-size: var(--fs-base); line-height: 1.5;
+    transition: var(--transition-fast);
 }
+.lf-field :is(input, select, textarea):hover:not(:focus) { border-color: color-mix(in srgb, var(--primary) 55%, var(--border-input)); }
 .lf-field textarea { resize: vertical; min-height: 130px; }
 .lf-field input:focus, .lf-field select:focus, .lf-field textarea:focus {
     outline: none; border-color: var(--primary);
     box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 14%, transparent);
 }
 .lf-hint { display: block; margin-top: 6px; font-size: var(--fs-small); color: var(--text-muted); }
-.lf-err  { display: block; margin-top: 6px; font-size: var(--fs-meta); color: #c0392b; font-weight: 600; }
+/* Erreur : signalée par le serveur (.lf-err) ou par le navigateur après saisie. */
+.lf-field :is(input, select, textarea):user-invalid,
+.lf-field:has(.lf-err) :is(input, select, textarea) {
+    border-color: var(--danger);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--danger) 12%, transparent);
+}
+.lf-err  { display: block; margin-top: var(--space-0-5); font-size: var(--fs-xs); color: var(--danger); font-weight: 600; }
 
 .lf-recap { margin: 0; display: grid; grid-template-columns: minmax(140px, auto) 1fr; gap: 10px 20px; }
 .lf-recap dt { font-size: var(--fs-meta); color: var(--text-muted); font-weight: 600; }
-.lf-recap dd { margin: 0; font-size: 0.92rem; color: var(--text-main); overflow-wrap: anywhere; }
+.lf-recap dd { margin: 0; font-size: var(--fs-base); color: var(--text-main); overflow-wrap: anywhere; }
 .lf-privacy { margin: 20px 0 0; font-size: var(--fs-meta); color: var(--text-muted); line-height: 1.55; }
 
 .lf-actions { display: flex; gap: 12px; justify-content: flex-end; margin-top: 22px; }
 .lf-btn {
     display: inline-flex; align-items: center; gap: 9px;
-    padding: 14px 30px; border-radius: 999px; border: 1px solid transparent;
-    font-size: 0.92rem; font-weight: 650; font-family: inherit;
+    min-height: 48px; padding: 0 var(--space-4); border-radius: 999px; border: 1px solid transparent;
+    font-size: var(--fs-base); font-weight: 700; font-family: inherit;
     cursor: pointer; transition: var(--transition);
+    position: relative;
+}
+/* Envoi en cours : roue avant le libellé, bouton atténué sans paraître éteint. */
+.lf-btn[aria-busy="true"] { opacity: 0.85 !important; cursor: progress !important; }
+.lf-btn[aria-busy="true"]::before {
+    content: ''; width: 16px; height: 16px; border-radius: 50%;
+    border: 2px solid currentColor; border-right-color: transparent;
+    animation: btn-spin 700ms linear infinite;
 }
 /* `display: inline-flex` l'emportait sur l'attribut `hidden` : « Retour » et
    « Envoyer ma demande » s'affichaient dès la première étape. */
 .lf-btn[hidden] { display: none; }
 .lf-btn-primary { background: var(--primary); color: var(--text-on-dark); }
 .lf-btn-primary:hover { transform: translateY(-2px); box-shadow: var(--shadow-btn); }
-.lf-btn-ghost { background: transparent; color: var(--text-main); border-color: var(--border); }
+.lf-btn-ghost { background: transparent; color: var(--text-main); border-color: var(--border-strong); }
 .lf-btn-ghost:hover { border-color: var(--primary); color: var(--primary); }
 
 .lf-alert {
     max-width: 860px; margin: 0 auto 22px;
     padding: 18px 20px; border-radius: var(--radius-lg);
-    border: 1px solid #e5b3ad; background: #fdf2f1; color: #8c2f22;
+    border: 1px solid color-mix(in srgb, var(--danger) 30%, transparent); background: var(--danger-bg); color: var(--danger);
+    animation: form-status-in var(--dur-2) var(--ease-out);
 }
-.lf-alert ul { margin: 8px 0 0; padding-left: 20px; font-size: 0.88rem; }
+.lf-alert ul { margin: var(--space-1) 0 0; padding-left: 20px; font-size: var(--fs-sm); }
 
 .lf-done {
     max-width: 640px; margin: 0 auto; text-align: center;
-    padding: 46px 34px; border-radius: var(--radius-lg);
-    border: 1px solid var(--border); background: var(--bg-card);
+    padding: var(--space-6) var(--space-4); border-radius: var(--radius-lg);
+    border: 1px solid color-mix(in srgb, var(--success) 25%, transparent); background: var(--bg-card);
+    box-shadow: var(--shadow-2);
 }
 .lf-done-icon {
     display: inline-flex; align-items: center; justify-content: center;
     width: 58px; height: 58px; border-radius: 50%; margin-bottom: 18px;
-    background: color-mix(in srgb, var(--primary) 12%, transparent); color: var(--primary);
+    background: var(--success-bg); color: var(--success);
 }
 .lf-done h3 { font-family: var(--font-heading); font-size: 1.3rem; color: var(--text-main); margin: 0 0 10px; }
-.lf-done p  { color: var(--text-muted); line-height: 1.6; margin: 0; }
+.lf-done p  { color: var(--text-sub); line-height: var(--line-height-body); margin: 0; }
 
 @media (max-width: 760px) {
     .lf-choices, .lf-grid { grid-template-columns: 1fr; }
@@ -377,6 +396,7 @@ $err = static function (string $k) use ($erreurs): string {
     .lf-actions { flex-direction: column-reverse; }
     .lf-btn { justify-content: center; }
     .lf-step-label { display: none; }
+    .lf-panel { padding: var(--space-3); }
 }
 </style>
 
@@ -477,8 +497,17 @@ $err = static function (string $k) use ($erreurs): string {
 
     // Double envoi : le bouton se désactive dès la soumission acceptée.
     form.addEventListener('submit', function () {
+        submit.dataset.libelle = submit.innerHTML;
         submit.disabled = true;
+        submit.setAttribute('aria-busy', 'true');
         submit.textContent = 'Envoi…';
+    });
+    // Retour arrière depuis le cache : le bouton ne doit pas rester bloqué.
+    window.addEventListener('pageshow', function (e) {
+        if (!e.persisted || !submit.dataset.libelle) { return; }
+        submit.disabled = false;
+        submit.removeAttribute('aria-busy');
+        submit.innerHTML = submit.dataset.libelle;
     });
 
     afficher(0, false);

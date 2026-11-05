@@ -38,8 +38,18 @@
 
     /* Visuel de partage : celui de la page si elle en porte un, sinon celui du site. */
     $_ogImage = trim((string)($page['og_image'] ?? ''));
-    if ($_ogImage === '') {
+    /* Repli : l'image par défaut /assets/images/og-image.jpg n'existe pas
+       (404 en production) — un partage n'affichait alors aucune vignette.
+       On prend la première image réelle de la page (le visuel du hero),
+       puis le logo du site, et le fichier par défaut seulement s'il existe. */
+    if ($_ogImage === '' && preg_match('#<img[^>]+src="([^"]+\.(?:jpe?g|png|webp))"#i', $content ?? '', $_ogM)) {
+        $_ogImage = html_entity_decode($_ogM[1], ENT_QUOTES);
+    }
+    if ($_ogImage === '' && is_file(ROOT_PATH . '/public/assets/images/og-image.jpg')) {
         $_ogImage = '/assets/images/og-image.jpg';
+    }
+    if ($_ogImage === '') {
+        $_ogImage = trim((string)($settings['site_logo'] ?? ''));
     }
     if (!preg_match('#^https?://#i', $_ogImage)) {
         $_ogImage = 'https://digitaliumgroup.com' . url($_ogImage);
@@ -160,11 +170,20 @@
         --letter-spacing-heading:   <?= $_thLS ?>em;
     }
     </style>
-    <?php if (!empty($settings['site_favicon'])): ?>
-        <link rel="icon" href="<?= htmlspecialchars(url($settings['site_favicon'])) ?>" type="image/x-icon">
-    <?php else: ?>
-        <link rel="icon" href="<?= url('/assets/images/favicon.png') ?>" type="image/x-icon">
-    <?php endif; ?>
+    <?php
+    /* Favicon (réglage admin) : le type annoncé suit l'extension réelle —
+       « image/x-icon » pour un fichier WebP faisait ignorer l'icône par
+       certains navigateurs. Le même visuel sert d'icône d'écran d'accueil
+       (iOS) et la barre d'adresse mobile prend la couleur de la marque. */
+    $_favicon = trim((string)($settings['site_favicon'] ?? '')) ?: '/assets/images/favicon.png';
+    $_favType = [
+        'webp' => 'image/webp', 'png' => 'image/png', 'svg' => 'image/svg+xml',
+        'ico'  => 'image/x-icon', 'jpg' => 'image/jpeg', 'jpeg' => 'image/jpeg',
+    ][strtolower(pathinfo(parse_url($_favicon, PHP_URL_PATH) ?? '', PATHINFO_EXTENSION))] ?? 'image/png';
+    ?>
+    <link rel="icon" href="<?= htmlspecialchars(url($_favicon)) ?>" type="<?= $_favType ?>">
+    <link rel="apple-touch-icon" href="<?= htmlspecialchars(url($_favicon)) ?>">
+    <meta name="theme-color" content="<?= htmlspecialchars($settings['theme_primary'] ?? '#01518e', ENT_QUOTES) ?>">
     <?php
     /* Les icônes Lucide (111 Ko) étaient chargées ici, dans <head>, en
        bloquant tout l'affichage. Le script est désormais en fin de <body>,
