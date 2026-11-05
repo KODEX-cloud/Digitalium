@@ -57,6 +57,11 @@ $heroLine = static function (string $raw): string {
     return nl2br($safe, false);
 };
 
+/* Un champ rédactionnel vidé en admin reprend sa valeur d'origine, relevée en
+   base par database/hero_content_v1.php — le bandeau ne se casse jamais.
+   Sans valeurs d'origine pour cette section, $single reste inchangé. */
+$single = \App\Helpers\HeroContentHelper::withDefaults((int)($sectionId ?? 0), $single, $settings ?? []);
+
 $showDecor = !isset($single['decor']) || $single['decor'] !== '0';
 $cards     = $groups ?? [];
 

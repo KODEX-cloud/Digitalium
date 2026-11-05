@@ -4,6 +4,26 @@
  * Entry point for all HTTP requests.
  */
 
+// ─── /public/… → ADRESSE CANONIQUE ────────────────────────────────────────────
+// Le site est servi par l'index.php racine. Ce fichier n'est atteint que par
+// une adresse saisie avec /public/ : la page répondait alors en 200 et tous
+// ses liens internes héritaient du préfixe (contenu dupliqué, le canonical
+// pointant ailleurs). Redirection permanente vers la même adresse sans
+// /public/, requête GET/HEAD seulement, et uniquement si l'index racine existe.
+$_pubDir = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? ''));
+$_pubUri = $_SERVER['REQUEST_URI'] ?? '';
+if (PHP_SAPI !== 'cli'
+    && in_array($_SERVER['REQUEST_METHOD'] ?? 'GET', ['GET', 'HEAD'], true)
+    && str_ends_with($_pubDir, '/public')
+    && is_file(dirname(__DIR__) . '/index.php')
+    && ($_pubUri === $_pubDir || str_starts_with($_pubUri, $_pubDir . '/') || str_starts_with($_pubUri, $_pubDir . '?'))) {
+    $_target = substr($_pubDir, 0, -strlen('/public')) . substr($_pubUri, strlen($_pubDir));
+    if ($_target === '' || $_target[0] !== '/') { $_target = '/' . ltrim($_target, '/'); }
+    header('Location: ' . $_target, true, 301);
+    exit;
+}
+unset($_pubDir, $_pubUri);
+
 // ─── MAINTENANCE MODE ─────────────────────────────────────────────────────────
 // Créer storage/maintenance.lock pour activer la maintenance.
 // Supprimer le fichier pour revenir en production.

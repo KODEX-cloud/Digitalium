@@ -403,6 +403,21 @@ class PageController extends Controller {
             $this->json(['error' => 'Champs invalides.'], 400);
         }
 
+        // Hero visible : contrôle serveur des champs rédactionnels (longueur,
+        // lien, type et poids de l'image) AVANT toute écriture — rien n'est
+        // enregistré si un seul champ est refusé.
+        $section = Section::find($sectionId);
+        if ($section && ($section['type'] ?? '') === 'hero_media_cards') {
+            $submitted = [];
+            foreach ($blocks as $key => $data) {
+                if (is_array($data) && !isset($data['group_id'])) { $submitted[$key] = (string)($data['value'] ?? ''); }
+            }
+            $errors = \App\Helpers\HeroContentHelper::validate($submitted);
+            if ($errors) {
+                $this->json(['error' => implode(' ', $errors), 'errors' => $errors], 422);
+            }
+        }
+
         foreach ($blocks as $key => $data) {
             $val = $data['value'] ?? '';
             $type = $data['type'] ?? 'text';

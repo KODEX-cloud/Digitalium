@@ -526,6 +526,14 @@ jobs:
                 echo "  ATTENTION Couleurs de texte (non-bloquant)"
               fi
             fi
+            # Heroes Solutions & Secteurs : releve des valeurs d'origine (drapeau en base).
+            if [ -f "database/hero_content_v1.php" ]; then
+              if $PHP database/hero_content_v1.php 2>&1; then
+                echo "  OK Heroes Solutions & Secteurs"
+              else
+                echo "  ATTENTION Heroes Solutions & Secteurs (non-bloquant)"
+              fi
+            fi
 
             # ─────────────────────────────────────────────────────────────────
             # ÉTAPE 4 — Cache Clear

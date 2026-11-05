@@ -1,5 +1,64 @@
 # PROJECT_STATE — Digitalium Group CMS
-> Dernière mise à jour : 2026-10-18 — Animations du logo et du menu
+> Dernière mise à jour : 2026-11-05 — Heroes Solutions & Secteurs administrables
+
+---
+
+### 2026-11-05 — Heroes Solutions & Secteurs administrables
+
+Demande : l'admin ne parvient pas à modifier les heroes de /solutions, de ses 5 pages filles et de /secteurs.
+
+**Diagnostic** — les bandeaux sont des sections `hero_media_cards` déjà stockées en base (blocs), lues par
+`app/Views/frontend/sections/hero_media_cards.php` ; aucun script de déploiement ne les écrase (vérifié :
+valeurs marquées puis 28 scripts du pipeline rejoués, 91/91 conservées). Le blocage vient de l'admin :
+- le « Gestionnaire de Hero Section » en tête de l'édition de page écrit dans `pages.hero_*`, que ces
+  pages n'affichent pas (`hero_status = 0`, reforcé à chaque déploiement par build_solutions_page.php
+  L107-110 / L566-570 et build_sectors_page.php L66) : modifier là n'a aucun effet visible ;
+- le vrai bandeau est la section « Hero — … », où les 10 champs de texte étaient noyés parmi 10
+  réglages techniques, sous des intitulés génériques (« Pastille du hero », « Chapô ») ;
+- aucune validation serveur ; le sélecteur d'images ne permettait pas de téléverser.
+
+**Réalisé**
+- `app/Helpers/HeroContentHelper.php` (nouveau) : champs rédactionnels + limites, `validate()` (longueur,
+  lien interne/ancre/https/mailto/tel, image sous /assets : JPG/PNG/WebP, type réel par finfo, 5 Mo max),
+  `withDefaults()` (champ vide → valeur d'origine ; H1 vide → début et fin d'origine ; alt vide → alt
+  d'origine si image d'origine, sinon le H1).
+- `BlockFieldHelper::label()/help()` : intitulés propres à `hero_media_cards` (Eyebrow, Titre H1 — début /
+  fin en couleur, Sous-titre, Image du hero, Texte alternatif, Bouton 1/2 — libellé/lien). Paramètre
+  optionnel, appels existants inchangés.
+- `admin/pages/edit.php` : champs du bandeau en tête, réglages de mise en page repliés (« avancé »),
+  valeur d'origine rappelée sous chaque champ ; encart dans le gestionnaire de hero de la page qui
+  renvoie vers la bonne section (bouton « Modifier le bandeau »).
+- `PageController::updateBlocks` : validation serveur des sections `hero_media_cards`, 422 + messages,
+  rien n'est écrit si un champ est refusé.
+- `admin/layout.php` : bouton « Téléverser une image » dans le sélecteur (route existante
+  /admin/media/upload, contrôles MediaManager), l'image est inscrite en médiathèque et choisie.
+- `database/hero_content_v1.php` (nouveau, drapeau `hero_content_v1`, ajouté au workflow) : relève les
+  valeurs actuelles des 7 heroes dans `settings.hero_defaults_v1`, inscrit leurs images en médiathèque.
+  Aucun bloc modifié. `--rollback` : retire le paramètre, le drapeau, le journal et les seules lignes
+  média créées (fichiers conservés).
+- `public/index.php` : `GET|HEAD /public/…` → 301 vers la même adresse sans /public/ (le site est servi
+  par l'index racine ; ces adresses répondaient 200 avec des liens internes préfixés).
+
+**Preuve** — banc local (MySQL 8.4 jetable rempli par les scripts du pipeline + serveur PHP) :
+
+| Vérification | Résultat |
+|---|---|
+| HTML des 7 pages avant / après migration | identique hors jeton CSRF de session (0 ligne) |
+| `<h1>` par page | 1 sur les 7 |
+| Les 10 champs du bandeau vidés puis enregistrés | rendu identique à l'original |
+| Nouvelle image + alt vide + fin de H1 vide | alt = H1, pas de partie en couleur |
+| Eyebrow 61 car. / lien `javascript:` / fichier absent / faux .jpg / WebP 5,7 Mo | 422 avec message, rien écrit |
+| Téléversement PNG depuis le sélecteur | converti en WebP, inscrit, sélectionné, servi en 200 |
+| Migration rejouée / `--rollback` | « Déjà appliqué » / 5 médias + 3 paramètres retirés |
+| /public/solutions, /public/?x, /public/admin/pages | 301 vers l'adresse sans /public/ ; CSS 200 ; POST non redirigé |
+| 12 éditeurs de page admin, pages publiques | 200, aucun avertissement PHP |
+
+**Non modifié (signalé)** — libellés « AI & Automation » / « Infrastructure & Security » (eyebrows,
+grilles de /solutions) vs « IA & Automatisation » / « Infrastructure & Sécurité » (titres de pages,
+menu) : contenu public, désormais modifiable en admin. hero-pro-dashboard-1893001.jpg sur Software &
+Platforms et Secteurs : remplaçable en admin. Les scripts build_solutions_page / build_sectors_page
+réimposent à chaque déploiement statut, présence au menu, ordre de menu, hero_status et ordre des
+sections de ces pages.
 
 ---
 

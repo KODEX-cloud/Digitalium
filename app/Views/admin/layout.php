@@ -593,25 +593,31 @@
                     <i data-lucide="image" style="color: var(--primary)"></i>
                     <span>Sélectionner une image</span>
                 </h3>
+                <!-- Téléversement sans quitter l'éditeur : même contrôle serveur que
+                     /admin/media (MediaManager : type réel du fichier, 10 Mo max). -->
+                <label class="btn-secondary" style="margin-left: auto; margin-right: 12px; padding: 8px 14px; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 6px; cursor: pointer;">
+                    <i data-lucide="upload" style="width: 14px; height: 14px;"></i>
+                    <span id="mediaPickerUploadLabel">Téléverser une image</span>
+                    <input type="file" id="mediaPickerUpload" accept="image/jpeg,image/png,image/webp,image/gif" style="display: none;">
+                </label>
                 <button type="button" class="action-btn-small" onclick="document.getElementById('mediaPickerModal').classList.remove('active')" style="background: none; border: none; cursor: pointer; color: var(--text-muted); padding: 4px; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center;">
                     <i data-lucide="x" style="width: 20px; height: 20px;"></i>
                 </button>
             </div>
             <div class="modal-body" style="padding: 20px; overflow-y: auto; flex-grow: 1;">
                 <?php if (empty($layoutMediaList)): ?>
-                    <div style="text-align: center; padding: 40px; color: var(--text-muted);">
+                    <div id="mediaPickerEmpty" style="text-align: center; padding: 40px; color: var(--text-muted);">
                         <i data-lucide="image-off" style="width: 48px; height: 48px; margin-bottom: 12px;"></i>
                         <p>Aucun fichier média trouvé.</p>
                     </div>
-                <?php else: ?>
-                    <div class="modal-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 16px;">
+                <?php endif; ?>
+                    <div class="modal-grid" id="mediaPickerGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 16px;">
                         <?php foreach ($layoutMediaList as $media): ?>
                             <div class="modal-media-item" data-filepath="<?= htmlspecialchars($media['filepath']) ?>" data-filename="<?= htmlspecialchars($media['original_name']) ?>" style="background-color: rgba(255,255,255,0.4); border: 1px solid var(--border); border-radius: 12px; aspect-ratio: 1; overflow: hidden; cursor: pointer; position: relative; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);">
                                 <img src="<?= htmlspecialchars($media['filepath']) ?>" alt="<?= htmlspecialchars($media['original_name']) ?>" style="width: 100%; height: 100%; object-fit: cover;">
                             </div>
                         <?php endforeach; ?>
                     </div>
-                <?php endif; ?>
             </div>
         </div>
     </div>
@@ -655,6 +661,48 @@
                 setTimeout(() => toast.remove(), 500);
             }, 3000);
         }
+
+        // Téléversement depuis le sélecteur : le fichier rejoint la Bibliothèque
+        // Média puis est aussitôt choisi pour le champ qui a ouvert le sélecteur.
+        (function () {
+            const input = document.getElementById('mediaPickerUpload');
+            if (!input) return;
+            input.addEventListener('change', function () {
+                const file = input.files && input.files[0];
+                if (!file) return;
+                const tokenEl = document.querySelector('input[name="csrf_token"]');
+                if (!tokenEl) { showNotification('Session expirée : rechargez la page.', 'error'); return; }
+                const label = document.getElementById('mediaPickerUploadLabel');
+                const fd = new FormData();
+                fd.append('file', file);
+                fd.append('ajax', '1');
+                fd.append('csrf_token', tokenEl.value);
+                if (label) label.textContent = 'Envoi…';
+                fetch(BASE_URL + '/admin/media/upload', { method: 'POST', body: fd })
+                    .then(r => r.json())
+                    .then(data => {
+                        if (!data.success || !data.file) { throw new Error(data.error || 'Téléversement refusé.'); }
+                        const grid = document.getElementById('mediaPickerGrid');
+                        const empty = document.getElementById('mediaPickerEmpty');
+                        if (empty) empty.remove();
+                        const item = document.createElement('div');
+                        item.className = 'modal-media-item';
+                        item.dataset.filepath = data.file.filepath;
+                        item.dataset.filename = data.file.original_name || data.file.filename;
+                        item.style.cssText = 'background-color: rgba(255,255,255,0.4); border: 1px solid var(--border); border-radius: 12px; aspect-ratio: 1; overflow: hidden; cursor: pointer; position: relative;';
+                        const img = document.createElement('img');
+                        img.src = data.file.filepath;
+                        img.alt = item.dataset.filename;
+                        img.style.cssText = 'width: 100%; height: 100%; object-fit: cover;';
+                        item.appendChild(img);
+                        grid.prepend(item);
+                        showNotification(data.message || 'Image téléversée.', 'success');
+                        item.click();
+                    })
+                    .catch(err => showNotification(err.message, 'error'))
+                    .finally(() => { input.value = ''; if (label) label.textContent = 'Téléverser une image'; });
+            });
+        })();
 
         // Global Event Delegation for Media Selectors
         document.body.addEventListener('click', function(e) {

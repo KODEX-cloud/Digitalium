@@ -587,6 +587,28 @@ if (empty($selectedLogo)) {
                     <span>Gestionnaire de Hero Section</span>
                 </h4>
 
+                <?php
+                /* Ces pages affichent leur bandeau via une section `hero_media_cards`
+                   et gardent ce gestionnaire désactivé (hero_status = 0) : le modifier
+                   ici n'a aucun effet visible. On renvoie vers le bon éditeur. */
+                $heroMcSection = null;
+                foreach ($sections as $s) {
+                    if (($s['type'] ?? '') === 'hero_media_cards' && ($s['status'] ?? 'active') === 'active') { $heroMcSection = $s; break; }
+                }
+                ?>
+                <?php if ($heroMcSection && (int)($page['hero_status'] ?? 1) === 0): ?>
+                    <div style="border: 1px solid var(--primary); background: var(--bg-surface); border-radius: 12px; padding: 14px 16px; margin-bottom: 16px; display: flex; gap: 12px; align-items: center; justify-content: space-between; flex-wrap: wrap;">
+                        <span style="color: var(--text-main); font-size: 0.9rem;">
+                            Le bandeau affiché sur cette page (eyebrow, H1, sous-titre, image, boutons) se modifie dans la section
+                            <strong>« <?= htmlspecialchars($heroMcSection['name']) ?> »</strong>. Les champs ci-dessous ne s'affichent pas sur cette page.
+                        </span>
+                        <button type="button" class="btn-primary" style="padding: 8px 14px; font-size: 0.8rem;"
+                                onclick="switchSection(<?= (int)$heroMcSection['id'] ?>)">
+                            Modifier le bandeau
+                        </button>
+                    </div>
+                <?php endif; ?>
+
                 <div style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 20px; align-items: start;">
                     <!-- Hero Left Fields -->
                     <div style="display: flex; flex-direction: column; gap: 14px;">
@@ -1206,24 +1228,59 @@ if (empty($selectedLogo)) {
                                     $singleFields[$supportedKey] = '';
                                 }
                             }
+
+                            /* Hero visible des pages : les champs rédactionnels (eyebrow, H1,
+                               sous-titre, image, alt, boutons) passent en tête, les réglages de
+                               mise en page sont repliés dessous. Mêlés aux vingt réglages
+                               techniques, les textes du bandeau étaient introuvables. */
+                            $isHeroMc     = $sec['type'] === 'hero_media_cards';
+                            $heroDefaults = [];
+                            if ($isHeroMc) {
+                                $contentKeys = array_keys(\App\Helpers\HeroContentHelper::CONTENT_KEYS);
+                                $singleFields = array_merge(
+                                    array_intersect_key(array_merge(array_fill_keys($contentKeys, ''), $singleFields), array_flip($contentKeys)),
+                                    array_diff_key($singleFields, array_flip($contentKeys))
+                                );
+                                $heroDefaults = \App\Helpers\HeroContentHelper::defaultsFor((int)$sec['id'], \App\Models\Setting::getAll() ?: []);
+                            }
+                            $advancedOpened = false;
                             ?>
+                            <?php if ($isHeroMc): ?>
+                                <p class="field-help" style="margin-bottom: 18px;">
+                                    Contenu du bandeau affiché en haut de la page.
+                                    <?php if ($heroDefaults): ?>Un champ laissé vide reprend sa valeur d'origine, rappelée sous le champ.<?php endif; ?>
+                                </p>
+                            <?php endif; ?>
                             <?php foreach ($singleFields as $blockKey => $blockValue):
                                 // Types, intitulés et aides viennent tous de BlockFieldHelper :
                                 // c'est la seule source de vérité. La vue avait sa propre copie
                                 // des règles, qui rendait « image_ratio » comme un sélecteur de
                                 // média — on ne pouvait donc pas y saisir « 1300 / 400 ».
-                                $label      = \App\Helpers\BlockFieldHelper::label($blockKey);
-                                $help       = \App\Helpers\BlockFieldHelper::help($blockKey);
+                                $label      = \App\Helpers\BlockFieldHelper::label($blockKey, $sec['type']);
+                                $help       = \App\Helpers\BlockFieldHelper::help($blockKey, $sec['type']);
                                 $choices    = \App\Helpers\BlockFieldHelper::choices($blockKey, $sec['type']);
                                 $fieldType  = \App\Helpers\BlockFieldHelper::type($blockKey, $sec['type']);
                                 if ($blockKey === 'title' && $sec['type'] === 'hero') {
                                     $fieldType = 'wysiwyg';
+                                }
+                                $defaultHint = '';
+                                if ($isHeroMc && $blockKey !== 'title_accent' && trim((string)($heroDefaults[$blockKey] ?? '')) !== '') {
+                                    $defaultHint = $blockKey === 'title'
+                                        ? trim($heroDefaults['title'] . ' ' . ($heroDefaults['title_accent'] ?? ''))
+                                        : (string)$heroDefaults[$blockKey];
+                                }
+                                if ($isHeroMc && !$advancedOpened && !array_key_exists($blockKey, \App\Helpers\HeroContentHelper::CONTENT_KEYS)) {
+                                    $advancedOpened = true;
+                                    echo '<details class="hero-advanced" style="margin-top: 8px; border-top: 1px solid var(--border); padding-top: 14px;"><summary style="cursor: pointer; font-weight: 600; color: var(--text-main); margin-bottom: 14px;">Réglages de mise en page (avancé)</summary>';
                                 }
                             ?>
                                 <div class="admin-form-group">
                                     <label><?= htmlspecialchars($label) ?></label>
                                     <?php if ($help !== ''): ?>
                                         <p class="field-help"><?= htmlspecialchars($help) ?></p>
+                                    <?php endif; ?>
+                                    <?php if ($defaultHint !== ''): ?>
+                                        <p class="field-help">Valeur d'origine si vide : « <?= htmlspecialchars($defaultHint) ?> »</p>
                                     <?php endif; ?>
 
                                     <?php if ($fieldType === 'select'): ?>
@@ -1283,6 +1340,7 @@ if (empty($selectedLogo)) {
                                     <?php endif; ?>
                                 </div>
                             <?php endforeach; ?>
+                            <?php if ($advancedOpened): ?></details><?php endif; ?>
 
                             <?php if (!empty($blocks['groups'])): ?>
                                 <div class="repeatable-deck">

@@ -287,15 +287,39 @@ class BlockFieldHelper {
         return 'text';
     }
 
+    /**
+     * Intitulés propres à un type de section, prioritaires sur FIELDS.
+     *
+     * Le bandeau `hero_media_cards` est le hero visible des pages Solutions et
+     * Secteurs : ses champs reprennent le vocabulaire de la maquette (eyebrow,
+     * H1, sous-titre) pour qu'on les reconnaisse sans connaître le code.
+     */
+    private const SECTION_FIELDS = [
+        'hero_media_cards' => [
+            'badge'        => ['Eyebrow (petit label)', "Petit texte en majuscules au-dessus du H1. 60 caractères max."],
+            'title'        => ['Titre H1 — début', "Seul H1 de la page. 150 caractères max."],
+            'title_accent' => ['Titre H1 — fin en couleur', "Suite du H1, en couleur d'accent. Facultatif : peut rester vide."],
+            'text'         => ['Sous-titre', "Paragraphe sous le H1. 500 caractères max."],
+            'image'        => ['Image du hero', "Bibliothèque Média ou téléversement (bouton « Choisir… »). JPG, PNG ou WebP, 5 Mo max."],
+            'image_alt'    => ['Texte alternatif de l\'image', "Décrit l'image pour l'accessibilité et le référencement. 180 caractères max."],
+            'cta1_text'    => ['Bouton 1 — libellé', "40 caractères max."],
+            'cta1_url'     => ['Bouton 1 — lien', "Chemin interne (/contact), ancre (#piliers) ou adresse https://."],
+            'cta2_text'    => ['Bouton 2 — libellé', "40 caractères max."],
+            'cta2_url'     => ['Bouton 2 — lien', "Chemin interne (/solutions), ancre ou adresse https://."],
+        ],
+    ];
+
     /** Intitulé lisible ; à défaut, dérivé du nom technique. */
-    public static function label(string $key): string {
+    public static function label(string $key, string $sectionType = ''): string {
+        if (isset(self::SECTION_FIELDS[$sectionType][$key])) { return self::SECTION_FIELDS[$sectionType][$key][0]; }
         if (isset(self::FIELDS[$key])) { return self::FIELDS[$key][0]; }
         $clean = str_replace(self::PREFIXES, '', $key);
         return ucfirst(str_replace('_', ' ', $clean));
     }
 
     /** Phrase d'aide, ou chaîne vide s'il n'y en a pas. */
-    public static function help(string $key): string {
+    public static function help(string $key, string $sectionType = ''): string {
+        if (isset(self::SECTION_FIELDS[$sectionType][$key])) { return self::SECTION_FIELDS[$sectionType][$key][1]; }
         return self::FIELDS[$key][1] ?? '';
     }
 
