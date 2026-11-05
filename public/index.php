@@ -22,6 +22,19 @@ if (PHP_SAPI !== 'cli'
     header('Location: ' . $_target, true, 301);
     exit;
 }
+// L'adresse racine « / » arrive aussi ici : pour une chaîne vide, la règle
+// `RewriteCond %{DOCUMENT_ROOT}/public/$1 -d` du .htaccess racine est vraie
+// (le dossier public/ existe). SCRIPT_NAME vaut alors /public/index.php et
+// url() préfixait TOUS les liens de l'accueil par /public/ (61 liens, chacun
+// suivi d'une redirection 301). L'adresse demandée ne contient pas /public :
+// on rétablit le script racine, comme pour toutes les autres pages.
+if (PHP_SAPI !== 'cli'
+    && str_ends_with($_pubDir, '/public')
+    && is_file(dirname(__DIR__) . '/index.php')
+    && !($_pubUri === $_pubDir || str_starts_with($_pubUri, $_pubDir . '/') || str_starts_with($_pubUri, $_pubDir . '?'))) {
+    $_SERVER['SCRIPT_NAME'] = substr($_pubDir, 0, -strlen('/public')) . '/index.php';
+    $_SERVER['PHP_SELF']    = $_SERVER['SCRIPT_NAME'];
+}
 unset($_pubDir, $_pubUri);
 
 // ─── MAINTENANCE MODE ─────────────────────────────────────────────────────────
