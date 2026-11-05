@@ -543,6 +543,14 @@ jobs:
                 echo "  ATTENTION Visuels responsives (non-bloquant)"
               fi
             fi
+            # Jetons de design : reglages du theme alignes sur la grille (drapeau en base).
+            if [ -f "database/design_tokens_v1.php" ]; then
+              if $PHP database/design_tokens_v1.php 2>&1; then
+                echo "  OK Jetons de design"
+              else
+                echo "  ATTENTION Jetons de design (non-bloquant)"
+              fi
+            fi
 
             # ─────────────────────────────────────────────────────────────────
             # ÉTAPE 4 — Cache Clear

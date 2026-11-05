@@ -91,29 +91,29 @@
     $_thBB   = htmlspecialchars($settings['theme_bg_base']                ?? '#ffffff', ENT_QUOTES);
     $_thBA   = htmlspecialchars($settings['theme_bg_alt']                 ?? 'var(--bg-base)', ENT_QUOTES);
     $_thBC   = htmlspecialchars($settings['theme_bg_card']                ?? '#ffffff', ENT_QUOTES);
-    $_thShC  = htmlspecialchars($settings['theme_shadow_card']            ?? '0 1px 3px rgba(0,0,0,0.04), 0 8px 32px rgba(0,0,0,0.06)', ENT_QUOTES);
-    $_thShB  = htmlspecialchars($settings['theme_shadow_btn']             ?? '0 4px 18px color-mix(in srgb, var(--primary) 28%, transparent)', ENT_QUOTES);
+    $_thShC  = htmlspecialchars($settings['theme_shadow_card']            ?? '0 1px 2px rgba(18,32,44,0.04), 0 2px 6px rgba(18,32,44,0.04), 0 8px 24px -8px rgba(18,32,44,0.10)', ENT_QUOTES);
+    $_thShB  = htmlspecialchars($settings['theme_shadow_btn']             ?? '0 1px 2px rgba(18,32,44,0.10), 0 6px 16px -6px rgba(18,32,44,0.28)', ENT_QUOTES);
     $_thBtnBg = htmlspecialchars($settings['theme_btn_primary_bg']    ?? '#272727', ENT_QUOTES);
     $_thBtnFg = htmlspecialchars($settings['theme_btn_primary_text']  ?? '#ffffff', ENT_QUOTES);
     $_thBdgBg = htmlspecialchars($settings['theme_badge_bg']          ?? '#e3effa', ENT_QUOTES);
     $_thBdgFg = htmlspecialchars($settings['theme_badge_text']        ?? '#0B4F8A', ENT_QUOTES);
     $_thFtBg  = htmlspecialchars($settings['theme_footer_bg']         ?? '#ffffff', ENT_QUOTES);
     $_thSfDk  = htmlspecialchars($settings['theme_surface_dark']      ?? '#12202c', ENT_QUOTES);
-    $_thRP   = (int)($settings['theme_radius_pill']            ?? 9);
+    $_thRP   = (int)($settings['theme_radius_pill']            ?? 8);
     $_thRC   = (int)($settings['theme_radius_card']            ?? 20);
-    $_thRBtn = (int)($settings['theme_radius_btn']             ?? 14);
+    $_thRBtn = (int)($settings['theme_radius_btn']             ?? 12);
     $_thRMd  = (int)($settings['theme_radius_md']              ?? 12);
     $_thRSm  = (int)($settings['theme_radius_sm']              ?? 8);
-    $_thSS   = (int)($settings['theme_space_section']          ?? 92);
+    $_thSS   = (int)($settings['theme_space_section']          ?? 96);
     $_thSSSm = max(48, $_thSS - 32);
-    $_thSSXs = max(32, $_thSS - 50);
+    $_thSSXs = max(32, $_thSS - 56);   // 96 → 64 / 40 : grille de 8 px
     $_thFH1  = (float)($settings['theme_font_h1']              ?? 4.3);
     $_thFH2  = (float)($settings['theme_font_h2']              ?? 3);
     $_thFH3  = (float)($settings['theme_font_h3']              ?? 1.25);
     $_thFB   = (float)($settings['theme_font_body']            ?? 1);
     $_thWH   = (int)($settings['theme_font_weight_heading']    ?? 800);
     $_thWB   = (int)($settings['theme_font_weight_body']       ?? 400);
-    $_thLH   = (float)($settings['theme_line_height_body']     ?? 1.55);
+    $_thLH   = (float)($settings['theme_line_height_body']     ?? 1.6);
     $_thLS   = (float)($settings['theme_letter_spacing_heading']?? -0.02);
     ?>
     <style id="cms-theme">
@@ -147,8 +147,8 @@
         --space-section-xs:         <?= $_thSSXs ?>px;
         --shadow-card:              <?= $_thShC ?>;
         --shadow-btn:               <?= $_thShB ?>;
-        --font-size-h1:             clamp(2rem, 5vw, <?= $_thFH1 ?>rem);
-        --font-size-h2:             clamp(1.5rem, 3.5vw, <?= $_thFH2 ?>rem);
+        --font-size-h1:             clamp(2.25rem, 1.6rem + 3vw, <?= $_thFH1 ?>rem);   /* échelle typographique (index.css), borne haute admin */
+        --font-size-h2:             clamp(1.875rem, 1.5rem + 1.7vw, <?= $_thFH2 ?>rem);
         --font-size-h3:             <?= $_thFH3 ?>rem;
         --font-size-body:           <?= $_thFB ?>rem;
         --font-weight-heading:      <?= $_thWH ?>;
@@ -801,8 +801,10 @@
         </div>
     </footer>
 
-    <?php /* Version figée : `@latest` coûtait une redirection à chaque visite. */ ?>
-    <script src="https://unpkg.com/lucide@1.69.0/dist/umd/lucide.min.js"></script>
+    <?php /* Version figée : `@latest` coûtait une redirection à chaque visite.
+             `defer` : le téléchargement ne bloque plus la lecture de la page ;
+             les icônes sont créées dès que le script est prêt (onload). */ ?>
+    <script defer src="https://unpkg.com/lucide@1.69.0/dist/umd/lucide.min.js" onload="lucide.createIcons()"></script>
     <script>
         if (window.lucide) { lucide.createIcons(); }
 
